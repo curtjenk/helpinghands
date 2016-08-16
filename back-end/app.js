@@ -9,10 +9,16 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+//allow cross origin requests
+app.use(function(req, res, next) {
+     res.header("Access-Control-Allow-Origin", "*");
+     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	 res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+     next();
+});
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -22,8 +28,44 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// apply the routes to our application with the prefix /api
+// route middleware to verify a token
+var secureRoute = function (req, res, next) {
+	// check header or url parameters or post parameters for token
+	//console.log(req.body);
+	var token = (req.body && req.body.token) ||
+		(req.query && req.query.token) ||
+		(req.headers && req.headers['x-access-token']);
+	// decode token
+	if (token) {
+		// verifies secret and checks exp
+		jwt.verify(token, config.secret, function (err, decoded) {
+			if (err) {
+				return res.status(401).send({
+					success: false,
+					message: 'Failed to authenticate token.'
+				});
+			} else {
+				// if everything is good, save to request for use in other routes
+				console.log("Token is verified");
+				req.decoded = decoded;
+				next();
+			}
+		});
+
+	} else {
+		// if there is no token
+		// return an error
+		return res.status(403).send({
+			success: false,
+			message: 'No token provided.'
+		});
+
+	}
+};
+app.use('/api', secureRoute);
 app.use('/', routes);
-app.use('/users', users);
+//app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

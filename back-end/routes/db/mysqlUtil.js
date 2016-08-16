@@ -1,3 +1,4 @@
+"use strict";
 
 var Q = require('q');
 var mysql = require('promise-mysql');
@@ -47,7 +48,7 @@ var authenticate = function (username, password) {
 };
 /*
  user_type 0 = Super User
- user_type 1 = Church Admin
+ user_type 1 = Organization Admin
  user_type 2 = Client
  user_type 3 = Helper
 
