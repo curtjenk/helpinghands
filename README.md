@@ -1,114 +1,40 @@
-# Helping Hands aka Christian Men Lifting Burdens
+<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+</p>
 
+## About Laravel
 
-### Authors
-- Curtis Jenkins
-- Joshua Ciaralli
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
 
-### Tech
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
+Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
 
+## Learning Laravel
 
-* [AngularJS] - MVC framework
-* [Bootstrap] - layout, etc.
-* [Angular-UI-Bootstrap] - image carousel
-* [Angular Messages] - form validation
-* [Angular Materials] - for animated tabs/checkbox/radio buttons
-* [Angular-UI-Router] - The de-facto solution to flexible routing with nested views
-* [Angular-local-storage] - An AngularJS module that gives you access to the browsers local storage
-* [Angular-Aria] - Angular's default accessibility by enabling common ARIA attributes
-* [Angular-Sanitize] - The ngSanitize module provides functionality to sanitize HTML
-* [Angular-Animate] - The ngAnimate module provides support for CSS-based animations & JS based animations
-* [Angular-drag-and-drop-lists] - Angular directives that allow you to build sortable lists with the native HTML5 drag & drop API
-* [Angular-utils-pagination] - Pagination Directive, easy plug and play to add pagination to your project
-* [Angular-chart] - Reactive, responsive, beautiful charts for AngularJS based on Chart.js
-* [Apache] - webserver
-* [Node.js] - Server side javascript
-* [Express] -
-* [jQuery] - javascript library
-* [MySQL] - relational database
-* [zippopotam.us] - Get city & state using zip code
-* [jwt] - JSON web tokens
-* [Q] - A library from promises
-* [BCrypt] - Encryption
-* [FontAwesome] - icons that are svg format used as fonts
-* [Fontastic] - Created custom fontastic font
+Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
 
-### Installation
-  - Requires MySql installation.
-  - NodesJs Configuration parameters are stored in "config.js" located in the routes folder.  Sample contents.
+If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
 
-    var Config = {};
-    Config.mysql = {};
-    Config.mysql.pool = {};
-    Config.mysql.pool.connectionLimit = 100;
-    Config.mysql.pool.debug = false;
-    Config.mysql.host = <your MySql host name>
-    Config.mysql.database = <database name>;
-    Config.mysql.username = <your username>;
-    Config.mysql.password = <your password>;
-    Config.secret = <secret string for Json Web Tokens>
-    //configuration for you mail server .. below is example only
-    Config.smtpConfig =  {
-      host: 'smtp.comcast.net',
-      port: 587,
-      secure: false, // use SSL
-      auth: {
-          user: 'xxxxxxxx',
-          pass: 'ppppppppppp'
-      }
-  };
+## Contributing
 
-  module.exports = Config;
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
 
-- There are also client side parameters needed.  Create a file called "front-config.js" in the "/assets/js" directory.  Here is a sample configuration;
+## Security Vulnerabilities
 
-    //Point ajax calls to the proper nodejs instance
-    var Config = {
-       //ticketFixMeApi: 'http://ticketfixme.com:4000'
-      ticketFixMeApi: 'http://localhost:4000'
-      }
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
 
-- cd to the "back-end" directory
-    * run npm install
-    * Note: uses port 4000
+## License
 
-### Demo
-
-http://www.ticketfixme.com
-
-### Todos
-
-
-### License
-
-MIT
-
-
-**Free Software, Well Yeah!**
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
-
-   [PHP]: <http://www.php.net/>
-   [MySQL]: <http://mysql.com>
-   [Apache]: <http://apache.org>
-   [Bootstrap]: <http://twitter.github.com/bootstrap/>
-   [AngularJS]: <http://angularjs.org>
-   [jQuery]: <http://jquery.com>
-   [Angular-UI-Router]: <https://angular-ui.github.io/ui-router/>
-   [Angular-UI-Bootstrap]: <https://angular-ui.github.io/bootstrap/>
-   [Angular-local-storage]: <https://github.com/grevory/angular-local-storage>
-   [Angular-Messages]: <https://docs.angularjs.org/api/ngMessages>
-   [Angular-Aria]: https://docs.angularjs.org/guide/accessibility
-   [Angular-Sanitize]: <https://docs.angularjs.org/api/ngSanitize>
-   [Angular-Animate]: <https://docs.angularjs.org/api/ngAnimate>
-   [Angular-drag-and-drop-lists]: <https://github.com/marceljuenemann/angular-drag-and-drop-lists>
-   [Angular-utils-pagination]: <https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination>
-   [Angular-chart]: <http://jtblin.github.io/angular-chart.js/>
-   [Passport]: <http://passportjs.org/>
-   [BCrypt]: <https://github.com/ncb000gt/node.bcrypt.js/>
-   [zippopotam.us]: <http://www.zippopotam.us/>
-   [FontAwesome]: <http://fontawesome.io/>
-   [Fontastic]: <http://fontastic.me/>
+The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
