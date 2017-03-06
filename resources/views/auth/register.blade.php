@@ -60,8 +60,8 @@
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
-                            <div class="col-md-4 text-right">
-                                <label class="control-label">Role</label>
+                            <div class="col-md-4 text">
+                                <label class="control-label">Organization</label>
                                 @if ($errors->has('organization_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('organization_id') }}</strong>
@@ -69,17 +69,15 @@
                                 @endif
                             </div>
                             <div class="col-md-8">
-                                @foreach (App\Organization::all() as $org)
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="organization_id" value="{{ $org->id }}"> {{$role->name}}
-                                        </label>
-                                    </div>
-                                @endforeach
+                                <select id="organization_id" name="organization_id">
+                                    @foreach (App\Organization::all() as $org)
+                                        <option value="{{ $org->id }}"> {{$org->name}} {{$org->city}} {{$org->state}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-4">
                                 <label class="control-label">Role</label>
                                 @if ($errors->has('role_id'))
                                     <span class="help-block">

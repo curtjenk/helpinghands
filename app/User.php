@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -30,7 +31,7 @@ class User extends Authenticatable
     /**
      * Check if the User has a specific Permission
      */
-    public function has_permission($name, $multipayer)
+    public function has_permission($name)
     {
         return DB::table('permission_role')
                 ->join('permissions', 'permission_role.permission_id', '=',

@@ -13,8 +13,10 @@ class AddOrganization extends Migration
      */
     public function up()
     {
-        DB::table('permissions')->insert([
-            ['name'=>'Create user']
+        DB::table('organizations')->insert([
+            ['name'=>'Cornerstone Baptist Church',
+             'city'=>'Lithia Springs',
+             'state'=>'Georgia']
         ]);
     }
 
@@ -25,6 +27,6 @@ class AddOrganization extends Migration
      */
     public function down()
     {
-        //
+        DB::table('organizations')->delete();
     }
 }
