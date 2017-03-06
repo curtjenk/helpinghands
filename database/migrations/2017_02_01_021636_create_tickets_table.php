@@ -8,6 +8,7 @@ class CreateTicketsTable extends Migration
 {
     /**
      * Run the migrations.
+     * A ticket can also be thought of as an "Event"
      *
      * @return void
      */
@@ -15,6 +16,12 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->string('subject');
+            $table->longtext('description')->nullable;
+            $table->date('date_start')->nullable;
+            $table->date('date_end')->nullable;
+            $table->integer('status_id')->unsigned();
             $table->timestamps();
         });
     }
