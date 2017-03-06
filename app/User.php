@@ -26,4 +26,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Check if the User has a specific Permission
+     */
+    public function has_permission($name, $multipayer)
+    {
+        return DB::table('permission_role')
+                ->join('permissions', 'permission_role.permission_id', '=',
+                       'permissions.id')
+                ->where('permission_role.role_id', $this->role_id)
+                ->where('permissions.name', $name)
+                ->count() > 0;
+    }
 }
