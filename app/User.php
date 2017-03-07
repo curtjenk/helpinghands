@@ -40,4 +40,14 @@ class User extends Authenticatable
                 ->where('permissions.name', $name)
                 ->count() > 0;
     }
+    /**
+     * Check if the user has any administrative right.
+     */
+    public function is_admin()
+    {
+        return DB::table('roles')
+            ->where('id', $this->role_id)
+            ->whereIn('name', ['Super User', 'Admin', 'Organization Admin'])
+            ->count() > 0;
+    }
 }

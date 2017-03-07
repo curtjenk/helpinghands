@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App;
 
 class HomeController extends Controller
 {
@@ -28,7 +29,7 @@ class HomeController extends Controller
         $tickets = [];
         if ($user->can('list-tickets'))
         {
-            $tickets = App\Ticket::all()->get();
+            $tickets = App\Ticket::all();
         }
         return view('home', ['tickets'=>$tickets]);
     }

@@ -86,10 +86,10 @@
                                 @endif
                             </div>
                             <div class="col-md-8">
-                                @foreach (App\Role::all() as $role)
+                                @foreach (App\Role::where('name', 'Organization User')->get() as $role)
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="role_id" value="{{ $role->id }}"> {{$role->name}}
+                                            <input type="radio" checked name="role_id" value="{{ $role->id }}"> {{$role->name}}
                                         </label>
                                     </div>
                                 @endforeach

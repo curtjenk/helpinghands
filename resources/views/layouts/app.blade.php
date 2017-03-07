@@ -43,7 +43,10 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                        @can ('list-tickets')
+                        <li><a href="{{ url('/ticket') }}">Tickets</a></li>
+                        @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -59,6 +62,10 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ url('/settings') }}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+                                    @if (Auth::user()->is_admin())
+                                    <li><a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
