@@ -15,16 +15,16 @@
     <div class="container testFont">
         <table class="table">
             <thead>
-                <tr><td>Name</td><td>Role</td><td class="printHide">Action</td></tr>
+                <tr><td>Name</td><td>Organization</td><td class="printHide">Action</td></tr>
             </thead>
             <tbody>
             @foreach ($users as $user)
                 <tr>
                     <td>
-                        <a href="{{ url('/user/'.$user->id) }}">{{ $user->repr() }}</a>
+                        <a href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
                     </td>
                     <td>
-                        {{ $user->role->name }}
+                        {{ $user->organization->name}}
                     </td>
                     <td class="printHide">
                     @can ('update', $user)
@@ -32,7 +32,7 @@
                     @endcan
                     @can ('destroy', $user)
                     <span data-toggle="tooltip" title="Delete User" data-placement="left" class="printHide">
-                      <a href="#" type="button" class="btn btn-default providerButtons" data-toggle="modal" data-target="#deleteUser" data-id="{{ $user->id }}" data-name="{{ $user->repr() }}" name="delete_{{ $user->id }}">
+                      <a href="#" type="button" class="btn btn-default providerButtons" data-toggle="modal" data-target="#deleteUser" data-id="{{ $user->id }}" data-name="{{ $user->name}}" name="delete_{{ $user->id }}">
                           <i class="fa fa-trash fa-lg"></i>
                       </a>
                     </span>

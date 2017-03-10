@@ -30,6 +30,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get the Organization for this user.
+     */
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
+    }
+
+    /**
      * Check if the User has a specific Permission
      */
     public function has_permission($name)

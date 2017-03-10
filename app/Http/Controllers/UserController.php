@@ -15,7 +15,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('list-users');
+        $user = Auth::user();
+
+        $query=App\User::with('organization')
+            ->where('users.id', '!=', $user->id)
+            ->when(!$user->is_admin(), function($query) {
+                $query->where('organization_id', $user->organization_id);
+            });
+
+        return view('user.index', [
+                'users'=>$query->get(),
+            ]);
     }
 
     /**
