@@ -1,0 +1,47 @@
+input {
+  outline: 0;
+  border-width: 0 0 1px 0;
+  border-color: $input;
+  background: transparent;
+  &:hover {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+  }
+  &:active {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+  }
+  &:focus {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+  }
+}
+
+.editInfo {
+  outline: 0;
+  border-width: 0 0 1px 0;
+  border-color: $input;
+  width: 75%;
+  background-color: white;
+  &:hover {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+    width: 75%;
+  }
+  &:active {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+    width: 75%;
+  }
+  &:focus {
+    outline: 0;
+    border-width: 0 0 1px 0;
+    border-color: $blue;
+    width: 75%;
+  }
+}
