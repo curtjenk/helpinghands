@@ -28,7 +28,9 @@
                     </td>
                     <td class="printHide">
                     @can ('update', $user)
-                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-default providerButtons" data-toggle="tooltip" title="Edit User" data-placement="left"><i class="fa fa-pencil fa-lg"></i></a>
+                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-default" data-toggle="tooltip" title="Edit User" data-placement="left">
+                            <i class="fa fa-pencil fa-lg"></i>
+                        </a>
                     @endcan
                     @can ('destroy', $user)
                     <span data-toggle="tooltip" title="Delete User" data-placement="left" class="printHide">
@@ -56,7 +58,7 @@
         Are you sure you want to delete user?
       </div>
       <div class="modal-footer">
-        <form action="" method="POST">
+        <form method="POST" action="">
           {{ csrf_field() }}
           <input name="_method" type="hidden" value="DELETE">
           <button type="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>

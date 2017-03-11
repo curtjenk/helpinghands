@@ -137,6 +137,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+            // dump("here = $id");
+        $user = App\User::findOrFail($id);
+        $this->authorize('destroy', $user);
+
+        $user->delete();
+        return redirect('/user');
     }
 }

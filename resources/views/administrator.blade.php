@@ -3,7 +3,7 @@
 @section('content')
 <main>
     <section class="page-header">
-        <div class="container">
+        <div class="container header">
             <div class="">Administrator Menu</div>
         </div>
     </section>
