@@ -38,6 +38,13 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the Role for this user.
+     */
+    public function role()
+    {
+        return $this->belongsTo('App\Role');
+    }
+    /**
      * Check if the User has a specific Permission
      */
     public function has_permission($name)

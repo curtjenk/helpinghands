@@ -19,13 +19,16 @@ class UserController extends Controller
         $user = Auth::user();
 
         $query=App\User::with('organization')
+            ->where('role_id', '!=', 1)
+            ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)
-            ->when(!$user->is_admin(), function($query) {
-                $query->where('organization_id', $user->organization_id);
-            });
+            ->when(!$user->is_admin(), function($q) use($user) {
+                return $q->where('organization_id', $user->organization_id);
+            })
+            ->get();
 
         return view('user.index', [
-                'users'=>$query->get(),
+                'users'=>$query,
             ]);
     }
 
@@ -36,7 +39,19 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create-user');
+        $user = Auth::user();
+
+        $roles = App\Role::where('id', ">=", $user->role_id)->get();
+
+        if ($user->role->name == 'Organization Admin') {
+            $orgs = App\Organization::where($user->organization_id)->get();
+        } else {
+            $orgs = App\Organization::all();
+        }
+        return view('user.create',
+            ['organizations'=>$orgs,
+             'roles'=>$roles]);
     }
 
     /**
@@ -47,7 +62,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create-user');
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'email' => 'required|max:255',
+            'organization_id' => 'required|exists:organization,id',
+            'role_id' => 'required|exists:roles,id',
+        ]);
     }
 
     /**

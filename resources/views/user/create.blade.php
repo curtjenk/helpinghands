@@ -13,7 +13,7 @@
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email" class="col-md-4 control-label">Email</label>
                 <div class="col-md-8">
-                    <input id="email" type="text" class="editInfo" name="email" autofocus maxlength="255" value="{{ old('email') }}" required>
+                    <input required id="email" type="text" class="editInfo" name="email" autofocus maxlength="255" value="{{ old('email') }}">
                     @if ($errors->has('email'))
                         <span class="help-block">
                             <strong>{{ $errors->first('email') }}</strong>
@@ -21,74 +21,57 @@
                     @endif
                 </div>
             </div>
-            <hr />
-            <div class="form-group{{ $errors->has('prefix') ? ' has-error' : '' }}">
-                <label for="prefix" class="col-md-4 control-label">Prefix</label>
+            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                <label for="name" class="col-md-4 control-label">Name</label>
                 <div class="col-md-8">
-                    <input id="prefix" type="text" class="editInfo" name="prefix" maxlength="255" value="{{ old('prefix') }}">
-                    @if ($errors->has('prefix'))
+                    <input required id="name" type="text" class="editInfo" name="name" maxlength="255" value="{{ isset($user) ? $user->name : old('name') }}">
+                    @if ($errors->has('name'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('prefix') }}</strong>
+                            <strong>{{ $errors->first('name') }}</strong>
                         </span>
                     @endif
                 </div>
             </div>
-            <div class="form-group{{ $errors->has('firstname') ? ' has-error' : '' }}">
-                <label for="firstname" class="col-md-4 control-label">First name</label>
+            <div class="form-group{{ $errors->has('homephone') ? ' has-error' : '' }}">
+                <label for="homephone" class="col-md-4 control-label">Home Phone</label>
                 <div class="col-md-8">
-                    <input id="firstname" type="text" class="editInfo" name="firstname" maxlength="255" value="{{ old('firstname') }}" required>
-                    @if ($errors->has('firstname'))
+                    <input id="homephone" type="text" class="editInfo" name="homephone" maxlength="64" value="{{ isset($user) ? $user->homephone : old('homephone') }}">
+                    @if ($errors->has('homephone'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('firstname') }}</strong>
+                            <strong>{{ $errors->first('homephone') }}</strong>
                         </span>
                     @endif
                 </div>
             </div>
-            <div class="form-group{{ $errors->has('middlename') ? ' has-error' : '' }}">
-                <label for="middlename" class="col-md-4 control-label">Middle name</label>
+            <div class="form-group{{ $errors->has('mobilephone') ? ' has-error' : '' }}">
+                <label for="mobilephone" class="col-md-4 control-label">Mobile Phone</label>
                 <div class="col-md-8">
-                    <input id="middlename" type="text" class="editInfo" name="middlename" maxlength="255" value="{{ old('middlename') }}">
-                    @if ($errors->has('middlename'))
+                    <input id="mobilephone" type="text" class="editInfo" name="mobilephone" maxlength="64" value="{{ isset($user) ? $user->mobilephone : old('mobilephone') }}">
+                    @if ($errors->has('mobilephone'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('middlename') }}</strong>
+                            <strong>{{ $errors->first('mobilephone') }}</strong>
                         </span>
                     @endif
                 </div>
             </div>
-            <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
-                <label for="lastname" class="col-md-4 control-label">Last name</label>
-                <div class="col-md-8">
-                    <input id="lastname" type="text" class="editInfo" name="lastname" maxlength="255" value="{{ old('lastname') }}" required>
-                    @if ($errors->has('lastname'))
+            <div class="form-group{{ $errors->has('org_id') ? ' has-error' : '' }}">
+                <div class="col-md-4 text-right">
+                    <label class="control-label">Organization</label>
+                    @if ($errors->has('org_id'))
                         <span class="help-block">
-                            <strong>{{ $errors->last('lastname') }}</strong>
+                            <strong>{{ $errors->first('org_id') }}</strong>
                         </span>
                     @endif
                 </div>
-            </div>
-            <div class="form-group{{ $errors->has('suffix') ? ' has-error' : '' }}">
-                <label for="suffix" class="col-md-4 control-label">Suffix</label>
                 <div class="col-md-8">
-                    <input id="suffix" type="text" class="editInfo" name="suffix" maxlength="255" value="{{ old('suffix') }}">
-                    @if ($errors->has('suffix'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('suffix') }}</strong>
-                        </span>
-                    @endif
+                    <select id="organization_id" name="organization_id">
+                        @foreach (App\Organization::all() as $org)
+                            <option value="{{ $org->id }}"> {{$org->name}} {{$org->city}} {{$org->state}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
-            <hr />
-            <div class="form-group{{ $errors->has('cellphone') ? ' has-error' : '' }}">
-                <label for="cellphone" class="col-md-4 control-label">Cellphone</label>
-                <div class="col-md-8">
-                    <input id="cellphone" type="text" class="editInfo" name="cellphone" maxlength="64" value="{{ old('cellphone') }}" required>
-                    @if ($errors->has('cellphone'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('cellphone') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
+
             <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
                 <div class="col-md-4 text-right">
                     <label class="control-label">Role</label>
@@ -99,13 +82,11 @@
                     @endif
                 </div>
                 <div class="col-md-8">
-                    @foreach ($roles as $role)
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="role_id" value="{{ $role->id }}"> {{$role->name}}
-                            </label>
-                        </div>
-                    @endforeach
+                    <select id="role_id" name="role_id">
+                        @foreach (App\Role::where('name', "!=", 'Super User')->get() as $role)
+                            <option value="{{ $role->id }}"> {{$role->name}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <hr />

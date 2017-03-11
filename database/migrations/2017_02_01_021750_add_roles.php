@@ -13,10 +13,10 @@ class AddRoles extends Migration
      */
     public function up()
     {
+
         DB::table('roles')->insert([
             ['name'=>'Super User'],
             ['name'=>'Admin'],
-            ['name'=>'User'],
             ['name'=>'Organization Admin'],
             ['name'=>'Organization User'],
         ]);

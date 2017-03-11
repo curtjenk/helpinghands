@@ -37,20 +37,6 @@ class AddPermissionRole extends Migration
                             ])
                         ->pluck('id'));
 
-        $user = App\Role::where('name','User')->first();
-        $user->permissions()
-              ->sync(App\Permission::whereIn('name',
-                            ['Show user',
-                             'List users',
-                             'Show organization',
-                             'List organizations',
-                             'Create ticket',
-                             'Show ticket',
-                             'Update ticket',
-                             'List tickets'
-                            ])
-                        ->pluck('id'));
-
         $orgadmin = App\Role::where('name','Organization Admin')->first();
         $orgadmin->permissions()
               ->sync(App\Permission::whereIn('name',

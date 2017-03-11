@@ -33,6 +33,8 @@ class CreateOrganizationsTable extends Migration
      */
     public function down()
     {
+        //DB::statement('drop table organizations cascade');
+        //Schema::dropIfExists('users');
         Schema::dropIfExists('organizations');
     }
 }

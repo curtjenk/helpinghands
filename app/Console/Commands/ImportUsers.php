@@ -58,7 +58,7 @@ class ImportUsers extends Command
                     'email'=>$row['E-mail Address'],
                     'homephone'=>$row['Home Phone'],
                     'mobilephone'=>$row['Mobile Phone'],
-                    'role_id'=>5,
+                    'role_id'=>App\Role::where('name','Organization User')->first()->id,
                     'organization_id'=>1
                 ]);
 
