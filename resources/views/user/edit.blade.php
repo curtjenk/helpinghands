@@ -4,10 +4,10 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left pageHeader testFont">{{ isset($user) ? 'Update' : 'Create' }} User</div>
+            <div class="pull-left header">{{ isset($user) ? 'Update' : 'Create' }} User</div>
         </div>
     </section>
-    <div class="container testFont">
+    <div class="container">
         <form class="form-horizontal" method="POST" action="{{ url('/user/'.$user->id) }}">
             <input name="_method" type="hidden" value="PUT">
             {{ csrf_field() }}
@@ -31,7 +31,7 @@
             <div class="form-group{{ $errors->has('homephone') ? ' has-error' : '' }}">
                 <label for="homephone" class="col-md-4 control-label">Home Phone</label>
                 <div class="col-md-8">
-                    <input id="homephone" type="text" class="editInfo" name="homephone" maxlength="64" value="{{ isset($user) ? $user->homephone : old('homephone') }}" required>
+                    <input id="homephone" type="text" class="editInfo" name="homephone" maxlength="64" value="{{ isset($user) ? $user->homephone : old('homephone') }}">
                     @if ($errors->has('homephone'))
                         <span class="help-block">
                             <strong>{{ $errors->first('homephone') }}</strong>
@@ -42,7 +42,7 @@
             <div class="form-group{{ $errors->has('mobilephone') ? ' has-error' : '' }}">
                 <label for="mobilephone" class="col-md-4 control-label">Mobile Phone</label>
                 <div class="col-md-8">
-                    <input id="mobilephone" type="text" class="editInfo" name="mobilephone" maxlength="64" value="{{ isset($user) ? $user->mobilephone : old('mobilephone') }}" required>
+                    <input id="mobilephone" type="text" class="editInfo" name="mobilephone" maxlength="64" value="{{ isset($user) ? $user->mobilephone : old('mobilephone') }}">
                     @if ($errors->has('mobilephone'))
                         <span class="help-block">
                             <strong>{{ $errors->first('mobilephone') }}</strong>

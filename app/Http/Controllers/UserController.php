@@ -113,7 +113,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255|min:5',
+            'mobilephone' => 'max:255',
+            'homephone' => 'max:255',
+            //'new_password' => 'confirmed|required_with:old_password',
+        ]);
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        $this->authorize('update', $user);
+        $user->name = $request->input('name');
+        $user->mobilephone = $request->input('mobilephone');
+        $user->homephone = $request->input('homephone');
+        $user->save();
+        return redirect('/user/'.$id);
     }
 
     /**

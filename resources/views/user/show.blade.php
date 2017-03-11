@@ -2,9 +2,9 @@
 
 @section('content')
 <main>
-    <section>
+    <section class="page-header">
         <div class="container">
-            <div class="pull-right">
+            <div class="pull-right header">
                 <a class="btn btn-default" href="{{ url('/user') }}"><i class="fa fa-users"></i> Users</a>
                 @can ('update', $user)
                 <a class="btn btn-default" href="{{ url('/user/'.$user->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>

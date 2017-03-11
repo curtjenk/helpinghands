@@ -18,7 +18,21 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('list-tickets');
+        $user = Auth::user();
+
+        $query=App\Ticket::with('organization')
+            ->where('role_id', '!=', 1)
+            ->where('role_id', '>=', $user->role_id)
+            ->where('users.id', '!=', $user->id)
+            ->when(!$user->is_admin(), function($q) use($user) {
+                return $q->where('organization_id', $user->organization_id);
+            })
+            ->get();
+
+        return view('user.index', [
+                'users'=>$query,
+            ]);
     }
 
     /**

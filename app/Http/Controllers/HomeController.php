@@ -33,4 +33,12 @@ class HomeController extends Controller
         }
         return view('home', ['tickets'=>$tickets]);
     }
+
+    public function administrator() {
+        $user = Auth::user();
+        if (!$user->is_admin()) {
+            abort(403);
+        }
+        return view('administrator', ['user'=>$user]);
+    }
 }

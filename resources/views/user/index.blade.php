@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left pageHeader testFont">Users</div>
+            <div class="pull-left header">Users</div>
             <div class="pull-right printHide">
                 @can ('create-user')
                     <a class="btn btn-default" href="{{ url('/user/create') }}"><i class="fa fa-plus"></i> Create</a>
@@ -12,7 +12,7 @@
             </div>
         </div>
     </section>
-    <div class="container testFont">
+    <div class="container">
         <table class="table">
             <thead>
                 <tr><td>Name</td><td>Organization</td><td class="printHide">Action</td></tr>

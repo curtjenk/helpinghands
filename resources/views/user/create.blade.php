@@ -4,10 +4,10 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left pageHeader testFont">Create User</div>
+            <div class="pull-left header">Create User</div>
         </div>
     </section>
-    <div class="container testFont">
+    <div class="container">
         <form class="form-horizontal" method="POST" action="{{ url('/user') }}">
             {{ csrf_field() }}
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
