@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    <section class="page-header">
+        <div class="container">
+            <div class="pull-left header"></div>
+        </div>
+    </section>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -29,7 +34,6 @@
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -54,14 +58,13 @@
 
                         <div class="form-group">
                             <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
+                            <label for="organization_id" class="col-md-4 control-label">Organization</label>
                             <div class="col-md-4 text">
-                                <label class="control-label">Organization</label>
                                 @if ($errors->has('organization_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('organization_id') }}</strong>
@@ -77,8 +80,8 @@
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                            <label for="role_id" class="col-md-4 control-label">Role</label>
                             <div class="col-md-4">
-                                <label class="control-label">Role</label>
                                 @if ($errors->has('role_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('role_id') }}</strong>

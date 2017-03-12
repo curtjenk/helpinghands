@@ -1,11 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+    <section class="page-header">
+        <div class="container">
+            <div class="pull-left header"></div>
+        </div>
+    </section>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
+                {{-- {{ dump(session()->all()) }}
+                @if ($errors->has('message'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('message') }}</strong>
+                    </span>
+                @endif --}}
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}

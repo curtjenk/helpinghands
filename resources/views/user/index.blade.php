@@ -5,11 +5,11 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header">Users</div>
-            <div class="pull-right printHide">
+            {{-- <div class="pull-right printHide">
                 @can ('create-user')
                     <a class="btn btn-default" href="{{ url('/user/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
-            </div>
+            </div> --}}
         </div>
     </section>
     <div class="container">
@@ -28,14 +28,14 @@
                     </td>
                     <td class="printHide">
                     @can ('update', $user)
-                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-default" data-toggle="tooltip" title="Edit User" data-placement="left">
-                            <i class="fa fa-pencil fa-lg"></i>
+                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit User" data-placement="left">
+                            <i class="fa fa-pencil"></i>
                         </a>
                     @endcan
                     @can ('destroy', $user)
                     <span data-toggle="tooltip" title="Delete User" data-placement="left" class="printHide">
-                      <a href="#" type="button" class="btn btn-default providerButtons" data-toggle="modal" data-target="#deleteUser" data-id="{{ $user->id }}" data-name="{{ $user->name}}" name="delete_{{ $user->id }}">
-                          <i class="fa fa-trash fa-lg"></i>
+                      <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteUser" data-id="{{ $user->id }}" data-name="{{ $user->name}}" name="delete_{{ $user->id }}">
+                          <i class="fa fa-trash"></i>
                       </a>
                     </span>
                     @endcan

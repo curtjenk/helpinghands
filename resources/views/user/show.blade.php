@@ -45,12 +45,18 @@
                                 <p id="mobilephone" class="form-control-static">{{ $user->mobilephone }}</p>
                             </div>
                         </div>
-                        {{-- <div class="form-group">
+                        <div class="form-group">
+                            <label for="role" class="col-md-4 control-label">Organization</label>
+                            <div class="col-md-8">
+                                <p id="role" class="form-control-static">{{ $user->organization->name}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="role" class="col-md-4 control-label">Role</label>
                             <div class="col-md-8">
                                 <p id="role" class="form-control-static">{{ $user->role->name}}</p>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>

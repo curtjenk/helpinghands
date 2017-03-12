@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-md-8">
                     <select id="organization_id" name="organization_id">
-                        @foreach (App\Organization::all() as $org)
+                        @foreach ($orgs as $org)
                             <option value="{{ $org->id }}"> {{$org->name}} {{$org->city}} {{$org->state}}</option>
                         @endforeach
                     </select>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-8">
                     <select id="role_id" name="role_id">
-                        @foreach (App\Role::where('name', "!=", 'Super User')->get() as $role)
+                        @foreach ($roles as $role)
                             <option value="{{ $role->id }}"> {{$role->name}}</option>
                         @endforeach
                     </select>

@@ -50,6 +50,41 @@
                     @endif
                 </div>
             </div>
+            <div class="form-group{{ $errors->has('org_id') ? ' has-error' : '' }}">
+                <div class="col-md-4 text-right">
+                    <label class="control-label">Organization</label>
+                    @if ($errors->has('org_id'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('org_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-md-8">
+                    <select id="org_id" name="org_id">
+                        @foreach ($orgs as $org)
+                            <option {{ $user->organization_id==$org->id ? 'selected' : '' }} value="{{ $org->id }}"> {{$org->name}} {{$org->city}} {{$org->state}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                <div class="col-md-4 text-right">
+                    <label class="control-label">Role</label>
+                    @if ($errors->has('role_id'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('role_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-md-8">
+                    <select id="role_id" name="role_id">
+                        @foreach ($roles as $role)
+                            <option {{ $user->role_id==$role->id ? 'selected' : '' }} value="{{ $role->id }}"> {{$role->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <hr />
             <div class="block text-center">
                 <a class="btn btn-default" href="{{ Request::header('referer') }}">

@@ -66,4 +66,19 @@ class User extends Authenticatable
             ->whereIn('name', ['Super User', 'Admin', 'Organization Admin'])
             ->count() > 0;
     }
+
+    public function is_orgLevel()
+    {
+        return DB::table('roles')
+            ->where('id', $this->role_id)
+            ->whereIn('name', ['Organization Admin', 'Organization User'])
+            ->count() > 0;
+    }
+    public function is_orgAdmin()
+    {
+        return DB::table('roles')
+            ->where('id', $this->role_id)
+            ->where('name', 'Organization Admin')
+            ->count() > 0;
+    }
 }

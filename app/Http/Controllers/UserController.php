@@ -22,7 +22,7 @@ class UserController extends Controller
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)
-            ->when(!$user->is_admin(), function($q) use($user) {
+            ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
             ->get();
@@ -42,15 +42,15 @@ class UserController extends Controller
         $this->authorize('create-user');
         $user = Auth::user();
 
-        $roles = App\Role::where('id', ">=", $user->role_id)->get();
+        $roles = App\Role::where('roles.id', '>=', $user->role_id)->get();
+        $orgs = App\Organization::select('organizations.*')
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organizations.id', $user->organization_id);
+            })
+            ->get();
 
-        if ($user->role->name == 'Organization Admin') {
-            $orgs = App\Organization::where($user->organization_id)->get();
-        } else {
-            $orgs = App\Organization::all();
-        }
         return view('user.create',
-            ['organizations'=>$orgs,
+            ['orgs'=>$orgs,
              'roles'=>$roles]);
     }
 
@@ -66,8 +66,21 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|max:255',
-            'organization_id' => 'required|exists:organization,id',
+            'mobilephone' => 'max:255',
+            'homephone' => 'max:255',
+            'organization_id' => 'required|exists:organizations,id',
             'role_id' => 'required|exists:roles,id',
+        ]);
+        $newuser = App\User::create([
+            'name'=>$request->input('name'),
+            'email'=>$request->input('email'),
+            'mobilephone'=>$request->input('mobilephone'),
+            'homephone'=>$request->input('homephone'),
+            'organization_id'=>$request->input('organization_id'),
+            'role_id'=>$request->input('role_id')
+        ]);
+        return view('user.show', [
+            'user'=>$user,
         ]);
     }
 
@@ -98,9 +111,17 @@ class UserController extends Controller
         $self = Auth::user();
         $user = App\User::findOrFail($id);
         $this->authorize('update', $user);
+        $roles = App\Role::where('roles.id', '>=', $self->role_id)->get();
+        $orgs = App\Organization::select('organizations.*')
+            ->when($self->is_orgLevel(), function($q) use($self) {
+                return $q->where('organizations.id', $self->organization_id);
+            })
+            ->get();
 
         return view('user.edit', [
-            'user'=>$user
+            'user'=>$user,
+            'roles'=>$roles,
+            'orgs'=>$orgs
         ]);
     }
 
@@ -117,6 +138,8 @@ class UserController extends Controller
             'name' => 'required|max:255|min:5',
             'mobilephone' => 'max:255',
             'homephone' => 'max:255',
+            'org_id' => 'required|exists:organizations,id',
+            'role_id' => 'required|exists:roles,id',
             //'new_password' => 'confirmed|required_with:old_password',
         ]);
         $user = App\User::findOrFail($id);
@@ -125,6 +148,8 @@ class UserController extends Controller
         $user->name = $request->input('name');
         $user->mobilephone = $request->input('mobilephone');
         $user->homephone = $request->input('homephone');
+        $user->organization_id = $request->input('org_id');
+        $user->role_id = $request->input('role_id');
         $user->save();
         return redirect('/user/'.$id);
     }
