@@ -80,7 +80,7 @@ class UserController extends Controller
             'role_id'=>$request->input('role_id')
         ]);
         return view('user.show', [
-            'user'=>$user,
+            'user'=>$newuser,
         ]);
     }
 
@@ -111,7 +111,9 @@ class UserController extends Controller
         $self = Auth::user();
         $user = App\User::findOrFail($id);
         $this->authorize('update', $user);
-        $roles = App\Role::where('roles.id', '>=', $self->role_id)->get();
+        $roles = App\Role::where('roles.id', '>=', $self->role_id)
+            ->where('roles.name', '!=', 'Super User')
+            ->get();
         $orgs = App\Organization::select('organizations.*')
             ->when($self->is_orgLevel(), function($q) use($self) {
                 return $q->where('organizations.id', $self->organization_id);

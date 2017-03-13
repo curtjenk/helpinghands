@@ -6,8 +6,10 @@
  */
 
 require('./bootstrap');
+require('../../../node_modules/jquery-ui-bundle/jquery-ui.min.js');
 
 import './user';
+import './ticket';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -53,6 +53,24 @@ input {
   }
 }
 
+.editTextArea {
+  outline: 0;
+  border: 1px solid $input;
+  width: 75%;
+  &:hover {
+    outline: 0;
+    border: 1px solid $blue;
+  }
+  &:active {
+    outline: 0;
+    border: 1px solid $blue;
+  }
+  &:focus {
+    outline: 0;
+    border: 1px solid $blue;
+  }
+}
+
 .editInfo {
   outline: 0;
   border-width: 0 0 1px 0;

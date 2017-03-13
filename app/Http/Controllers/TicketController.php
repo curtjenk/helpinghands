@@ -44,7 +44,17 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create-ticket');
+        $user = Auth::user();
+
+        $orgs = App\Organization::select('organizations.*')
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organizations.id', $user->organization_id);
+            })
+            ->get();
+
+        return view('ticket.create',
+            ['orgs'=>$orgs,]);
     }
 
     /**
@@ -55,7 +65,26 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $this->authorize('create-user');
+        $this->validate($request, [
+            'subject' => 'required|max:255',
+            'description' => 'string',
+            'date_start' => 'date',
+            'date_end' => 'date',
+            'organization_id' => 'required|exists:organizations,id',
+        ]);
+        $newticket = App\Ticket::create([
+            'subject'=>$request->input('subject'),
+            'description'=>$request->input('description'),
+            'date_start'=>$request->input('date_start'),
+            'date_end'=>$request->input('date_end'),
+            'user_id'=>$user->id,
+            'organization_id'=>$request->input('organization_id')
+        ]);
+        return view('ticket.show', [
+            'ticket'=>$newticket,
+        ]);
     }
 
     /**
@@ -66,7 +95,12 @@ class TicketController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = Auth::user();
+        $ticket = App\Ticket::findOrFail($id);
+        $this->authorize('show', $ticket);
+        return view('ticket.show', [
+            'ticket'=>$ticket,
+        ]);
     }
 
     /**
