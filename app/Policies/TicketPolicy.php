@@ -19,19 +19,14 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket)
     {
-        //
+        return $user->has_permission('Show ticket')&&
+        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
+    }
+    public function show(User $user, Ticket $ticket)
+    {
+        return $this->view($user, $ticket);
     }
 
-    /**
-     * Determine whether the user can create tickets.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function create(User $user)
-    {
-        //
-    }
 
     /**
      * Determine whether the user can update the ticket.
@@ -42,7 +37,8 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket)
     {
-        //
+        return $user->has_permission('Update ticket')&&
+        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
     }
 
     /**
@@ -54,6 +50,11 @@ class TicketPolicy
      */
     public function delete(User $user, Ticket $ticket)
     {
-        //
+        return $user->has_permission('Delete ticket')&&
+        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
+    }
+    public function destroy(User $user, Ticket $ticket)
+    {
+        return $this->delete($user, $ticket);
     }
 }

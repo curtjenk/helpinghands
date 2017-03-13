@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App;
+use Auth;
+use DB;
+use Log;
 
 class TicketController extends Controller
 {
@@ -22,16 +26,14 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $query=App\Ticket::with('organization')
-            ->where('role_id', '!=', 1)
-            ->where('role_id', '>=', $user->role_id)
-            ->where('users.id', '!=', $user->id)
-            ->when(!$user->is_admin(), function($q) use($user) {
+            ->when(!$user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
+            ->orderBy('tickets.date_start', 'desc')
             ->get();
 
-        return view('user.index', [
-                'users'=>$query,
+        return view('ticket.index', [
+                'tickets'=>$query,
             ]);
     }
 

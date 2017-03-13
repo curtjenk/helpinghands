@@ -63,7 +63,7 @@ class User extends Authenticatable
     {
         return DB::table('roles')
             ->where('id', $this->role_id)
-            ->whereIn('name', ['Super User', 'Admin', 'Organization Admin'])
+            ->whereIn('name', ['Super User', 'Admin'])
             ->count() > 0;
     }
 
