@@ -26,7 +26,7 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $query=App\Ticket::with('organization')
-            ->when(!$user->is_orgLevel(), function($q) use($user) {
+            ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
             ->orderBy('tickets.date_start', 'desc')
@@ -66,7 +66,7 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('create-user');
+        $this->authorize('create-ticket');
         $this->validate($request, [
             'subject' => 'required|max:255',
             'description' => 'string',
@@ -111,7 +111,18 @@ class TicketController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = Auth::user();
+        $ticket = App\Ticket::findOrFail($id);
+        $this->authorize('update', $ticket);
+        $orgs = App\Organization::select('organizations.*')
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organizations.id', $user->organization_id);
+            })
+            ->get();
+        return view('ticket.create', [
+            'ticket'=>$ticket,
+            'orgs'=>$orgs,
+        ]);
     }
 
     /**
@@ -123,7 +134,27 @@ class TicketController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = Auth::user();
+        $ticket = App\Ticket::findOrFail($id);
+        $this->authorize('update', $ticket);
+        $this->validate($request, [
+            'subject' => 'required|max:255',
+            'description' => 'string',
+            'date_start' => 'date',
+            'date_end' => 'date',
+            'organization_id' => 'required|exists:organizations,id',
+        ]);
+
+        $ticket->subject = $request->input('subject');
+        $ticket->description = $request->input('description');
+        $ticket->date_start = $request->input('date_start');
+        $ticket->date_end = $request->input('date_end');
+        $ticket->updated_by = $user->id;
+        $ticket->organization_id = $request->input('organization_id');
+        $ticket->save();
+        return view('ticket.show', [
+            'ticket'=>$ticket,
+        ]);
     }
 
     /**

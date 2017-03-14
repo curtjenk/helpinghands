@@ -23,6 +23,7 @@ class CreateTicketsTable extends Migration
             $table->date('date_start')->nullable();
             $table->date('date_end')->nullable();
             $table->date('evite_sent')->nullable();
+            $table->integer('updated_user_id')->unsigned()->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->timestamps();
         });
