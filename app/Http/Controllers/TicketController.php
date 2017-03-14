@@ -149,7 +149,7 @@ class TicketController extends Controller
         $ticket->description = $request->input('description');
         $ticket->date_start = $request->input('date_start');
         $ticket->date_end = $request->input('date_end');
-        $ticket->updated_by = $user->id;
+        $ticket->updated_user_id = $user->id;
         $ticket->organization_id = $request->input('organization_id');
         $ticket->save();
         return view('ticket.show', [
