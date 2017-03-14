@@ -15,6 +15,21 @@ class TicketController extends Controller
     {
         $this->middleware('auth');
     }
+    public function calendar()
+    {
+        $this->authorize('list-tickets');
+        $user = Auth::user();
+        $query=App\Ticket::select('subject', 'date_start', 'date_end')
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organization_id', $user->organization_id);
+            })
+            ->orderBy('tickets.date_start', 'asc')
+            ->get();
+
+            return view('ticket.calendar', [
+                    'tickets'=>$query,
+                ]);
+    }
     /**
      * Display a listing of the resource.
      *
