@@ -19,16 +19,25 @@ class TicketController extends Controller
     {
         $this->authorize('list-tickets');
         $user = Auth::user();
-        $query=App\Ticket::select('subject', 'date_start', 'date_end')
+        $query=App\Ticket::select('id', 'subject', 'date_start', 'date_end')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
             ->orderBy('tickets.date_start', 'asc')
             ->get();
 
-            return view('ticket.calendar', [
-                    'tickets'=>$query,
-                ]);
+        $counts=App\Ticket::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organization_id', $user->organization_id);
+            })
+            ->groupBy('interval')
+            ->orderBy('interval', 'asc')
+            ->get();
+
+        return view('ticket.calendar', [
+                'tickets'=>$query,
+                'counts'=>$counts
+            ]);
     }
     /**
      * Display a listing of the resource.

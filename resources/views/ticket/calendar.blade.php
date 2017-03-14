@@ -15,7 +15,30 @@
     </section>
     <input type="hidden" name="eventdates" value="{{ $tickets }}">
     <div class="container">
-    	<div id="calendar"></div>
+        <div class="col-md-2">
+            <table class="table">
+                <thead>
+                    <tr><td>Year/Month</td><td>Events</td></tr>
+                </thead>
+                <tbody>
+                    @foreach ($counts as $count)
+                        <tr>
+                            <td class="col-md-8">
+                                {{ $count->interval }}
+                            </td>
+                            <td class="col-md-4">
+                                {{ $count->num }}
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-9">
+    	    <div id="calendar"></div>
+        </div>
     </div>
 </main>
 @endsection
