@@ -15,7 +15,10 @@
     <div class="container">
         <table class="table">
             <thead>
-                <tr><td>Subject</td><td>Begin Date</td><td>End Date</td><td>Action</td></tr>
+                <tr><td>Subject</td>
+                    <td>Begin Date</td>
+                    <td>End Date</td>
+                    <td class="text-center">Action</td></tr>
             </thead>
             <tbody>
             @foreach ($tickets as $ticket)
@@ -29,9 +32,16 @@
                     <td class="col-md-2">
                         {{ $ticket->date_end}}
                     </td>
-                    <td class="col-md-2">
+                    <td class="col-md-2 text-center">
                     @can ('update', $ticket)
                         <a href="{{ url('/ticket/'.$ticket->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
+                    @endcan
+                    @can ('send-evites')
+                      @if(empty($ticket->evite_sent))
+                         <a href="{{ url('/evite/'.$ticket->id) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Send Evite" data-placement="left"><i class="fa fa-envelope"></i></a>
+                      @else
+                         <a href="#" class="btn btn-xs btn-default" data-toggle="tooltip" title="Event Sent on {{$ticket->evite_sent}}" data-placement="left"><i class="fa fa-check-square" style="color: green;"></i></a>
+                      @endif
                     @endcan
                     @can ('destroy', $ticket)
                     <span data-toggle="tooltip" title="Delete" data-placement="left" class="">

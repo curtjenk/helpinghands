@@ -47,5 +47,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('list-users', function ($user) {
             return $user->has_permission('List users');
         });
+        Gate::define('send-evites', function ($user) {
+            return $user->is_admin() || $user->is_orgAdmin();
+        });
     }
 }
