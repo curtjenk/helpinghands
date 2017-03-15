@@ -19,18 +19,12 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
-        //
+        return $user->has_permission('Show organization')&&
+        ($user->is_admin() || $user->organization_id == $organization->id);
     }
-
-    /**
-     * Determine whether the user can create organizations.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function create(User $user)
+    public function show(User $user, Organization $organization)
     {
-        //
+        return $this->view($user, $organization);
     }
 
     /**
@@ -42,7 +36,8 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        //
+        return $user->has_permission('Update organization')&&
+        ($user->is_admin() || $user->organization_id == $organization->id);
     }
 
     /**
@@ -52,8 +47,13 @@ class OrganizationPolicy
      * @param  \App\Organization  $organization
      * @return mixed
      */
-    public function delete(User $user, Organization $organization)
-    {
-        //
-    }
+     public function delete(User $user, Organization $organization)
+     {
+         return $user->has_permission('Delete organization')&&
+         ($user->is_admin() || $user->organization_id == $organization->id);
+     }
+     public function destroy(User $user, Organization $organization)
+     {
+         return $this->delete($user, $organization);
+     }
 }

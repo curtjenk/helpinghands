@@ -11,6 +11,7 @@ require('../../../node_modules/jquery-ui-bundle/jquery-ui.min.js');
 import './user';
 import './ticket';
 import './calendar';
+import './organization';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

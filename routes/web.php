@@ -25,8 +25,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('user', 'UserController');
     Route::get('user.destroy', 'UserController@destroy');
-    
+
     Route::get('administrator', 'HomeController@administrator');
 
+    Route::resource('organization', 'OrganizationController');
 
 });

@@ -189,7 +189,11 @@ class TicketController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ticket = App\Ticket::findOrFail($id);
+        $this->authorize('destroy', $ticket);
+
+        $ticket->delete();
+        return redirect('/ticket');
     }
 
 }
