@@ -16,6 +16,7 @@
         <table class="table">
             <thead>
                 <tr><td>Subject</td>
+                    <td class="text-center">Evite Sent</td>
                     <td>Begin Date</td>
                     <td>End Date</td>
                     <td class="text-center">Action</td></tr>
@@ -23,8 +24,15 @@
             <tbody>
             @foreach ($tickets as $ticket)
                 <tr>
-                    <td class="col-md-6">
+                    <td class="col-md-5">
                         <a href="{{ url('/ticket/'.$ticket->id) }}">{{ $ticket->subject }}</a>
+                    </td>
+                    <td class="col-md-2 text-center">
+                      @if(empty($ticket->evite_sent))
+                         <i class="fa fa-frown-o" style="color: red;"></i>
+                      @else
+                         <i class="fa fa-check-square" style="color: green;"></i>
+                      @endif
                     </td>
                     <td class="col-md-2">
                         {{ $ticket->date_start}}
@@ -32,16 +40,9 @@
                     <td class="col-md-2">
                         {{ $ticket->date_end}}
                     </td>
-                    <td class="col-md-2 text-center">
+                    <td class="col-md-1 text-center">
                     @can ('update', $ticket)
                         <a href="{{ url('/ticket/'.$ticket->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
-                    @endcan
-                    @can ('send-evites')
-                      @if(empty($ticket->evite_sent))
-                         <a href="{{ url('/evite/'.$ticket->id) }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Send Evite" data-placement="left"><i class="fa fa-envelope"></i></a>
-                      @else
-                         <a href="#" class="btn btn-xs btn-default" data-toggle="tooltip" title="Event Sent on {{$ticket->evite_sent}}" data-placement="left"><i class="fa fa-check-square" style="color: green;"></i></a>
-                      @endif
                     @endcan
                     @can ('destroy', $ticket)
                     <span data-toggle="tooltip" title="Delete" data-placement="left" class="">
