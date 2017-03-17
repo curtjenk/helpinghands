@@ -17,7 +17,7 @@ class CreateResponsesTable extends Migration
             $table->increments('id');
             $table->integer('ticket_id');
             $table->integer('user_id');
-            $table->boolean('helping');
+            $table->boolean('helping')->nullable();
             $table->string('token')->nullable();
             $table->timestamps();
         });

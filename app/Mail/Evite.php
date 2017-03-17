@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App;
+use DB;
 
 class Evite extends Mailable
 {
@@ -38,12 +39,18 @@ class Evite extends Mailable
      */
     public function build()
     {
-        echo "\n email subject=".$this->ticket->subject;
+        echo "\n email subject=".$this->ticket->subject."\n";
+        $response = \App\Response::create([
+            'user_id'=>$this->user->id,
+            'ticket_id'=>$this->ticket->id,
+            'token'=>\App\Response::generateToken()
+        ]);
         return $this->subject($this->ticket->subject)
             ->view('emails.evite.invite')
             ->with([
                 'ticket'=>$this->ticket,
-                'user'=>$this->user
+                'user'=>$this->user,
+                'token'=>$response->token,
             ]);
     }
 }

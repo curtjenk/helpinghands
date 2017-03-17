@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 use App\Mail\Evite;
 use Auth;
 use App;
@@ -28,20 +29,20 @@ class EviteController extends Controller
             })
             ->whereNull('responses.user_id')
             ->where('users.role_id', '!=', 1)
+            ->where('users.organization_id', $ticket->organization_id)
             ->get();
-
 
         $cnt=0;
         foreach($helpers as $helper)
         {
             ++$cnt;
             Mail::to($helper)->queue(new Evite($ticket, $helper));
-            echo "\n".$helper->name;
+        }
+        if ($helpers->count() > 0) {
+            $ticket->evite_sent = Carbon::now();
+            $ticket->save();
         }
 
-        $ticket->evite_sent = Carbon::now();
-        $ticket->save();
-        
         return view('ticket.show', [
             'ticket'=>$ticket,
             'num_evites'=>$cnt,
