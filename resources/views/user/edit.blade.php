@@ -86,6 +86,43 @@
                 </div>
             </div>
             <hr />
+            {{-- {{ var_dump($user) }} --}}
+            <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">
+                <label class="control-label col-md-4 text-right">Receive Evites</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="opt_receive_evite"
+                        {{ $user->opt_receive_evite==true ? ' checked' : ''}}
+                        data-size="mini">
+                    @if ($errors->has('opt_receive_evite'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('opt_receive_evite') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('opt_show_mobilephone') ? ' has-error' : '' }}">
+                <label class="control-label col-md-4 text-right">Show Mobile Phone</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="opt_show_mobilephone" {{ $user->opt_show_mobilephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
+                    @if ($errors->has('opt_show_mobilephone'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('opt_show_mobilephone') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('opt_show_homephone') ? ' has-error' : '' }}">
+                <label class="control-label col-md-4 text-right">Show Home Phone</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="opt_show_homephone" {{ $user->opt_show_homephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
+                    @if ($errors->has('opt_show_homephone'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('opt_show_homephone') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <hr />
             <div class="block text-center">
                 <a class="btn btn-default" href="{{ Request::header('referer') }}">
                     <i class="fa fa-btn fa-times"></i> Cancel
@@ -97,4 +134,5 @@
         </form>
     </div>
 </main>
+
 @endsection

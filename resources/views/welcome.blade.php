@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content" style="margin-top: 40px">
+    <div class="content" style="margin-top: 70px">
         <div class="title m-b-md">
             Legacy Builders
         </div>

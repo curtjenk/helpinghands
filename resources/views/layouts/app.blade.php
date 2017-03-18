@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/gsdk.css') }}" rel="stylesheet"> --}}
 
     <!-- Scripts -->
     <script>
@@ -22,7 +23,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
 
@@ -74,7 +75,7 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ url('/settings') }}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
+                                    <li><a href="{{ url('/user/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
                                     @if (Auth::user()->is_admin())
                                     <li><a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
                                     @endif

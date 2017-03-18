@@ -12,6 +12,7 @@ import './user';
 import './ticket';
 import './calendar';
 import './organization';
+import './bswitch';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

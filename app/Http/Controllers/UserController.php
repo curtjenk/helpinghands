@@ -136,6 +136,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //dump($request->all());
         $this->validate($request, [
             'name' => 'required|max:255|min:5',
             'mobilephone' => 'max:255',
@@ -152,6 +153,9 @@ class UserController extends Controller
         $user->homephone = $request->input('homephone');
         $user->organization_id = $request->input('org_id');
         $user->role_id = $request->input('role_id');
+        $user->opt_receive_evite = $request->has('opt_receive_evite') ? true : false;
+        $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
+        $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
         $user->save();
         return redirect('/user/'.$id);
     }

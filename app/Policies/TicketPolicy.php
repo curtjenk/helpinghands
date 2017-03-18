@@ -38,7 +38,7 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket)
     {
         return $user->has_permission('Update ticket')&&
-        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
+        ($user->is_admin() || $user->organization_id == $ticket->organization_id);
     }
 
     /**
