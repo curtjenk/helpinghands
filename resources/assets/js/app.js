@@ -6,7 +6,6 @@
  */
 
 require('./bootstrap');
-require('../../../node_modules/jquery-ui-bundle/jquery-ui.min.js');
 
 import './user';
 import './ticket';

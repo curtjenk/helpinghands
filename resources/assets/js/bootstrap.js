@@ -11,7 +11,8 @@ window.$ = window.jQuery = require('jquery');
 
 require('bootstrap-sass');
 require('bootstrap-switch');
-require('jquery-ui');
+require('fullcalendar');
+require('jquery-ui-bundle');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
