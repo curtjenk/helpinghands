@@ -44,9 +44,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        @if (Auth::user())
+                        {{-- @if (Auth::user())
                         <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                        @endif
+                        @endif --}}
                         @can ('list-tickets')
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -56,7 +56,9 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/ticket/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
                                 <li><a href="{{ url('/ticket') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
-                                {{-- <li><a href="{{ url('/ticket') }}"><i class="fa fa-cog fa-plus"></i>  Manage Events</a></li> --}}
+                            @can ('create-ticket')
+                                <li><a href="{{ url('/ticket/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
+                            @endcan
                             </ul>
                         </li>
                         @endcan
