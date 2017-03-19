@@ -20,7 +20,7 @@ class TicketPolicy
     public function view(User $user, Ticket $ticket)
     {
         return $user->has_permission('Show ticket')&&
-        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
+        ($user->is_admin() || $user->organization_id == $ticket->organization_id);
     }
     public function show(User $user, Ticket $ticket)
     {
