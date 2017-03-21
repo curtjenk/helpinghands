@@ -54,7 +54,7 @@
                         <a href="{{ url('/ticket/'.$ticket->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
                     @endcan
                     @can ('destroy', $ticket)
-                    <span data-toggle="tooltip" title="Delete" data-placement="left" class="">
+                    <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
                       <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteTicket" data-id="{{ $ticket->id }}" data-name="{{ $ticket->subject}}" name="delete_{{ $ticket->id }}">
                           <i class="fa fa-trash"></i>
                       </a>
