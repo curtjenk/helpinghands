@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App;
 use Auth;
 use DB;
@@ -15,6 +16,10 @@ class TicketController extends Controller
     {
         $this->middleware('auth');
     }
+    
+    /*
+
+     */
     public function calendar()
     {
         $this->authorize('list-tickets');
@@ -30,8 +35,10 @@ class TicketController extends Controller
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
+            ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->format('Ym')."'")
             ->groupBy('interval')
             ->orderBy('interval', 'asc')
+            ->limit(3)
             ->get();
 
         return view('ticket.calendar', [

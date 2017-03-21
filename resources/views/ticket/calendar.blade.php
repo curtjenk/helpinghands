@@ -16,6 +16,9 @@
     <input type="hidden" name="eventdates" value="{{ $tickets }}">
     <div class="container">
         <div class="col-md-2">
+            <p class="text-center">
+                Three Month Preview
+            </p>
             <table class="table">
                 <thead>
                     <tr><td>Year/Month</td><td>Events</td></tr>
