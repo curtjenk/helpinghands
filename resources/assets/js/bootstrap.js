@@ -9,10 +9,20 @@ window._ = require('lodash');
 
 window.$ = window.jQuery = require('jquery');
 
+require('jquery-ui-bundle');
 require('bootstrap-sass');
 require('bootstrap-switch');
 require('fullcalendar');
-require('jquery-ui-bundle');
+
+
+// Confirm we're loading correctly.
+// jquery ui and bootstrap tooltip conflict if jquery ui comes AFTER bootstrap-sass
+// Prefer bootstrap tooltip
+$( document ).ready(function() {
+    // console.log($.fn.tooltip);
+    // console.log($.fn.tooltip.Constructor.VERSION);
+});
+
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces

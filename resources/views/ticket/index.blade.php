@@ -16,18 +16,27 @@
         <table class="table">
             <thead>
                 <tr><td>Subject</td>
-                    <td class="text-center">Evite Sent</td>
-                    <td>Begin Date</td>
-                    <td>End Date</td>
-                    <td class="text-center">Action</td></tr>
+                    <td>Description</td>
+                    <td class="text-center">Evite?</td>
+                    <td>Begin</td>
+                    <td>End</td>
+                    <td class="text-center">Action</td>
+                </tr>
             </thead>
             <tbody>
             @foreach ($tickets as $ticket)
                 <tr>
-                    <td class="col-md-5">
-                        <a href="{{ url('/ticket/'.$ticket->id) }}">{{ $ticket->subject }}</a>
+                    <td class="col-md-3">
+                      <span data-toggle="tooltip" title="<i>{{ $ticket->subject }}</i>" data-html="true">
+                        <a href="{{ url('/ticket/'.$ticket->id) }}">{{ str_limit($ticket->subject, 35) }}</a>
+                      </span>
                     </td>
-                    <td class="col-md-2 text-center">
+                    <td class="col-md-3">
+                      <span data-toggle="tooltip" title="<i>{{ $ticket->description }}</i>" data-html="true">
+                        <a href="{{ url('/ticket/'.$ticket->id) }}">{{ str_limit($ticket->description, 35) }}</a>
+                      </span>
+                    </td>
+                    <td class="col-md-1 text-center">
                       @if(empty($ticket->evite_sent))
                          <i class="fa fa-frown-o" style="color: red;"></i>
                       @else
@@ -38,7 +47,7 @@
                         {{ $ticket->date_start}}
                     </td>
                     <td class="col-md-2">
-                        {{ $ticket->date_end}}
+                        {{ $ticket->date_end }}
                     </td>
                     <td class="col-md-1 text-center">
                     @can ('update', $ticket)
