@@ -23,7 +23,7 @@ class Response extends Model
      */
     static public function generateToken()
     {
-        $token = str_random(10);
+        $token = str_random(30);
         if (App\Response::where('token', $token)->first()){
             generateToken();
         }

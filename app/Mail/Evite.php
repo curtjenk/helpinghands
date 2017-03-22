@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App;
 use DB;
+use Log;
 
 class Evite extends Mailable
 {
@@ -39,7 +40,7 @@ class Evite extends Mailable
      */
     public function build()
     {
-        echo "\n email subject=".$this->ticket->subject."\n";
+        Log::debug("ticket:".$this->ticket->id." to: ". $this->user->name. " email: " . $this->user->email);
         $response = \App\Response::create([
             'user_id'=>$this->user->id,
             'ticket_id'=>$this->ticket->id,

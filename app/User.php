@@ -30,6 +30,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function responses()
+    {
+        return $this->hasMany('App\Response');
+    }
     /**
      * Get the Organization for this user.
      */

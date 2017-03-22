@@ -14,8 +14,10 @@
                 <a class="btn btn-default" href="{{ url('/ticket/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
                 @can ('send-evites')
-                    @if(empty($ticket->evite_sent))
-                    <a class="btn btn-default" href="{{ url('/evite/'.$ticket->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
+                    @if($ticket->evite_sent)
+                      <a class="btn btn-warning" href="{{ url('/evite/'.$ticket->id) }}"><i class="fa fa-mail-forward"></i> Resend Evite</a>
+                    @else
+                      <a class="btn btn-default" href="{{ url('/evite/'.$ticket->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
                     @endif
                 @endcan
             </div>

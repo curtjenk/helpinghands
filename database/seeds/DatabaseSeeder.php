@@ -20,9 +20,10 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('users')->insert([
             'name' => 'Legacy Builder',
-            'email' => 'curtjenk@gmail.com',
-            'password' => bcrypt('Cornerstone111'),
+            'email' => 'curtjenk@comcast.net',
+            'password' => bcrypt('abc123'),
             'organization_id' => $org1,
+            'opt_receive_evite' => false,
             'role_id' => App\Role::where('name', 'Super User')->pluck('id')->first(),
         ]);
         //Add other test users;
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'tadmin@helpinghands.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
+            'opt_receive_evite' => false,
             'role_id' => App\Role::where('name', 'Admin')->pluck('id')->first(),
         ]);
         DB::table('users')->insertGetId([
@@ -39,13 +41,15 @@ class DatabaseSeeder extends Seeder
             'email' => 'torgadmin@helpinghands.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
+            'opt_receive_evite' => false,
             'role_id' => App\Role::where('name', 'Organization Admin')->pluck('id')->first(),
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org User',
-            'email' => 'torguser@helpinghands.com',
+            'email' => 'curtjenk@gmail.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
+            'opt_receive_evite' => false,
             'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),
         ]);
         $org2 = DB::table('organizations')->insertGetId([
