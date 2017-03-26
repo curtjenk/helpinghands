@@ -12,17 +12,17 @@
   },
   "devDependencies": {
     "axios": "^0.15.3",
-
     "laravel-mix": "^0.8.3",
     "lodash": "^4.17.4",
     "vue": "^2.1.10"
   },
   "dependencies": {
-    "jquery": "^3.1.1",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-switch": "^3.3.4",
     "font-awesome": "^4.7.0",
     "fullcalendar": "^3.2.0",
-    "jquery-ui-bundle": "^1.11.4"
+    "jquery": "^3.1.1",
+    "jquery-ui-bundle": "^1.11.4",
+    "vue-tables-2": "^0.4.60"
   }
 }
