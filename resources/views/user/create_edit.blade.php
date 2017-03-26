@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left header">{{ isset($user) ? 'Update' : 'Create' }} User</div>
+            <div class="pull-left header">{{ isset($user) ? 'Update' : 'Create' }} Profile</div>
         </div>
     </section>
     <div class="container">
@@ -24,6 +24,17 @@
                     @if ($errors->has('name'))
                         <span class="help-block">
                             <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('nickname') ? ' has-error' : '' }}">
+                <label for="nickname" class="col-md-4 control-label">Nick Name</label>
+                <div class="col-md-8">
+                    <input id="nickname" type="text" class="editInfo" name="nickname" maxlength="255" value="{{ isset($user) ? $user->nickname : old('nickname') }}">
+                    @if ($errors->has('nickname'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('nickname') }}</strong>
                         </span>
                     @endif
                 </div>

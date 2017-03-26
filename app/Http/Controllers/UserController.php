@@ -27,7 +27,8 @@ class UserController extends Controller
             [ ]
         );
         Log::debug($inputs->all());
-        return App\User::with('organization')->select('users.*', 'users.name as nickname')
+        return App\User::with('organization')
+            ->select('users.*', 'users.name as nickname')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)
@@ -86,7 +87,7 @@ class UserController extends Controller
             })
             ->get();
 
-        return view('user.create',
+        return view('user.create_edit',
             ['orgs'=>$orgs,
              'roles'=>$roles]);
     }
@@ -103,6 +104,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|max:255',
+            'nickname' => 'max:255',
             'mobilephone' => 'max:255',
             'homephone' => 'max:255',
             'organization_id' => 'required|exists:organizations,id',
@@ -111,6 +113,7 @@ class UserController extends Controller
         $newuser = App\User::create([
             'name'=>$request->input('name'),
             'email'=>$request->input('email'),
+            'nickname'=>$request->input('nickname'),
             'mobilephone'=>$request->input('mobilephone'),
             'homephone'=>$request->input('homephone'),
             'organization_id'=>$request->input('organization_id'),
@@ -120,7 +123,6 @@ class UserController extends Controller
             'user'=>$newuser,
         ]);
     }
-
     /**
      * Display the specified resource.
      *
@@ -136,7 +138,6 @@ class UserController extends Controller
             'user'=>$user,
         ]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -157,7 +158,7 @@ class UserController extends Controller
             })
             ->get();
 
-        return view('user.edit', [
+        return view('user.create_edit', [
             'user'=>$user,
             'roles'=>$roles,
             'orgs'=>$orgs
@@ -176,6 +177,7 @@ class UserController extends Controller
         //dump($request->all());
         $this->validate($request, [
             'name' => 'required|max:255|min:5',
+            'nickname' => 'max:255',
             'mobilephone' => 'max:255',
             'homephone' => 'max:255',
             'org_id' => 'required|exists:organizations,id',
@@ -186,6 +188,7 @@ class UserController extends Controller
         $self = Auth::user();
         $this->authorize('update', $user);
         $user->name = $request->input('name');
+        $user->nickname = $request->input('nickname');
         $user->mobilephone = $request->input('mobilephone');
         $user->homephone = $request->input('homephone');
         $user->organization_id = $request->input('org_id');

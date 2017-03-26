@@ -36,7 +36,7 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import DetailRow from './DetailRow'
-import FilterBar from './FilterBar'
+import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
 Vue.component('custom-actions', CustomActions)
@@ -58,11 +58,11 @@ export default {
           titleClass: 'text-right',
           dataClass: 'text-right'
         },
-        {
-          name: '__checkbox',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-        },
+        // {
+        //   name: '__checkbox',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        // },
         {
           name: 'name',
           sortField: 'name',
@@ -71,38 +71,31 @@ export default {
           name: 'email',
           sortField: 'email'
         },
-        {
-          name: 'birthdate',
-          sortField: 'birthdate',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatDate|DD-MM-YYYY'
-        },
+        // {
+        //   name: 'birthdate',
+        //   sortField: 'birthdate',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   callback: 'formatDate|DD-MM-YYYY'
+        // },
         {
           name: 'nickname',
           sortField: 'nickname',
           callback: 'allcap'
         },
-        {
-          name: 'gender',
-          sortField: 'gender',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'genderLabel'
-        },
-        {
-          name: 'salary',
-          sortField: 'salary',
-          titleClass: 'text-center',
-          dataClass: 'text-right',
-          callback: 'formatNumber'
-        },
-        {
-          name: '__component:custom-actions',
-          title: 'Actions',
-          titleClass: 'text-center',
-          dataClass: 'text-center'
-        }
+        // {
+        //   name: 'salary',
+        //   sortField: 'salary',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-right',
+        //   callback: 'formatNumber'
+        // },
+        // {
+        //   name: '__component:custom-actions',
+        //   title: 'Actions',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center'
+        // }
       ],
       css: {
         table: {

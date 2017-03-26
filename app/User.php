@@ -68,7 +68,15 @@ class User extends Authenticatable
     {
         return DB::table('roles')
             ->where('id', $this->role_id)
-            ->whereIn('name', ['Super User', 'Admin'])
+            ->whereIn('name', ['Admin'])
+            ->count() > 0;
+    }
+
+    public function is_superuser()
+    {
+        return DB::table('roles')
+            ->where('id', $this->role_id)
+            ->whereIn('name', ['Super User'])
             ->count() > 0;
     }
 

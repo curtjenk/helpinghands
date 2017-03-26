@@ -20,7 +20,7 @@ import './bs_common';
  */
 
 Vue.component('example', require('./components/Example.vue'));
-Vue.component('memberslist', require('./components/MyVuetable.vue'));
+Vue.component('memberslist', require('./components/MembersList/MyVuetable.vue'));
 
 const app = new Vue({
     el: '#app'

@@ -17,9 +17,9 @@
         <div class="col-md-6">
             <div class="form-horizontal">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
+                    {{-- <div class="panel-heading">
                         <h4>User Information</h4>
-                    </div>
+                    </div> --}}
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="email" class="col-md-4 control-label">Email</label>
@@ -31,6 +31,12 @@
                             <label for="name" class="col-md-4 control-label">Name</label>
                             <div class="col-md-8">
                                 <p id="name" class="form-control-static">{{ $user->name }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-md-4 control-label">Nick Name</label>
+                            <div class="col-md-8">
+                                <p id="name" class="form-control-static">{{ $user->nickname }}</p>
                             </div>
                         </div>
                         <div class="form-group">

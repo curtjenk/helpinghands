@@ -9,6 +9,7 @@ use App\Mail\Evite;
 use Auth;
 use App;
 use DB;
+use Log;
 
 class EviteController extends Controller
 {
@@ -58,12 +59,12 @@ class EviteController extends Controller
         $user = Auth::user();
         $ticket = App\Ticket::findOrFail($ticket_id);
         $this->authorize('send-evites');
-
+        Log::debug("send evites authorized=yes");
         $helpers = App\User::where('users.opt_receive_evite', true)
             ->where('users.role_id', '!=', 1)
             ->where('users.organization_id', $ticket->organization_id)
             ->get();
-
+        Log::debug("num potential hepers = count($helpers) ");
         $cnt=0;
         foreach($helpers as $helper)
         {
@@ -85,7 +86,7 @@ class EviteController extends Controller
             $ticket->evite_sent = Carbon::now();
             $ticket->save();
         }
-
+        Log::debug("num evites = $cnt");
         return view('ticket.show', [
             'ticket'=>$ticket,
             'num_evites'=>$cnt,

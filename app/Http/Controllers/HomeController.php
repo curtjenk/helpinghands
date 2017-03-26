@@ -36,7 +36,7 @@ class HomeController extends Controller
 
     public function administrator() {
         $user = Auth::user();
-        if (!$user->is_admin()) {
+        if (!$user->is_admin() && !$user->is_superuser()) {
             abort(403);
         }
         return view('administrator', ['user'=>$user]);

@@ -51,7 +51,7 @@ class TicketPolicy
     public function delete(User $user, Ticket $ticket)
     {
         return $user->has_permission('Delete ticket')&&
-        ($user->is_admin() || $user->organization_id == $tcket->organization_id);
+        ($user->is_admin() || $user->organization_id == $ticket->organization_id);
     }
     public function destroy(User $user, Ticket $ticket)
     {

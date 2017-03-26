@@ -12,14 +12,14 @@
       <label>Nickname: </label>
       <span>{{rowData.nickname}}</span>
     </div>
-    <div class="inline field">
+    <!-- <div class="inline field">
       <label>Birthdate: </label>
       <span>{{rowData.birthdate}}</span>
     </div>
     <div class="inline field">
       <label>Gender: </label>
       <span>{{rowData.gender}}</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
