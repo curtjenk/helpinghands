@@ -47,7 +47,12 @@
                         {{-- @if (Auth::user())
                         <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                         @endif --}}
-                        @can ('list-tickets')
+                    @if (Auth::user())
+                        <li>
+                            <a href="{{ url('/user/members') }}">Members</a>
+                        </li>
+                    @endif
+                    @can ('list-tickets')
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Service/Events <span class="caret"></span>
@@ -61,7 +66,7 @@
                             @endcan
                             </ul>
                         </li>
-                        @endcan
+                    @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->

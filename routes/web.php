@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ticket/calendar', 'TicketController@calendar');
     Route::resource('ticket', 'TicketController');
 
+    Route::get('user/members', 'UserController@members');
     Route::resource('user', 'UserController');
     Route::get('user.destroy', 'UserController@destroy');
 

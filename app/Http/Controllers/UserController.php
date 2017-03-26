@@ -3,11 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Common\Inputs;
 use App;
 use Auth;
+use Log;
 
 class UserController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function members(Request $request)
+    {
+        $this->authorize('list-users');
+        $user = Auth::user();
+        if (!$request->ajax()) {
+            return view('user.memberslist', []);
+        }
+        Log::debug('here1');
+        $inputs = new Inputs($request,
+            ['orderby'=>'name',
+             'direction'=>'asc',
+             ]
+        );
+        Log::debug('here2');
+        $query=App\User::with('organization')
+            ->where('role_id', '!=', 1)
+            ->where('role_id', '>=', $user->role_id)
+            ->where('users.id', '!=', $user->id)
+            ->when($user->is_orgLevel(), function($q) use($user) {
+                return $q->where('organization_id', $user->organization_id);
+            })->get();
+        Log::debug('here3');
+        Log::debug($query->count());
+        return response()->json($query);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +64,6 @@ class UserController extends Controller
                 'users'=>$query,
             ]);
     }
-
     /**
      * Show the form for creating a new resource.
      *
