@@ -6,6 +6,13 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
+## Notes:
+- Run CREATE EXTENSION citext; at the psql prompt
+- Run at the psql prompt
+    - alter table users alter column name type citext;
+    - alter table users alter column email type citext;
+    - alter table users alter column nickname type citext;
+
 
 ## About Laravel
 

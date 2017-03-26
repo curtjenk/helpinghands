@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('nickname');
+            $table->string('nickname')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('mobilephone',64)->nullable();
@@ -32,6 +32,8 @@ class CreateUsersTable extends Migration
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('organization_id')->references('id')->on('organizations');
         });
+
+        DB::query("ALTER TABLE users ALTER COLUMN name TYPE CITEXT");
     }
 
     /**
