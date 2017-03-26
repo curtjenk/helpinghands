@@ -2,7 +2,7 @@
   <div>
     <filter-bar></filter-bar>
     <vuetable ref="vuetable"
-      api-url="http://vuetable.ratiw.net/api/users"
+      api-url="/user/members"
       :fields="fields"
       pagination-path=""
       :css="css.table"

@@ -22,23 +22,28 @@ class UserController extends Controller
         if (!$request->ajax()) {
             return view('user.memberslist', []);
         }
-        Log::debug('here1');
+
         $inputs = new Inputs($request,
-            ['orderby'=>'name',
-             'direction'=>'asc',
-             ]
+            [ ]
         );
-        Log::debug('here2');
-        $query=App\User::with('organization')
+        Log::debug($inputs->all());
+        return App\User::with('organization')->select('users.*', 'users.name as nickname')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
-            })->get();
-        Log::debug('here3');
-        Log::debug($query->count());
-        return response()->json($query);
+            })
+            ->when($inputs->filter, function($q) use($inputs){
+                return $q->where(function($q2) use($inputs) {
+                    $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
+                    ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
+                });
+            })
+            ->when($inputs->sort, function($q) use($inputs){
+                return $q->orderby($inputs->sort, $inputs->direction);
+            })
+            ->paginate(10);
     }
 
     /**

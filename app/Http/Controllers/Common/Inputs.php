@@ -8,8 +8,8 @@ use Log;
 
 class Inputs
 {
-    public $filterby;
-    public $orderby;
+    public $filter;
+    public $sort;
     public $direction;
     public $limit;
     public $skip;
@@ -17,8 +17,10 @@ class Inputs
     public $hasExportInvalid;
     public $from;
     public $until;
+    private $request;
     public function __construct(Request $request, $defaults = [])
     {
+        $this->request = $request;
         // from-until filter for provider's screens
         if ($request->exists('from')) {
             if ($request->input('from') == '') {
@@ -47,11 +49,17 @@ class Inputs
         $this->hasExportCsv = false;
         $this->hasExport = false;
         $this->hasExportInvalid = false;
-        $this->filterby = $request->input('filterby');
-        $this->filterby = str_replace('*', '%', $this->filterby);
-        $this->filterby = str_replace('?', '_', $this->filterby);
-        $this->orderby = $request->input('orderby');
-        $this->direction = $request->input('direction');
+        $this->filter = $request->input('filter');
+        $this->filter = str_replace('*', '%', $this->filter);
+        $this->filter = str_replace('?', '_', $this->filter);
+        $temp = explode('|', $request->input('sort'));
+        if (count($temp)==2) {
+            $this->sort = $temp[0];
+            $this->direction = $temp[1];
+        } else {
+            $this->sort = $request->input('sort');
+            $this->direction = $request->input('direction');
+        }
         $this->limit = $request->input(
                 'limit', config('app.default_table_rows_limit'));
         $this->skip = $request->input('skip', 0);
@@ -68,12 +76,12 @@ class Inputs
         //apply Defaults
         if (count($defaults) > 0) {
             foreach($defaults as $key => $value) {
-                if ($key == 'orderby' && empty($this->orderby)) {
-                    $this->orderby = $value;
+                if ($key == 'sort' && empty($this->sort)) {
+                    $this->sort = $value;
                 } else if ($key == 'direction' && empty($this->direction)) {
                     $this->direction = $value;
-                } else if ($key == 'filterby' && empty($this->filterby)) {
-                    $this->filterby = $value;
+                } else if ($key == 'filter' && empty($this->filter)) {
+                    $this->filter = $value;
                 } else if ($key == 'skip' && empty($this->skip)) {
                     $this->skip = $value;
                 }
@@ -85,4 +93,9 @@ class Inputs
     {
         session()->forget(['from','until']);
     }
+    public function all()
+    {
+        return $this->request->all();
+    }
+
 }
