@@ -49,7 +49,7 @@
                         @endif --}}
                     @if (Auth::user())
                         <li>
-                            <a href="{{ url('/user/members') }}">Members</a>
+                            <a href="{{ url('/members') }}">Members</a>
                         </li>
                     @endif
                     @can ('list-tickets')

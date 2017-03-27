@@ -16,6 +16,10 @@ class Response extends Model
         'ticket_id', 'user_id', 'helping', 'token',
     ];
 
+    public function ticket()
+    {
+        return $this->belongsTo('App\Ticket');
+    }
     /**
      * Generate a token to send in emails.  If dupe token
      * call recusively.

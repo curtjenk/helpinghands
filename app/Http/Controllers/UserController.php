@@ -10,6 +10,27 @@ use Log;
 
 class UserController extends Controller
 {
+    public function member_yes($id)
+    {
+        $user = Auth::user();
+        $member = App\User::findOrFail($id);
+        $this->authorize('show',$member);
+        $responses = $member->responses()
+        ->select("tickets.subject", 'tickets.date_start', 'tickets.date_end')
+        ->join('tickets', 'tickets.id', '=', 'responses.ticket_id')
+        ->where('responses.helping', true)
+        ->get();
+
+        // $responses = App\User::
+        //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
+        //     ->leftjoin('tickets', 'tickets.id', '=', 'responses.ticket_id')
+        //     ->groupby('users.id')
+        //     ->groupby('responses.id')
+        //     ->groupby('tickets.id')
+        //     ->paginate(10);
+
+        return response()->json($responses);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +49,7 @@ class UserController extends Controller
         );
         Log::debug($inputs->all());
         return App\User::with('organization')
-            ->select('users.*', 'users.name as nickname')
+            ->select('users.*')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)

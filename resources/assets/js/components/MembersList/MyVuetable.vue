@@ -2,7 +2,7 @@
   <div>
     <filter-bar></filter-bar>
     <vuetable ref="vuetable"
-      api-url="/user/members"
+      api-url="/members"
       :fields="fields"
       pagination-path=""
       :css="css.table"
@@ -125,13 +125,13 @@ export default {
   },
   methods: {
     allcap (value) {
-      return value.toUpperCase()
+      return value==null ? '' : value.toUpperCase()
     },
-    genderLabel (value) {
-      return value === 'M'
-        ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-        : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-    },
+    // genderLabel (value) {
+    //   return value === 'M'
+    //     ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
+    //     : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    // },
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
     },
@@ -148,8 +148,20 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked (data, field, event) {
-      console.log('cellClicked: ', field.name)
-      this.$refs.vuetable.toggleDetailRow(data.id)
+    //   console.log('cellClicked: ', field.name)
+
+      if ($('#'+data.id).length == 0) {
+        axios.get('/member/' + data.id )
+        .then(  (response) => {
+          console.log(response.data);
+          data.events = response.data;
+          this.$refs.vuetable.toggleDetailRow(data.id)
+        }).catch((error) => {
+
+        });
+      } else {
+        this.$refs.vuetable.toggleDetailRow(data.id)
+      }
     },
   },
   events: {
