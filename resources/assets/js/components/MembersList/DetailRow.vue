@@ -21,11 +21,11 @@
     </div>
     <div class="col-md-6" id="scrollarea-invalid">
         <div id="scrollarea-content">
-            <ul id="">
+            <ol id="">
               <li v-for="item in rowData.events">
                 {{ item.subject }}
               </li>
-            </ul>
+           </ol>
         </div>
     </div>
   </div>
