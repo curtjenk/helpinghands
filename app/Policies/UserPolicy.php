@@ -41,7 +41,9 @@ class UserPolicy
     public function show(User $self, User $user)
     {
         return $self->has_permission('Show user')&&
-        ($self->is_admin() || $self->organization_id == $user->organization_id);
+        ($self->is_admin() ||
+         $self->is_superuser() ||
+         $self->organization_id == $user->organization_id);
     }
 
     /**

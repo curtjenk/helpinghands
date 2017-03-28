@@ -66,6 +66,7 @@ export default {
         {
           name: 'name',
           sortField: 'name',
+          dataClass: 'text-primary'
         },
         {
           name: 'email',

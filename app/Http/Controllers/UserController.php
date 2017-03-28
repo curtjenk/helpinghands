@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $member = App\User::findOrFail($id);
-        $this->authorize('show',$member);
+        $this->authorize('show', $member);
         $responses = $member->responses()
         ->select("tickets.subject", 'tickets.date_start', 'tickets.date_end')
         ->join('tickets', 'tickets.id', '=', 'responses.ticket_id')

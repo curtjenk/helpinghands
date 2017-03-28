@@ -83,9 +83,9 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ url('/user/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
-                                    @if (Auth::user()->is_admin() || Auth::user()->is_superuser())
+                                    @can ('administer')
                                     <li><a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
-                                    @endif
+                                    @endcan
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();

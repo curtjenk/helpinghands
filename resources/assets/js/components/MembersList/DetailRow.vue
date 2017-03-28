@@ -15,11 +15,22 @@
         </div>
     </div>
     <div class="col-md-3">
-        <p>
-            Attended {{ rowData.events.length }} Events
-        </p>
+        <div v-if="rowData.opt_show_mobilephone" class="inline field">
+          <label>Mobile: </label>
+          <span>{{rowData.mobilephone}}</span>
+        </div>
+        <div v-if="rowData.opt_show_homephone" class="inline field">
+          <label>Home: </label>
+
+          <span>{{rowData.homephone}}</span>
+        </div>
     </div>
-    <div class="col-md-6" id="scrollarea-invalid">
+    <div class="col-md-2">
+        <h5 class="">
+            Attended {{ rowData.events.length }} Event(s)
+        </h5>
+    </div>
+    <div class="col-md-4" id="scrollarea-invalid">
         <div id="scrollarea-content">
             <ol id="">
               <li v-for="item in rowData.events">
@@ -57,6 +68,7 @@ export default {
     overflow-x:hidden;
 }
 #scrollarea-invalid {
+    padding-left: 0;
     overflow-y: scroll;
     overflow-x:hidden;
     height: 50px;
