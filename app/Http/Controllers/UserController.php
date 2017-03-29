@@ -47,7 +47,7 @@ class UserController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-        Log::debug($inputs->all());
+        //Log::debug($inputs->all());
         return App\User::with('organization')
             ->select('users.*')
             ->where('role_id', '!=', 1)

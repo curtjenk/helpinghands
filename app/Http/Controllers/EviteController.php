@@ -20,25 +20,44 @@ class EviteController extends Controller
      */
     public function response_yes($ticket_id, $user_id, $token)
     {
-
+        $user = App\User::findOrFail($user_id);
+        $ticket = App\Ticket::findOrFail($ticket_id);
         $resp = $this->getResponseModel($ticket_id, $user_id, $token);
-        if(!$resp || $resp->helping) {
+        if(!$resp) {
             abort(400);
+        }
+        if ($resp->helping != null) {
+            //already responded
+            return;
         }
         $resp->helping = true;
         $resp->save();
-        return response()->json(["yes"=>$token]);
+        Log::debug('response_yes: send confirmation email');
+        Mail::to($user)->queue(new Evite($ticket, $user, $resp));
+        return view('emails.evite.confirm_yes',
+            ['ticket'=>$ticket,
+             'user'=>$user]);
     }
 
     public function response_no($ticket_id, $user_id, $token)
     {
+        $user = App\User::findOrFail($user_id);
+        $ticket = App\Ticket::findOrFail($ticket_id);
         $resp = $this->getResponseModel($ticket_id, $user_id, $token);
-        if(!$resp || $resp->helping) {
+        if(!$resp) {
             abort(400);
+        }
+        if ($resp->helping != null) {
+            //already responded
+            return;
         }
         $resp->helping = false;
         $resp->save();
-        return response()->json(["no"=>$token]);
+        Log::debug('response_no: send confirmation email');
+        Mail::to($user)->queue(new Evite($ticket, $user, $resp));
+        return view('emails.evite.confirm_no',
+            ['ticket'=>$ticket,
+             'user'=>$user]);
     }
 
     private function getResponseModel($ticket_id, $user_id, $token)

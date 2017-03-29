@@ -13,7 +13,7 @@
     <p>
         <a href="{{ url('/api/evite/o/'.$ticket->id."/".$user->id."/".$token) }}">Sorry, not this time</a>
     </p>
-    <h4>Event Description</h4>
+    <h4><u>Event Description</u></h4>
     <p>
         {{ $ticket->description }}
     </p>
