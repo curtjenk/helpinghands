@@ -10,7 +10,7 @@ use Log;
 
 class UserController extends Controller
 {
-    public function member_yes($id)
+    public function yes_responses($id)
     {
         $user = Auth::user();
         $member = App\User::findOrFail($id);

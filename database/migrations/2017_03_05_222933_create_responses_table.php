@@ -21,8 +21,13 @@ class CreateResponsesTable extends Migration
             $table->string('token')->nullable();
             $table->timestamps();
 
-            $table->foreign('ticket_id')->references('id')->on('tickets');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('ticket_id')
+                  ->references('id')->on('tickets')
+                  ->onDelete('cascade');
+
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onDelete('cascade');
         });
     }
 

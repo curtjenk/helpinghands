@@ -24,7 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('ticket', 'TicketController');
 
     Route::get('members', 'UserController@members');
-    Route::get('member/{id}', 'UserController@member_yes');
+    Route::get('member/{id}', 'UserController@yes_responses');
+
     Route::resource('user', 'UserController');
     Route::get('user.destroy', 'UserController@destroy');
 
