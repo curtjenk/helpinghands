@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use DB;
+use Auth;
+use Log;
 
 class User extends Authenticatable
 {
@@ -18,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'role_id', 'organization_id',
         'mobilephone', 'homephone', 'opt_receive_evite', 'opt_show_mobilephone',
-        'opt_show_homephone',
+        'opt_show_homephone', 'opt_show_email',
     ];
 
     /**

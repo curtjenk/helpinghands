@@ -59,7 +59,11 @@ class ImportUsers extends Command
                     'homephone'=>$row['Home Phone'],
                     'mobilephone'=>$row['Mobile Phone'],
                     'role_id'=>App\Role::where('name','Organization User')->first()->id,
-                    'organization_id'=>1
+                    'organization_id'=>1,
+                    'opt_receive_evite'=>true,
+                    'opt_show_email'=>true,
+                    'opt_show_mobilephone'=>false,
+                    'opt_show_homephone'=>false,
                 ]);
 
             } catch (QueryException $qe) {

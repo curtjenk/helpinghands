@@ -97,7 +97,7 @@
             <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Receive Evites</label>
                 <div class="col-md-8">
-                    <input type="checkbox" name="opt_receive_evite"
+                    <input type="checkbox" checkboxSwitch name="opt_receive_evite"
                         {{ $user->opt_receive_evite==true ? ' checked' : ''}}
                         data-size="mini">
                     @if ($errors->has('opt_receive_evite'))
@@ -107,10 +107,24 @@
                     @endif
                 </div>
             </div>
+            <div class="form-group{{ $errors->has('opt_show_email') ? ' has-error' : '' }}">
+                <label class="control-label col-md-4 text-right">Show Email</label>
+                <div class="col-md-8">
+                    <input type="checkbox" checkboxSwitch name="opt_show_email"
+                        {{ $user->opt_show_email==true ? ' checked' : ''}}
+                        data-size="mini">
+                    @if ($errors->has('opt_show_email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('opt_show_email') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
             <div class="form-group{{ $errors->has('opt_show_mobilephone') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Mobile Phone</label>
                 <div class="col-md-8">
-                    <input type="checkbox" name="opt_show_mobilephone" {{ $user->opt_show_mobilephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
+                    <input type="checkbox"  checkboxSwitch name="opt_show_mobilephone"
+                        {{ $user->opt_show_mobilephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
                     @if ($errors->has('opt_show_mobilephone'))
                         <span class="help-block">
                             <strong>{{ $errors->first('opt_show_mobilephone') }}</strong>
@@ -121,7 +135,7 @@
             <div class="form-group{{ $errors->has('opt_show_homephone') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Home Phone</label>
                 <div class="col-md-8">
-                    <input type="checkbox" name="opt_show_homephone" {{ $user->opt_show_homephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
+                    <input type="checkbox" checkboxSwitch name="opt_show_homephone" {{ $user->opt_show_homephone==true ? ' checked' : ''}} data-toggle="toggle" data-size="mini">
                     @if ($errors->has('opt_show_homephone'))
                         <span class="help-block">
                             <strong>{{ $errors->first('opt_show_homephone') }}</strong>

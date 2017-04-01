@@ -1,6 +1,17 @@
 <template>
   <div>
+      <!-- <div class="vuetable-pagination"> -->
+        <!-- <vuetable-pagination-info ref="paginationInfoTop"
+          info-class="pagination-info"
+        ></vuetable-pagination-info> -->
+        <vuetable-pagination ref="paginationTop" style="padding-top:20px"
+          :css="css.pagination"
+          :icons="css.icons"
+          @vuetable-pagination:change-page="onChangePage"
+        ></vuetable-pagination>
+    <!-- </div> -->
     <filter-bar></filter-bar>
+
     <vuetable ref="vuetable"
       api-url="/members"
       :fields="fields"
@@ -12,6 +23,7 @@
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
+      @vuetable:load-success="onLoadSuccess"
     ></vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -142,11 +154,28 @@ export default {
         : moment(value, 'YYYY-MM-DD').format(fmt)
     },
     onPaginationData (paginationData) {
+      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+     // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
+
       this.$refs.pagination.setPaginationData(paginationData)
       this.$refs.paginationInfo.setPaginationData(paginationData)
     },
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
+    },
+    onLoadSuccess (response) {
+        response.data.data.forEach(function(el){
+            console.log(el.opt_show_email)
+            if (el.opt_show_email==false) {
+                el.email=''
+            }
+            if (el.opt_show_homephone==false){
+                el.homephone=''
+            }
+            if (el.opt_show_mobilephone==false){
+                el.mobilephone=''
+            }
+        })
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)

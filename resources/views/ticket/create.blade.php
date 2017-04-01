@@ -69,7 +69,7 @@
             <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                 <label for="description" class="col-md-4 control-label">Description</label>
                 <div class="col-md-8">
-                    <textarea required id="description" cols="60" rows="10" class="editTextArea" name="description" >{{ isset($ticket) ? $ticket->description : old('description') }}
+                    <textarea required id="description" cols="60" rows="5" class="editTextArea" name="description" >{{ isset($ticket) ? $ticket->description : old('description') }}
                     </textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">

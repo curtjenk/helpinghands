@@ -15,13 +15,12 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div v-if="rowData.opt_show_mobilephone" class="inline field">
+        <div class="inline field">
           <label>Mobile: </label>
           <span>{{rowData.mobilephone}}</span>
         </div>
-        <div v-if="rowData.opt_show_homephone" class="inline field">
+        <div class="inline field">
           <label>Home: </label>
-
           <span>{{rowData.homephone}}</span>
         </div>
     </div>
@@ -55,7 +54,7 @@ export default {
   },
   methods: {
     onClick (event) {
-      console.log('my-detail-row: on-click', event.target)
+      //console.log('my-detail-row: on-click', event.target)
     //   console.log(this.rowData);
     }
   },
