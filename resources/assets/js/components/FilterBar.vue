@@ -3,7 +3,9 @@
       <form class="form-inline">
         <div class="form-group">
           <label>Search for:</label>
-          <input type="text" v-model="filterText" class="form-control" @keyup.enter="doFilter" placeholder="name, nickname, or email">
+          <input type="text" v-model="filterText" class="form-control"
+                  @keyup.enter="doFilter"
+                  :placeholder="filterPlaceholder">
           <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
           <button class="btn" @click.prevent="resetFilter">Reset</button>
         </div>
@@ -13,9 +15,11 @@
 
 <script>
   export default {
+    props: ['filterPlaceholder'],
     data () {
       return {
         filterText: ''
+        // filterPlaceholder: 'hello'
       }
     },
     methods: {

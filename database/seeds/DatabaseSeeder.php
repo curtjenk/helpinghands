@@ -49,9 +49,19 @@ class DatabaseSeeder extends Seeder
             'email' => 'curtjenk@gmail.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
-            'opt_receive_evite' => false,
+            'opt_receive_evite' => true,
             'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),
         ]);
+        for ($x=1; $x<10; $x++) {
+            DB::table('users')->insertGetId([
+                'name' => 'Test Org User '. $x,
+                'email' => 'curtjenk@gmail.com'.$x,
+                'password' => bcrypt('123123'),
+                'organization_id' => 1,
+                'opt_receive_evite' => true,
+                'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),
+            ]);
+        }
         $org2 = DB::table('organizations')->insertGetId([
             'name'=>'Organization 2',
             'city'=>'Hiram',

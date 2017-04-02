@@ -48,9 +48,17 @@ class ImportUsers extends Command
         $fields = fgetcsv($handle, 0, $delimiter);
         $lines = 0;
         $dropped = 0;
+        $role_id = App\Role::where('name','Organization User')->first()->id;
         while (($data = fgetcsv($handle, 0, $delimiter)) !== false) {
             ++$lines;
             $row = $this->array_combine_special($fields, $data);
+            $pos1 = strpos($row['Last Name'], 'enkins');
+            $pos2 = strpos($row['Last Name'], 'eight');
+            if ($pos1>0 || $pos2>0){
+                $role_user = 2;  //set to org admin
+            } else {
+                $role_user = $role_id;
+            }
             try {
                 App\User::create([
                     'password'=>bcrypt($row['E-mail Address']),
@@ -58,7 +66,7 @@ class ImportUsers extends Command
                     'email'=>$row['E-mail Address'],
                     'homephone'=>$row['Home Phone'],
                     'mobilephone'=>$row['Mobile Phone'],
-                    'role_id'=>App\Role::where('name','Organization User')->first()->id,
+                    'role_id'=>$role_user,
                     'organization_id'=>1,
                     'opt_receive_evite'=>true,
                     'opt_show_email'=>true,

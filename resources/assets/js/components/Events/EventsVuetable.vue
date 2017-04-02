@@ -10,10 +10,10 @@
           @vuetable-pagination:change-page="onChangePage"
         ></vuetable-pagination>
     <!-- </div> -->
-    <filter-bar></filter-bar>
+    <filter-bar filterPlaceholder="subject, description"></filter-bar>
 
     <vuetable ref="vuetable"
-      api-url="/members"
+      api-url="/event"
       :fields="fields"
       pagination-path=""
       :css="css.table"
@@ -46,8 +46,8 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-import CustomActions from './CustomActions'
-import DetailRow from './DetailRow'
+import CustomActions from './EventsCustomActions'
+import DetailRow from './EventsDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
@@ -76,25 +76,37 @@ export default {
         //   dataClass: 'text-center',
         // },
         {
-          name: 'name',
-          sortField: 'name',
+          name: 'subject',
+          sortField: 'subject',
           dataClass: 'text-primary'
         },
         {
-          name: 'email',
-          sortField: 'email'
+          name: 'description'
+        //   sortField: 'email'
         },
-        // {
-        //   name: 'birthdate',
-        //   sortField: 'birthdate',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
         {
-          name: 'nickname',
-          sortField: 'nickname',
-          callback: 'allcap'
+          name: 'evite_sent',
+          title: 'Evite?',
+          titleClass: 'text-center',
+          dataClass: 'text-center',
+          sortField: 'evite_sent',
+          callback: 'eviteLabel'
+        },
+        {
+          name: 'date_start',
+          title: 'Begin',
+          sortField: 'date_start',
+          titleClass: 'text-center',
+          dataClass: 'text-center',
+          callback: 'formatDate|DD-MM-YYYY'
+        },
+        {
+          name: 'date_end',
+          title: 'End',
+          sortField: 'date_end',
+          titleClass: 'text-center',
+          dataClass: 'text-center',
+          callback: 'formatDate|DD-MM-YYYY'
         },
         // {
         //   name: 'salary',
@@ -103,12 +115,12 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
-        // {
-        //   name: '__component:custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // }
+        {
+          name: '__component:custom-actions',
+          title: 'Actions',
+          titleClass: 'text-center',
+          dataClass: 'text-center'
+        }
       ],
       css: {
         table: {
@@ -131,7 +143,7 @@ export default {
         },
       },
       sortOrder: [
-        { field: 'email', sortField: 'email', direction: 'asc'}
+        { field: 'date_start', sortField: 'date_start', direction: 'desc'}
       ],
       moreParams: {}
     }
@@ -139,6 +151,12 @@ export default {
   methods: {
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
+    },
+    eviteLabel (value) {
+        return (value == null)
+          ? '<i class="fa fa-frown-o" style="color: red;"></i>'
+          : '<i class="fa fa-check-square" style="color: green;"></i>'
+
     },
     // genderLabel (value) {
     //   return value === 'M'
@@ -164,27 +182,27 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
-        response.data.data.forEach(function(el){
-            console.log(el.opt_show_email)
-            if (el.opt_show_email==false) {
-                el.email=''
-            }
-            if (el.opt_show_homephone==false){
-                el.homephone=''
-            }
-            if (el.opt_show_mobilephone==false){
-                el.mobilephone=''
-            }
-        })
+        // response.data.data.forEach(function(el){
+        //     console.log(el.opt_show_email)
+        //     if (el.opt_show_email==false) {
+        //         el.email=''
+        //     }
+        //     if (el.opt_show_homephone==false){
+        //         el.homephone=''
+        //     }
+        //     if (el.opt_show_mobilephone==false){
+        //         el.mobilephone=''
+        //     }
+        // })
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
 
       if ($('#'+data.id).length == 0) {
-        axios.get('/member/' + data.id )
+        axios.get('/event/' + data.id + '/members')
         .then(  (response) => {
           console.log(response.data);
-          data.events = response.data;
+          data.members = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
         }).catch((error) => {
 

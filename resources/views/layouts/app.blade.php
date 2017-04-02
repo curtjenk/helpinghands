@@ -49,7 +49,7 @@
                         @endif --}}
                     @if (Auth::user())
                         <li>
-                            <a href="{{ url('/members') }}">Members</a>
+                            <a href="{{ url('/member') }}">Members</a>
                         </li>
                     @endif
                     @can ('list-tickets')
@@ -60,7 +60,7 @@
                         {{-- <li><a href="{{ url('/ticket') }}">Service/Events</a> --}}
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/ticket/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
-                                <li><a href="{{ url('/ticket') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
+                                <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
                             @can ('create-ticket')
                                 <li><a href="{{ url('/ticket/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
                             @endcan

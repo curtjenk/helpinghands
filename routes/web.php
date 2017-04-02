@@ -20,10 +20,13 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('event/{id}/members', 'EventController@members');
+    Route::resource('event', 'EventController');
+
     Route::get('ticket/calendar', 'TicketController@calendar');
     Route::resource('ticket', 'TicketController');
 
-    Route::get('members', 'UserController@members');
+    Route::get('member', 'UserController@members');
     Route::get('member/{id}', 'UserController@yes_responses');
 
     Route::resource('user', 'UserController');
