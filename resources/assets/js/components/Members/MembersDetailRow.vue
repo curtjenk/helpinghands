@@ -61,6 +61,9 @@ export default {
 }
 </script>
 <style>
+ol {
+    list-style-type: circle;
+}
 .scrollbox {
     height: 50px;
     overflow-y: scroll;

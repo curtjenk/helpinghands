@@ -195,16 +195,21 @@ export default {
     },
   },
   events: {
-    'filter-set' (filterText) {
-      this.moreParams = {
-        filter: filterText
+      'filter-set' (filterText) {
+       // console.log("<",filterText,">")
+        this.moreParams = {
+          filter: filterText
+        }
+        if (this.$refs.vuetable) {
+          Vue.nextTick( () => this.$refs.vuetable.refresh() )
+        }
+      },
+      'filter-reset' () {
+        this.moreParams = {}
+        if (this.$refs.vuetable) {
+          Vue.nextTick( () => this.$refs.vuetable.refresh() )
+        }
       }
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
-    },
-    'filter-reset' () {
-      this.moreParams = {}
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
-    }
   }
 }
 </script>

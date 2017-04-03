@@ -19,7 +19,7 @@
       :css="css.table"
       :sort-order="sortOrder"
       :multi-sort="true"
-      detail-row-component="my-detail-row"
+      detail-row-component="events-detail-row"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
@@ -52,7 +52,7 @@ import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
 Vue.component('custom-actions', CustomActions)
-Vue.component('my-detail-row', DetailRow)
+Vue.component('events-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
 export default {
@@ -182,6 +182,7 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
+        console.log('onloadsuccess')
         // response.data.data.forEach(function(el){
         //     console.log(el.opt_show_email)
         //     if (el.opt_show_email==false) {
@@ -201,7 +202,7 @@ export default {
       if ($('#'+data.id).length == 0) {
         axios.get('/event/' + data.id + '/members')
         .then(  (response) => {
-          console.log(response.data);
+         // console.log(response.data);
           data.members = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
         }).catch((error) => {
@@ -217,11 +218,15 @@ export default {
       this.moreParams = {
         filter: filterText
       }
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+      Vue.nextTick( () =>
+            this.$refs.vuetable.refresh()
+      )
     },
     'filter-reset' () {
       this.moreParams = {}
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+      if (this.$refs.vuetable) {
+        Vue.nextTick( () => this.$refs.vuetable.refresh() )
+      }
     }
   }
 }
