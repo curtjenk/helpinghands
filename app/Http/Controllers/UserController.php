@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Common\Inputs;
 use App;
 use Auth;
+use DB;
 use Log;
 
 class UserController extends Controller
@@ -48,8 +49,9 @@ class UserController extends Controller
             [ ]
         );
         //Log::debug($inputs->all());
-        return App\User::with('organization')
-            ->select('users.*')
+        return App\User::       //with('organization')
+            select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
+            ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
             ->where('users.id', '!=', $user->id)
@@ -65,6 +67,7 @@ class UserController extends Controller
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
+            ->groupby('users.id')
             ->paginate(10);
     }
 

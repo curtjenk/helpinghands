@@ -46,12 +46,12 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-import CustomActions from './EventsCustomActions'
+//import CustomActions from './EventsCustomActions'
 import DetailRow from './EventsDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-Vue.component('custom-actions', CustomActions)
+//Vue.component('custom-actions', CustomActions)
 Vue.component('events-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -78,15 +78,17 @@ export default {
         {
           name: 'subject',
           sortField: 'subject',
-          dataClass: 'text-primary'
+          dataClass: 'text-primary',
+          titleClass: 'text-center'
         },
         {
-          name: 'description'
+          name: 'description',
+          titleClass: 'text-center',
         //   sortField: 'email'
         },
         {
           name: 'evite_sent',
-          title: 'Evite?',
+          title: 'Evite Sent',
           titleClass: 'text-center',
           dataClass: 'text-center',
           sortField: 'evite_sent',
@@ -108,6 +110,13 @@ export default {
           dataClass: 'text-center',
           callback: 'formatDate|DD-MM-YYYY'
         },
+        {
+          title: 'Positive Responses',
+          name: 'yes_responses',
+          sortField: 'yes_responses',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+        },
         // {
         //   name: 'salary',
         //   sortField: 'salary',
@@ -115,12 +124,12 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
-        {
-          name: '__component:custom-actions',
-          title: 'Actions',
-          titleClass: 'text-center',
-          dataClass: 'text-center'
-        }
+        // {
+        //   name: '__component:custom-actions',
+        //   title: 'Actions',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center'
+        // }
       ],
       css: {
         table: {
@@ -149,6 +158,14 @@ export default {
     }
   },
   methods: {
+    expandAllDetailRows: function() {
+     this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
+            return item.id
+      })
+    },
+    collapseAllDetailRows: function() {
+      this.$refs.vuetable.visibleDetailRows = []
+    },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
     },
@@ -182,19 +199,7 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
-        console.log('onloadsuccess')
-        // response.data.data.forEach(function(el){
-        //     console.log(el.opt_show_email)
-        //     if (el.opt_show_email==false) {
-        //         el.email=''
-        //     }
-        //     if (el.opt_show_homephone==false){
-        //         el.homephone=''
-        //     }
-        //     if (el.opt_show_mobilephone==false){
-        //         el.mobilephone=''
-        //     }
-        // })
+        //console.log('onloadsuccess')
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
@@ -224,9 +229,8 @@ export default {
     },
     'filter-reset' () {
       this.moreParams = {}
-      if (this.$refs.vuetable) {
-        Vue.nextTick( () => this.$refs.vuetable.refresh() )
-      }
+      this.collapseAllDetailRows()
+      Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
   }
 }

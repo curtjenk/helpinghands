@@ -24,6 +24,7 @@
           <span>{{rowData.homephone}}</span>
         </div>
     </div>
+    <span v-if="rowData.events != null">
     <div class="col-md-2">
         <h5 class="">
             Attended {{ rowData.events.length }} Event(s)
@@ -38,6 +39,7 @@
            </ol>
         </div>
     </div>
+    </span>
   </div>
 </template>
 
@@ -58,6 +60,23 @@ export default {
     //   console.log(this.rowData);
     }
   },
+  events: {
+    // 'hide-detail' () {
+    //   console.log('hide-detail')
+    // },
+    // 'show-detail' () {
+    //   console.log('show-detail')
+    //   axios.get('/member/' + this.rowData.id )
+    //   .then(  (response) => {
+    //    console.log(response.data);
+    //   }).catch((error) => {
+    //       console.log('detail:', error)
+    //   });
+    // },
+    // 'filter-reset' () {
+    //     console.log('filter-reset caught in detailrow')
+    // }
+  }
 }
 </script>
 <style>

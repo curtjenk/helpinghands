@@ -46,12 +46,12 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-import CustomActions from './MembersCustomActions'
+// import CustomActions from './MembersCustomActions'
 import DetailRow from './MembersDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-Vue.component('custom-actions', CustomActions)
+// Vue.component('custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -96,6 +96,13 @@ export default {
           sortField: 'nickname',
           callback: 'allcap'
         },
+        {
+          title: 'Positive Responses',
+          name: 'yes_responses',
+          sortField: 'yes_responses',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+        },
         // {
         //   name: 'salary',
         //   sortField: 'salary',
@@ -103,12 +110,12 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
-        {
-          name: '__component:custom-actions',
-          title: 'Actions',
-          titleClass: 'text-center',
-          dataClass: 'text-center'
-        }
+        // {
+        //   name: '__component:custom-actions',
+        //   title: 'Actions',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center'
+        // }
       ],
       css: {
         table: {
@@ -137,6 +144,14 @@ export default {
     }
   },
   methods: {
+    expandAllDetailRows: function() {
+      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
+          return item.id
+      })
+    },
+    collapseAllDetailRows: function() {
+     this.$refs.vuetable.visibleDetailRows = []
+    },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
     },
@@ -183,15 +198,15 @@ export default {
       if ($('#'+data.id).length == 0) {
         axios.get('/member/' + data.id )
         .then(  (response) => {
-         // console.log(response.data);
           data.events = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
         }).catch((error) => {
-
+            console.log(error)
         });
       } else {
-        this.$refs.vuetable.toggleDetailRow(data.id)
+         this.$refs.vuetable.toggleDetailRow(data.id)
       }
+
     },
   },
   events: {
@@ -200,15 +215,12 @@ export default {
         this.moreParams = {
           filter: filterText
         }
-        if (this.$refs.vuetable) {
-          Vue.nextTick( () => this.$refs.vuetable.refresh() )
-        }
+        Vue.nextTick( () => this.$refs.vuetable.refresh() )
       },
       'filter-reset' () {
         this.moreParams = {}
-        if (this.$refs.vuetable) {
-          Vue.nextTick( () => this.$refs.vuetable.refresh() )
-        }
+        this.collapseAllDetailRows();
+        Vue.nextTick( () => this.$refs.vuetable.refresh() )
       }
   }
 }

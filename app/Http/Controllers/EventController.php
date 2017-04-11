@@ -63,8 +63,10 @@ class EventController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-        return App\Ticket::            //with('organization')
-            when($user->is_orgLevel(), function($q) use($user) {
+        return App\Ticket::
+            select('tickets.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
+            ->leftjoin('responses', 'responses.ticket_id', '=', 'tickets.id')
+            ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
             ->when($inputs->filter, function($q) use($inputs){
@@ -76,6 +78,7 @@ class EventController extends Controller
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
+            ->groupby('tickets.id')
             ->paginate(10);
     }
 
