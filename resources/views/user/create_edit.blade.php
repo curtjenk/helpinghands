@@ -93,7 +93,8 @@
                 </div>
             </div>
             <hr />
-            {{-- <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">
+            @can ('administer')
+            <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Receive Evites</label>
                 <div class="col-md-8">
                     <input type="checkbox" checkboxSwitch name="opt_receive_evite"
@@ -105,7 +106,8 @@
                         </span>
                     @endif
                 </div>
-            </div> --}}
+            </div>
+            @endcan
             <div class="form-group{{ $errors->has('opt_show_email') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Email</label>
                 <div class="col-md-8">

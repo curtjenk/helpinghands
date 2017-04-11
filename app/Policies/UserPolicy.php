@@ -42,6 +42,7 @@ class UserPolicy
     {
         return $self->has_permission('Show user')&&
         ($self->is_admin() ||
+         $self->is_orgAdmin() ||
          $self->is_superuser() ||
          $self->organization_id == $user->organization_id);
     }
@@ -54,6 +55,8 @@ class UserPolicy
     public function update(User $self, User $user)
     {
         return $self->has_permission('Update user') &&
-        ($self->id == $user->id ||  $self->is_admin());
+        ($self->id == $user->id ||
+        $self->is_orgAdmin() ||
+        $self->is_admin());
     }
 }
