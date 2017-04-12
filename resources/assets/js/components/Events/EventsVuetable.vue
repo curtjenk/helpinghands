@@ -100,7 +100,7 @@ export default {
           sortField: 'date_start',
           titleClass: 'text-center',
           dataClass: 'text-center',
-          callback: 'formatDate|DD-MM-YYYY'
+          callback: 'formatDate|MM-DD-YYYY'
         },
         {
           name: 'date_end',
@@ -108,7 +108,7 @@ export default {
           sortField: 'date_end',
           titleClass: 'text-center',
           dataClass: 'text-center',
-          callback: 'formatDate|DD-MM-YYYY'
+          callback: 'formatDate|MM-DD-YYYY'
         },
         {
           title: 'Positive Responses',
