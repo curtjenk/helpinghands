@@ -46,12 +46,12 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-// import CustomActions from './MembersCustomActions'
+import CustomActions from './MembersCustomActions'
 import DetailRow from './MembersDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-// Vue.component('custom-actions', CustomActions)
+Vue.component('custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -61,6 +61,23 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
+  // props: [
+  //     'canUpdate',
+  //     'canView',
+  //     'canDelete'
+  // ],
+  // computed: {
+  //     computedCanView: function() {
+  //         //console.log('canview', this.canView)
+  //         return this.canView
+  //     },
+  //     computedCanUpdate: function() {
+  //         return this.canUpdate
+  //     },
+  //     computedCanDelete: function() {
+  //         return this.canDelete
+  //     }
+  // },
   data () {
     return {
       fields: [
@@ -110,12 +127,12 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
-        // {
-        //   name: '__component:custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // }
+        {
+          name: '__component:custom-actions',
+          title: 'Actions',
+          titleClass: 'text-center',
+          dataClass: 'text-center'
+        }
       ],
       css: {
         table: {

@@ -54,7 +54,7 @@ class UserController extends Controller
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
-            ->where('users.id', '!=', $user->id)
+            //->where('users.id', '!=', $user->id)
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
@@ -84,7 +84,7 @@ class UserController extends Controller
         $query=App\User::with('organization')
             ->where('role_id', '!=', 1)
             ->where('role_id', '>=', $user->role_id)
-            ->where('users.id', '!=', $user->id)
+            //->where('users.id', '!=', $user->id)
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })

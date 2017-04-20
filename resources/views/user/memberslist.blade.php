@@ -8,7 +8,7 @@
         </div>
     </section>
     <div class="container-fluid">
-         <memberslist></memberslist>
+        <<memberslist></memberslist>
     </div>
 </main>
 
