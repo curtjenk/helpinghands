@@ -42,9 +42,8 @@ class Evite extends Mailable
      */
     public function build()
     {
-        // Log::debug(print_r($this->resp, true));
         if ($this->resp == null) {
-         //Yeah, we got a response to an evite!!!
+            Log::debug("Send evite to ".$this->user->name);
             $response = \App\Response::create([
                 'user_id'=>$this->user->id,
                 'ticket_id'=>$this->ticket->id,
@@ -58,7 +57,7 @@ class Evite extends Mailable
                     'token'=>$response->token,
                 ]);
         }
-        //else we are sending out the initial or follow-up evites.
+
 
         if ($this->resp->helping == true || $this->resp->helping == 1) {
             return $this->subject($this->ticket->subject)

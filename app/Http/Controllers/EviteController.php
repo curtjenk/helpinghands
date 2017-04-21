@@ -78,12 +78,10 @@ class EviteController extends Controller
         $user = Auth::user();
         $ticket = App\Ticket::findOrFail($ticket_id);
         $this->authorize('send-evites');
-        Log::debug("send evites authorized=yes");
         $helpers = App\User::where('users.opt_receive_evite', true)
             ->where('users.role_id', '!=', 1)
             ->where('users.organization_id', $ticket->organization_id)
             ->get();
-        Log::debug("num potential hepers = count($helpers) ");
         $cnt=0;
         foreach($helpers as $helper)
         {
@@ -94,8 +92,6 @@ class EviteController extends Controller
             $numResponses = $evites->filter(function($el) {
                         return isset($el->helping);
                     })->count();
-            // dump("evites =" . $numEvites);
-            // dump("responses = ". $numResponses);
             if ($numEvites < 8 && $numResponses == 0) {
                 ++$cnt;
                 Mail::to($helper)->queue(new Evite($ticket, $helper));
