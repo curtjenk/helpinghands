@@ -172,7 +172,7 @@ class UserController extends Controller
     {
         $self = Auth::user();
         $user = App\User::findOrFail($id);
-        $this->authorize('update', $user);
+        //$this->authorize('update', $user);
         $roles = App\Role::where('roles.id', '>=', $self->role_id)
             ->where('roles.name', '!=', 'Super User')
             ->get();

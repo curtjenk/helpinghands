@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left header">{{ isset($user) ? 'Update' : 'Create' }} Profile</div>
+            <div class="pull-left header">{{ isset($user) ? '' : 'Create' }} Profile</div>
         </div>
     </section>
     <div class="container">
@@ -17,6 +17,7 @@
                     <p id="email" class="form-control-static">{{ $user->email }}</p>
                 </div>
             </div>
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name" class="col-md-4 control-label">Name</label>
                 <div class="col-md-8">
@@ -28,6 +29,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Name</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{$user->name}}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('nickname') ? ' has-error' : '' }}">
                 <label for="nickname" class="col-md-4 control-label">Nick Name</label>
                 <div class="col-md-8">
@@ -39,6 +51,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Nick Name</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{$user->nickname}}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('homephone') ? ' has-error' : '' }}">
                 <label for="homephone" class="col-md-4 control-label">Home Phone</label>
                 <div class="col-md-8">
@@ -50,6 +73,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Home Phone</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{$user->homephone}}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('mobilephone') ? ' has-error' : '' }}">
                 <label for="mobilephone" class="col-md-4 control-label">Mobile Phone</label>
                 <div class="col-md-8">
@@ -61,6 +95,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Mobile Phone</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{$user->mobilephone}}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('org_id') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Organization</label>
                 <div class="col-md-8">
@@ -76,7 +121,17 @@
                     @endif
                 </div>
             </div>
-
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Organization</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{$user->organization->name}} {{$user->organization->city}} {{$user->organization->state}}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Role</label>
                 <div class="col-md-8">
@@ -92,8 +147,18 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Show Email</label>
+                <div class="control-text-left col-md-8">
+                    <u>
+                        {{ $user->role->name }}
+                    </u>
+                </div>
+            </div>
+        @endif
             <hr />
-            @can ('administer')
+        @can ('administer')
             <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Receive Evites</label>
                 <div class="col-md-8">
@@ -107,7 +172,8 @@
                     @endif
                 </div>
             </div>
-            @endcan
+        @endcan
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('opt_show_email') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Email</label>
                 <div class="col-md-8">
@@ -121,6 +187,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Show Email</label>
+                <div class="control-text-left col-md-1">
+                    <u>
+                        {{ $user->opt_show_email==true ? 'On':'Off' }}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('opt_show_mobilephone') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Mobile Phone</label>
                 <div class="col-md-8">
@@ -133,6 +210,17 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Show Mobile Phone</label>
+                <div class="control-text-left col-md-1">
+                    <u>
+                        {{ $user->opt_show_mobilephone==true ? 'On':'Off' }}
+                    </u>
+                </div>
+            </div>
+        @endif
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('opt_show_homephone') ? ' has-error' : '' }}">
                 <label class="control-label col-md-4 text-right">Show Home Phone</label>
                 <div class="col-md-8">
@@ -144,14 +232,26 @@
                     @endif
                 </div>
             </div>
+        @else
+            <div class="form-group">
+                <label class="control-label col-md-4 text-right">Show Home Phone</label>
+                <div class="control-text-left col-md-1">
+                    <u>
+                        {{ $user->opt_show_homephone==true ? 'On':'Off' }}
+                    </u>
+                </div>
+            </div>
+        @endif
             <hr />
             <div class="block text-center">
                 <a class="btn btn-default" href="{{ Request::header('referer') }}">
                     <i class="fa fa-btn fa-times"></i> Cancel
                 </a>
+                @if(Gate::check('update', $user))
                 <button type="submit" class="btn btn-primary" name="submit">
                     <i class="fa fa-btn fa-check"></i> Accept
                 </button>
+                @endif
             </div>
         </form>
     </div>

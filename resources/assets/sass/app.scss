@@ -28,7 +28,10 @@ html, body {
 .full-height {
     height: 100vh;
 }
-
+// override bootstrap from-group
+.form-group {
+    margin-bottom: 10px !important;
+}
 .flex-center {
     align-items: center;
     display: flex;
@@ -48,7 +51,16 @@ html, body {
 .content {
     text-align: center;
 }
-
+.control-text-left {
+    text-align: left;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
+.control-text-right {
+    text-align: right;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
 .title {
     font-size: 84px;
 }

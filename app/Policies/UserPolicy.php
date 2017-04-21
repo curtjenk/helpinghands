@@ -54,9 +54,15 @@ class UserPolicy
      */
     public function update(User $self, User $user)
     {
-        return $self->has_permission('Update user') &&
+        // dump($self->has_permission('Update user'));
+        // dump($self->id == $user->id);
+        // dump($self->is_orgAdmin());
+        // dump($self->is_admin());
+        $rtn = $self->has_permission('Update user') &&
         ($self->id == $user->id ||
         $self->is_orgAdmin() ||
         $self->is_admin());
+        // dump($rtn);
+        return $rtn;
     }
 }
