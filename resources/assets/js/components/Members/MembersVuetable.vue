@@ -51,7 +51,7 @@ import DetailRow from './MembersDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-Vue.component('custom-actions', CustomActions)
+Vue.component('member-custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -128,7 +128,7 @@ export default {
         //   callback: 'formatNumber'
         // },
         {
-          name: '__component:custom-actions',
+          name: '__component:member-custom-actions',
           title: 'Actions',
           titleClass: 'text-center',
           dataClass: 'text-center'

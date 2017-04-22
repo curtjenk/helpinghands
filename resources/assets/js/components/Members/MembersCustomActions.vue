@@ -19,7 +19,7 @@
     },
     methods: {
       itemAction (action, data, index) {
-        // console.log('custom-actions: ' + action, data.name, index)
+        console.log('custom-actions member: ' + action, data.name, index)
         window.location.href = '/user/'+this.rowData.id+'/edit';
       }
     }

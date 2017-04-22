@@ -46,12 +46,12 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-//import CustomActions from './EventsCustomActions'
+import CustomActions from './EventsCustomActions'
 import DetailRow from './EventsDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-//Vue.component('custom-actions', CustomActions)
+Vue.component('event-custom-actions', CustomActions)
 Vue.component('events-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -124,12 +124,12 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
-        // {
-        //   name: '__component:custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // }
+        {
+          name: '__component:event-custom-actions',
+          title: 'Actions',
+          titleClass: 'text-center',
+          dataClass: 'text-center'
+        }
       ],
       css: {
         table: {

@@ -180,8 +180,8 @@ class EventController extends Controller
                 return $q->where('organizations.id', $user->organization_id);
             })
             ->get();
-        return view('ticket.create', [
-            'ticket'=>$event,
+        return view('event.create', [
+            'event'=>$event,
             'orgs'=>$orgs,
         ]);
     }

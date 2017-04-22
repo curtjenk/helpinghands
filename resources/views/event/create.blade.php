@@ -10,10 +10,10 @@
     <div class="container">
 
             @if(isset($event))
-        <form class="form-horizontal" method="POST" action="{{ url('/ticket/'.$event->id) }}">
+        <form class="form-horizontal" method="POST" action="{{ url('/event/'.$event->id) }}">
             <input name="_method" type="hidden" value="PUT">
             @else
-        <form class="form-horizontal" method="POST" action="{{ url('/ticket') }}">
+        <form class="form-horizontal" method="POST" action="{{ url('/event') }}">
             @endif
             {{ csrf_field() }}
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">

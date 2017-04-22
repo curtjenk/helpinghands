@@ -102,8 +102,8 @@ class EviteController extends Controller
             $ticket->save();
         }
         Log::debug("num evites = $cnt");
-        return view('ticket.show', [
-            'ticket'=>$ticket,
+        return view('event.show', [
+            'event'=>$ticket,
             'num_evites'=>$cnt,
         ]);
 

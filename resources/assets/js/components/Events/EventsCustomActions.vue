@@ -1,8 +1,8 @@
   <template>
     <div class="custom-actions">
-      <button class="btn btn-sm" @click="itemAction('view-item', rowData, rowIndex)"><i class="glyphicon glyphicon-zoom-in"></i></button>
-      <button class="btn btn-sm" @click="itemAction('edit-item', rowData, rowIndex)"><i class="glyphicon glyphicon-pencil"></i></button>
-      <button class="btn btn-sm" @click="itemAction('delete-item', rowData, rowIndex)"><i class="glyphicon glyphicon-trash"></i></button>
+      <!-- <a class="" data-toggle="tooltip" title="View"  @click="itemAction('view-item', rowData, rowIndex)"><i class="fa fa-eye fa-lg"></i></a> -->
+      <a class="" data-toggle="tooltip" title="Edit"  @click="itemAction('edit-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a>
+      <!-- <a class="" @click="itemAction('delete-item', rowData, rowIndex)"><i class="glyphicon glyphicon-trash"></i></a> -->
     </div>
   </template>
 
@@ -19,7 +19,8 @@
     },
     methods: {
       itemAction (action, data, index) {
-        console.log('custom-actions: ' + action, data.name, index)
+        console.log('custom-actions: ' + action, data.subject, index)
+        window.location.href = '/event/'+data.id;
       }
     }
   }
