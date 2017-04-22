@@ -37,5 +37,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('organization', 'OrganizationController');
 
     Route::get('evite/{id}', 'EviteController@send_evites');
+    Route::get('evite/{id}/signup', 'EviteController@signup');
 
 });

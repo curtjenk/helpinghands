@@ -81,12 +81,12 @@ export default {
   data () {
     return {
       fields: [
-        {
-          name: '__sequence',
-          title: '#',
-          titleClass: 'text-right',
-          dataClass: 'text-right'
-        },
+        // {
+        //   name: '__sequence',
+        //   title: '#',
+        //   titleClass: 'text-right',
+        //   dataClass: 'text-right'
+        // },
         // {
         //   name: '__checkbox',
         //   titleClass: 'text-center',

@@ -1,8 +1,8 @@
   <template>
     <div class="custom-actions">
       <!-- <a class="" data-toggle="tooltip" title="View"  @click="itemAction('view-item', rowData, rowIndex)"><i class="fa fa-eye fa-lg"></i></a> -->
-      <a class="" data-toggle="tooltip" title="Edit"  @click="itemAction('edit-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a>
-      <!-- <a class="" @click="itemAction('delete-item', rowData, rowIndex)"><i class="glyphicon glyphicon-trash"></i></a> -->
+      <a class="" data-toggle="tooltip" title="Details"  @click="itemAction('edit-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a>
+      <!-- <a class="" data-toggle="tooltip" title="Sign-up" @click="itemAction('signup-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a> -->
     </div>
   </template>
 

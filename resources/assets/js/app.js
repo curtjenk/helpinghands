@@ -12,6 +12,7 @@ import './ticket';
 import './calendar';
 import './organization';
 import './bs_common';
+import './common';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -51,6 +51,14 @@ class User extends Authenticatable
         return Auth::user()->has_permission('Delete user');
     }
 
+    public function signedup($event_id)
+    {
+        return $this->responses()
+            ->where('ticket_id',$event_id)
+            ->where('helping',true)
+            ->count()>0;
+    }
+
     public function responses()
     {
         return $this->hasMany('App\Response');

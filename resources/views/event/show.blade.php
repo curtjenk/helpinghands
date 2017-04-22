@@ -7,19 +7,22 @@
             <div class="pull-left header">Service / Fellowship Event</div>
             <div class="pull-right">
                 <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
-                @can ('update', $event)
+            @if(!Auth::user()->signedup($event->id))
+                <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/signup') }}"><i class="fa fa-handshake-o"></i> Signup</a>
+            @endif
+            @can ('update', $event)
                 <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
-                @endcan
-                @can ('create-ticket')
+            @endcan
+            @can ('create-ticket')
                 <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
-                @endcan
-                @can ('send-evites')
+            @endcan
+            @can ('send-evites')
                     @if($event->evite_sent)
                       <a class="btn btn-warning" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Resend Evite</a>
                     @else
                       <a class="btn btn-default" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
                     @endif
-                @endcan
+            @endcan
             </div>
         </div>
     </section>
@@ -34,9 +37,17 @@
         <div class="col-md-8">
             <div class="form-horizontal">
                 <div class="panel panel-default">
-                    {{-- <div class="panel-heading">
-                        <h4>Information</h4>
-                    </div> --}}
+
+                    @if(Auth::user()->signedup($event->id))
+                        <div class="bg-success">
+                            <h4 class="text-center">I already signed-up!</h4>
+                        </div>
+                    @else
+                        <div class="bg-danger">
+                            <h4 class="text-center">I should signup today!</h4>
+                        </div>
+                    @endif
+
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="organziation" class="col-md-4 control-label">Organization</label>

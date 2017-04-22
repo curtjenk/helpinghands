@@ -39,6 +39,29 @@ class EviteController extends Controller
              'user'=>$user]);
     }
 
+    public function signup($ticket_id, $user_id)
+    {
+        $user = App\User::findOrFail($user_id);
+        $ticket = App\Ticket::findOrFail($ticket_id);
+        $resp = $this->getResponseModel($ticket_id, $user_id);
+        if (!$resp) { //no evite sent but user is signing-up
+            \App\Response::create([
+                'user_id'=>$this->user->id,
+                'ticket_id'=>$this->ticket->id,
+                'helping'=>true,
+                'token'=>null
+            ]);
+        } elseif ($resp->helping == true) {
+            //already signed-up (responded yes)
+            return;
+        } else {
+            //no response to evite or responded No;  Set to Yes
+            $prev_resp->helping = true;
+            $prev_resp->save();
+        }
+        return redirect()->back();
+    }
+
     public function response_no($ticket_id, $user_id, $token)
     {
         $user = App\User::findOrFail($user_id);
@@ -60,12 +83,19 @@ class EviteController extends Controller
              'user'=>$user]);
     }
 
-    private function getResponseModel($ticket_id, $user_id, $token)
+    private function getResponseModel($ticket_id, $user_id, $token=null)
     {
-        return App\Response::where('token', $token)
-            ->where('ticket_id',$ticket_id)
-            ->where('user_id',$user_id)
-            ->first();
+        if (isset($token)) {
+            return App\Response::where('token', $token)
+                ->where('ticket_id',$ticket_id)
+                ->where('user_id',$user_id)
+                ->first();
+        } else {
+            return App\Response::
+                  where('ticket_id',$ticket_id)
+                ->where('user_id',$user_id)
+                ->first();
+        }
     }
 
     /**

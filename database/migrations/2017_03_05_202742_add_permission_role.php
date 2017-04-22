@@ -62,7 +62,6 @@ class AddPermissionRole extends Migration
                              'List users',
                              'Update user',
                              'Show organization',
-                             'Create ticket',
                              'Show ticket',
                              'List tickets'
                             ])

@@ -64,12 +64,12 @@ export default {
   data () {
     return {
       fields: [
-        {
-          name: '__sequence',
-          title: '#',
-          titleClass: 'text-right',
-          dataClass: 'text-right'
-        },
+        // {
+        //   name: '__sequence',
+        //   title: '#',
+        //   titleClass: 'text-right',
+        //   dataClass: 'text-right'
+        // },
         // {
         //   name: '__checkbox',
         //   titleClass: 'text-center',
@@ -79,12 +79,14 @@ export default {
           name: 'subject',
           sortField: 'subject',
           dataClass: 'text-primary',
-          titleClass: 'text-center'
+          titleClass: 'text-center',
+          callback: 'ellipsis|30'
         },
         {
           name: 'description',
           titleClass: 'text-center',
-        //   sortField: 'email'
+        //   sortField: 'description'
+          callback: 'ellipsis|50'
         },
         {
           name: 'evite_sent',
@@ -168,6 +170,9 @@ export default {
     },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
+    },
+    ellipsis (value, max = 1) {
+      return value.ellipsis(max)
     },
     eviteLabel (value) {
         return (value == null)
