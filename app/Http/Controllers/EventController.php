@@ -105,7 +105,7 @@ class EventController extends Controller
     public function members(Request $request, $id)
     {
         $user = Auth::user();
-        $event = App\User::findOrFail($id);
+        $event = App\Ticket::findOrFail($id);
         $this->authorize('show', $event);
         $members = App\User::join('responses', function($join) use($event){
             $join->on('responses.user_id', 'users.id')
