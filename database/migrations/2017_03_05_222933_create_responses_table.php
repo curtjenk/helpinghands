@@ -15,14 +15,14 @@ class CreateResponsesTable extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('ticket_id');
+            $table->integer('event_id');
             $table->integer('user_id');
             $table->boolean('helping')->nullable();
             $table->string('token')->nullable();
             $table->timestamps();
 
-            $table->foreign('ticket_id')
-                  ->references('id')->on('tickets')
+            $table->foreign('event_id')
+                  ->references('id')->on('events')
                   ->onDelete('cascade');
 
             $table->foreign('user_id')

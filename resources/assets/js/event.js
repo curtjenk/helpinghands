@@ -2,7 +2,7 @@
  * This namespace includes tools related to users for the application
  * @namespace
  */
-export const ticket = ticket || {};
+export const event = event || {};
 
 // import { common } from './common';
 // import { notification } from './notification';
@@ -11,12 +11,12 @@ export const ticket = ticket || {};
  * Initialization of events.
  */
 $(function() {
-  $( "#dateTicketStartPicker" ).datepicker();
-  $( "#dateTicketEndPicker" ).datepicker();
-  
+  $( "#dateEventStartPicker" ).datepicker();
+  $( "#dateEventEndPicker" ).datepicker();
+
   $('#deleteTicket').on('show.bs.modal', function(event) {
     const button = $(event.relatedTarget);
     $('#deleteTicket h4').text('Delete ' + button.data('name'));
-    $('#deleteTicket form').attr('action', 'ticket/' + button.data('id'));
+    $('#deleteTicket form').attr('action', 'event/' + button.data('id'));
   });
 });

@@ -54,7 +54,7 @@ class User extends Authenticatable
     public function signedup($event_id)
     {
         return $this->responses()
-            ->where('ticket_id',$event_id)
+            ->where('event_id',$event_id)
             ->where('helping',true)
             ->count()>0;
     }

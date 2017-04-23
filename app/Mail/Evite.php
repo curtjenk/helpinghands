@@ -17,9 +17,9 @@ class Evite extends Mailable
     /**
     * The order instance.
     *
-    * @var Ticket
+    * @var Event
     */
-   protected $ticket;
+   protected $event;
    protected $user;
    protected $resp;
 
@@ -28,9 +28,9 @@ class Evite extends Mailable
      *
      * @return void
      */
-    public function __construct(App\Ticket $ticket, App\User $user, App\Response $resp = null)
+    public function __construct(App\Event $event, App\User $user, App\Response $resp = null)
     {
-        $this->ticket = $ticket;
+        $this->event = $event;
         $this->user = $user;
         $this->resp = $resp;
     }
@@ -46,13 +46,13 @@ class Evite extends Mailable
             Log::debug("Send evite to ".$this->user->name);
             $response = \App\Response::create([
                 'user_id'=>$this->user->id,
-                'ticket_id'=>$this->ticket->id,
+                'event_id'=>$this->event->id,
                 'token'=>\App\Response::generateToken()
             ]);
-            return $this->subject($this->ticket->subject)
+            return $this->subject($this->event->subject)
                 ->view('emails.evite.invite')
                 ->with([
-                    'ticket'=>$this->ticket,
+                    ''=>$this->event,
                     'user'=>$this->user,
                     'token'=>$response->token,
                 ]);
@@ -60,18 +60,18 @@ class Evite extends Mailable
 
 
         if ($this->resp->helping == true || $this->resp->helping == 1) {
-            return $this->subject($this->ticket->subject)
+            return $this->subject($this->event->subject)
                 ->view('emails.evite.confirm_yes')
                 ->with([
-                    'ticket'=>$this->ticket,
+                    'event'=>$this->event,
                     'user'=>$this->user,
                 ]);
         }
 
-        return $this->subject($this->ticket->subject)
+        return $this->subject($this->event->subject)
             ->view('emails.evite.confirm_no')
             ->with([
-                'ticket'=>$this->ticket,
+                ''=>$this->event,
                 'user'=>$this->user,
             ]);
     }

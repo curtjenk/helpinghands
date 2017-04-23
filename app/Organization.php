@@ -16,8 +16,8 @@ class Organization extends Model
         'state', 'zipcode',
     ];
 
-    public function tickets()
+    public function events()
     {
-        return $this->hasMany('App\Ticket');
+        return $this->hasMany('App\Event');
     }
 }

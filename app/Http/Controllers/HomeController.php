@@ -26,12 +26,12 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $tickets = [];
-        if ($user->can('list-tickets'))
+        $events = [];
+        if ($user->can('list-events'))
         {
-            $tickets = App\Ticket::all();
+            $events = App\Event::all();
         }
-        return view('home', ['tickets'=>$tickets]);
+        return view('home', ['events'=>$events]);
     }
 
     public function administrator() {

@@ -9,11 +9,11 @@
     </section>
     <div class="container">
 
-            @if(isset($ticket))
-        <form class="form-horizontal" method="POST" action="{{ url('/ticket/'.$ticket->id) }}">
+            @if(isset($event))
+        <form class="form-horizontal" method="POST" action="{{ url('/event/'.$event->id) }}">
             <input name="_method" type="hidden" value="PUT">
             @else
-        <form class="form-horizontal" method="POST" action="{{ url('/ticket') }}">
+        <form class="form-horizontal" method="POST" action="{{ url('/event') }}">
             @endif
             {{ csrf_field() }}
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
@@ -36,7 +36,7 @@
             <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                 <label for="subject" class="col-md-4 control-label">Subject</label>
                 <div class="col-md-8">
-                    <input required id="subject" type="text" class="editInfo" name="subject" autofocus maxlength="255" value="{{ isset($ticket) ? $ticket->subject : old('subject') }}">
+                    <input required id="subject" type="text" class="editInfo" name="subject" autofocus maxlength="255" value="{{ isset($event) ? $event->subject : old('subject') }}">
                     @if ($errors->has('subject'))
                         <span class="help-block">
                             <strong>{{ $errors->first('subject') }}</strong>
@@ -47,7 +47,7 @@
             <div class="form-group{{ $errors->has('date_start') ? ' has-error' : '' }}">
                 <label for="date_start" class="col-md-4 control-label">Start</label>
                 <div class="col-md-5">
-                    <input required id="dateTicketStartPicker" type="text" name="date_start" autofocus value="{{ isset($ticket) ? $ticket->date_start : old('date_start') }}">
+                    <input required id="dateeventStartPicker" type="text" name="date_start" autofocus value="{{ isset($event) ? $event->date_start : old('date_start') }}">
                     @if ($errors->has('date_start'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_start') }}</strong>
@@ -58,7 +58,7 @@
             <div class="form-group{{ $errors->has('date_end') ? ' has-error' : '' }}">
                 <label for="date_end" class="col-md-4 control-label">End</label>
                 <div class="col-md-5">
-                    <input required id="dateTicketEndPicker" type="text" name="date_end" autofocus value="{{ isset($ticket) ? $ticket->date_end : old('date_end') }}">
+                    <input required id="dateeventEndPicker" type="text" name="date_end" autofocus value="{{ isset($event) ? $event->date_end : old('date_end') }}">
                     @if ($errors->has('date_end'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_end') }}</strong>
@@ -69,7 +69,7 @@
             <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                 <label for="description" class="col-md-4 control-label">Description</label>
                 <div class="col-md-8">
-                    <textarea required id="description" cols="60" rows="5" class="editTextArea" name="description" >{{ isset($ticket) ? $ticket->description : old('description') }}
+                    <textarea required id="description" cols="60" rows="5" class="editTextArea" name="description" >{{ isset($event) ? $event->description : old('description') }}
                     </textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">

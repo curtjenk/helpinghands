@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ticket extends Model
+class Event extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -16,14 +16,14 @@ class Ticket extends Model
         'date_end', 'user_id',
     ];
     /**
-     * Get the Organization for this ticket.
+     * Get the Organization for this Event.
      */
     public function organization()
     {
         return $this->belongsTo('App\Organization');
     }
     /**
-     * Get the User that created this ticket.
+     * Get the User that created this .
      */
     public function user()
     {

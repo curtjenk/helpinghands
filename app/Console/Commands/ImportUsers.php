@@ -76,6 +76,7 @@ class ImportUsers extends Command
 
             } catch (QueryException $qe) {
                 ++$dropped;
+                echo print_r($qe->getmessage(), true);
                 echo "$dropped Dropped ". $row['First Name'].' '.$row['E-mail Address']."\n";
             }
             // dump($row);

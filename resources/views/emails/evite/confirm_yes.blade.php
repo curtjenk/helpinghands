@@ -6,8 +6,8 @@
         <div class="container">
             <div class="pull-left header">Confirmation - Yes, I'm going</div>
             {{-- <div class="pull-right">
-                @can ('create-ticket')
-                    <a class="btn btn-default" href="{{ url('/ticket/create') }}"><i class="fa fa-plus"></i> Create</a>
+                @can ('create-event')
+                    <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
             </div> --}}
         </div>
@@ -17,7 +17,7 @@
         <p>
             We appreciate your time and talents.
             <br/>
-            See below for more information regarding <b>{{ $ticket->subject }}</b> 
+            See below for more information regarding <b>{{ $event->subject }}</b>
         </p>
         <p>
             Please add the date(s) to your calendar.
@@ -28,10 +28,10 @@
         <h4><u>Event Description</u></h4>
         <p>
             <div>
-                <b>{{ $ticket->date_start}} thru {{ $ticket->date_end }}</b>.
+                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>.
             </div>
             <div>
-                <b>{{ $ticket->description }}</b>
+                <b>{{ $event->description }}</b>
             </div>
         </p>
     </div>

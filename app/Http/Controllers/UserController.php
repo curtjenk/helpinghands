@@ -17,17 +17,17 @@ class UserController extends Controller
         $member = App\User::findOrFail($id);
         $this->authorize('show', $member);
         $responses = $member->responses()
-        ->select("tickets.subject", 'tickets.date_start', 'tickets.date_end')
-        ->join('tickets', 'tickets.id', '=', 'responses.ticket_id')
+        ->select("events.subject", 'events.date_start', 'events.date_end')
+        ->join('events', 'events.id', '=', 'responses.event_id')
         ->where('responses.helping', true)
         ->get();
 
         // $responses = App\User::
         //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
-        //     ->leftjoin('tickets', 'tickets.id', '=', 'responses.ticket_id')
+        //     ->leftjoin('events', 'events.id', '=', 'responses.event_id')
         //     ->groupby('users.id')
         //     ->groupby('responses.id')
-        //     ->groupby('tickets.id')
+        //     ->groupby('events.id')
         //     ->paginate(10);
 
         return response()->json($responses);
@@ -37,7 +37,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function members(Request $request)
+    public function index(Request $request)
     {
         $this->authorize('list-users');
         $user = Auth::user();
@@ -76,7 +76,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function deleteMeOLDindex()
     {
         $this->authorize('list-users');
         $user = Auth::user();

@@ -5,9 +5,9 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-right header">
-                <a class="btn btn-default" href="{{ url('/user') }}"><i class="fa fa-users"></i> Users</a>
+                <a class="btn btn-default" href="{{ url('/member') }}"><i class="fa fa-users"></i> Members</a>
                 @can ('update', $user)
-                <a class="btn btn-default" href="{{ url('/user/'.$user->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
+                <a class="btn btn-default" href="{{ url('/member/'.$user->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
                 @endcan
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="form-horizontal">
                 <div class="panel panel-default">
                     {{-- <div class="panel-heading">
-                        <h4>User Information</h4>
+                        <h4>Member Information</h4>
                     </div> --}}
                     <div class="panel-body">
                         <div class="form-group">

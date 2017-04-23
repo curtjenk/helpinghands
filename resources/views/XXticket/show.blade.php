@@ -6,18 +6,18 @@
         <div class="container">
             <div class="pull-left header">Service / Fellowship Event</div>
             <div class="pull-right">
-                <a class="btn btn-default" href="{{ url('/ticket') }}"><i class="fa fa-list"></i> Events</a>
-                @can ('update', $ticket)
-                <a class="btn btn-default" href="{{ url('/ticket/'.$ticket->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
+                <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
+                @can ('update', $event)
+                <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
                 @endcan
-                @can ('create-ticket')
-                <a class="btn btn-default" href="{{ url('/ticket/create') }}"><i class="fa fa-plus"></i> Create</a>
+                @can ('create-event')
+                <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
                 @can ('send-evites')
-                    @if($ticket->evite_sent)
-                      <a class="btn btn-warning" href="{{ url('/evite/'.$ticket->id) }}"><i class="fa fa-mail-forward"></i> Resend Evite</a>
+                    @if($event->evite_sent)
+                      <a class="btn btn-warning" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Resend Evite</a>
                     @else
-                      <a class="btn btn-default" href="{{ url('/evite/'.$ticket->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
+                      <a class="btn btn-default" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
                     @endif
                 @endcan
             </div>
@@ -42,32 +42,32 @@
                             <label for="organziation" class="col-md-4 control-label">Organization</label>
                             <div class="col-md-8">
                                 <p id="organziation" class="form-control-static">
-                                    {{$ticket->organization->name}} {{$ticket->organization->city}} {{$ticket->organization->state}}
+                                    {{$event->organization->name}} {{$event->organization->city}} {{$event->organization->state}}
                                 </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="subject" class="col-md-4 control-label">Subject</label>
                             <div class="col-md-8">
-                                <p id="subject" class="form-control-static">{{ $ticket->subject }}</p>
+                                <p id="subject" class="form-control-static">{{ $event->subject }}</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="date_start" class="col-md-4 control-label">Start</label>
                             <div class="col-md-8">
-                                <p id="date_start" class="form-control-static">{{ $ticket->date_start }}</p>
+                                <p id="date_start" class="form-control-static">{{ $event->date_start }}</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="date_end" class="col-md-4 control-label">End</label>
                             <div class="col-md-8">
-                                <p id="date_end" class="form-control-static">{{ $ticket->date_end }}</p>
+                                <p id="date_end" class="form-control-static">{{ $event->date_end }}</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="subject" class="col-md-4 control-label">Description</label>
                             <div class="col-md-8">
-                                <p id="subject" class="form-control-static">{{ $ticket->description }}</p>
+                                <p id="subject" class="form-control-static">{{ $event->description }}</p>
                             </div>
                         </div>
                     </div>

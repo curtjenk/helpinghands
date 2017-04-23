@@ -10,7 +10,7 @@
     <div class="container">
         <div class="text-center">
             <div class="row">
-            @can ('list-users')
+            {{-- @can ('list-users')
                 <div class="col-md-6 col-md-offset-3">
                     <a href="{{ url('/user') }}" name="manage_users" style="text-decoration: none;">
                         <div class="thumbnail">
@@ -19,7 +19,7 @@
                         </div>
                     </a>
                 </div>
-            @endcan
+            @endcan --}}
             </div>
             <div class="row">
             @can ('list-organizations')

@@ -52,17 +52,17 @@
                             <a href="{{ url('/member') }}">Members</a>
                         </li>
                     @endif
-                    @can ('list-tickets')
+                    @can ('list-events')
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Service/Events <span class="caret"></span>
                             </a>
-                        {{-- <li><a href="{{ url('/ticket') }}">Service/Events</a> --}}
+                        {{-- <li><a href="{{ url('/event') }}">Service/Events</a> --}}
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/ticket/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
+                                <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
                                 <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
-                            @can ('create-ticket')
-                                <li><a href="{{ url('/ticket/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
+                            @can ('create-event')
+                                <li><a href="{{ url('/event/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
                             @endcan
                             </ul>
                         </li>
@@ -82,7 +82,7 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ url('/user/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
+                                    <li><a href="{{ url('/member/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
                                     @can ('administer')
                                     <li><a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
                                     @endcan

@@ -21,22 +21,21 @@ Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('event/{id}/members', 'EventController@members');
+    Route::get('event/{id}/signup', 'EventController@signup');
+    Route::get('event/calendar', 'EventController@calendar');
     Route::resource('event', 'EventController');
-
-    Route::get('ticket/calendar', 'TicketController@calendar');
-    Route::resource('ticket', 'TicketController');
 
     Route::get('member', 'UserController@members');
     Route::get('member/{id}', 'UserController@yes_responses');
 
-    Route::resource('user', 'UserController');
-    Route::get('user.destroy', 'UserController@destroy');
+    Route::resource('member', 'UserController');
+    Route::get('member.destroy', 'UserController@destroy');
 
     Route::get('administrator', 'HomeController@administrator');
 
     Route::resource('organization', 'OrganizationController');
 
     Route::get('evite/{id}', 'EviteController@send_evites');
-    Route::get('evite/{id}/signup', 'EviteController@signup');
+
 
 });

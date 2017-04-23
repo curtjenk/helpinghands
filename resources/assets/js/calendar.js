@@ -25,7 +25,7 @@ export const calendar = calendar || {};
          var events = [];
          eventdates.forEach(function(d) {
              events.push({'title': d.subject,
-             'url' : '/ticket/'+d.id,
+             'url' : '/event/'+d.id,
              'start' : d.date_start,
              'end' : d.date_end});
          });

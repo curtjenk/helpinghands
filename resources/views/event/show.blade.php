@@ -13,7 +13,7 @@
             @can ('update', $event)
                 <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
             @endcan
-            @can ('create-ticket')
+            @can ('create-event')
                 <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
             @endcan
             @can ('send-evites')
@@ -39,7 +39,7 @@
                 <div class="panel panel-default">
                 @if(Auth::user()->signedup($event->id))
                     <div class="panel-heading" style="background-color:#41b5f4">
-                        <h4 class="text-center">Already signed-up!</h4>
+                        <h4 class="text-center">You are signed-up!</h4>
                     </div>
                 @else
                     <div class="panel-heading" style="background-color:#f45f42">

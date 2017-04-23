@@ -18,21 +18,45 @@ class EventController extends Controller
         $this->middleware('auth');
     }
 
+    public function signup($event_id)
+    {
+        $user = Auth::user();
+        $event = App\Event::findOrFail($event_id);
+        $resp = App\Response::where('event_id',$event->id)
+            ->where('user_id',$user->id)->first();
+        if (!$resp) { //no evite sent but user is signing-up
+            
+            App\Response::create([
+                'user_id'=>$user->id,
+                'event_id'=>$event->id,
+                'helping'=>true,
+                'token'=>null
+            ]);
+        } elseif ($resp->helping == true) {
+            //already signed-up (responded yes)
+            return;
+        } else {
+            //no response to evite or responded No;  Set to Yes
+            $prev_resp->helping = true;
+            $prev_resp->save();
+        }
+        return redirect()->back();
+    }
     /*
 
      */
     public function calendar()
     {
-        $this->authorize('list-tickets');
+        $this->authorize('list-events');
         $user = Auth::user();
-        $query=App\Ticket::select('id', 'subject', 'date_start', 'date_end')
+        $query=App\Event::select('id', 'subject', 'date_start', 'date_end')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
-            ->orderBy('tickets.date_start', 'asc')
+            ->orderBy('events.date_start', 'asc')
             ->get();
 
-        $counts=App\Ticket::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
+        $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
@@ -54,7 +78,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('list-tickets');
+        $this->authorize('list-events');
         $user = Auth::user();
         if (!$request->ajax()) {
             return view('event.index', []);
@@ -63,22 +87,22 @@ class EventController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-        return App\Ticket::
-            select('tickets.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
-            ->leftjoin('responses', 'responses.ticket_id', '=', 'tickets.id')
+        return App\Event::
+            select('events.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
+            ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
-                    $q2->where('tickets.subject', 'like', '%'.$inputs->filter.'%')
-                    ->orWhere('tickets.description', 'like', '%'.$inputs->filter.'%');
+                    $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
+                    ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
                 });
             })
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
-            ->groupby('tickets.id')
+            ->groupby('events.id')
             ->paginate(10);
     }
 
@@ -89,7 +113,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        $this->authorize('create-ticket');
+        $this->authorize('create-event');
         $user = Auth::user();
 
         $orgs = App\Organization::select('organizations.*')
@@ -105,11 +129,11 @@ class EventController extends Controller
     public function members(Request $request, $id)
     {
         $user = Auth::user();
-        $event = App\Ticket::findOrFail($id);
+        $event = App\Event::findOrFail($id);
         $this->authorize('show', $event);
         $members = App\User::join('responses', function($join) use($event){
             $join->on('responses.user_id', 'users.id')
-                ->where('responses.ticket_id', $event->id)
+                ->where('responses.event_id', $event->id)
                 ->where('responses.helping', true);
         })
         ->distinct()
@@ -127,7 +151,7 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('create-ticket');
+        $this->authorize('create-event');
         $this->validate($request, [
             'subject' => 'required|max:255',
             'description' => 'string',
@@ -135,7 +159,7 @@ class EventController extends Controller
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
         ]);
-        $newEvent = App\Ticket::create([
+        $newEvent = App\Event::create([
             'subject'=>$request->input('subject'),
             'description'=>$request->input('description'),
             'date_start'=>$request->input('date_start'),
@@ -157,7 +181,7 @@ class EventController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $event = App\Ticket::findOrFail($id);
+        $event = App\Event::findOrFail($id);
         $this->authorize('show', $event);
         return view('event.show', [
             'event'=>$event,
@@ -173,7 +197,7 @@ class EventController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $event = App\Ticket::findOrFail($id);
+        $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
         $orgs = App\Organization::select('organizations.*')
             ->when($user->is_orgLevel(), function($q) use($user) {
@@ -196,7 +220,7 @@ class EventController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $event = App\Ticket::findOrFail($id);
+        $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
         $this->validate($request, [
             'subject' => 'required|max:255',
@@ -213,8 +237,8 @@ class EventController extends Controller
         $event->updated_user_id = $user->id;
         $event->organization_id = $request->input('organization_id');
         $event->save();
-        return view('ticket.show', [
-            'ticket'=>$event,
+        return view('event.show', [
+            'event'=>$event,
         ]);
     }
 
@@ -226,11 +250,11 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        $event = App\Ticket::findOrFail($id);
+        $event = App\Event::findOrFail($id);
         $this->authorize('destroy', $event);
 
         $event->delete();
-        return redirect('/ticket');
+        return redirect('/event');
     }
 
 }

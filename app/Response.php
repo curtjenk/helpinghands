@@ -13,12 +13,12 @@ class Response extends Model
      * @var array
      */
     protected $fillable = [
-        'ticket_id', 'user_id', 'helping', 'token',
+        'event_id', 'user_id', 'helping', 'token',
     ];
 
-    public function ticket()
+    public function events()
     {
-        return $this->belongsTo('App\Ticket');
+        return $this->belongsTo('App\Event');
     }
     /**
      * Generate a token to send in emails.  If dupe token

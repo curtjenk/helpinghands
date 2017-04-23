@@ -29,11 +29,11 @@ class AddPermissionRole extends Migration
                              'Show organization',
                              'Update organization',
                              'List organizations',
-                             'Create ticket',
-                             'Delete ticket',
-                             'Show ticket',
-                             'Update ticket',
-                             'List tickets'
+                             'Create event',
+                             'Delete event',
+                             'Show event',
+                             'Update event',
+                             'List events'
                             ])
                         ->pluck('id'));
 
@@ -47,11 +47,11 @@ class AddPermissionRole extends Migration
                              'List users',
                              'Show organization',
                              'Update organization',
-                             'Create ticket',
-                             'Delete ticket',
-                             'Show ticket',
-                             'Update ticket',
-                             'List tickets'
+                             'Create event',
+                             'Delete event',
+                             'Show event',
+                             'Update event',
+                             'List events'
                             ])
                         ->pluck('id'));
 
@@ -62,8 +62,8 @@ class AddPermissionRole extends Migration
                              'List users',
                              'Update user',
                              'Show organization',
-                             'Show ticket',
-                             'List tickets'
+                             'Show event',
+                             'List events'
                             ])
                         ->pluck('id'));
 

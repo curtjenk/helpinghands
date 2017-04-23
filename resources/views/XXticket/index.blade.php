@@ -6,8 +6,8 @@
         <div class="container">
             <div class="pull-left header">Service / Fellowship Events</div>
             <div class="pull-right">
-                @can ('create-ticket')
-                    <a class="btn btn-default" href="{{ url('/ticket/create') }}"><i class="fa fa-plus"></i> Create</a>
+                @can ('create-event')
+                    <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
             </div>
         </div>
@@ -24,38 +24,38 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach ($tickets as $ticket)
+            @foreach ($events as $event)
                 <tr>
                     <td class="col-md-3">
-                      <span data-toggle="tooltip" title="<i>{{ $ticket->subject }}</i>" data-html="true">
-                        <a href="{{ url('/ticket/'.$ticket->id) }}">{{ str_limit($ticket->subject, 35) }}</a>
+                      <span data-toggle="tooltip" title="<i>{{ $event->subject }}</i>" data-html="true">
+                        <a href="{{ url('/event/'.$event->id) }}">{{ str_limit($event->subject, 35) }}</a>
                       </span>
                     </td>
                     <td class="col-md-3">
-                      <span data-toggle="tooltip" title="<i>{{ $ticket->description }}</i>" data-html="true">
-                        <a href="{{ url('/ticket/'.$ticket->id) }}">{{ str_limit($ticket->description, 35) }}</a>
+                      <span data-toggle="tooltip" title="<i>{{ $event->description }}</i>" data-html="true">
+                        <a href="{{ url('/event/'.$event->id) }}">{{ str_limit($event->description, 35) }}</a>
                       </span>
                     </td>
                     <td class="col-md-1 text-center">
-                      @if(empty($ticket->evite_sent))
+                      @if(empty($event->evite_sent))
                          <i class="fa fa-frown-o" style="color: red;"></i>
                       @else
                          <i class="fa fa-check-square" style="color: green;"></i>
                       @endif
                     </td>
                     <td class="col-md-2">
-                        {{ $ticket->date_start}}
+                        {{ $event->date_start}}
                     </td>
                     <td class="col-md-2">
-                        {{ $ticket->date_end }}
+                        {{ $event->date_end }}
                     </td>
                     <td class="col-md-1 text-center">
-                    @can ('update', $ticket)
-                        <a href="{{ url('/ticket/'.$ticket->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
+                    @can ('update', $event)
+                        <a href="{{ url('/event/'.$event->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
                     @endcan
-                    @can ('destroy', $ticket)
+                    @can ('destroy', $event)
                     <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
-                      <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteTicket" data-id="{{ $ticket->id }}" data-name="{{ $ticket->subject}}" name="delete_{{ $ticket->id }}">
+                      <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteevent" data-id="{{ $event->id }}" data-name="{{ $event->subject}}" name="delete_{{ $event->id }}">
                           <i class="fa fa-trash"></i>
                       </a>
                     </span>
@@ -68,7 +68,7 @@
     </div>
 </main>
 
-<div class="modal fade" id="deleteTicket" tabindex="-1" user="dialog" aria-labelledby="Confirm delete ticket">
+<div class="modal fade" id="deleteevent" tabindex="-1" user="dialog" aria-labelledby="Confirm delete event">
   <div class="modal-dialog modal-sm" user="document">
     <div class="modal-content">
       <div class="modal-header">

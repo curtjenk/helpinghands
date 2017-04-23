@@ -16,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         App\User::class => App\Policies\UserPolicy::class,
         App\Organization::class => App\Policies\OrganizationPolicy::class,
-        App\Ticket::class => App\Policies\TicketPolicy::class,
+        App\Event::class => App\Policies\EventPolicy::class,
     ];
 
     /**
@@ -27,11 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        Gate::define('create-ticket', function ($user) {
-            return $user->has_permission('Create ticket');
+        Gate::define('create-event', function ($user) {
+            return $user->has_permission('Create event');
         });
-        Gate::define('list-tickets', function ($user) {
-            return $user->has_permission('List tickets');
+        Gate::define('list-events', function ($user) {
+            return $user->has_permission('List events');
         });
 
         Gate::define('create-organization', function ($user) {

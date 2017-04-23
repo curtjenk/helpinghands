@@ -9,7 +9,7 @@ use Auth;
 use DB;
 use Log;
 
-class TicketController extends Controller
+class eventController extends Controller
 {
 
     public function __construct()
@@ -22,16 +22,16 @@ class TicketController extends Controller
      */
     public function calendar()
     {
-        $this->authorize('list-tickets');
+        $this->authorize('list-events');
         $user = Auth::user();
-        $query=App\Ticket::select('id', 'subject', 'date_start', 'date_end')
+        $query=App\Event::select('id', 'subject', 'date_start', 'date_end')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
-            ->orderBy('tickets.date_start', 'asc')
+            ->orderBy('events.date_start', 'asc')
             ->get();
 
-        $counts=App\Ticket::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
+        $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
@@ -41,8 +41,8 @@ class TicketController extends Controller
             ->limit(3)
             ->get();
 
-        return view('ticket.calendar', [
-                'tickets'=>$query,
+        return view('event.calendar', [
+                'events'=>$query,
                 'counts'=>$counts
             ]);
     }
@@ -53,18 +53,18 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $this->authorize('list-tickets');
+        $this->authorize('list-events');
         $user = Auth::user();
 
-        $query=App\Ticket::with('organization')
+        $query=App\Event::with('organization')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
-            ->orderBy('tickets.date_start', 'desc')
+            ->orderBy('events.date_start', 'desc')
             ->get();
 
-        return view('ticket.index', [
-                'tickets'=>$query,
+        return view('event.index', [
+                'events'=>$query,
             ]);
     }
 
@@ -75,7 +75,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        $this->authorize('create-ticket');
+        $this->authorize('create-event');
         $user = Auth::user();
 
         $orgs = App\Organization::select('organizations.*')
@@ -84,7 +84,7 @@ class TicketController extends Controller
             })
             ->get();
 
-        return view('ticket.create',
+        return view('event.create',
             ['orgs'=>$orgs,]);
     }
 
@@ -97,7 +97,7 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('create-ticket');
+        $this->authorize('create-event');
         $this->validate($request, [
             'subject' => 'required|max:255',
             'description' => 'string',
@@ -105,7 +105,7 @@ class TicketController extends Controller
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
         ]);
-        $newticket = App\Ticket::create([
+        $newevent = App\Event::create([
             'subject'=>$request->input('subject'),
             'description'=>$request->input('description'),
             'date_start'=>$request->input('date_start'),
@@ -113,8 +113,8 @@ class TicketController extends Controller
             'user_id'=>$user->id,
             'organization_id'=>$request->input('organization_id')
         ]);
-        return view('ticket.show', [
-            'ticket'=>$newticket,
+        return view('event.show', [
+            'event'=>$newevent,
         ]);
     }
 
@@ -127,10 +127,10 @@ class TicketController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $ticket = App\Ticket::findOrFail($id);
-        $this->authorize('show', $ticket);
-        return view('ticket.show', [
-            'ticket'=>$ticket,
+        $event = App\Event::findOrFail($id);
+        $this->authorize('show', $event);
+        return view('event.show', [
+            'event'=>$event,
         ]);
     }
 
@@ -143,15 +143,15 @@ class TicketController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $ticket = App\Ticket::findOrFail($id);
-        $this->authorize('update', $ticket);
+        $event = App\Event::findOrFail($id);
+        $this->authorize('update', $event);
         $orgs = App\Organization::select('organizations.*')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organizations.id', $user->organization_id);
             })
             ->get();
-        return view('ticket.create', [
-            'ticket'=>$ticket,
+        return view('event.create', [
+            'event'=>$event,
             'orgs'=>$orgs,
         ]);
     }
@@ -166,8 +166,8 @@ class TicketController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $ticket = App\Ticket::findOrFail($id);
-        $this->authorize('update', $ticket);
+        $event = App\Event::findOrFail($id);
+        $this->authorize('update', $event);
         $this->validate($request, [
             'subject' => 'required|max:255',
             'description' => 'string',
@@ -176,15 +176,15 @@ class TicketController extends Controller
             'organization_id' => 'required|exists:organizations,id',
         ]);
 
-        $ticket->subject = $request->input('subject');
-        $ticket->description = $request->input('description');
-        $ticket->date_start = $request->input('date_start');
-        $ticket->date_end = $request->input('date_end');
-        $ticket->updated_user_id = $user->id;
-        $ticket->organization_id = $request->input('organization_id');
-        $ticket->save();
-        return view('ticket.show', [
-            'ticket'=>$ticket,
+        $event->subject = $request->input('subject');
+        $event->description = $request->input('description');
+        $event->date_start = $request->input('date_start');
+        $event->date_end = $request->input('date_end');
+        $event->updated_user_id = $user->id;
+        $event->organization_id = $request->input('organization_id');
+        $event->save();
+        return view('event.show', [
+            'event'=>$event,
         ]);
     }
 
@@ -196,11 +196,11 @@ class TicketController extends Controller
      */
     public function destroy($id)
     {
-        $ticket = App\Ticket::findOrFail($id);
-        $this->authorize('destroy', $ticket);
+        $event = App\Event::findOrFail($id);
+        $this->authorize('destroy', $event);
 
-        $ticket->delete();
-        return redirect('/ticket');
+        $event->delete();
+        return redirect('/event');
     }
 
 }

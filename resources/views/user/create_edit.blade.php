@@ -8,7 +8,7 @@
         </div>
     </section>
     <div class="container">
-        <form class="form-horizontal" method="POST" action="{{ url('/user/'.$user->id) }}">
+        <form class="form-horizontal" method="POST" action="{{ url('/member/'.$user->id) }}">
             <input name="_method" type="hidden" value="PUT">
             {{ csrf_field() }}
             <div class="form-group">

@@ -47,7 +47,7 @@
             <div class="form-group{{ $errors->has('date_start') ? ' has-error' : '' }}">
                 <label for="date_start" class="col-md-4 control-label">Start</label>
                 <div class="col-md-5">
-                    <input required id="dateTicketStartPicker" type="text" name="date_start" autofocus value="{{ isset($event) ? $event->date_start : old('date_start') }}">
+                    <input required id="dateEventStartPicker" type="text" name="date_start" autofocus value="{{ isset($event) ? $event->date_start : old('date_start') }}">
                     @if ($errors->has('date_start'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_start') }}</strong>
@@ -58,7 +58,7 @@
             <div class="form-group{{ $errors->has('date_end') ? ' has-error' : '' }}">
                 <label for="date_end" class="col-md-4 control-label">End</label>
                 <div class="col-md-5">
-                    <input required id="dateTicketEndPicker" type="text" name="date_end" autofocus value="{{ isset($event) ? $event->date_end : old('date_end') }}">
+                    <input required id="dateEventEndPicker" type="text" name="date_end" autofocus value="{{ isset($event) ? $event->date_end : old('date_end') }}">
                     @if ($errors->has('date_end'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_end') }}</strong>

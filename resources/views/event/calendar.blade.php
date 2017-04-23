@@ -7,7 +7,7 @@
             <div class="pull-left header">Service / Fellowship Events Calendar</div>
             <div class="pull-right">
                 <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
-                @can ('create-ticket')
+                @can ('create-event')
                 <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
                 @endcan
             </div>
