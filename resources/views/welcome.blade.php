@@ -11,7 +11,7 @@
         <div class="links">
             <a href="http://cornerstonesbc.net">
             <h5>
-                Supported by Cornerstone Baptist Church
+                Supported by <u>Cornerstone Baptist Church</u>
             </h5>
             <h6>
                 Lithia Springs, GA

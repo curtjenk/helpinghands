@@ -8,7 +8,7 @@
             <div class="pull-right">
                 <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
             @if(!Auth::user()->signedup($event->id))
-                <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/signup') }}"><i class="fa fa-handshake-o"></i> Signup</a>
+                <a class="btn btn-default" style="background-color:#f45f42" href="{{ url('/event/'.$event->id.'/signup') }}"><i class="fa fa-handshake-o"></i> Signup</a>
             @endif
             @can ('update', $event)
                 <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
@@ -37,17 +37,15 @@
         <div class="col-md-8">
             <div class="form-horizontal">
                 <div class="panel panel-default">
-
-                    @if(Auth::user()->signedup($event->id))
-                        <div class="bg-success">
-                            <h4 class="text-center">I already signed-up!</h4>
-                        </div>
-                    @else
-                        <div class="bg-danger">
-                            <h4 class="text-center">I should signup today!</h4>
-                        </div>
-                    @endif
-
+                @if(Auth::user()->signedup($event->id))
+                    <div class="panel-heading" style="background-color:#41b5f4">
+                        <h4 class="text-center">Already signed-up!</h4>
+                    </div>
+                @else
+                    <div class="panel-heading" style="background-color:#f45f42">
+                        <h4 class="text-center"><em>Signup today!</em></h4>
+                    </div>
+                @endif
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="organziation" class="col-md-4 control-label">Organization</label>
