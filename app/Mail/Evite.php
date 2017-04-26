@@ -52,7 +52,7 @@ class Evite extends Mailable
             return $this->subject($this->event->subject)
                 ->view('emails.evite.invite')
                 ->with([
-                    ''=>$this->event,
+                    'event'=>$this->event,
                     'user'=>$this->user,
                     'token'=>$response->token,
                 ]);
@@ -71,7 +71,7 @@ class Evite extends Mailable
         return $this->subject($this->event->subject)
             ->view('emails.evite.confirm_no')
             ->with([
-                ''=>$this->event,
+                'event'=>$this->event,
                 'user'=>$this->user,
             ]);
     }
