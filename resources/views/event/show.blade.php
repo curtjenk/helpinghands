@@ -39,7 +39,7 @@
                 <div class="panel panel-default">
                 @if(Auth::user()->signedup($event->id))
                     <div class="panel-heading" style="background-color:#41b5f4">
-                        <h4 class="text-center">You are signed-up!</h4>
+                        <h4 class="text-center"><em>You are signed-up!</em></h4>
                     </div>
                 @else
                     <div class="panel-heading" style="background-color:#f45f42">

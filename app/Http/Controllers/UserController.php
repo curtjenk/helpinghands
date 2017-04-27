@@ -223,7 +223,7 @@ class UserController extends Controller
         $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
         $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
         $user->save();
-        return redirect('/user/'.$id);
+        return redirect('/member/'.$id);
     }
 
     /**
@@ -239,6 +239,6 @@ class UserController extends Controller
         $this->authorize('destroy', $user);
 
         $user->delete();
-        return redirect('/user');
+        return redirect('/member');
     }
 }
