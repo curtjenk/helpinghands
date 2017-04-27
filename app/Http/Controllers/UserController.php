@@ -223,7 +223,10 @@ class UserController extends Controller
         $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
         $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
         $user->save();
-        return redirect('/member/'.$id);
+        return view('user.show', [
+            'user'=>$user,
+        ]);
+        //return redirect('/member/'.$id);
     }
 
     /**
