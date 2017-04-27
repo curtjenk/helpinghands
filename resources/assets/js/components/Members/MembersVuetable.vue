@@ -110,8 +110,8 @@ export default {
         // },
         {
           name: 'nickname',
-          sortField: 'nickname',
-          callback: 'allcap'
+          sortField: 'nickname'
+        //   callback: 'allcap'
         },
         {
           title: 'Positive Responses',

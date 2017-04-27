@@ -59,8 +59,8 @@
                             </a>
                         {{-- <li><a href="{{ url('/event') }}">Service/Events</a> --}}
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
                                 <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
+                                <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
                             @can ('create-event')
                                 <li><a href="{{ url('/event/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
                             @endcan
