@@ -44,6 +44,8 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                        <li style="height: 1px; margin-left:100px;">
+                        </li>
                         {{-- @if (Auth::user())
                         <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                         @endif --}}

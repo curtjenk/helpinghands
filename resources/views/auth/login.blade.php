@@ -11,12 +11,11 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
-                {{-- {{ dump(session()->all()) }}
-                @if ($errors->has('message'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('message') }}</strong>
+                @if (isset($message))
+                    <span>
+                        <strong>{{ $message }}</strong>
                     </span>
-                @endif --}}
+                @endif
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
