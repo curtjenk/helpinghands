@@ -47,10 +47,17 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         //Log::debug(get_class($exception));
-        if ($exception instanceof TokenMismatchException){
-            //Log::debug("token mismatch exception");
-            return view('auth.login',
-             ['message' => 'Your session has expired. Please login again.']);
+        // if ($exception instanceof TokenMismatchException){
+        //     //Log::debug("token mismatch exception");
+        //     return view('auth.login',
+        //      ['message' => 'Your session has expired. Please login again.']);
+        // }
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException)
+        {
+            return redirect()
+                ->back()
+                ->withInput($request->except('password', '_token'))
+                ->withError('Your form has expired. Please refresh the page and try again.');
         }
         return parent::render($request, $exception);
     }

@@ -28,6 +28,9 @@ class CreateUsersTable extends Migration
             $table->string('homephone',64)->nullable();
             $table->integer('role_id')->nullable();
             $table->integer('organization_id')->nullable();
+            $table->integer('birth_mm')->nullable();
+            $table->integer('birth_dd')->nullable();
+            $table->integer('birth_yyyy')->nullable();
             $table->boolean('opt_show_email')->default(false);
             $table->boolean('opt_receive_evite')->default(true);
             $table->boolean('opt_show_mobilephone')->default(false);

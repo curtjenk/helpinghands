@@ -113,11 +113,18 @@ export default {
           callback: 'formatDate|MM-DD-YYYY'
         },
         {
-          title: 'Positive Responses',
+          title: 'Yes',
           name: 'yes_responses',
           sortField: 'yes_responses',
           dataClass: 'text-center',
-          titleClass: 'text-center',
+          titleClass: 'text-center'
+        },
+        {
+          title: 'No',
+          name: 'no_responses',
+          sortField: 'no_responses',
+          dataClass: 'text-center',
+          titleClass: 'text-center'
         },
         // {
         //   name: 'salary',
@@ -137,7 +144,8 @@ export default {
         table: {
           tableClass: 'table table-bordered table-striped table-hover',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down'
+          descendingIcon: 'glyphicon glyphicon-chevron-down',
+          thumbsup: 'fa fa-thumbs-o-up'
         },
         pagination: {
           wrapperClass: 'pagination',

@@ -25,6 +25,8 @@ class CreateEventsTable extends Migration
             $table->integer('updated_user_id')->unsigned()->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->timestamps();
+
+            $table->foreign('status_id')->references('id')->on('statuses');
         });
     }
 

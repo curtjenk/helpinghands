@@ -29,4 +29,11 @@ class Event extends Model
     {
         return $this->belongsTo('App\User');
     }
+    /**
+     * Get the status for this event
+     */
+    public function status()
+    {
+        return $this->belongsTo('App\Status');
+    }
 }

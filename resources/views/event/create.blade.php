@@ -28,7 +28,9 @@
                 <div class="col-md-8">
                     <select id="organization_id" name="organization_id">
                         @foreach ($orgs as $org)
-                            <option value="{{ $org->id }}"> {{$org->name}} {{$org->city}} {{$org->state}}</option>
+                            <option value="{{ $org->id }}" {{$event->organization_id==$org->id?'selected':''}}>
+                                {{$org->name}} {{$org->city}} {{$org->state}}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -64,6 +66,25 @@
                             <strong>{{ $errors->first('date_end') }}</strong>
                         </span>
                     @endif
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">
+                <div class="col-md-4 text-right">
+                    <label class="control-label">Status</label>
+                    @if ($errors->has('status'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('status_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-md-8">
+                    <select id="status_id" name="status_id">
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status->id }}" {{$event->status_id == $status->id ? 'selected':''}}>
+                                {{$status->name}}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">

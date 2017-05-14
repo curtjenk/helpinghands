@@ -34,6 +34,7 @@
                 </h5>
             @endif
         </div>
+        {{-- {{dump($event)}} --}}
         <div class="col-md-8">
             <div class="form-horizontal">
                 <div class="panel panel-default">
@@ -74,9 +75,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="subject" class="col-md-4 control-label">Description</label>
+                            <label for="status" class="col-md-4 control-label">Status</label>
                             <div class="col-md-8">
-                                <p id="subject" class="form-control-static">{{ $event->description }}</p>
+                                <p id="status" class="form-control-static">{{ $event->status->name }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-md-4 control-label">Description</label>
+                            <div class="col-md-8">
+                                <p id="description" class="form-control-static">{{ $event->description }}</p>
                             </div>
                         </div>
                     </div>
