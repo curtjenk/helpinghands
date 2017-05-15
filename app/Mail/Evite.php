@@ -22,17 +22,24 @@ class Evite extends Mailable
    protected $event;
    protected $user;
    protected $resp;
+   protected $confirm;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(App\Event $event, App\User $user, App\Response $resp = null)
+    public function __construct(App\Event $event, App\User $user,
+            App\Response $resp = null, Array $confirm = null)
     {
         $this->event = $event;
         $this->user = $user;
         $this->resp = $resp;
+        if (isset($confirm)) {
+            $this->confirm = $confirm['confirm'];
+        } else {
+            $this->confirm = null;
+        }
     }
 
     /**
@@ -42,37 +49,47 @@ class Evite extends Mailable
      */
     public function build()
     {
-        if ($this->resp == null) {
-            Log::debug("Send evite to ".$this->user->name);
-            $response = \App\Response::create([
+        if (isset($confirm)) {
+            Log::debug("Send confirmation to ".$this->user->name.' '.$this->user->email.' ('.$confirm.')');
+            if ($confirm == 1) {
+                return $this->subject($this->event->subject)
+                    ->view('emails.evite.confirm_yes')
+                    ->with([
+                        'event'=>$this->event,
+                        'user'=>$this->user,
+                    ]);
+            } else {
+                return $this->subject($this->event->subject)
+                    ->view('emails.evite.confirm_no')
+                    ->with([
+                        'event'=>$this->event,
+                        'user'=>$this->user,
+                    ]);
+            }
+        }
+        //check for first time (!$responded) or resending because no response (helping ==null)
+        $token = '';
+        if (!$this->resp) {
+            Log::debug("Send evite to ".$this->user->name.' '.$this->user->email);
+            $newresp = \App\Response::create([
                 'user_id'=>$this->user->id,
                 'event_id'=>$this->event->id,
                 'token'=>\App\Response::generateToken()
             ]);
-            return $this->subject($this->event->subject)
-                ->view('emails.evite.invite')
-                ->with([
-                    'event'=>$this->event,
-                    'user'=>$this->user,
-                    'token'=>$response->token,
-                ]);
+            $token = $newresp->token;
+
+        } else {
+            Log::debug("Re-Send evite to ".$this->user->name.' '.$this->user->email);
+            $token = $this->resp->token;
         }
-
-
-        if ($this->resp->helping == true || $this->resp->helping == 1) {
-            return $this->subject($this->event->subject)
-                ->view('emails.evite.confirm_yes')
-                ->with([
-                    'event'=>$this->event,
-                    'user'=>$this->user,
-                ]);
-        }
-
         return $this->subject($this->event->subject)
-            ->view('emails.evite.confirm_no')
+            ->view('emails.evite.invite')
             ->with([
                 'event'=>$this->event,
                 'user'=>$this->user,
+                'token'=>$token,
             ]);
+
+
     }
 }

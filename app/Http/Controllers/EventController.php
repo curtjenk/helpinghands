@@ -37,8 +37,8 @@ class EventController extends Controller
             return;
         } else {
             //no response to evite or responded No;  Set to Yes
-            $prev_resp->helping = true;
-            $prev_resp->save();
+            $resp->helping = true;
+            $resp->save();
         }
         return redirect()->back();
     }

@@ -33,13 +33,13 @@ class EviteController extends Controller
         $resp->helping = true;
         $resp->save();
         Log::debug('response_yes: send confirmation email');
-        Mail::to($user)->queue(new Evite($event, $user, $resp));
+        Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>1]));
         return view('emails.evite.confirm_yes',
             ['event'=>$event,
              'user'=>$user]);
     }
 
-    
+
 
     public function response_no($event_id, $user_id, $token)
     {
@@ -56,7 +56,7 @@ class EviteController extends Controller
         $resp->helping = false;
         $resp->save();
         Log::debug('response_no: send confirmation email');
-        Mail::to($user)->queue(new Evite($event, $user, $resp));
+        Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>0]));
         return view('emails.evite.confirm_no',
             ['event'=>$event,
              'user'=>$user]);
@@ -94,16 +94,14 @@ class EviteController extends Controller
         $cnt=0;
         foreach($helpers as $helper)
         {
-            $evites = $helper->responses()
+            //check if already responded Yes/no
+            $responded = $helper->responses()
                 ->where('event_id', $event_id)
-                ->get();
-            $numEvites = $evites->count();
-            $numResponses = $evites->filter(function($el) {
-                        return isset($el->helping);
-                    })->count();
-            if ($numEvites < 8 && $numResponses == 0) {
+                ->first();
+            //check for first time (!$responded) or resending because no response (helping ==null)
+            if (!$responded || !isset($responded->helping)) {
                 ++$cnt;
-                Mail::to($helper)->queue(new Evite($event, $helper));
+                Mail::to($helper)->queue(new Evite($event, $helper, $responded));
             }
         }
         if ($cnt > 0) {
