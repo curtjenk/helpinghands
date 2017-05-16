@@ -75,6 +75,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="event_type" class="col-md-4 control-label">Type</label>
+                            <div class="col-md-8">
+                                <p id="event_type" class="form-control-static">{{ $event->event_type->name }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="status" class="col-md-4 control-label">Status</label>
                             <div class="col-md-8">
                                 <p id="status" class="form-control-static">{{ $event->status->name }}</p>

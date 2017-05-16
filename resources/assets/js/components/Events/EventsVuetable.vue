@@ -89,8 +89,16 @@ export default {
           callback: 'ellipsis|50'
         },
         {
+          name: 'type',
+          titleClass: 'text-center',
+        },
+        {
+          name: 'status',
+          titleClass: 'text-center',
+        },
+        {
           name: 'evite_sent',
-          title: 'Evite Sent',
+          title: 'Evites?',
           titleClass: 'text-center',
           dataClass: 'text-center',
           sortField: 'evite_sent',
@@ -113,14 +121,14 @@ export default {
           callback: 'formatDate|MM-DD-YYYY'
         },
         {
-          title: 'Yes',
+          title: '<i class=" fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
           dataClass: 'text-center',
-          titleClass: 'text-center'
+          titleClass: 'text-center '
         },
         {
-          title: 'No',
+          title: '<i class=" fa fa-thumbs-o-down fa-w"></i>',
           name: 'no_responses',
           sortField: 'no_responses',
           dataClass: 'text-center',

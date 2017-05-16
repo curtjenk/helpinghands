@@ -13,7 +13,7 @@ class Event extends Model
      */
     protected $fillable = [
         'subject', 'description', 'evite_sent', 'date_start', 'organization_id',
-        'date_end', 'user_id',
+        'date_end', 'user_id', 'status_id', 'event_type_id'
     ];
     /**
      * Get the Organization for this Event.
@@ -35,5 +35,12 @@ class Event extends Model
     public function status()
     {
         return $this->belongsTo('App\Status');
+    }
+    /**
+     * Get the type for this event
+     */
+    public function event_type()
+    {
+        return $this->belongsTo('App\EventType');
     }
 }

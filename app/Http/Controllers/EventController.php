@@ -88,11 +88,13 @@ class EventController extends Controller
             [ ]
         );
         return App\Event::
-            select('events.*',
+            select('events.*', 'statuses.name as status', 'event_types.name as type',
                 DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
                 DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
             )
             ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
+            ->join('statuses', 'statuses.id', '=', 'events.status_id')
+            ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
@@ -106,6 +108,8 @@ class EventController extends Controller
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
             ->groupby('events.id')
+            ->groupby('statuses.id')
+            ->groupby('event_types.id')
             ->paginate(10);
     }
 
@@ -127,7 +131,9 @@ class EventController extends Controller
 
         return view('event.create',
             ['orgs'=>$orgs,
-             'statuses'=>App\Status::all()]);
+             'statuses'=>App\Status::all(),
+             'event_types'=>App\EventType::all(),
+         ]);
     }
 
     public function members(Request $request, $id)
@@ -162,8 +168,10 @@ class EventController extends Controller
             'date_start' => 'date',
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
+            'event_type_id' => 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id'
         ]);
+        // dump($request->all());
         $newEvent = App\Event::create([
             'subject'=>$request->input('subject'),
             'description'=>$request->input('description'),
@@ -171,6 +179,7 @@ class EventController extends Controller
             'date_end'=>$request->input('date_end'),
             'user_id'=>$user->id,
             'status_id'=>$request->input('status_id'),
+            'event_type_id'=>$request->input('event_type_id'),
             'organization_id'=>$request->input('organization_id')
         ]);
         return view('event.show', [
@@ -213,7 +222,8 @@ class EventController extends Controller
         return view('event.create', [
             'event'=>$event,
             'orgs'=>$orgs,
-            'statuses'=>App\Status::all()
+            'statuses'=>App\Status::all(),
+            'event_types'=>App\EventType::all()
         ]);
     }
 
@@ -235,6 +245,7 @@ class EventController extends Controller
             'date_start' => 'date',
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
+            'event_type_id'=> 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id'
         ]);
 
@@ -245,6 +256,7 @@ class EventController extends Controller
         $event->updated_user_id = $user->id;
         $event->organization_id = $request->input('organization_id');
         $event->status_id = $request->input('status_id');
+        $event->event_type_id = $request->input('event_type_id');
         $event->save();
         return view('event.show', [
             'event'=>$event,

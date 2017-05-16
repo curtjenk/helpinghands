@@ -24,9 +24,11 @@ class CreateEventsTable extends Migration
             $table->date('evite_sent')->nullable();
             $table->integer('updated_user_id')->unsigned()->nullable();
             $table->integer('status_id')->unsigned()->nullable();
+            $table->integer('event_type_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('status_id')->references('id')->on('statuses');
+            $table->foreign('event_type_id')->references('id')->on('event_types');
         });
     }
 

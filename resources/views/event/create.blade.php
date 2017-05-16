@@ -28,7 +28,7 @@
                 <div class="col-md-8">
                     <select id="organization_id" name="organization_id">
                         @foreach ($orgs as $org)
-                            <option value="{{ $org->id }}" {{$event->organization_id==$org->id?'selected':''}}>
+                            <option value="{{ $org->id }}" {{ isset($event)&& $event->organization_id==$org->id?'selected':''}}>
                                 {{$org->name}} {{$org->city}} {{$org->state}}
                             </option>
                         @endforeach
@@ -68,10 +68,29 @@
                     @endif
                 </div>
             </div>
+            <div class="form-group{{ $errors->has('event_type_id') ? ' has-error' : '' }}">
+                <div class="col-md-4 text-right">
+                    <label class="control-label">Type</label>
+                    @if ($errors->has('event_type_id'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('event_type_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-md-8">
+                    <select id="event_type_id" name="event_type_id">
+                        @foreach ($event_types as $event_type)
+                            <option value="{{ $event_type->id }}" {{isset($event) && $event->event_type_id == $event_type->id ? 'selected':''}}>
+                                {{$event_type->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">
                 <div class="col-md-4 text-right">
                     <label class="control-label">Status</label>
-                    @if ($errors->has('status'))
+                    @if ($errors->has('status_id'))
                         <span class="help-block">
                             <strong>{{ $errors->first('status_id') }}</strong>
                         </span>
@@ -80,7 +99,7 @@
                 <div class="col-md-8">
                     <select id="status_id" name="status_id">
                         @foreach ($statuses as $status)
-                            <option value="{{ $status->id }}" {{$event->status_id == $status->id ? 'selected':''}}>
+                            <option value="{{ $status->id }}" {{isset($event)&&$event->status_id == $status->id ? 'selected':''}}>
                                 {{$status->name}}
                             </option>
                         @endforeach
