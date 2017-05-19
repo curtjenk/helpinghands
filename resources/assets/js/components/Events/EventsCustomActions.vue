@@ -1,6 +1,7 @@
   <template>
     <div class="custom-actions">
-      <!-- <a class="" data-toggle="tooltip" title="View"  @click="itemAction('view-item', rowData, rowIndex)"><i class="fa fa-eye fa-lg"></i></a> -->
+        <!-- {{permissions}} -->
+      <!-- <a class="" data-perm="{{permissions.isadmin}}" data-toggle="tooltip" title="View"  @click="itemAction('view-item', rowData, rowIndex)"><i class="fa fa-eye fa-lg"></i></a> -->
       <a class="" data-toggle="tooltip" title="Details"  @click="itemAction('edit-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a>
       <!-- <a class="" data-toggle="tooltip" title="Sign-up" @click="itemAction('signup-item', rowData, rowIndex)"><i class="fa fa-edit fa-lg"></i></a> -->
     </div>

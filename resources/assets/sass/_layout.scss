@@ -71,6 +71,9 @@ input {
   }
 }
 
+textarea {
+  resize: none;
+}
 .editTextArea {
   outline: 0;
   border: 1px solid $input;

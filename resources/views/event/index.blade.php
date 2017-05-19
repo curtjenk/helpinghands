@@ -13,7 +13,12 @@
         </div>
     </section>
     <div class="container-fluid">
-         <eventslist></eventslist>
+        <eventslist
+          isAdmin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin()
+              ? 'true':'false'}}"
+        >
+
+         </eventslist>
     </div>
     {{-- <div class="container">
         <table class="table">
@@ -89,6 +94,29 @@
           <button type="submit" class="btn btn-danger" name="submit">Accept</button>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="eventnotify" tabindex="-1" user="dialog" aria-labelledby="Send Notification event">
+  <div class="modal-dialog modal-sm" user="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">placeholder</h4>
+        <div class="text-center">Enter brief message below</div>
+      </div>
+      <form method="POST" action="">
+        <div class="modal-body">
+            <textarea required cols="35" rows="7" class="" name="message" >
+            </textarea>
+        </div>
+        <div class="modal-footer">
+          {{ csrf_field() }}
+          <button type="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger" name="submit">Accept</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

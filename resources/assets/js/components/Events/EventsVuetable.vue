@@ -10,11 +10,12 @@
           @vuetable-pagination:change-page="onChangePage"
         ></vuetable-pagination>
     <!-- </div> -->
-    <filter-bar filterPlaceholder="subject, description"></filter-bar>
+    <filter-bar filterPlaceholder=" subject, description"></filter-bar>
 
     <vuetable ref="vuetable"
       api-url="/event"
       :fields="fields"
+      :permissions="permissions"
       pagination-path=""
       :css="css.table"
       :sort-order="sortOrder"
@@ -24,7 +25,32 @@
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
-    ></vuetable>
+    >
+        <template slot="actions2" scope="props">
+          <div class="custom-actions">
+            <span data-toggle="tooltip" title="Details" data-placement="left" class="">
+                <a v-show="isadmin" href="#" type="button" class=""
+                  @click="showEvent(props.rowData, props.rowIndex)">
+                  <i class="fa fa-edit fa-lg"></i>
+                </a>
+            </span>
+            <span data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
+                <a v-show="isadmin" href="#" type="button" class=""
+                    data-toggle="modal" data-target="#eventnotify"
+                    :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
+                    <i class="fa fa-envelope-o fa-lg"></i>
+                </a>
+            </span>
+            <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
+             <a v-show="isadmin" href="#" type="button" class=""
+                 data-toggle="modal" data-target="#deleteevent"
+                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
+                 <i class="fa fa-trash fa-lg"></i>
+             </a>
+            </span>
+          </div>
+        </template>
+    </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
         info-class="pagination-info"
@@ -61,8 +87,14 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
+  props: [
+      'isadmin'
+  ],
   data () {
     return {
+      permissions : {
+           isadmin: this.isadmin
+      },
       fields: [
         // {
         //   name: '__sequence',
@@ -121,14 +153,14 @@ export default {
           callback: 'formatDate|MM-DD-YYYY'
         },
         {
-          title: '<i class=" fa fa-thumbs-o-up fa-w"></i>',
+          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
           dataClass: 'text-center',
           titleClass: 'text-center '
         },
         {
-          title: '<i class=" fa fa-thumbs-o-down fa-w"></i>',
+          title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
           name: 'no_responses',
           sortField: 'no_responses',
           dataClass: 'text-center',
@@ -141,8 +173,14 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
+        // {
+        //   name: '__component:event-custom-actions',
+        //   title: 'Actions',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center'
+        // },
         {
-          name: '__component:event-custom-actions',
+          name: '__slot:actions2',   // <----
           title: 'Actions',
           titleClass: 'text-center',
           dataClass: 'text-center'
@@ -176,6 +214,13 @@ export default {
     }
   },
   methods: {
+    showEvent (data, index) {
+        console.log('slot)', data.subject, index)
+        window.location.href = '/event/'+data.id;
+    },
+    onAction2 (action, data, index) {
+      console.log('slot) action: ' + action, data.subject, index)
+    },
     expandAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
             return item.id

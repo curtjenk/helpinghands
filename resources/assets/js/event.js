@@ -14,9 +14,19 @@ $(function() {
   $( "#dateEventStartPicker" ).datepicker();
   $( "#dateEventEndPicker" ).datepicker();
 
-  $('#deleteTicket').on('show.bs.modal', function(event) {
+  $('#deleteevent').on('show.bs.modal', function(event) {
     const button = $(event.relatedTarget);
-    $('#deleteTicket h4').text('Delete ' + button.data('name'));
-    $('#deleteTicket form').attr('action', 'event/' + button.data('id'));
+    $('#deleteevent h4').text('Delete ' + button.data('name'));
+    $('#deleteevent form').attr('action', 'event/' + button.data('id'));
+  });
+  $('#eventnotify').on('show.bs.modal', function(event) {
+    const button = $(event.relatedTarget);
+    $('#eventnotify h4').text('Send notification ');
+    $('#eventnotify form').attr('action', 'event/notify/' + button.data('id'));
+  });
+  $('#eventevite').on('show.bs.modal', function(event) {
+    const button = $(event.relatedTarget);
+    $('#eventevite h4').text('Send evites ');
+    $('#eventevite form').attr('action', 'evite' + button.data('id'));
   });
 });
