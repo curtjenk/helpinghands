@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.email')
 
 @section('content')
 <main>
@@ -28,6 +28,9 @@
             <a href="{{ url('/api/evite/o/'.$event->id."/".$user->id."/".$token) }}">Sorry, maybe next time</a>
         </p>
         <h4><u>Event Description</u></h4>
+        <p>
+            This is a {{ $event->event_type->name }} event/opportunity.
+        </p>
         <p>
             <div>
                 <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>.

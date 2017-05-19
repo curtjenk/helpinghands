@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App;
 
 class Event extends Model
 {
@@ -42,5 +43,15 @@ class Event extends Model
     public function event_type()
     {
         return $this->belongsTo('App\EventType');
+    }
+    /**
+     * Get users signedup for this event;
+     */
+    public function signups()
+    {
+        return App\User::join('responses', 'responses.user_id', '=', 'users.id')
+            ->where('responses.event_id', $this->id)
+            ->where('responses.helping',true)
+            ->distinct();
     }
 }

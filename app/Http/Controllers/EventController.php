@@ -72,6 +72,21 @@ class EventController extends Controller
             ]);
     }
     /**
+     * Send an email to people who've signed-up for this event.
+     * @param Request $request [description]
+     */
+    public function notify(Request $request, $event_id)
+    {
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize('update', $event);
+        $this->validate($request, [
+            'message' => 'required',
+        ]);
+        $signups = $event->signups()->get();
+        dump($request->input('message'));
+        //return redirect('/event');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
