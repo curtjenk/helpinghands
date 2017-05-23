@@ -49,9 +49,9 @@ class Evite extends Mailable
      */
     public function build()
     {
-        if (isset($confirm)) {
-            Log::debug("Send confirmation to ".$this->user->name.' '.$this->user->email.' ('.$confirm.')');
-            if ($confirm == 1) {
+        if (isset($this->confirm)) {
+            Log::debug("Send confirmation to ".$this->user->name.' '.$this->user->email.' ('.$this->confirm.')');
+            if ($this->confirm == 1) {
                 return $this->subject($this->event->subject)
                     ->view('emails.evite.confirm_yes')
                     ->with([
@@ -82,8 +82,11 @@ class Evite extends Mailable
             Log::debug("Re-Send evite to ".$this->user->name.' '.$this->user->email);
             $token = $this->resp->token;
         }
+
+        $type = $this->event->event_type->name;
+
         return $this->subject($this->event->subject)
-            ->view('emails.evite.invite')
+            ->view('emails.evite.'.$type)
             ->with([
                 'event'=>$this->event,
                 'user'=>$this->user,

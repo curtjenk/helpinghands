@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Common\Inputs;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Mail\EventNotification;
 use App;
 use Auth;
 use DB;
@@ -83,8 +85,17 @@ class EventController extends Controller
             'message' => 'required',
         ]);
         $signups = $event->signups()->get();
-        dump($request->input('message'));
-        //return redirect('/event');
+        $message = $request->input('message');
+        // dump($signups);
+        foreach ($signups as $u) {
+            // dump($u);
+            // if ($u->id != 3){
+            // Log::debug($u->email);
+            Mail::to($u)->queue(new EventNotification($event, $u, $message));
+            // }
+        }
+        //dump($request->input('message'));
+        return redirect('/event');
     }
     /**
      * Display a listing of the resource.

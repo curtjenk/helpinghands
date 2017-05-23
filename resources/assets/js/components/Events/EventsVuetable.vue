@@ -29,7 +29,7 @@
         <template slot="actions2" scope="props">
           <div class="custom-actions">
             <span data-toggle="tooltip" title="Details" data-placement="left" class="">
-                <a v-show="isadmin" href="#" type="button" class=""
+                <a href="#" type="button" class=""
                   @click="showEvent(props.rowData, props.rowIndex)">
                   <i class="fa fa-edit fa-lg"></i>
                 </a>
@@ -88,13 +88,10 @@ export default {
     VuetablePaginationInfo,
   },
   props: [
-      'isadmin'
+      'isAdmin'
   ],
   data () {
     return {
-      permissions : {
-           isadmin: this.isadmin
-      },
       fields: [
         // {
         //   name: '__sequence',

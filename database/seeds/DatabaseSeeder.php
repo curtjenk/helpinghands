@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insertGetId([
             'name' => 'Test Admin',
-            'email' => 'tadmin@helpinghands.com',
+            'email' => 'tadmin@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
             'opt_receive_evite' => false,
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org Admin',
-            'email' => 'torgadmin@helpinghands.com',
+            'email' => 'torgadmin@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => 1,
             'opt_receive_evite' => false,
@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
             'opt_receive_evite' => true,
             'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),
         ]);
-        for ($x=1; $x<10; $x++) {
+        for ($x=1; $x<3; $x++) {
             DB::table('users')->insertGetId([
                 'name' => 'Test Org User '. $x,
                 'email' => 'curtjenk@gmail.com'.$x,
@@ -74,28 +74,28 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org 2 Admin',
-            'email' => 'torgadmin2@helpinghands.com',
+            'email' => 'torgadmin2@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => $org2,
             'role_id' => App\Role::where('name', 'Organization Admin')->pluck('id')->first(),
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org 2 User',
-            'email' => 'torguser2@helpinghands.com',
+            'email' => 'torguser2@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => $org2,
             'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org 3 Admin',
-            'email' => 'torgadmin3@helpinghands.com',
+            'email' => 'torgadmin3@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => $org3,
             'role_id' => App\Role::where('name', 'Organization Admin')->pluck('id')->first(),
         ]);
         DB::table('users')->insertGetId([
             'name' => 'Test Org 3 User',
-            'email' => 'torguser3@helpinghands.com',
+            'email' => 'torguser3@hh.com',
             'password' => bcrypt('123123'),
             'organization_id' => $org3,
             'role_id' => App\Role::where('name', 'Organization User')->pluck('id')->first(),

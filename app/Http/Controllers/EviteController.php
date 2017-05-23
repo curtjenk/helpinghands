@@ -32,7 +32,7 @@ class EviteController extends Controller
         }
         $resp->helping = true;
         $resp->save();
-        Log::debug('response_yes: send confirmation email');
+        Log::debug('response_yes: send confirmation email '.$user->name);
         Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>1]));
         return view('emails.evite.confirm_yes',
             ['event'=>$event,
@@ -55,7 +55,7 @@ class EviteController extends Controller
         }
         $resp->helping = false;
         $resp->save();
-        Log::debug('response_no: send confirmation email');
+        Log::debug('response_no: send confirmation email '.$user->name);
         Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>0]));
         return view('emails.evite.confirm_no',
             ['event'=>$event,

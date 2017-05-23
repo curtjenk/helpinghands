@@ -49,7 +49,8 @@ class Event extends Model
      */
     public function signups()
     {
-        return App\User::join('responses', 'responses.user_id', '=', 'users.id')
+        return App\User::select('users.*')
+            ->join('responses', 'responses.user_id', '=', 'users.id')
             ->where('responses.event_id', $this->id)
             ->where('responses.helping',true)
             ->distinct();
