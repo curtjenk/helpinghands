@@ -78,6 +78,9 @@ class ImportUsers extends Command
                 ++$dropped;
                 echo print_r($qe->getmessage(), true);
                 echo "$dropped Dropped ". $row['First Name'].' '.$row['E-mail Address']."\n";
+            } catch (Exception $e) {
+                echo print_r($e->getmessage(), true);
+                echo "ERROR: ". $row['First Name'].' '.$row['E-mail Address']."\n";
             }
             // dump($row);
             // break;
