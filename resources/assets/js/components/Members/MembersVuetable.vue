@@ -146,13 +146,13 @@ export default {
           disabledClass: 'disabled',
           pageClass: 'page',
           linkClass: 'link',
-        },
-        icons: {
-          first: 'glyphicon glyphicon-step-backward',
-          prev: 'glyphicon glyphicon-chevron-left',
-          next: 'glyphicon glyphicon-chevron-right',
-          last: 'glyphicon glyphicon-step-forward',
-        },
+          icons: {
+            first: 'glyphicon glyphicon-step-backward',
+            prev: 'glyphicon glyphicon-chevron-left',
+            next: 'glyphicon glyphicon-chevron-right',
+            last: 'glyphicon glyphicon-step-forward'
+          }
+        }
       },
       sortOrder: [
         { field: 'email', sortField: 'email', direction: 'asc'}

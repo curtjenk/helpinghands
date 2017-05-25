@@ -15,7 +15,6 @@
     <vuetable ref="vuetable"
       api-url="/event"
       :fields="fields"
-      :permissions="permissions"
       pagination-path=""
       :css="css.table"
       :sort-order="sortOrder"
@@ -27,25 +26,25 @@
       @vuetable:load-success="onLoadSuccess"
     >
         <template slot="actions2" scope="props">
-          <div class="custom-actions">
+          <div class="">
             <span data-toggle="tooltip" title="Details" data-placement="left" class="">
                 <a href="#" type="button" class=""
                   @click="showEvent(props.rowData, props.rowIndex)">
-                  <i class="fa fa-edit fa-lg"></i>
+                  <i class="fa fa-edit fa-lg fa-fw"></i>
                 </a>
             </span>
             <span data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
-                <a v-show="isadmin" href="#" type="button" class=""
+                <a v-show="isAdmin" href="#" type="button" class=""
                     data-toggle="modal" data-target="#eventnotify"
                     :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
-                    <i class="fa fa-envelope-o fa-lg"></i>
+                    <i class="fa fa-envelope-o fa-lg fa-fw"></i>
                 </a>
             </span>
             <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
-             <a v-show="isadmin" href="#" type="button" class=""
+             <a v-show="isAdmin" href="#" type="button" class=""
                  data-toggle="modal" data-target="#deleteevent"
                  :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
-                 <i class="fa fa-trash fa-lg"></i>
+                 <i class="fa fa-trash fa-lg fa-fw"></i>
              </a>
             </span>
           </div>
@@ -123,7 +122,9 @@ export default {
         },
         {
           name: 'status',
+          sortField: 'status',
           titleClass: 'text-center',
+          dataClass: 'text-center',
         },
         {
           name: 'evite_sent',
@@ -196,12 +197,12 @@ export default {
           disabledClass: 'disabled',
           pageClass: 'page',
           linkClass: 'link',
-        },
-        icons: {
-          first: 'glyphicon glyphicon-step-backward',
-          prev: 'glyphicon glyphicon-chevron-left',
-          next: 'glyphicon glyphicon-chevron-right',
-          last: 'glyphicon glyphicon-step-forward',
+          icons: {
+            first: 'glyphicon glyphicon-step-backward',
+            prev: 'glyphicon glyphicon-chevron-left',
+            next: 'glyphicon glyphicon-chevron-right',
+            last: 'glyphicon glyphicon-step-forward',
+          },
         },
       },
       sortOrder: [

@@ -14,66 +14,10 @@
     </section>
     <div class="container-fluid">
         <eventslist
-          isAdmin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin()
-              ? 'true':'false'}}"
-        >
-
+          is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin()
+              ? 'true':'false'}}"  >
          </eventslist>
     </div>
-    {{-- <div class="container">
-        <table class="table">
-            <thead>
-                <tr><td>Subject</td>
-                    <td>Description</td>
-                    <td class="text-center">Evite?</td>
-                    <td>Begin</td>
-                    <td>End</td>
-                    <td class="text-center">Action</td>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach ($events as $event)
-                <tr>
-                    <td class="col-md-3">
-                      <span data-toggle="tooltip" title="<i>{{ $event->subject }}</i>" data-html="true">
-                        <a href="{{ url('/event/'.$event->id) }}">{{ str_limit($event->subject, 35) }}</a>
-                      </span>
-                    </td>
-                    <td class="col-md-3">
-                      <span data-toggle="tooltip" title="<i>{{ $event->description }}</i>" data-html="true">
-                        <a href="{{ url('/event/'.$event->id) }}">{{ str_limit($event->description, 35) }}</a>
-                      </span>
-                    </td>
-                    <td class="col-md-1 text-center">
-                      @if(empty($event->evite_sent))
-                         <i class="fa fa-frown-o" style="color: red;"></i>
-                      @else
-                         <i class="fa fa-check-square" style="color: green;"></i>
-                      @endif
-                    </td>
-                    <td class="col-md-2">
-                        {{ $event->date_start}}
-                    </td>
-                    <td class="col-md-2">
-                        {{ $event->date_end }}
-                    </td>
-                    <td class="col-md-1 text-center">
-                    @can ('update', $event)
-                        <a href="{{ url('/event/'.$event->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
-                    @endcan
-                    @can ('destroy', $event)
-                    <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
-                      <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteevent" data-id="{{ $event->id }}" data-name="{{ $event->subject}}" name="delete_{{ $event->id }}">
-                          <i class="fa fa-trash"></i>
-                      </a>
-                    </span>
-                    @endcan
-                    </td>
-                </tr>
-            @endforeach
-            <tbody>
-        </table>
-    </div> --}}
 </main>
 
 <div class="modal fade" id="deleteevent" tabindex="-1" user="dialog" aria-labelledby="Confirm delete event">
