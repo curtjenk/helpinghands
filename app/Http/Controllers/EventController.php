@@ -20,26 +20,24 @@ class EventController extends Controller
         $this->middleware('auth');
     }
 
-    public function signup($event_id)
+    public function signup(Request $request, $event_id)
     {
         $user = Auth::user();
         $event = App\Event::findOrFail($event_id);
         $resp = App\Response::where('event_id',$event->id)
             ->where('user_id',$user->id)->first();
-        if (!$resp) { //no evite sent but user is signing-up
-
+        $helping = $request->input('h', 'false');
+        Log::debug("helping = $helping");
+        if (!$resp) { //no evite sent but user is signing-up or declining
             App\Response::create([
                 'user_id'=>$user->id,
                 'event_id'=>$event->id,
-                'helping'=>true,
+                'helping'=>$helping,
                 'token'=>null
             ]);
-        } elseif ($resp->helping == true) {
-            //already signed-up (responded yes)
-            return;
         } else {
             //no response to evite or responded No;  Set to Yes
-            $resp->helping = true;
+            $resp->helping = $helping;
             $resp->save();
         }
         return redirect()->back();

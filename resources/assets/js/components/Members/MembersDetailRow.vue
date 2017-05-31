@@ -1,6 +1,6 @@
 <template>
   <div @click="onClick" :id="rowData.id">
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
         <div class="inline field">
           <label>Name: </label>
           <span>{{rowData.name}}</span>
@@ -13,8 +13,8 @@
           <label>Nickname: </label>
           <span>{{rowData.nickname}}</span>
         </div>
-    </div>
-    <div class="col-md-3">
+    </div> -->
+    <!-- <div class="col-md-3">
         <div class="inline field">
           <label>Mobile: </label>
           <span>{{rowData.mobilephone}}</span>
@@ -23,18 +23,18 @@
           <label>Home: </label>
           <span>{{rowData.homephone}}</span>
         </div>
-    </div>
+    </div> -->
     <span v-if="rowData.events != null">
-    <div class="col-md-2">
+    <!-- <div class="col-md-2">
         <h5 class="">
-            Attended {{ rowData.events.length }} Event(s)
+            {{ rowData.events.length }} Event(s)
         </h5>
-    </div>
-    <div class="col-md-4" id="scrollarea-invalid">
+    </div> -->
+    <div class="col-md-12" id="scrollarea-invalid">
         <div id="scrollarea-content">
             <ol id="">
-              <li v-for="item in rowData.events">
-                {{ item.subject }}
+              <li v-for="item in rowData.events" class="col-md-4">
+                {{ item.subject.ellipsisText(50) }}
               </li>
            </ol>
         </div>

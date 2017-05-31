@@ -37,6 +37,18 @@ class Event extends Model
     {
         return $this->belongsTo('App\Status');
     }
+    public function statusOpen()
+    {
+        return $this->status_id == 1 ? true : false;
+    }
+    public function statusClosed()
+    {
+        return $this->status_id == 2 ? true : false;
+    }
+    public function statusHold()
+    {
+        return $this->status_id == 3 ? true : false;
+    }
     /**
      * Get the type for this event
      */

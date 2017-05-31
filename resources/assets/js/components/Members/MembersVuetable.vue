@@ -114,7 +114,7 @@ export default {
         //   callback: 'allcap'
         },
         {
-          title: 'Positive Responses',
+          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
           dataClass: 'text-center',

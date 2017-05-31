@@ -7,8 +7,13 @@
             <div class="pull-left header">Service / Fellowship Event</div>
             <div class="pull-right">
                 <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
-            @if(!Auth::user()->signedup($event->id))
-                <a class="btn btn-default" style="background-color:#f45f42" href="{{ url('/event/'.$event->id.'/signup') }}"><i class="fa fa-handshake-o"></i> Signup</a>
+            @if($event->statusOpen())
+                @if(!Auth::user()->signedup($event->id, 'yes'))
+                    <a class="btn btn-default" style="background-color:#41b5f4" href="{{ url('/event/'.$event->id.'/signup?h=1') }}"><i class="fa fa-thumbs-o-up"></i> Signup</a>
+                @endif
+                @if(!Auth::user()->signedup($event->id, 'no'))
+                    <a class="btn btn-default" style="background-color:#f45f42" href="{{ url('/event/'.$event->id.'/signup?h=0') }}"><i class="fa fa-thumbs-o-down"></i> Decline</a>
+                @endif
             @endif
             @can ('update', $event)
                 <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
@@ -38,13 +43,23 @@
         <div class="col-md-8">
             <div class="form-horizontal">
                 <div class="panel panel-default">
-                @if(Auth::user()->signedup($event->id))
-                    <div class="panel-heading" style="background-color:#41b5f4">
-                        <h4 class="text-center"><em>You are signed-up!</em></h4>
-                    </div>
+                @if($event->statusOpen())
+                    @if(Auth::user()->signedup($event->id, 'yes'))
+                        <div class="panel-heading" style="background-color:#41b5f4">
+                            <h4 class="text-center"><em>You are signed-up!</em></h4>
+                        </div>
+                    @elseif (Auth::user()->signedup($event->id,'no'))
+                        <div class="panel-heading" style="background-color:#f45f42">
+                            <h4 class="text-center"><em>You Declined but it's not too late!</em></h4>
+                        </div>
+                    @else
+                        <div class="panel-heading" style="background-color:yellow">
+                            <h4 class="text-center"><em>Signup today!</em></h4>
+                        </div>
+                    @endif
                 @else
-                    <div class="panel-heading" style="background-color:#f45f42">
-                        <h4 class="text-center"><em>Signup today!</em></h4>
+                    <div class="panel-heading" style="background-color:yellow">
+                        <h4 class="text-center"><em>Event is Closed/On-Hold</em></h4>
                     </div>
                 @endif
                     <div class="panel-body">
