@@ -56,14 +56,14 @@ class EventController extends Controller
             ->orderBy('events.date_start', 'asc')
             ->get();
 
-        $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY Mon') as interval, count(*) as num"))
+        $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY mm Mon') as interval, count(*) as num"))
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);
             })
-            ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->format('Ym')."'")
+            ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->subMonths(3)->format('Ym')."'")
             ->groupBy('interval')
             ->orderBy('interval', 'asc')
-            ->limit(3)
+            ->limit(6)
             ->get();
 
         return view('event.calendar', [

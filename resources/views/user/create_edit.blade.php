@@ -78,7 +78,7 @@
                 <label class="control-label col-md-4 text-right">Home Phone</label>
                 <div class="control-text-left col-md-8">
                     <u>
-                        {{$user->homephone}}
+                        {{$user->opt_show_homephone ? $user->homephone : '###-###-#####'}}
                     </u>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                 <label class="control-label col-md-4 text-right">Mobile Phone</label>
                 <div class="control-text-left col-md-8">
                     <u>
-                        {{$user->mobilephone}}
+                        {{$user->opt_show_mobilephone ? $user->mobilephone : '###-###-#####'}}
                     </u>
                 </div>
             </div>

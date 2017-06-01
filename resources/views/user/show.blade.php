@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <label for="mobilephone" class="col-md-4 control-label">Mobile Phone</label>
                             <div class="col-md-8">
-                                <p id="mobilephone" class="form-control-static">{{ $user->mobilephone }}</p>
+                                <p id="mobilephone" class="form-control-static">{{ $user->opt_show_mobilephone ? $user->mobilephone : ''}}</p>
                             </div>
                         </div>
                         <div class="form-group">
