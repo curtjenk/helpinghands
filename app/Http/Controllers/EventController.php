@@ -27,7 +27,7 @@ class EventController extends Controller
         $resp = App\Response::where('event_id',$event->id)
             ->where('user_id',$user->id)->first();
         $helping = $request->input('h', 'false');
-        Log::debug("helping = $helping");
+        //Log::debug("helping = $helping");
         if (!$resp) { //no evite sent but user is signing-up or declining
             App\Response::create([
                 'user_id'=>$user->id,
@@ -111,7 +111,7 @@ class EventController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-        return App\Event::
+        $query = App\Event::
             select('events.*', 'statuses.name as status', 'event_types.name as type',
                 DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
                 DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
@@ -133,8 +133,14 @@ class EventController extends Controller
             })
             ->groupby('events.id')
             ->groupby('statuses.id')
-            ->groupby('event_types.id')
-            ->paginate(10);
+            ->groupby('event_types.id');
+
+        //check that it wasn't a vue-tables-2 request
+        if ($request->input('paginate') == '0') {
+            return response()->json($query->get());
+        } else {
+            return $query->paginate(10);
+        }
     }
 
     /**

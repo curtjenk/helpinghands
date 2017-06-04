@@ -117,6 +117,42 @@ class UserController extends Controller
     }
 
     /**
+     * The authenticated user is signing-up on behalf of $user_id
+     * @param  Request $request [description]
+     * @param  [type]  $user_id [description]
+     * @return [type]           [description]
+     */
+    public function proxy_signup(Request $request, $user_id)
+    {
+        $user = Auth::user();
+        $proxy_user = App\User::findOrFail($user_id);
+
+        $event_id = $request->input('event_id');
+        $action = $request->input('action');
+
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize('view', $event);
+        //Log::debug($event->subject);
+        $resp = App\Response::where('event_id',$event->id)
+            ->where('user_id',$proxy_user->id)->first();
+
+        $helping = $action=='signup'? 1 : 0;
+
+        if ($resp) {
+            $resp->helping = $helping;
+            $resp->save();
+        } else {
+            App\Response::create([
+                'user_id'=>$proxy_user->id,
+                'event_id'=>$event->id,
+                'helping'=>$helping,
+                'token'=>null
+            ]);
+        }
+
+        return redirect()->back();
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

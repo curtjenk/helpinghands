@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('member', 'UserController@members');
     Route::get('member/{id}', 'UserController@yes_responses');
+    Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');
+    Route::post('member/{id}/payEvent', 'UserController@payEvent');
 
     Route::resource('member', 'UserController');
     Route::get('member.destroy', 'UserController@destroy');

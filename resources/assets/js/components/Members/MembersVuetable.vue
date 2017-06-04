@@ -24,7 +24,34 @@
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
-    ></vuetable>
+    >
+        <template slot="actions" scope="props">
+          <div class="">
+            <span data-toggle="tooltip" title="View profile" data-placement="left" class="">
+                <a href="#" type="button" class=""
+                  @click="showMember(props.rowData, props.rowIndex)">
+                  <i class="fa fa-address-card-o fa-lg fa-fw"></i>
+                </a>
+            </span>
+            <!--     // data-toggle="modal" data-target="#proxySignup"
+             :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id" -->
+            <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
+                <a v-show="isAdmin" href="#" type="button" class=""
+                    @click="getEvents(props.rowData, props.rowIndex)"
+                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id"
+
+                >
+                    <i class="fa fa-user-plus fa-lg fa-fw"></i>
+                </a>
+            </span>
+            <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
+             <a v-show="isAdmin" href="#" type="button" class="">
+                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
+             </a>
+            </span>
+          </div>
+        </template>
+    </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
         info-class="pagination-info"
@@ -61,25 +88,12 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  // props: [
-  //     'canUpdate',
-  //     'canView',
-  //     'canDelete'
-  // ],
-  // computed: {
-  //     computedCanView: function() {
-  //         //console.log('canview', this.canView)
-  //         return this.canView
-  //     },
-  //     computedCanUpdate: function() {
-  //         return this.canUpdate
-  //     },
-  //     computedCanDelete: function() {
-  //         return this.canDelete
-  //     }
-  // },
+  props: [
+      'isAdmin'
+  ],
   data () {
     return {
+      events: [],
       fields: [
         // {
         //   name: '__sequence',
@@ -127,8 +141,14 @@ export default {
         //   dataClass: 'text-right',
         //   callback: 'formatNumber'
         // },
+        // {
+        //   name: '__component:member-custom-actions',
+        //   title: 'Actions',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center'
+        // },
         {
-          name: '__component:member-custom-actions',
+          name: '__slot:actions',   // <----
           title: 'Actions',
           titleClass: 'text-center',
           dataClass: 'text-center'
@@ -161,6 +181,33 @@ export default {
     }
   },
   methods: {
+    showMember (data, index) {
+          window.location.href = '/member/'+data.id+'/edit';
+    },
+    getEvents (data, index) {
+      console.log(data);
+      $("#proxySignup select").empty();
+      axios('/event?paginate=0')
+      .then(response => {
+        for(var i=0; i< response.data.length; i++)
+        {
+          if (response.data[i].status=='Open') {
+            $("#proxySignup select").append(
+               $('<option>').text(response.data[i].subject).val(response.data[i].id)
+            );
+          }
+        }
+        $('#proxySignup h4').text('Signup/Decline for ' + data.name);
+        $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
+        $("#proxySignup").modal('show');
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
+    payEvent (data, index) {
+         window.location.href = '/member/'+data.id+'/payEvent';
+    },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
           return item.id
