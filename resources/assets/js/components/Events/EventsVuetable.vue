@@ -127,12 +127,26 @@ export default {
           dataClass: 'text-center',
         },
         {
-          name: 'evite_sent',
-          title: 'Evites?',
+          name: 'signup_limit',
+          title: 'Signup Limit',
           titleClass: 'text-center',
           dataClass: 'text-center',
-          sortField: 'evite_sent',
-          callback: 'eviteLabel'
+          sortField: 'signup_limit',
+          callback: 'signupLimit'
+        },
+        {
+          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
+          name: 'yes_responses',
+          sortField: 'yes_responses',
+          dataClass: 'text-center',
+          titleClass: 'text-center '
+        },
+        {
+          title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
+          name: 'no_responses',
+          sortField: 'no_responses',
+          dataClass: 'text-center',
+          titleClass: 'text-center'
         },
         {
           name: 'date_start',
@@ -149,20 +163,6 @@ export default {
           titleClass: 'text-center',
           dataClass: 'text-center',
           callback: 'formatDate|MM-DD-YYYY'
-        },
-        {
-          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
-          name: 'yes_responses',
-          sortField: 'yes_responses',
-          dataClass: 'text-center',
-          titleClass: 'text-center '
-        },
-        {
-          title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
-          name: 'no_responses',
-          sortField: 'no_responses',
-          dataClass: 'text-center',
-          titleClass: 'text-center'
         },
         // {
         //   name: 'salary',
@@ -232,6 +232,13 @@ export default {
     },
     ellipsis (value, max = 1) {
       return value.ellipsis(max)
+    },
+    signupLimit (value) {
+        if(!value || value==0){
+            return 'None'
+        } else {
+            return value
+        }
     },
     eviteLabel (value) {
         return (value == null)

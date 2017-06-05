@@ -20,18 +20,35 @@ class EviteController extends Controller
      */
     public function response_yes($event_id, $user_id, $token)
     {
+        Log::debug("Response yes");
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(!$resp) {
             abort(400);
         }
-        if ($resp->helping != null) {
-            //already responded
-            return;
+
+        $num_signups = App\Response::where('event_id', $event_id)
+            ->where('helping', true)->get()->count();
+        Log::debug("Num signups already = $num_signups");
+        if($event->signup_limit > 0 && $num_signups == $event->signup_limit){
+            Log::debug('limit reached '.$user->name.' '.$event->subject);
+            Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>'limit_reached']));
+            return view('emails.evite.limit_reached',
+                ['event'=>$event,
+                 'user'=>$user]);
         }
+
+        // if ($resp->helping != null ||
+        //     $resp->helping==0 || $resp->helping==false ||
+        //     $resp->helping==1 || $resp->helping==true){
+        //     Log::debug("Already logged response as (".$resp->helping.") ".$user->name);
+        //     return;
+        // }
+
         $resp->helping = true;
         $resp->save();
+
         Log::debug('response_yes: send confirmation email '.$user->name);
         Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>1]));
         return view('emails.evite.confirm_yes',
@@ -49,7 +66,9 @@ class EviteController extends Controller
         if(!$resp) {
             abort(400);
         }
-        if ($resp->helping != null) {
+        if ($resp->helping != null ||
+            $resp->helping==0 || $resp->helping==false ||
+            $resp->helping==1 || $resp->helping==true){
             //already responded
             return;
         }
@@ -91,6 +110,18 @@ class EviteController extends Controller
             ->where('users.role_id', '!=', 1)
             ->where('users.organization_id', $event->organization_id)
             ->get();
+        //check if already reached the limit
+        $num_signups = App\Response::where('event_id', $event_id)
+            ->where('helping', true)->get()->count();
+        if($event->signup_limit > 0 && $num_signups == $event->signup_limit){
+            Log::debug('limit reached for '.$event->subject);
+            return view('event.show', [
+                'event'=>$event,
+                'num_evites'=>0,
+                'msg'=>'Limit reached'
+            ]);
+        }
+        //--------------------
         $cnt=0;
         foreach($helpers as $helper)
         {

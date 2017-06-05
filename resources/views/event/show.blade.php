@@ -15,6 +15,8 @@
                     <a class="btn btn-default" style="background-color:#f45f42" href="{{ url('/event/'.$event->id.'/signup?h=0') }}"><i class="fa fa-thumbs-o-down"></i> Decline</a>
                 @endif
             @endif
+            {{--  add vertical bar/line --}}
+            <span>&#124;</span>
             @can ('update', $event)
                 <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
             @endcan
@@ -44,7 +46,12 @@
             <div class="form-horizontal">
                 <div class="panel panel-default">
                 @if($event->statusOpen())
-                    @if(Auth::user()->signedup($event->id, 'yes'))
+                    @if($errors->any() || isset($msg))
+                        <?php $message = isset($msg)?$msg : $errors->first(); ?>
+                        <div class="panel-heading" style="background-color:yellow">
+                            <h4 class="text-center"><em>{{$message}}</em></h4>
+                        </div>
+                    @elseif(Auth::user()->signedup($event->id, 'yes'))
                         <div class="panel-heading" style="background-color:#41b5f4">
                             <h4 class="text-center"><em>You are signed-up!</em></h4>
                         </div>
@@ -99,6 +106,12 @@
                             <label for="status" class="col-md-4 control-label">Status</label>
                             <div class="col-md-8">
                                 <p id="status" class="form-control-static">{{ $event->status->name }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup_limit" class="col-md-4 control-label">Signup Limit</label>
+                            <div class="col-md-8">
+                                <p id="signup_limit" class="form-control-static">{{ $event->signup_limit>0?$event->signup_limit:"None" }}</p>
                             </div>
                         </div>
                         <div class="form-group">

@@ -18,6 +18,7 @@ class AddStatuses extends Migration
             ['name'=>'Open', 'description'=>'Open for signup'],
             ['name'=>'Closed', 'description'=>'Closed to signup. Event Complete or Cancelled'],
             ['name'=>'Hold', 'description'=>'Event on hold'],
+            ['name'=>'Filled', 'description'=>'Maximum number of signups met'],
         ]);
     }
 

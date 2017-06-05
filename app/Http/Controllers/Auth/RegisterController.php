@@ -68,6 +68,8 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'role_id' => $data['role_id'],
             'organization_id' => $data['organization_id'],
+            'opt_show_email' => 1,
+            'opt_receive_evite' => 1
         ]);
     }
 }

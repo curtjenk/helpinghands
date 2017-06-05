@@ -53,7 +53,7 @@ class UserController extends Controller
             select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->where('role_id', '!=', 1)
-            ->where('role_id', '>=', $user->role_id)
+            // ->where('role_id', '>=', $user->role_id)
             //->where('users.id', '!=', $user->id)
             ->when($user->is_orgLevel(), function($q) use($user) {
                 return $q->where('organization_id', $user->organization_id);

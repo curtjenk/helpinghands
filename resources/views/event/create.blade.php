@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left header">Create Service or Fellowship Event</div>
+            <div class="pull-left header">Create an Event</div>
         </div>
     </section>
     <div class="container">
@@ -85,6 +85,17 @@
                             </option>
                         @endforeach
                     </select>
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('signup_limit') ? ' has-error' : '' }}">
+                <label for="signup_limit" class="col-md-4 control-label">Signup Limit</label>
+                <div class="col-md-8">
+                    <input required id="signup_limit" type="number" class="" name="signup_limit" autofocus max="999" value="{{ isset($event) ? $event->signup_limit : old('signup_limit') }}">
+                    @if ($errors->has('signup_limit'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('signup_limit') }}</strong>
+                        </span>
+                    @endif
                 </div>
             </div>
             <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">

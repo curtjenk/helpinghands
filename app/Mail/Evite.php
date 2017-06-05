@@ -22,7 +22,7 @@ class Evite extends Mailable
    protected $event;
    protected $user;
    protected $resp;
-   protected $confirm;
+   protected $confirm; //
 
     /**
      * Create a new message instance.
@@ -58,9 +58,17 @@ class Evite extends Mailable
                         'event'=>$this->event,
                         'user'=>$this->user,
                     ]);
-            } else {
+            } else if ($this->confirm == 0){
                 return $this->subject($this->event->subject)
                     ->view('emails.evite.confirm_no')
+                    ->with([
+                        'event'=>$this->event,
+                        'user'=>$this->user,
+                    ]);
+            } else {
+                Log::debug("Limit reached: $this->confirm");
+                return $this->subject($this->event->subject)
+                    ->view('emails.evite.limit_reached')
                     ->with([
                         'event'=>$this->event,
                         'user'=>$this->user,

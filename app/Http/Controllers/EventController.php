@@ -20,6 +20,7 @@ class EventController extends Controller
         $this->middleware('auth');
     }
 
+// handle online signup versus email signup.
     public function signup(Request $request, $event_id)
     {
         $user = Auth::user();
@@ -27,6 +28,16 @@ class EventController extends Controller
         $resp = App\Response::where('event_id',$event->id)
             ->where('user_id',$user->id)->first();
         $helping = $request->input('h', 'false');
+
+        $num_signups = App\Response::where('event_id', $event_id)
+            ->where('helping', true)->get()->count();
+
+        if($event->signup_limit > 0 && $num_signups == $event->signup_limit){
+            // Log::debug('limit reached '.$user->name.' '.$event->subject);
+            return redirect()->back()->withErrors([
+                'msg'=>'Sorry, this event is filled! Thanks for your interest.']);
+        }
+
         //Log::debug("helping = $helping");
         if (!$resp) { //no evite sent but user is signing-up or declining
             App\Response::create([
@@ -36,7 +47,7 @@ class EventController extends Controller
                 'token'=>null
             ]);
         } else {
-            //no response to evite or responded No;  Set to Yes
+            //Toggle response
             $resp->helping = $helping;
             $resp->save();
         }
@@ -199,7 +210,8 @@ class EventController extends Controller
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
             'event_type_id' => 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id'
+            'status_id' => 'required|exists:statuses,id',
+            'signup_limit'=> 'required|numeric'
         ]);
         // dump($request->all());
         $newEvent = App\Event::create([
@@ -210,7 +222,8 @@ class EventController extends Controller
             'user_id'=>$user->id,
             'status_id'=>$request->input('status_id'),
             'event_type_id'=>$request->input('event_type_id'),
-            'organization_id'=>$request->input('organization_id')
+            'organization_id'=>$request->input('organization_id'),
+            'signup_limit'=>$request->input('signup_limit'),
         ]);
         return view('event.show', [
             'event'=>$newEvent,
@@ -276,7 +289,8 @@ class EventController extends Controller
             'date_end' => 'date',
             'organization_id' => 'required|exists:organizations,id',
             'event_type_id'=> 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id'
+            'status_id' => 'required|exists:statuses,id',
+            'signup_limit'=> 'required|numeric'
         ]);
 
         $event->subject = $request->input('subject');
@@ -287,6 +301,7 @@ class EventController extends Controller
         $event->organization_id = $request->input('organization_id');
         $event->status_id = $request->input('status_id');
         $event->event_type_id = $request->input('event_type_id');
+        $event->signup_limit = $request->input('signup_limit');
         $event->save();
         return view('event.show', [
             'event'=>$event,
