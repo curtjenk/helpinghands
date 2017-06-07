@@ -28,7 +28,7 @@
       <form method="POST" action="">
           {{ csrf_field() }}
         <div class="modal-body">
-            <div id="payups" class="container">
+            <div id="payups" class="container-fluid">
 
             </div>
         </div>

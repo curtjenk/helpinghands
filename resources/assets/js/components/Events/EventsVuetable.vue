@@ -235,7 +235,7 @@ export default {
         {
           data = response.data[i];
           console.log(data);
-          var $div = $("<div>", {"class": "col-sm-3"});
+          var $div = $("<div>", {"class": "col-md-4"});
           $('#payups').append($div);
           $('<input/>', {
                id: 'pay'+data.id,
