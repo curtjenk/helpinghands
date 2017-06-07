@@ -36,20 +36,20 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['authUserCanView', 'authUserCanDelete','authUserCanUpdate'];
-
-    public function getAuthUserCanViewAttribute()
-    {
-        return Auth::user()->has_permission('Show user');
-    }
-    public function getAuthUserCanUpdateAttribute()
-    {
-        return Auth::user()->has_permission('Update user');
-    }
-    public function getAuthUserCanDeleteAttribute()
-    {
-        return Auth::user()->has_permission('Delete user');
-    }
+    // protected $appends = ['authUserCanView', 'authUserCanDelete','authUserCanUpdate'];
+    //
+    // public function getAuthUserCanViewAttribute()
+    // {
+    //     return Auth::user()->has_permission('Show user');
+    // }
+    // public function getAuthUserCanUpdateAttribute()
+    // {
+    //     return Auth::user()->has_permission('Update user');
+    // }
+    // public function getAuthUserCanDeleteAttribute()
+    // {
+    //     return Auth::user()->has_permission('Delete user');
+    // }
 
     public function signedup($event_id, $helping='yes')
     {

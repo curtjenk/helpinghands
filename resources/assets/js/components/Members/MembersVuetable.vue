@@ -38,9 +38,7 @@
             <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
                 <a v-show="isAdmin" href="#" type="button" class=""
                     @click="getEvents(props.rowData, props.rowIndex)"
-                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id"
-
-                >
+                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
                     <i class="fa fa-user-plus fa-lg fa-fw"></i>
                 </a>
             </span>
@@ -204,9 +202,6 @@ export default {
       .catch(e => {
         console.log(e);
       })
-    },
-    payEvent (data, index) {
-         window.location.href = '/member/'+data.id+'/payEvent';
     },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {

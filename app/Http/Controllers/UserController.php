@@ -33,6 +33,22 @@ class UserController extends Controller
         return response()->json($responses);
     }
     /**
+     * Get list of members who signed-up for the event
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function signups(Request $request, $event_id)
+    {
+        $user = Auth::user();
+        $this->authorize('list-users');
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize('show', $event);
+        if (!$request->ajax()) {
+            return abort(400);
+        }
+        return response()->json($event->signups()->get());
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

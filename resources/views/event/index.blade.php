@@ -18,6 +18,28 @@
          </eventslist>
     </div>
 </main>
+<div class="modal fade" id="eventPay" tabindex="-1" user="dialog" aria-labelledby="Log Event Payment">
+  <div class="modal-dialog modal-md" user="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <form method="POST" action="">
+          {{ csrf_field() }}
+        <div class="modal-body">
+            <div id="payups" class="container">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger" name="submit">Accept</button>
+           </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="deleteevent" tabindex="-1" user="dialog" aria-labelledby="Confirm delete event">
   <div class="modal-dialog modal-sm" user="document">

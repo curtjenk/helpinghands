@@ -40,6 +40,13 @@
                     <i class="fa fa-envelope-o fa-lg fa-fw"></i>
                 </a>
             </span>
+            <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
+             <a v-show="isAdmin" href="#" type="button" class=""
+                 @click="getSignupsPay(props.rowData, props.rowIndex)"
+                  :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
+                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
+             </a>
+            </span>
             <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
              <a v-show="isAdmin" href="#" type="button" class=""
                  data-toggle="modal" data-target="#deleteevent"
@@ -218,6 +225,35 @@ export default {
     },
     onAction2 (action, data, index) {
       console.log('slot) action: ' + action, data.subject, index)
+    },
+    getSignupsPay (data, index) {
+    //   console.log(data);
+      $("#payups").empty();
+      axios('/member/signups/'+data.id)
+      .then(response => {
+        for(var i=0; i< response.data.length; i++)
+        {
+          data = response.data[i];
+          console.log(data);
+          var $div = $("<div>", {"class": "col-sm-3"});
+          $('#payups').append($div);
+          $('<input/>', {
+               id: 'pay'+data.id,
+               type: 'checkbox',
+               name: 'pay',
+               value: data.id}).appendTo($div);
+          $('<label/>', {
+              'for': 'pay'+data.id,
+              text: data.name }).appendTo($div);
+
+        }
+        // $('#eventPay h4').text('Signup/Decline for ' + data.name);
+        // $('#eventPay form').attr('action', 'member/eventPay');
+        $("#eventPay").modal('show');
+      })
+      .catch(e => {
+        console.log(e);
+      })
     },
     expandAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
