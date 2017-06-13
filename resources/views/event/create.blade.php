@@ -49,7 +49,7 @@
             <div class="form-group{{ $errors->has('date_start') ? ' has-error' : '' }}">
                 <label for="date_start" class="col-md-4 control-label">Start</label>
                 <div class="col-md-5">
-                    <input required id="dateEventStartPicker" type="text" name="date_start" autofocus value="{{ isset($event) ? $event->date_start : old('date_start') }}">
+                    <input required id="dateEventStartPicker" type="text" name="date_start" value="{{ isset($event) ? $event->date_start : old('date_start') }}">
                     @if ($errors->has('date_start'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_start') }}</strong>
@@ -60,10 +60,21 @@
             <div class="form-group{{ $errors->has('date_end') ? ' has-error' : '' }}">
                 <label for="date_end" class="col-md-4 control-label">End</label>
                 <div class="col-md-5">
-                    <input required id="dateEventEndPicker" type="text" name="date_end" autofocus value="{{ isset($event) ? $event->date_end : old('date_end') }}">
+                    <input required id="dateEventEndPicker" type="text" name="date_end" value="{{ isset($event) ? $event->date_end : old('date_end') }}">
                     @if ($errors->has('date_end'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date_end') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <div class="form-group{{ $errors->has('cost') ? ' has-error' : '' }}">
+                <label for="cost" class="col-md-4 control-label">Cost</label>
+                <div class="col-md-5">
+                    <input required id="cost" type="number" name="cost"  min="0" step="any" value="{{ isset($event) ? $event->cost : old('cost') }}">
+                    @if ($errors->has('cost'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('cost') }}</strong>
                         </span>
                     @endif
                 </div>
@@ -90,7 +101,7 @@
             <div class="form-group{{ $errors->has('signup_limit') ? ' has-error' : '' }}">
                 <label for="signup_limit" class="col-md-4 control-label">Signup Limit</label>
                 <div class="col-md-8">
-                    <input required id="signup_limit" type="number" class="" name="signup_limit" autofocus max="999" value="{{ isset($event) ? $event->signup_limit : old('signup_limit') }}">
+                    <input id="signup_limit" type="number" name="signup_limit"  max="999" value="{{ isset($event) ? $event->signup_limit : old('signup_limit') }}">
                     @if ($errors->has('signup_limit'))
                         <span class="help-block">
                             <strong>{{ $errors->first('signup_limit') }}</strong>

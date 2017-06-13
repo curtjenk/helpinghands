@@ -14,7 +14,7 @@ class Event extends Model
      */
     protected $fillable = [
         'subject', 'description', 'evite_sent', 'date_start', 'organization_id',
-        'date_end', 'user_id', 'status_id', 'event_type_id'
+        'date_end', 'cost', 'user_id', 'status_id', 'event_type_id'
     ];
     /**
      * Get the Organization for this Event.
@@ -61,7 +61,8 @@ class Event extends Model
      */
     public function signups()
     {
-        return App\User::select('users.*')
+
+        return App\User::select('users.*', 'responses.paid as paid')
             ->join('responses', 'responses.user_id', '=', 'users.id')
             ->where('responses.event_id', $this->id)
             ->where('responses.helping',true)

@@ -134,6 +134,13 @@ export default {
           dataClass: 'text-center',
         },
         {
+          name: 'cost',
+          sortField: 'cost',
+          titleClass: 'text-center',
+          dataClass: 'text-center',
+          callback: 'formatMoney'
+        },
+        {
           name: 'signup_limit',
           title: 'Signup Limit',
           titleClass: 'text-center',
@@ -233,22 +240,24 @@ export default {
       .then(response => {
         for(var i=0; i< response.data.length; i++)
         {
-          data = response.data[i];
-          console.log(data);
+          let resp = response.data[i];
+          console.log(resp);
           var $div = $("<div>", {"class": "col-md-4"});
           $('#payups').append($div);
           $('<input/>', {
-               id: 'pay'+data.id,
+               id: 'pay'+resp.id,
                type: 'checkbox',
-               name: 'pay',
-               value: data.id}).appendTo($div);
-          $('<label/>', {
-              'for': 'pay'+data.id,
-              text: data.name }).appendTo($div);
+               name: 'pay[]',
+               checked: resp.paid ? true : false,
+               value: resp.id}).appendTo($div);
+          $('<label />', {
+              'for': 'pay'+resp.id,
+              style: 'padding-left:3px;',
+              text: resp.name }).appendTo($div);
 
         }
-        // $('#eventPay h4').text('Signup/Decline for ' + data.name);
-        // $('#eventPay form').attr('action', 'member/eventPay');
+        $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
+        $('#eventPay form').attr('action', 'member/eventpay/'+data.id);
         $("#eventPay").modal('show');
       })
       .catch(e => {
@@ -294,6 +303,9 @@ export default {
       return (value == null)
         ? ''
         : moment(value, 'YYYY-MM-DD').format(fmt)
+    },
+    formatMoney (value) {
+        return '$'+value;
     },
     onPaginationData (paginationData) {
       this.$refs.paginationTop.setPaginationData(paginationData)      // <----

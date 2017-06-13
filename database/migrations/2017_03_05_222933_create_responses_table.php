@@ -18,6 +18,7 @@ class CreateResponsesTable extends Migration
             $table->integer('event_id');
             $table->integer('user_id');
             $table->boolean('helping')->nullable();
+            $table->boolean('paid')->nullable()->default(0);
             $table->string('token')->nullable();
             $table->timestamps();
 

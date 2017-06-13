@@ -97,6 +97,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="cost" class="col-md-4 control-label">Cost</label>
+                            <div class="col-md-8">
+                                <p id="cost" class="form-control-static">${{ $event->cost }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="event_type" class="col-md-4 control-label">Type</label>
                             <div class="col-md-8">
                                 <p id="event_type" class="form-control-static">{{ $event->event_type->name }}</p>

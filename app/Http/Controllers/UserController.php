@@ -49,6 +49,42 @@ class UserController extends Controller
         return response()->json($event->signups()->get());
     }
     /**
+     *
+     */
+    public function pay(Request $request, $event_id)
+    {
+        $user = Auth::user();
+        $this->authorize('list-users');
+        $this->authorize('administer');
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize('show', $event);
+
+        //Log::debug($request->input('pay'));
+        $paid_ids = $request->input('pay');
+        if (!empty($paid_ids))
+        {
+            foreach($paid_ids as $user_id) {
+                $resp = App\Response::where('event_id',$event_id)
+                    ->where('user_id', $user_id)
+                    ->first();
+                $resp->paid = true;
+                $resp->save();
+            }
+        }
+        //Now handle "unchecks"
+        foreach ($event->signups()->get()->pluck('id')->diff($paid_ids) as $not)
+        {
+            $resp = App\Response::where('event_id',$event_id)
+                ->where('user_id', $not)
+                ->first();
+            $resp->paid = false;
+            $resp->save();
+        }
+
+        return redirect()->back();
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

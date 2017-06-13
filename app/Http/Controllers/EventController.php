@@ -211,7 +211,8 @@ class EventController extends Controller
             'organization_id' => 'required|exists:organizations,id',
             'event_type_id' => 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric'
+            'signup_limit'=> 'required|numeric',
+            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
         ]);
         // dump($request->all());
         $newEvent = App\Event::create([
@@ -224,6 +225,7 @@ class EventController extends Controller
             'event_type_id'=>$request->input('event_type_id'),
             'organization_id'=>$request->input('organization_id'),
             'signup_limit'=>$request->input('signup_limit'),
+            'cost'=>$request->input('cost'),
         ]);
         return view('event.show', [
             'event'=>$newEvent,
@@ -290,7 +292,8 @@ class EventController extends Controller
             'organization_id' => 'required|exists:organizations,id',
             'event_type_id'=> 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric'
+            'signup_limit'=> 'required|numeric',
+            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
         ]);
 
         $event->subject = $request->input('subject');
@@ -302,6 +305,7 @@ class EventController extends Controller
         $event->status_id = $request->input('status_id');
         $event->event_type_id = $request->input('event_type_id');
         $event->signup_limit = $request->input('signup_limit');
+        $event->cost = $request->input('cost');
         $event->save();
         return view('event.show', [
             'event'=>$event,

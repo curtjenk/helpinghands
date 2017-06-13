@@ -35,7 +35,7 @@
         <div class="modal-footer">
           <button type="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-danger" name="submit">Accept</button>
-           </div>
+        </div>
       </form>
     </div>
   </div>
