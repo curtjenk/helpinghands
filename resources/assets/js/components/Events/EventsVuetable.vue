@@ -227,11 +227,11 @@ export default {
   },
   methods: {
     showEvent (data, index) {
-        console.log('slot)', data.subject, index)
+        // console.log('slot)', data.subject, index)
         window.location.href = '/event/'+data.id;
     },
     onAction2 (action, data, index) {
-      console.log('slot) action: ' + action, data.subject, index)
+    //   console.log('slot) action: ' + action, data.subject, index)
     },
     getSignupsPay (data, index) {
     //   console.log(data);
@@ -241,7 +241,7 @@ export default {
         for(var i=0; i< response.data.length; i++)
         {
           let resp = response.data[i];
-          console.log(resp);
+        //   console.log(resp);
           var $div = $("<div>", {"class": "col-md-4"});
           $('#payups').append($div);
           $('<input/>', {
