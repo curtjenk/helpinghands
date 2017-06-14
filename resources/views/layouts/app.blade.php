@@ -57,7 +57,7 @@
                     @can ('list-events')
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Service/Events <span class="caret"></span>
+                                Events <span class="caret"></span>
                             </a>
                         {{-- <li><a href="{{ url('/event') }}">Service/Events</a> --}}
                             <ul class="dropdown-menu" role="menu">
