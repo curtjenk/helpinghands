@@ -42,11 +42,11 @@
                     <i class="fa fa-user-plus fa-lg fa-fw"></i>
                 </a>
             </span>
-            <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
+            <!-- <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
              <a v-show="isAdmin" href="#" type="button" class="">
                  <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
              </a>
-            </span>
+            </span> -->
           </div>
         </template>
     </vuetable>

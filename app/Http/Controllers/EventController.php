@@ -148,6 +148,9 @@ class EventController extends Controller
 
         //check that it wasn't a vue-tables-2 request
         if ($request->input('paginate') == '0') {
+            // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
+            $query = $query->where('statuses.name', 'Open')
+                ->orderby('events.date_start', 'desc');
             return response()->json($query->get());
         } else {
             return $query->paginate(10);
