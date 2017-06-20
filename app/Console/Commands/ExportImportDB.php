@@ -37,8 +37,8 @@ class ExportImportDB extends Command
         //'permission_role'=>'role_id,permission_id',
         'organizations'=>'id,name,address1,address2,city,zipcode,state,phone,created_at,updated_at',
         'users'=>'id,name,nickname,email,password,birth_mm,birth_dd,birth_yyyy,mobilephone,homephone,role_id,organization_id,opt_show_email,opt_receive_evite,opt_show_mobilephone,opt_show_homephone,remember_token,created_at,updated_at',
-        'events'=>'id,user_id,organization_id,subject,description,date_start,date_end,evite_sent,updated_user_id,status_id,created_at,updated_at',
-        'responses'=>'id,event_id,user_id,helping,token,created_at,updated_at',
+        'events'=>'id,user_id,organization_id,subject,description,date_start,date_end,evite_sent,updated_user_id,status_id,created_at,updated_at,signup_limit,cost',
+        'responses'=>'id,event_id,user_id,helping,token,created_at,updated_at,paid',
         'notes'=>'id,note,event_id,user_id,created_at,updated_at',
     ];
     private $tables_with_ids = [
