@@ -23,6 +23,7 @@ import './common';
 Vue.component('example', require('./components/Example.vue'));
 Vue.component('memberslist', require('./components/Members/MembersVuetable.vue'));
 Vue.component('eventslist', require('./components/Events/EventsVuetable.vue'));
+Vue.component('dashboardcharts', require('./components/Charts/Dashboard.vue'));
 
 const app = new Vue({
     el: '#app'

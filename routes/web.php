@@ -17,9 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
-
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', 'HomeController@index');
+
     Route::get('event/{id}/members', 'EventController@members');
     Route::get('event/{id}/signup', 'EventController@signup');
     Route::get('event/calendar', 'EventController@calendar');

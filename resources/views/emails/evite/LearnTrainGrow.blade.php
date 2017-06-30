@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left header">Your response is appreciated</div>
+            <div class="pull-left header">See below to respond</div>
         </div>
     </section>
     <div class="container">
@@ -16,10 +16,20 @@
         </p>
         <h4>Please respond by clicking the appropriate link</h4>
         <p>
-            <a href="{{ url('/api/evite/s/'.$event->id."/".$user->id."/".$token) }}">Yes, I want to Learn, Train and Grow</a>
+            <div>
+                Click <a href="{{ url('/api/evite/s/'.$event->id."/".$user->id."/".$token) }}">here</a> if you will participate
+            </div>
+            <div>
+                <a href="{{ url('/api/evite/s/'.$event->id."/".$user->id."/".$token) }}">Yes, I will participate</a>
+            </div>
         </p>
         <p>
-            <a href="{{ url('/api/evite/o/'.$event->id."/".$user->id."/".$token) }}">Sorry, maybe next time</a>
+            <div>
+                Click <a href="{{ url('/api/evite/o/'.$event->id."/".$user->id."/".$token) }}">here</a> if you will NOT participate
+            </div>
+            <div>
+                <a href="{{ url('/api/evite/o/'.$event->id."/".$user->id."/".$token) }}">Sorry, maybe next time</a>
+            </div>
         </p>
         <h4><u>Learn, Train, Grow event description</u></h4>
         <p>
