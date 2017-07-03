@@ -13,11 +13,19 @@
                 {{-- <div class="panel-heading">Dashboard</div> --}}
 
                 <div class="panel-body">
-                    You are logged in!
+                    How are we doing?
                 </div>
             </div>
         </div>
     </div>
-    <dashboardcharts></dashboardcharts>
+    <div class="row">
+        <div class="col-md-3">
+            Left Side Nav
+        </div>
+        <div class="col-md-9">
+            <dashboardcharts></dashboardcharts>
+        </div>
+    </div>
+
 </div>
 @endsection

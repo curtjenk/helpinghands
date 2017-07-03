@@ -26,12 +26,8 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $events = [];
-        if ($user->can('list-events'))
-        {
-            $events = App\Event::all();
-        }
-        return view('home', ['events'=>$events]);
+
+        return view('home', []);
     }
 
     public function administrator() {

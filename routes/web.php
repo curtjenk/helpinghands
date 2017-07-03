@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index');
+    Route::get('/db', 'DashboardController@index');
 
     Route::get('event/{id}/members', 'EventController@members');
     Route::get('event/{id}/signup', 'EventController@signup');

@@ -8,27 +8,23 @@ export default Bar.extend({
         type: Array,
         required: true
       },
-      data: {
+      datasets: {
           type: Array,
           required: true
       },
-      label: {
-        type: String,
-        required: true
+      options: {
+          type: Object,
+          required: false
       }
   },
   watch: {
-    data () {
+    datasets () {
       this.renderChart({
         labels: this.labels,
-        datasets: [
-          {
-            backgroundColor: '#f87979',
-            label: this.label,
-            data: this.data
-          }
-        ]
-      },{responsive: true, maintainAspectRatio: false})
+        datasets: this.datasets
+      },
+      this.options
+      )
     }
   }
 
