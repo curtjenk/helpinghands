@@ -8,21 +8,17 @@
     </section>
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                {{-- <div class="panel-heading">Dashboard</div> --}}
-
-                <div class="panel-body">
-                    How are we doing?
+                <div class="panel-body text-center">
+                    <h1>How are we doing?</h1>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-3">
-            Left Side Nav
-        </div>
-        <div class="col-md-9">
+
+        <div class="col-md-10 col-md-offset-1">
             <dashboardcharts></dashboardcharts>
         </div>
     </div>

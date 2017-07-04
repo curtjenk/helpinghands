@@ -27,18 +27,16 @@ export default Doughnut.extend({
   },
   watch: {
     data () {
-    //   console.log("doughnut render");
-    //   console.log(this.labels)
-    //   console.log(this.data)
-    //   console.log(this.bgColors)
       this.renderChart({
         labels: this.labels,
         datasets: [{
           data: this.data,
           backgroundColor: this.bgColors
         //   hoverBackgroundColor: this.hoverBGColors
-         }]
-      })
+        }]
+      },
+      this.options
+      )
     }
   }
 })

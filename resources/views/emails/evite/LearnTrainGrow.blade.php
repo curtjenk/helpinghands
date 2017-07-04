@@ -2,11 +2,12 @@
 
 @section('content')
 <main>
-    <section class="page-header">
+    @include('layouts.email_header')
+    {{-- <section class="page-header">
         <div class="container">
             <div class="pull-left header">See below to respond</div>
         </div>
-    </section>
+    </section> --}}
     <div class="container">
         <h3>Dear {{ $user->name}},</h3>
         <p>

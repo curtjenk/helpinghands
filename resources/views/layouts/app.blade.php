@@ -51,6 +51,9 @@
                         @endif --}}
                     @if (Auth::user())
                         <li>
+                            <a href="{{ url('/home') }}">Dashboard</a>
+                        </li>
+                        <li>
                             <a href="{{ url('/member') }}">Members</a>
                         </li>
                     @endif

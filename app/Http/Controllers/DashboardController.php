@@ -33,7 +33,24 @@ class DashboardController extends Controller
         }
         $data['EventTypesOverTime'] = $this->events_over_time($eventTypes);
         $data['TotalByType'] = $this->total_by_type($eventTypes);
+        $data['ParticpationRate'] = $this->overall_particiption();
         return response()->json($data);
+    }
+    private function overall_particiption()
+    {
+        $user = Auth::user();
+        $numMembers = App\User::where('organization_id',$user->organization_id)->count();
+        $query = App\Response::selectRaw(
+            "sum(case helping when true then 1 else 0 end)*100/count(*) as pct_yes,
+             sum(case helping when false then 1 else 0 end)*100/count(*) as pct_no,
+             sum(case when helping is null  then 1 else 0 end)*100/count(*) as pct_no_reply"
+            )->get();
+        $participation = [];
+        foreach($query as $key=>$value)
+        {
+            $participation[$key]=$value;
+        }
+        return $participation;
     }
     /**
      *  Get Year-To-Date total for each event type

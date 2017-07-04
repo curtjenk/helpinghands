@@ -1,19 +1,29 @@
 <template>
     <div class="">
         <div class="container-fluid">
-            <div class="col-md-6">
-                <doughnut-chart id="d1" :data="doughnutdata1"
-                    :labels="doughnutlabels1"
-                    :bgColors="doughnutBGColors1"
-                    :hoverBGColors="doughnutHoverBGColors1"
-                    :options="doughnutoptions1">
-                </doughnut-chart>
+            <div class="col-md-6 panel panel-default">
+                <div class="panel-heading text-center">
+                    Relative Proportion of Event Types
+                </div>
+                <div class="panel-body">
+                    <doughnut-chart id="d1" :data="doughnutdata1"
+                        :labels="doughnutlabels1"
+                        :bgColors="doughnutBGColors1"
+                        :hoverBGColors="doughnutHoverBGColors1"
+                        :options="doughnutoptions1">
+                    </doughnut-chart>
+                </div>
             </div>
-            <div class="col-md-6">
-                <bar-chart id="b1" :datasets="bardata1"
-                    :labels="barlabels1"
-                    :options="baroptions1">
-                </bar-chart>
+            <div class="col-md-6 panel panel-default">
+                <div class="panel-heading text-center">
+                    Year-To-Date Events Per Month
+                </div>
+                <div class="panel-body">
+                    <bar-chart id="b1" :datasets="bardata1"
+                        :labels="barlabels1"
+                        :options="baroptions1">
+                    </bar-chart>
+                </div>
             </div>
         </div>
     </div>
@@ -55,7 +65,13 @@ export default {
         // this.doughnutoptions1 = {responsive: true,
         //   maintainAspectRatio: false,
         // };
-
+        this.doughnutoptions1 = {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            position: 'bottom'
+          }
+        };
         this.doughnutlabels1.push('Service');
         this.doughnutlabels1.push('Fellowship');
         this.doughnutlabels1.push('LearnTrainGrow');
@@ -68,7 +84,8 @@ export default {
       },
       bar1(data) {
           this.barlabels1 = [];
-          this.baroptions1 = {responsive: true,
+          this.baroptions1 = {
+            responsive: true,
             maintainAspectRatio: false,
             tooltips: {
               mode: 'label',
@@ -81,6 +98,9 @@ export default {
             scales: {
               xAxes: [{ stacked: true }],
               yAxes: [{ stacked: true }]
+            },
+            legend: {
+              position: 'bottom'
             }
           };
           let ltg = []
