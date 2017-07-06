@@ -13,7 +13,6 @@ require('jquery-ui-bundle');
 require('bootstrap-sass');
 require('bootstrap-switch');
 require('fullcalendar');
-require('chartjs');
 require('vue-chartjs');
 
 
