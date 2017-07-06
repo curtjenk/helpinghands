@@ -70,8 +70,9 @@ class DashboardController extends Controller
             )
             ->join('events', 'events.id', '=', 'responses.event_id')
             ->where('events.organization_id', $org_id)
+            ->whereNotIn('event_id', [1,2,4])
             ->first();
-            
+
         return $query;
     }
     /**
