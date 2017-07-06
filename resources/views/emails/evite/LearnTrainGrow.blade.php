@@ -11,8 +11,9 @@
     <div class="container">
         <h3>Dear {{ $user->name}},</h3>
         <p>
-             "Learn, Train, Grow " is a key component in our journey to be Legacy Builders.
-             Will you take advantage of <b>{{ $event->subject }}</b> to continue Learning, Training and Growing?
+            <b>{{ $event->subject }}</b> is an opportunity to continue to Learn, Train &amp; Grow;
+             which is a key component in our journey to be Legacy Builders.
+             Will you take advantage of this great opportunity?
              <br/>
         </p>
         <h4>Please respond by clicking the appropriate link</h4>
@@ -43,7 +44,7 @@
             </div>
         </p>
         <hr />
-        @include('layouts.manhood')
     </div>
+    @include('layouts.email_footer')
 </main>
 @endsection

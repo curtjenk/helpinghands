@@ -42,7 +42,7 @@
             </div>
         </p>
         <hr />
-        @include('layouts.manhood')
     </div>
+    @include('layouts.email_footer')
 </main>
 @endsection
