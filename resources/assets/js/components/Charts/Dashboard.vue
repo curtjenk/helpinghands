@@ -1,6 +1,19 @@
-<template>
+partdata<template>
     <div class="">
         <div class="container-fluid">
+            <div class="col-md-6 panel panel-default">
+                <div class="panel-heading text-center">
+                    Overall Participation Rate
+                </div>
+                <div class="panel-body">
+                    <pie-chart id="p1" :data="partdata"
+                        :labels="partlabels"
+                        :bgColors="partBGColors"
+                        :hoverBGColors="partHoverBGColors"
+                        :options="partoptions">
+                    </pie-chart>
+                </div>
+            </div>
             <div class="col-md-6 panel panel-default">
                 <div class="panel-heading text-center">
                     Relative Proportion of Event Types
@@ -32,19 +45,28 @@
 <script>
 import BarChart from './bar'
 import DoughnutChart from './doughnut'
+import PieChart from './pie'
 Vue.component('bar-chart', BarChart)
+Vue.component('pie-chart', PieChart)
 Vue.component('doughnut-chart', DoughnutChart)
 export default {
   data () {
     return {
-        bardata1: [],
-        barlabels1: [],
-        baroptions1: {},
-        doughnutdata1: [],
-        doughnutlabels1: [],
-        doughnutBGColors1: [],
-        doughnutHoverBGColors1: [],
-        doughnutoptions1: {}
+      bardata1: [],
+      barlabels1: [],
+      baroptions1: {},
+
+      doughnutdata1: [],
+      doughnutlabels1: [],
+      doughnutBGColors1: [],
+      doughnutHoverBGColors1: [],
+      doughnutoptions1: {},
+
+      partdata: [],
+      partlabels: [],
+      partBGColors: [],
+      partHoverBGColors: [],
+      partoptions: {},
     }
   },
   mounted () {
@@ -53,6 +75,7 @@ export default {
     .then(response => {
       this.bar1(response.data.EventTypesOverTime);
       this.doughnut1(response.data.TotalByType);
+      this.participation(response.data.ParticpationRate);
     })
     .catch(e => {
       console.log(e);
@@ -60,7 +83,23 @@ export default {
 
   },
   methods: {
-      doughnut1(data) {
+    participation(data) {
+    // pie chart
+      this.partlabels = ['Yes', 'No', 'NoReply'];
+      this.partdata = [data.yes, data.no, data.noreply];
+      this.partBGColors = [
+                "rgba(0, 255, 0, 0.7)",
+                "rgba(225, 58, 55, 0.7)",
+                "rgba(255, 255, 0, 0.7)"];
+      this.partoptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          position: 'bottom'
+        }
+      };
+    },
+    doughnut1(data) {
         this.doughnutlabels1 = [];
         // this.doughnutoptions1 = {responsive: true,
         //   maintainAspectRatio: false,
@@ -82,7 +121,7 @@ export default {
         this.doughnutdata1.push(data.Fellowship);
         this.doughnutdata1.push(data.LearnTrainGrow);
       },
-      bar1(data) {
+    bar1(data) {
           this.barlabels1 = [];
           this.baroptions1 = {
             responsive: true,
@@ -142,8 +181,7 @@ export default {
           ];
 
       }
-  }
-
+  } //end-methods
 
 }
 </script>

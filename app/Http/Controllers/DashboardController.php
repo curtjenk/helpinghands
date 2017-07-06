@@ -70,13 +70,9 @@ class DashboardController extends Controller
             )
             ->join('events', 'events.id', '=', 'responses.event_id')
             ->where('events.organization_id', $org_id)
-            ->get();
-        $participation = [];
-        foreach($query as $key=>$value)
-        {
-            $participation[$key]=$value;
-        }
-        return $participation;
+            ->first();
+            
+        return $query;
     }
     /**
      *  Get Year-To-Date total for each event type

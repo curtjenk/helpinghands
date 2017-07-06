@@ -1,5 +1,7 @@
 <section class="page-header">
-    {{-- <div class="container">
-        <div class="pull-left header">Please, do not reply to this email. Contact Dea. Jenkins for questions.</div>
-    </div> --}}
+    <div class="container">
+        <div class="pull-left" style="color:red;">
+            Please, <em>Do Not Reply to this email</em>.  Click the appropriate link below to register your response.
+        </div>
+    </div>
 </section>
