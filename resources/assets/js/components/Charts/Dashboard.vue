@@ -86,7 +86,6 @@ export default {
     participation(data) {
     // pie chart
       this.partlabels = ['Yes', 'No', 'NoReply'];
-      this.partdata = [data.yes, data.no, data.noreply];
       this.partBGColors = [
                 "rgba(0, 255, 0, 0.7)",
                 "rgba(225, 58, 55, 0.7)",
@@ -94,10 +93,21 @@ export default {
       this.partoptions = {
         responsive: true,
         maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+                let index = tooltipItem['index'];
+                let lbl = data.labels[index];
+                let val = data.datasets[0].data[index];
+                return lbl + ': ' + val + '%';
+            }
+          }
+        },
         legend: {
           position: 'bottom'
         }
       };
+      this.partdata = [data.yes, data.no, data.noreply];
     },
     doughnut1(data) {
         this.doughnutlabels1 = [];
