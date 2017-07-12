@@ -17,7 +17,7 @@
     <div class="container">
         <div class="col-md-2">
             <p class="text-center">
-                Three Month Preview
+                Count Of Events Per Month
             </p>
             <table class="table">
                 <thead>
@@ -39,7 +39,7 @@
             </table>
         </div>
         <div class="col-md-1"></div>
-        <div class="col-md-9">
+        <div class="col-md-8">
     	    <div id="calendar"></div>
         </div>
     </div>

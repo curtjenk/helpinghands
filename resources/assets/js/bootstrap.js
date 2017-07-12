@@ -14,6 +14,8 @@ require('bootstrap-sass');
 require('bootstrap-switch');
 require('fullcalendar');
 require('vue-chartjs');
+//Require chart.piecelabel.js AFTER vue-chartjs
+require('chart.piecelabel.js');
 
 
 // Confirm we're loading correctly.

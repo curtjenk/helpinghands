@@ -16,7 +16,7 @@ partdata<template>
             </div>
             <div class="col-md-6 panel panel-default">
                 <div class="panel-heading text-center">
-                    Relative Proportion of Event Types
+                     Year-To-Date Count Per Event Type
                 </div>
                 <div class="panel-body">
                     <doughnut-chart id="d1" :data="doughnutdata1"
@@ -105,7 +105,32 @@ export default {
         },
         legend: {
           position: 'bottom'
-        }
+        },
+          pieceLabel: {
+            // mode 'label', 'value' or 'percentage', default is 'percentage'
+            mode: 'value',
+            // precision for percentage, default is 0
+            precision: 0,
+            //identifies whether or not labels of value 0 are displayed, default is false
+            showZero: true,
+            // font size, default is defaultFontSize
+            fontSize: 18,
+            // font color, default is '#fff'
+            fontColor: '#000',
+            // font style, default is defaultFontStyle
+            fontStyle: 'normal',
+            // font family, default is defaultFontFamily
+            fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+            // draw label in arc, default is false
+            arc: false,
+            // position to draw label, available value is 'default', 'border' and 'outside'
+            // default is 'default'
+            position: 'default',
+            // format text, work when mode is 'value'
+            format: function (value) {
+            return value + '%';
+            }
+          }
       };
       this.partdata = [data.yes, data.no, data.noreply];
     },
@@ -119,6 +144,32 @@ export default {
           maintainAspectRatio: false,
           legend: {
             position: 'bottom'
+          },
+        //   piecelabel is a Chartjs plugin
+          pieceLabel: {
+            // mode 'label', 'value' or 'percentage', default is 'percentage'
+            mode: 'value',
+            // precision for percentage, default is 0
+            precision: 0,
+            //identifies whether or not labels of value 0 are displayed, default is false
+            showZero: true,
+            // font size, default is defaultFontSize
+            fontSize: 18,
+            // font color, default is '#fff'
+            fontColor: '#000',
+            // font style, default is defaultFontStyle
+            fontStyle: 'normal',
+            // font family, default is defaultFontFamily
+            fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+            // draw label in arc, default is false
+            arc: false,
+            // position to draw label, available value is 'default', 'border' and 'outside'
+            // default is 'default'
+            position: 'default',
+            // format text, work when mode is 'value'
+            format: function (value) {
+            return value;
+            }
           }
         };
         this.doughnutlabels1.push('Service');

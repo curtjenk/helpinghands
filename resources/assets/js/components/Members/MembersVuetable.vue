@@ -105,6 +105,13 @@ export default {
         //   dataClass: 'text-center',
         // },
         {
+          title: 'Active',
+          name: 'opt_receive_evite',
+          sortField: 'opt_receive_evite',
+          dataClass: 'text-primary',
+          callback: 'setActiveIcon'
+        },
+        {
           name: 'name',
           sortField: 'name',
           dataClass: 'text-primary'
@@ -126,7 +133,7 @@ export default {
         //   callback: 'allcap'
         },
         {
-          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
+          title: '<i class="fa fa-thumbs-o-up fa-w"> Events</i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
           dataClass: 'text-center',
@@ -210,6 +217,11 @@ export default {
     },
     collapseAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = []
+    },
+    setActiveIcon (value) {
+          return value == true
+            ? '<span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Yes</span>'
+            : '<span class="label label-danger"><i class="glyphicon glyphicon-remove"></i> No</span>'
     },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()

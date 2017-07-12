@@ -51,18 +51,19 @@
                         @endif --}}
                     @if (Auth::user())
                         <li>
-                            <a href="{{ url('/home') }}">Dashboard</a>
+                            <a href="{{ url('/home') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="{{ url('/member') }}">Members</a>
+                            <a href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
                         </li>
                     @endif
                     @can ('list-events')
-                        <li class="dropdown">
+                        <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a></li>
+                        <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
+                        {{-- <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Events <span class="caret"></span>
                             </a>
-                        {{-- <li><a href="{{ url('/event') }}">Service/Events</a> --}}
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
                                 <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
@@ -70,7 +71,7 @@
                                 <li><a href="{{ url('/event/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
                             @endcan
                             </ul>
-                        </li>
+                        </li> --}}
                     @endcan
                     </ul>
 
