@@ -114,7 +114,7 @@ export default {
             //identifies whether or not labels of value 0 are displayed, default is false
             showZero: true,
             // font size, default is defaultFontSize
-            fontSize: 18,
+            fontSize: 16,
             // font color, default is '#fff'
             fontColor: '#000',
             // font style, default is defaultFontStyle
@@ -125,7 +125,7 @@ export default {
             arc: false,
             // position to draw label, available value is 'default', 'border' and 'outside'
             // default is 'default'
-            position: 'default',
+            position: 'border',
             // format text, work when mode is 'value'
             format: function (value) {
             return value + '%';
@@ -145,7 +145,7 @@ export default {
           legend: {
             position: 'bottom'
           },
-        //   piecelabel is a Chartjs plugin
+        //   pieceLabel is a Chartjs plugin
           pieceLabel: {
             // mode 'label', 'value' or 'percentage', default is 'percentage'
             mode: 'value',
