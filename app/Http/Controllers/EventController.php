@@ -173,7 +173,7 @@ class EventController extends Controller
             })
             ->get();
 
-        return view('event.create',
+        return view('event.create_edit',
             ['orgs'=>$orgs,
              'statuses'=>App\Status::all(),
              'event_types'=>App\EventType::all(),
@@ -267,7 +267,7 @@ class EventController extends Controller
                 return $q->where('organizations.id', $user->organization_id);
             })
             ->get();
-        return view('event.create', [
+        return view('event.create_edit', [
             'event'=>$event,
             'orgs'=>$orgs,
             'statuses'=>App\Status::all(),

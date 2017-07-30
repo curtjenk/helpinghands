@@ -8,7 +8,7 @@
 require('./bootstrap');
 
 import './user';
-import './event';
+import './events';
 import './calendar';
 import './organization';
 import './bs_common';

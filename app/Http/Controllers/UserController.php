@@ -289,6 +289,7 @@ class UserController extends Controller
         //dump($request->all());
         $this->validate($request, [
             'name' => 'required|max:255|min:5',
+            'email' => 'required|max:255',
             'nickname' => 'max:255',
             'mobilephone' => 'max:255',
             'homephone' => 'max:255',
@@ -299,6 +300,7 @@ class UserController extends Controller
         $user = App\User::findOrFail($id);
         $self = Auth::user();
         $this->authorize('update', $user);
+        $user->email = $request->input('email');
         $user->name = $request->input('name');
         $user->nickname = $request->input('nickname');
         $user->mobilephone = $request->input('mobilephone');

@@ -11,12 +11,26 @@
         <form class="form-horizontal" method="POST" action="{{ url('/member/'.$user->id) }}">
             <input name="_method" type="hidden" value="PUT">
             {{ csrf_field() }}
+        @if(Gate::check('update', $user) || Gate::check('create', $user))
+            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                <label for="email" class="col-md-4 control-label">Email</label>
+                <div class="col-md-8">
+                    <input id="email" type="text" class="editInfo" name="email" maxlength="255" value="{{ isset($user) ? $user->email : old('email') }}" required>
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @else
             <div class="form-group">
                 <label for="email" class="col-md-4 control-label">Email</label>
                 <div class="col-md-8">
                     <p id="email" class="form-control-static">{{ $user->email }}</p>
                 </div>
             </div>
+        @endif
         @if(Gate::check('update', $user) || Gate::check('create', $user))
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name" class="col-md-4 control-label">Name</label>
