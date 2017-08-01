@@ -17,14 +17,12 @@
           {{ csrf_field() }}
           <div class="col-md-6">
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Organization</label>
-                    @if ($errors->has('organization_id'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('organization_id') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                <label for="organization_id" class="col-md-3 control-label">Organization</label>
+                @if ($errors->has('organization_id'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('organization_id') }}</strong>
+                    </span>
+                @endif
                 <div class="col-md-9">
                     <select id="organization_id" name="organization_id">
                         @foreach ($orgs as $org)
@@ -71,7 +69,7 @@
             <div class="form-group{{ $errors->has('cost') ? ' has-error' : '' }}">
                 <label for="cost" class="col-md-3 control-label">Cost</label>
                 <div class="col-md-9">
-                    <input required id="cost" type="number" name="cost"  min="0" step="any" value="{{ isset($event) ? $event->cost : old('cost') }}">
+                    <input required id="cost" type="number" name="cost"  min="0" step="any" value="{{ isset($event) ? $event->cost : (old('cost') ? old('cost') : 0) }}">
                     @if ($errors->has('cost'))
                         <span class="help-block">
                             <strong>{{ $errors->first('cost') }}</strong>
@@ -80,14 +78,12 @@
                 </div>
             </div>
             <div class="form-group{{ $errors->has('event_type_id') ? ' has-error' : '' }}">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Type</label>
-                    @if ($errors->has('event_type_id'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('event_type_id') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                <label for="event_type_id" class="col-md-3 control-label">Type</label>
+                @if ($errors->has('event_type_id'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('event_type_id') }}</strong>
+                    </span>
+                @endif
                 <div class="col-md-9">
                     <select id="event_type_id" name="event_type_id">
                         @foreach ($event_types as $event_type)
@@ -101,7 +97,7 @@
             <div class="form-group{{ $errors->has('signup_limit') ? ' has-error' : '' }}">
                 <label for="signup_limit" class="col-md-3 control-label">Signup Limit</label>
                 <div class="col-md-9">
-                    <input id="signup_limit" type="number" name="signup_limit"  max="999" value="{{ isset($event) ? $event->signup_limit : old('signup_limit') }}">
+                    <input id="signup_limit" type="number" name="signup_limit"  max="999" value="{{ isset($event) ? $event->signup_limit : (old('signup_limit') ? old('signup_limit') : 0) }}">
                     @if ($errors->has('signup_limit'))
                         <span class="help-block">
                             <strong>{{ $errors->first('signup_limit') }}</strong>
@@ -110,14 +106,12 @@
                 </div>
             </div>
             <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Status</label>
-                    @if ($errors->has('status_id'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('status_id') }}</strong>
-                        </span>
-                    @endif
-                </div>
+                <label for="status_id" class="col-md-3 control-label">Status</label>
+                @if ($errors->has('status_id'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('status_id') }}</strong>
+                    </span>
+                @endif
                 <div class="col-md-9">
                     <select id="status_id" name="status_id">
                         @foreach ($statuses as $status)
@@ -160,11 +154,10 @@
                 </button>
             </div>
           </div>
+          <div class="row">
+              <div id="image_preview"></div>
+          </div>
         </form>
-        <div class="row">
-            <div id="image_preview"></div>
-        </div>
-
     </div>
 </main>
 

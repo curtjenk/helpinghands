@@ -17,6 +17,13 @@ class Event extends Model
         'date_end', 'cost', 'user_id', 'status_id', 'event_type_id'
     ];
     /**
+     * Get the Files/Attachments for this Event.
+     */
+    public function files()
+    {
+        return $this->hasMany('App\EventFiles');
+    }
+    /**
      * Get the Organization for this Event.
      */
     public function organization()

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Mail\EventNotification;
 use App;
 use Auth;
+use Storage;
 use DB;
 use Log;
 
@@ -230,6 +231,21 @@ class EventController extends Controller
             'signup_limit'=>$request->input('signup_limit'),
             'cost'=>$request->input('cost'),
         ]);
+        //Store to 'pubilic'
+        //created sym link using php artisan storage:link
+        //so files are accessible from web
+        $dir = 'event_files/'.$newEvent->id;
+        $uploads = $request->file('event_file');
+        if (isset($uploads)) {
+            foreach($uploads as $upload) {
+                $original = $upload->getClientOriginalName();
+                $filename = $upload->store($dir, 'public');
+                App\EventFiles::create(['event_id'=>$newEvent->id,
+                    'filename'=>$filename,
+                    'original_filename'=>$original]);
+            }
+        }
+
         return view('event.show', [
             'event'=>$newEvent,
         ]);
@@ -310,6 +326,23 @@ class EventController extends Controller
         $event->signup_limit = $request->input('signup_limit');
         $event->cost = $request->input('cost');
         $event->save();
+
+        $dir = 'event_files/'.$event->id;
+        //cleanup storage and db rows
+        Storage::disk('public')->deleteDirectory($dir);
+        $event->files()->delete();
+
+        $uploads = $request->file('event_file');
+        if (isset($uploads)) {
+            foreach($uploads as $upload) {
+                $original = $upload->getClientOriginalName();
+                $filename = $upload->store($dir, 'public');
+                App\EventFiles::create(['event_id'=>$event->id,
+                    'filename'=>$filename,
+                    'original_filename'=>$original]);
+            }
+        }
+
         return view('event.show', [
             'event'=>$event,
         ]);
