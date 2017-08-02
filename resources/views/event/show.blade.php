@@ -33,103 +33,92 @@
             </div>
         </div>
     </section>
-    <div class="container">
-        <div class="col-md-2">
+    <div class="container-fluid">
+        <div class="row form-horizontal">
             @if(!empty($num_evites))
                 <h5 style="color: red">
                     Sent {{ $num_evites }} Evites
                 </h5>
             @endif
         </div>
-        {{-- {{dump($event)}} --}}
-        <div class="col-md-8">
-            <div class="form-horizontal">
-                <div class="panel panel-default">
-                @if($event->statusOpen())
-                    @if($errors->any() || isset($msg))
-                        <?php $message = isset($msg)?$msg : $errors->first(); ?>
-                        <div class="panel-heading" style="background-color:yellow">
-                            <h4 class="text-center"><em>{{$message}}</em></h4>
-                        </div>
-                    @elseif(Auth::user()->signedup($event->id, 'yes'))
-                        <div class="panel-heading" style="background-color:#41b5f4">
-                            <h4 class="text-center"><em>You are signed-up!</em></h4>
-                        </div>
-                    @elseif (Auth::user()->signedup($event->id,'no'))
-                        <div class="panel-heading" style="background-color:#f45f42">
-                            <h4 class="text-center"><em>You Declined but it's not too late!</em></h4>
-                        </div>
-                    @else
-                        <div class="panel-heading" style="background-color:yellow">
-                            <h4 class="text-center"><em>Signup today!</em></h4>
-                        </div>
-                    @endif
+        <div class="row form-horizontal">
+            <div class="panel panel-default">
+            @if($event->statusOpen())
+                @if($errors->any() || isset($msg))
+                <?php $message = isset($msg)?$msg : $errors->first(); ?>
+                <div class="panel-heading" style="background-color:yellow">
+                    <h4 class="text-center"><em>{{$message}}</em></h4>
+                </div>
+                @elseif(Auth::user()->signedup($event->id, 'yes'))
+                <div class="panel-heading" style="background-color:#41b5f4">
+                    <h4 class="text-center"><em>You are signed-up!</em></h4>
+                </div>
+                @elseif (Auth::user()->signedup($event->id,'no'))
+                <div class="panel-heading" style="background-color:#f45f42">
+                    <h4 class="text-center"><em>You Declined but it's not too late!</em></h4>
+                </div>
                 @else
-                    <div class="panel-heading" style="background-color:yellow">
-                        <h4 class="text-center"><em>Event is Closed/On-Hold</em></h4>
-                    </div>
+                <div class="panel-heading" style="background-color:yellow">
+                    <h4 class="text-center"><em>Signup today!</em></h4>
+                </div>
                 @endif
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="organziation" class="col-md-4 control-label">Organization</label>
-                            <div class="col-md-8">
-                                <p id="organziation" class="form-control-static">
-                                    {{$event->organization->name}} {{$event->organization->city}} {{$event->organization->state}}
+            @else
+                <div class="panel-heading" style="background-color:yellow">
+                    <h4 class="text-center"><em>Event is Closed/On-Hold</em></h4>
+                </div>
+            @endif
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <label class="col-md-3 control-label">Organization</label>
+                        <div class="col-md-9">
+                            <p>{{$event->organization->name}}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Subject</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->subject }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Start</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->date_start }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">End</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->date_end }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Cost</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">${{ $event->cost }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Type</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->event_type->name }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Status</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->status->name }}</p>
+                        </div>
+                        <label class="col-md-3 control-label">Signup Limit</label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">{{ $event->signup_limit>0?$event->signup_limit:"None" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-md-3 control-label">Description</label>
+                        <div class="col-md-9">
+                            <textarea cols="45" rows="6" readonly>{{ $event->description }}
+                            </textarea>
+                        </div>
+                        <label class="col-md-3 control-label">Attachments:</label>
+                        @foreach ($event->files as $file)
+                            <div class="col-md-11 col-md-offset-1">
+                                <p>
+                                    {{$file->original_filename}}
                                 </p>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject" class="col-md-4 control-label">Subject</label>
-                            <div class="col-md-8">
-                                <p id="subject" class="form-control-static">{{ $event->subject }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="date_start" class="col-md-4 control-label">Start</label>
-                            <div class="col-md-8">
-                                <p id="date_start" class="form-control-static">{{ $event->date_start }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="date_end" class="col-md-4 control-label">End</label>
-                            <div class="col-md-8">
-                                <p id="date_end" class="form-control-static">{{ $event->date_end }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="cost" class="col-md-4 control-label">Cost</label>
-                            <div class="col-md-8">
-                                <p id="cost" class="form-control-static">${{ $event->cost }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="event_type" class="col-md-4 control-label">Type</label>
-                            <div class="col-md-8">
-                                <p id="event_type" class="form-control-static">{{ $event->event_type->name }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="status" class="col-md-4 control-label">Status</label>
-                            <div class="col-md-8">
-                                <p id="status" class="form-control-static">{{ $event->status->name }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="signup_limit" class="col-md-4 control-label">Signup Limit</label>
-                            <div class="col-md-8">
-                                <p id="signup_limit" class="form-control-static">{{ $event->signup_limit>0?$event->signup_limit:"None" }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="description" class="col-md-4 control-label">Description</label>
-                            <div class="col-md-8">
-                                <p id="description" class="form-control-static">{{ $event->description }}</p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
-            <div class="col-md-2"></div>
         </div>
     </div>
 </main>
