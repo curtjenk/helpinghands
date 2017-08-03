@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('event/{id}/members', 'EventController@members');
     Route::get('event/{id}/signup', 'EventController@signup');
+    Route::get('event/{eid}/download/{fid}', 'EventController@download');
     Route::get('event/calendar', 'EventController@calendar');
     Route::post('event/notify/{id}', 'EventController@notify');
     Route::resource('event', 'EventController');

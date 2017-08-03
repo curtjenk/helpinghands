@@ -33,7 +33,7 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row form-horizontal">
             @if(!empty($num_evites))
                 <h5 style="color: red">
@@ -68,7 +68,7 @@
                 </div>
             @endif
                 <div class="panel-body">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <label class="col-md-3 control-label">Organization</label>
                         <div class="col-md-9">
                             <p>{{$event->organization->name}}</p>
@@ -102,20 +102,26 @@
                             <p class="form-control-static">{{ $event->signup_limit>0?$event->signup_limit:"None" }}</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <label class="col-md-3 control-label">Description</label>
                         <div class="col-md-9">
-                            <textarea cols="45" rows="6" readonly>{{ $event->description }}
+                            <textarea class="editTextArea" cols="200" rows="6" readonly>{{ $event->description }}
                             </textarea>
                         </div>
                         <label class="col-md-3 control-label">Attachments:</label>
+                        <div class="col-md-11 col-md-offset-1">
                         @foreach ($event->files as $file)
-                            <div class="col-md-11 col-md-offset-1">
-                                <p>
-                                    {{$file->original_filename}}
-                                </p>
-                            </div>
+                            <div class="col-md-2">
+                               <div class="thumbnail">
+                                   <a data-toggle="tooltip" title="{{$file->original_filename}}"
+                                       href="{{url('/event/'.$event->id.'/download/'.$file->id)}}">
+                                      <img src="{{url('/event/'.$event->id.'/download/'.$file->id)}}"
+                                          alt="ALT NAME" class="img-responsive" />
+                                    </a>
+                               </div>
+                           </div>
                         @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

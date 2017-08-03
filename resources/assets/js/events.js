@@ -13,8 +13,10 @@ events.preview_image = function(event)
  $('#image_preview').html("");
  for(var i=0;i<total_file;i++)
  {
-  $('#image_preview').append('<div class="img-preview col-sm-1">'
+  $('#image_preview').append('<div class="col-md-2">'
+    + '<div class="thumbnail">'
     + "<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"'>"
+    + '</div>'
     + '</div>');
  }
 }

@@ -196,6 +196,28 @@ class EventController extends Controller
 
         return response()->json($members);
     }
+    /**
+     * Download the requested file/attachment
+     * @param  Request $request [description]
+     * @param  [type]  $event_id      [description]
+     * @param  [type]  $file_id [description]
+     * @return [type]           [description]
+     */
+    public function download(Request $request, $event_id, $file_id)
+    {
+        $user = Auth::user();
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize('show', $event);
+        $file = App\EventFiles::where('id', $file_id)
+            ->where('event_id', $event->id)
+            ->first();
+        //dump($file);
+        $pathToFile =  Storage::disk('public')
+            ->getDriver()->getAdapter()
+            ->applyPathPrefix($file->filename);
+        //dump($pathToFile);
+        return response()->download($pathToFile, $file->original_filename);
+    }
 
     /**
      * Store a newly created resource in storage.

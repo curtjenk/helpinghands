@@ -127,7 +127,7 @@
             <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                 <label for="description" class="col-md-3 control-label">Description</label>
                 <div class="col-md-9">
-                    <textarea required id="description" cols="70" rows="5" class="editTextArea" name="description" >{{ isset($event) ? $event->description : old('description') }}
+                    <textarea required id="description" cols="100" rows="6" class="editTextArea" name="description" >{{ isset($event) ? $event->description : old('description') }}
                     </textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">
@@ -142,6 +142,9 @@
                     <input id="event_file" name="event_file[]" type="file" multiple/><br />
                 </div>
             </div>
+            <div class="form-group">
+                <div id="image_preview"></div>
+            </div>
           </div>
 
           <div class="col-md-12">
@@ -154,9 +157,9 @@
                 </button>
             </div>
           </div>
-          <div class="row">
+          {{-- <div class="row">
               <div id="image_preview"></div>
-          </div>
+          </div> --}}
         </form>
     </div>
 </main>
