@@ -4,7 +4,7 @@
 <main>
     <section class="page-header">
         <div class="container">
-            <div class="pull-left header">Service / Fellowship Event</div>
+            <div class="pull-left header"> Event</div>
             <div class="pull-right">
                 <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
             @if($event->statusOpen())
