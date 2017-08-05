@@ -9,12 +9,13 @@ export const events = events || {};
 
 events.preview_image = function(event)
 {
- var total_file=$("#event_file")[0].files.length;
+ var total_file=event.target.files.length;
  $('#image_preview').html("");
+ $('#prev_image_preview').html("");
  for(var i=0;i<total_file;i++)
  {
   $('#image_preview').append('<div class="col-md-2">'
-    + '<div class="thumbnail">'
+    + '<div class="thumbnail" data-toggle="tooltip" title="'+event.target.files[i].name+'">'
     + "<img class='img-responsive' src='"+URL.createObjectURL(event.target.files[i])+"'>"
     + '</div>'
     + '</div>');
@@ -45,7 +46,6 @@ $(function() {
     $('#eventevite form').attr('action', 'evite' + button.data('id'));
   });
   $('#event_file').on('change', function(event) {
-
     events.preview_image(event);
   });
 });

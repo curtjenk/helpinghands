@@ -116,7 +116,7 @@
                                    <a data-toggle="tooltip" title="{{$file->original_filename}}"
                                        href="{{url('/event/'.$event->id.'/download/'.$file->id)}}">
                                       <img src="{{url('/event/'.$event->id.'/download/'.$file->id)}}"
-                                          alt="ALT NAME" class="img-responsive" />
+                                          alt="" class="img-responsive" />
                                     </a>
                                </div>
                            </div>

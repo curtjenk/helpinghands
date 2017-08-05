@@ -10,6 +10,7 @@ use App\Mail\EventNotification;
 use App;
 use Auth;
 use Storage;
+use Cache;
 use DB;
 use Log;
 
@@ -211,7 +212,10 @@ class EventController extends Controller
         $file = App\EventFiles::where('id', $file_id)
             ->where('event_id', $event->id)
             ->first();
-        //dump($file);
+        if(!isset($file)){
+            Log::debug("File not found. id = ".$file_id." event=".$event_id);
+            return;
+        }
         $pathToFile =  Storage::disk('public')
             ->getDriver()->getAdapter()
             ->applyPathPrefix($file->filename);
@@ -259,18 +263,21 @@ class EventController extends Controller
         $dir = 'event_files/'.$newEvent->id;
         $uploads = $request->file('event_file');
         if (isset($uploads)) {
+            // Log::debug("about to upload");
             foreach($uploads as $upload) {
                 $original = $upload->getClientOriginalName();
                 $filename = $upload->store($dir, 'public');
+                // Log::debug(Storage::disk('public')->url($filename));
                 App\EventFiles::create(['event_id'=>$newEvent->id,
                     'filename'=>$filename,
                     'original_filename'=>$original]);
             }
         }
 
-        return view('event.show', [
-            'event'=>$newEvent,
-        ]);
+        return redirect("event/$newEvent->id");
+        // return view('event.show', [
+        //     'event'=>$newEvent,
+        // ]);
     }
 
     /**
@@ -322,6 +329,7 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Log::debug(print_r(Cache::all(),true));
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
@@ -350,12 +358,13 @@ class EventController extends Controller
         $event->save();
 
         $dir = 'event_files/'.$event->id;
-        //cleanup storage and db rows
-        Storage::disk('public')->deleteDirectory($dir);
-        $event->files()->delete();
 
         $uploads = $request->file('event_file');
         if (isset($uploads)) {
+            //cleanup storage and db rows from previous
+            Storage::disk('public')->deleteDirectory($dir);
+            $event->files()->delete();
+            //now save the uploaded
             foreach($uploads as $upload) {
                 $original = $upload->getClientOriginalName();
                 $filename = $upload->store($dir, 'public');
@@ -364,10 +373,26 @@ class EventController extends Controller
                     'original_filename'=>$original]);
             }
         }
-
-        return view('event.show', [
-            'event'=>$event,
-        ]);
+        $todelete = $request->input('delete_file');
+        if(is_array($todelete))
+        {
+            foreach($todelete as $id) {
+                $eventFile = App\EventFiles::findOrFail($id);
+                Storage::disk('public')->delete($eventFile->filename);
+                $eventFile->delete();
+            }
+            //delete directory if empty
+            $diskfiles = Storage::disk('public')->files($dir);
+            // Log::debug(print_r($diskfiles, true));
+            if (count($diskfiles)==0) {
+                // Log::debug("delete directory");
+                Storage::disk('public')->deleteDirectory($dir);
+            }
+        }
+        return redirect("event/$event->id");
+        // return view('event.show', [
+        //     'event'=>$event,
+        // ]);
     }
 
     /**

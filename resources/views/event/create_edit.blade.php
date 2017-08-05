@@ -10,7 +10,7 @@
     <div class="container">
     @if(isset($event))
         <form class="form-horizontal" method="POST" action="{{ url('/event/'.$event->id) }}" enctype="multipart/form-data">
-            <input name="_method" type="hidden" value="PUT">
+            <input name="_method" type="hidden" value="PUT"/>
     @else
         <form class="form-horizontal" method="POST" action="{{ url('/event') }}" enctype="multipart/form-data">
     @endif
@@ -144,6 +144,20 @@
             </div>
             <div class="form-group">
                 <div id="image_preview"></div>
+            @if(isset($event))
+                <div id="prev_image_preview">
+                @foreach ($event->files as $file)
+                    <div class="col-md-2">
+                        <input id="delete_file" class="red-cb" name="delete_file[]"
+                            type="checkbox" value="{{$file->id}}"/>
+                        <label for="delete_file"><span><span></span></span></label>
+                        <div class="thumbnail" data-toggle="tooltip" title="{{$file->original_filename}}">
+                          <img src="{{url('/event/'.$event->id.'/download/'.$file->id)}}"
+                              alt="" class="img-responsive" />
+                        </div>
+                   </div>
+                @endforeach
+            @endif
             </div>
           </div>
 
@@ -157,9 +171,6 @@
                 </button>
             </div>
           </div>
-          {{-- <div class="row">
-              <div id="image_preview"></div>
-          </div> --}}
         </form>
     </div>
 </main>
