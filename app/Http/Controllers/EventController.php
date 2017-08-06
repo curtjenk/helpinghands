@@ -118,6 +118,7 @@ class EventController extends Controller
         $this->authorize('list-events');
         $user = Auth::user();
         if (!$request->ajax()) {
+            
             return view('event.index', []);
         }
 

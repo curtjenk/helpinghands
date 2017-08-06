@@ -5,32 +5,48 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header"> Event</div>
+            <div class="pull-left">@include('layouts.org_selector')</div>
             <div class="pull-right">
-                <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
+                <a class="btn btn-default btn-xs"
+                href="{{ url('/event') }}">
+                <i class="fa fa-list"></i> Events</a>
             @if($event->statusOpen())
                 @if(!Auth::user()->signedup($event->id, 'yes'))
-                    <a class="btn btn-default" style="background-color:#41b5f4" href="{{ url('/event/'.$event->id.'/signup?h=1') }}"><i class="fa fa-thumbs-o-up"></i> Signup</a>
+                    <a class="btn btn-default btn-xs" style="background-color:#41b5f4"
+                    href="{{ url('/event/'.$event->id.'/signup?h=1') }}">
+                    <i class="fa fa-thumbs-o-up"></i> Signup</a>
                 @endif
                 @if(!Auth::user()->signedup($event->id, 'no'))
-                    <a class="btn btn-default" style="background-color:#f45f42" href="{{ url('/event/'.$event->id.'/signup?h=0') }}"><i class="fa fa-thumbs-o-down"></i> Decline</a>
+                    <a class="btn btn-default btn-xs" style="background-color:#f45f42"
+                    href="{{ url('/event/'.$event->id.'/signup?h=0') }}">
+                    <i class="fa fa-thumbs-o-down"></i> Decline</a>
                 @endif
             @endif
             {{--  add vertical bar/line --}}
             <span>&#124;</span>
             @can ('update', $event)
-                <a class="btn btn-default" href="{{ url('/event/'.$event->id.'/edit') }}"><i class="fa fa-pencil"></i> Edit</a>
+                <a class="btn btn-default btn-xs"
+                href="{{ url('/event/'.$event->id.'/edit') }}">
+                <i class="fa fa-pencil"></i> Edit</a>
             @endcan
             @can ('create-event')
-                <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
+                <a class="btn btn-default btn-xs"
+                href="{{ url('/event/create') }}">
+                <i class="fa fa-plus"></i> Create</a>
             @endcan
             @can ('send-evites')
                     @if($event->evite_sent)
-                      <a class="btn btn-warning" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Resend Evite</a>
+                      <a class="btn btn-warning btn-xs"
+                      href="{{ url('/evite/'.$event->id) }}">
+                      <i class="fa fa-mail-forward"></i> Resend Evite</a>
                     @else
-                      <a class="btn btn-default" href="{{ url('/evite/'.$event->id) }}"><i class="fa fa-mail-forward"></i> Evite</a>
+                      <a class="btn btn-default btn-xs"
+                      href="{{ url('/evite/'.$event->id) }}">
+                      <i class="fa fa-mail-forward"></i> Evite</a>
                     @endif
             @endcan
             </div>
+
         </div>
     </section>
     <div class="container">

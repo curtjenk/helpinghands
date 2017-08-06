@@ -12,6 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-body text-center">
                     <h1>How are we doing?</h1>
+                    @include('layouts.org_selector')
                 </div>
             </div>
         </div>

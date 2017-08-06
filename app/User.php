@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App;
+use AddPermissions;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use DB;
@@ -31,25 +33,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
+     * Get list organizations this user has access to
+     * @return Collection of App\Organization
      */
-    // protected $appends = ['authUserCanView', 'authUserCanDelete','authUserCanUpdate'];
-    //
-    // public function getAuthUserCanViewAttribute()
-    // {
-    //     return Auth::user()->has_permission('Show user');
-    // }
-    // public function getAuthUserCanUpdateAttribute()
-    // {
-    //     return Auth::user()->has_permission('Update user');
-    // }
-    // public function getAuthUserCanDeleteAttribute()
-    // {
-    //     return Auth::user()->has_permission('Delete user');
-    // }
+    public function allowed_organizations()
+    {
+        return App\Organization::select('organizations.*')
+            ->when($this->is_orgLevel(), function($q) {
+                return $q->where('organizations.id', $this->organization_id);
+            })->get();
+    }
 
     public function signedup($event_id, $helping='yes')
     {
@@ -92,7 +87,8 @@ class User extends Authenticatable
                 ->count() > 0;
     }
     /**
-     * Check if the user has any administrative right.
+     * Check if the user has any administrative right
+     * across all organizations
      */
     public function is_admin()
     {
@@ -102,6 +98,10 @@ class User extends Authenticatable
             ->count() > 0;
     }
 
+    /**
+     * System level user.
+     * @return boolean [description]
+     */
     public function is_superuser()
     {
         return DB::table('roles')
@@ -110,6 +110,10 @@ class User extends Authenticatable
             ->count() > 0;
     }
 
+    /**
+     * Member of an organization whether the org's Admin or normal user
+     * @return boolean [description]
+     */
     public function is_orgLevel()
     {
         return DB::table('roles')
@@ -117,6 +121,10 @@ class User extends Authenticatable
             ->whereIn('name', ['Organization Admin', 'Organization User'])
             ->count() > 0;
     }
+    /**
+     * Admin of an organization
+     * @return boolean [description]
+     */
     public function is_orgAdmin()
     {
         return DB::table('roles')
