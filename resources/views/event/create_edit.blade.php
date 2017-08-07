@@ -27,10 +27,20 @@
         <form class="form-horizontal" method="POST" action="{{ url('/event') }}" enctype="multipart/form-data">
     @endif
           {{ csrf_field() }}
+          @php
+              $org = Auth::user()->organization;
+              if (Request::session()->has('orgid')) {
+                 $org = App\Organization::find(Request::session()->get('orgid'));
+              }
+          @endphp
           <div class="col-md-6">
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
                 <label for="organization_id" class="col-md-3 control-label">Organization</label>
-                @if ($errors->has('organization_id'))
+                <div class="col-md-9">
+                    <div class="editInfo">{{$org->name}}</div>
+                    <input type="hidden" name="organization_id" value="{{$org->id}}" />
+                </div>
+                {{-- @if ($errors->has('organization_id'))
                     <span class="help-block">
                         <strong>{{ $errors->first('organization_id') }}</strong>
                     </span>
@@ -43,7 +53,7 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
             </div>
             <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                 <label for="subject" class="col-md-3 control-label">Subject</label>

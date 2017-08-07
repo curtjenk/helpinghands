@@ -5,7 +5,13 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header"> Event</div>
-            <div class="pull-left">@include('layouts.org_selector')</div>
+            <div class="pull-left">
+            @if(isset($event))
+                @include('layouts.org_selector', ['specific'=>$event->organization->id])
+            @else
+                @include('layouts.org_selector')
+            @endif
+            </div>
             <div class="pull-right">
                 <a class="btn btn-default btn-xs"
                 href="{{ url('/event') }}">

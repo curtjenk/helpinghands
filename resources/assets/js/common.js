@@ -9,11 +9,11 @@ common.change_organization = function(event)
 {
   let orgid=$('#selected_org_id').val();
   let url=$('#selected_org_id').parent().attr('data-url');
-  axios.post('session', {
+  axios.post('/session', {
       orgid: orgid
   })
   .then(function (response) {
-    console.log(response.data);
+    // console.log(response.data);
     window.location.href=url;
   })
   .catch(function (error) {
