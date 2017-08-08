@@ -1,4 +1,5 @@
 <div class="header-2" data-url="{{Request::url()}}">
+    &nbsp;
     @php
         //for some views, show only a specific organization
         if (isset($specific)) {

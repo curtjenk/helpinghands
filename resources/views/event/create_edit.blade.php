@@ -37,7 +37,7 @@
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
                 <label for="organization_id" class="col-md-3 control-label">Organization</label>
                 <div class="col-md-9">
-                    <div class="editInfo">{{$org->name}}</div>
+                    <div class="form-control-static">{{$org->name}}</div>
                     <input type="hidden" name="organization_id" value="{{$org->id}}" />
                 </div>
                 {{-- @if ($errors->has('organization_id'))

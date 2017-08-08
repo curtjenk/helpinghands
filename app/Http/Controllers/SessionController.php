@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App;
 use DB;
+use Session;
 use Log;
 
 class SessionController extends Controller
@@ -38,6 +39,9 @@ class SessionController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        // if ($this->expired()) {
+        //     redirect("/login");
+        // }
         $vars = [];
         foreach($request->all() as $key=>$value)
         {
@@ -56,6 +60,15 @@ class SessionController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
+    }
+
+    private function expired()
+    {
+        if ((time() - Session::activity()) > (Config::get('session.lifetime') * 60))
+        {
+            return true;
+        }
+        return false;
     }
 
 }

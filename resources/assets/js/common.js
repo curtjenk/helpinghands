@@ -18,6 +18,10 @@ common.change_organization = function(event)
   })
   .catch(function (error) {
     console.log(error);
+    console.log(error.response);
+    if (error.response.status===401) {
+      window.location.href = 'login';
+    }
   });
 }
  /**

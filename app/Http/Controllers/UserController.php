@@ -101,13 +101,16 @@ class UserController extends Controller
             [ ]
         );
         //Log::debug($inputs->all());
+        $organization_id = $this->getOrg($request, $user);
+        // Log::debug('orgid='.$organization_id);
         return App\User::       //with('organization')
             select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->where('role_id', '!=', 1)
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organization_id', $user->organization_id);
-            })
+            ->where('organization_id', $organization_id)
+            // ->when($user->is_orgLevel(), function($q) use($user) {
+            //     return $q->where('organization_id', $user->organization_id);
+            // })
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
                     $q2->where('users.name', 'like', '%'.$inputs->filter.'%')

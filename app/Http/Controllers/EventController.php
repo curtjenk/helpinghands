@@ -58,21 +58,24 @@ class EventController extends Controller
     /*
 
      */
-    public function calendar()
+    public function calendar(Request $request)
     {
         $this->authorize('list-events');
         $user = Auth::user();
+        $organization_id = $this->getOrg($request, $user);
         $query=App\Event::select('id', 'subject', 'date_start', 'date_end')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organization_id', $user->organization_id);
-            })
+            ->where('organization_id', $organization_id)
+            // ->when($user->is_orgLevel(), function($q) use($user) {
+            //     return $q->where('organization_id', $user->organization_id);
+            // })
             ->orderBy('events.date_start', 'asc')
             ->get();
 
         $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY mm Mon') as interval, count(*) as num"))
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organization_id', $user->organization_id);
-            })
+            ->where('organization_id', $organization_id)
+            // ->when($user->is_orgLevel(), function($q) use($user) {
+            //     return $q->where('organization_id', $user->organization_id);
+            // })
             ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->subMonths(3)->format('Ym')."'")
             ->groupBy('interval')
             ->orderBy('interval', 'asc')
@@ -124,11 +127,12 @@ class EventController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-        if($request->session()->has('orgid')) {
-            $organization_id = $request->session()->get('orgid');
-        } else {
-            $organization_id = $user->organization_id;
-        }
+        $organization_id = $this->getOrg($request, $user);
+        // if($request->session()->has('orgid')) {
+        //     $organization_id = $request->session()->get('orgid');
+        // } else {
+        //     $organization_id = $user->organization_id;
+        // }
         $query = App\Event::
             select('events.*', 'statuses.name as status', 'event_types.name as type',
                 DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
