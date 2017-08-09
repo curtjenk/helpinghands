@@ -93,7 +93,7 @@
                     <div class="col-md-5">
                         <label class="col-md-3 control-label">Organization</label>
                         <div class="col-md-9">
-                            <p>{{$event->organization->name}}</p>
+                            <p class="form-control-static">{{$event->organization->name}}</p>
                         </div>
                         <label class="col-md-3 control-label">Subject</label>
                         <div class="col-md-9">

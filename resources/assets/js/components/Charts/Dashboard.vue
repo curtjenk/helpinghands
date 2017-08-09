@@ -70,7 +70,7 @@ export default {
     }
   },
   mounted () {
-    console.log("mounted.")
+    // console.log("mounted.")
     axios('/db')
     .then(response => {
       this.bar1(response.data.EventTypesOverTime);

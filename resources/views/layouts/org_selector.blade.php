@@ -1,5 +1,5 @@
 <div class="header-2" data-url="{{Request::url()}}">
-    &nbsp;
+    &nbsp;&nbsp;
     @php
         //for some views, show only a specific organization
         if (isset($specific)) {
@@ -19,7 +19,7 @@
     @else
     <select id="selected_org_id" name="selected_org_id">
     @foreach ($orgs as $org)
-        <option {{ $org_id==$org->id ? 'selected' : '' }} value="{{ $org->id }}"> {{$org->name}} {{$org->city}}</option>
+        <option {{ $org_id==$org->id ? 'selected' : '' }} value="{{ $org->id }}"> {{$org->name}}</option>
     @endforeach
     @endif
     </select>

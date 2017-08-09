@@ -92,7 +92,7 @@ ol {
     padding-left: 0;
     overflow-y: scroll;
     overflow-x:hidden;
-    height: 50px;
+    height: 150px;
 }
 #scrollarea-content{
     min-height:101%;

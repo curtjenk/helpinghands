@@ -197,12 +197,14 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('show', $event);
-        $members = App\User::join('responses', function($join) use($event){
-            $join->on('responses.user_id', 'users.id')
-                ->where('responses.event_id', $event->id)
-                ->where('responses.helping', true);
-        })
-        ->distinct()
+        $members = App\User::select('users.*', 'responses.*')
+            ->join('responses', function($join) use($event){
+                $join->on('responses.user_id', 'users.id')
+                    ->where('responses.event_id', $event->id)
+                    ->where('responses.helping', true);
+                }
+        )->distinct()
+        ->orderby('responses.updated_at', 'asc')
         ->get();
 
         return response()->json($members);

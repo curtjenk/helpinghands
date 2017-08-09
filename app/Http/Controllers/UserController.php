@@ -20,6 +20,7 @@ class UserController extends Controller
         ->select("events.subject", 'events.date_start', 'events.date_end')
         ->join('events', 'events.id', '=', 'responses.event_id')
         ->where('responses.helping', true)
+        ->orderby('events.date_end','asc')
         ->get();
 
         // $responses = App\User::
@@ -129,24 +130,24 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteMeOLDindex()
-    {
-        $this->authorize('list-users');
-        $user = Auth::user();
-
-        $query=App\User::with('organization')
-            ->where('role_id', '!=', 1)
-            ->where('role_id', '>=', $user->role_id)
-            //->where('users.id', '!=', $user->id)
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organization_id', $user->organization_id);
-            })
-            ->get();
-
-        return view('user.index', [
-                'users'=>$query,
-            ]);
-    }
+    // public function deleteMeOLDindex()
+    // {
+    //     $this->authorize('list-users');
+    //     $user = Auth::user();
+    //
+    //     $query=App\User::with('organization')
+    //         ->where('role_id', '!=', 1)
+    //         ->where('role_id', '>=', $user->role_id)
+    //         //->where('users.id', '!=', $user->id)
+    //         ->when($user->is_orgLevel(), function($q) use($user) {
+    //             return $q->where('organization_id', $user->organization_id);
+    //         })
+    //         ->get();
+    //
+    //     return view('user.index', [
+    //             'users'=>$query,
+    //         ]);
+    // }
     /**
      * Show the form for creating a new resource.
      *
