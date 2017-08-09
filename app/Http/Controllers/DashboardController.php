@@ -25,17 +25,18 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $organization_id = $this->getOrg($request, $user);
         $numMembers = App\User::where('organization_id',$user->organization_id)->count();
         foreach (App\EventType::all() as $et) {
             $eventTypes[$et->name] = 0;
         }
-        $data['EventTypesOverTime'] = $this->events_over_time($eventTypes, $user->organization_id);
-        $data['TotalByType'] = $this->total_by_type($eventTypes, $user->organization_id);
-        $data['ParticpationRate'] = $this->overall_particiption($user->organization_id);
-        $data['ParticpationOverTime'] = $this->particiption_over_time($user->organization_id);
+        $data['EventTypesOverTime'] = $this->events_over_time($eventTypes, $organization_id);
+        $data['TotalByType'] = $this->total_by_type($eventTypes, $organization_id);
+        $data['ParticpationRate'] = $this->overall_particiption($organization_id);
+        $data['ParticpationOverTime'] = $this->particiption_over_time($organization_id);
         return response()->json($data);
     }
     /**
