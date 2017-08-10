@@ -14,7 +14,7 @@
             {{ $content }}
         </p>
         <hr/>
-        @include('layouts.manhood')
+        @include('layouts.email_footer')
     </div>
 </main>
 @endsection
