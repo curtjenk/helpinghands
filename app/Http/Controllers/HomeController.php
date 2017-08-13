@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Auth;
 use App;
 
@@ -23,10 +24,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-
+        if (!Session::has('orgid')) {
+            Session::put('orgid',$user->organization_id);
+        }
         return view('home', []);
     }
 
