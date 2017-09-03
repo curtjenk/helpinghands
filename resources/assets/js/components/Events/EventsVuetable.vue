@@ -113,7 +113,7 @@ export default {
         {
           name: 'subject',
           sortField: 'subject',
-          dataClass: 'text-primary',
+          dataClass: 'text-center',
           titleClass: 'text-center',
           callback: 'ellipsis|30'
         },
@@ -152,14 +152,14 @@ export default {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
-          dataClass: 'text-center',
+          dataClass: 'text-primary',
           titleClass: 'text-center '
         },
         {
           title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
           name: 'no_responses',
           sortField: 'no_responses',
-          dataClass: 'text-center',
+          dataClass: 'text-primary',
           titleClass: 'text-center'
         },
         {
@@ -321,19 +321,20 @@ export default {
         //console.log('onloadsuccess')
     },
     onCellClicked (data, field, event) {
-    //   console.log('cellClicked: ', field.name)
+      // console.log('cellClicked: ', field.name)
+      if (field.name=='yes_responses' || field.name=='no_responses') {
+        if ($('#'+data.id).length == 0) {
+          axios.get('/event/' + data.id + '/members')
+          .then(  (response) => {
+           // console.log(response.data);
+            data.members = response.data;
+            this.$refs.vuetable.toggleDetailRow(data.id)
+          }).catch((error) => {
 
-      if ($('#'+data.id).length == 0) {
-        axios.get('/event/' + data.id + '/members')
-        .then(  (response) => {
-         // console.log(response.data);
-          data.members = response.data;
+          });
+        } else {
           this.$refs.vuetable.toggleDetailRow(data.id)
-        }).catch((error) => {
-
-        });
-      } else {
-        this.$refs.vuetable.toggleDetailRow(data.id)
+        }
       }
     },
   },

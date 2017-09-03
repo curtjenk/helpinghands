@@ -42,9 +42,7 @@
             <div>
                 <b>{{ $event->description }}</b>
             </div>
-        </p>
-        <hr />
-
+        </p>        
     </div>
     @include('layouts.email_footer')
 </main>

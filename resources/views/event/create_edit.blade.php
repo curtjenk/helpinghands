@@ -33,27 +33,13 @@
                  $org = App\Organization::find(Request::session()->get('orgid'));
               }
           @endphp
-          <div class="col-md-6">
+          <div class="col-md-5">
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
                 <label for="organization_id" class="col-md-3 control-label">Organization</label>
                 <div class="col-md-9">
                     <div class="form-control-static">{{$org->name}}</div>
                     <input type="hidden" name="organization_id" value="{{$org->id}}" />
                 </div>
-                {{-- @if ($errors->has('organization_id'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('organization_id') }}</strong>
-                    </span>
-                @endif
-                <div class="col-md-9">
-                    <select id="organization_id" name="organization_id">
-                        @foreach ($orgs as $org)
-                            <option value="{{ $org->id }}" {{ isset($event)&& $event->organization_id==$org->id?'selected':''}}>
-                                {{$org->name}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div> --}}
             </div>
             <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                 <label for="subject" class="col-md-3 control-label">Subject</label>
@@ -145,11 +131,13 @@
                 </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-7">
             <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                <label for="description" class="col-md-3 control-label">Description</label>
-                <div class="col-md-9">
-                    <textarea required id="description" cols="100" rows="6" class="editTextArea" name="description" >{{ isset($event) ? $event->description : old('description') }}
+                <div class="row">
+                    <label for="description" class="control-label">Description</label>
+                </div>
+                <div class="row">
+                    <textarea required id="description" cols="" rows="10" class="editTextArea" name="description" >{{ isset($event) ? $event->description : old('description') }}
                     </textarea>
                     @if ($errors->has('description'))
                         <span class="help-block">
@@ -159,10 +147,8 @@
                 </div>
             </div>
             <div class="form-group{{ $errors->has('files') ? ' has-error' : '' }}">
-                <label for="files" class="col-md-3 control-label">Attachments</label>
-                <div class="col-md-9">
-                    <input id="event_file" name="event_file[]" type="file" multiple/><br />
-                </div>
+                {{-- <label for="files" class="col-md-2 control-label">Attachment</label> --}}
+                <input id="event_file" class="" name="event_file[]" type="file" multiple/>
             </div>
             <div class="form-group">
                 <div id="image_preview"></div>

@@ -1,3 +1,12 @@
+<hr />
+@foreach ($event->files as $file)
+    @php $pathToFile =  Storage::disk('public')
+        ->getDriver()->getAdapter()
+        ->applyPathPrefix($file->filename);
+    @endphp
+    <img src="{{ $message->embed($pathToFile) }}" />
+@endforeach
+<hr />
 <div class="container-fluid" style="font-size:0.75em;font-style: italic">
     <div class="col-md-4" >
         <h5><b style="color:red;">Our Strategy</b></h5>

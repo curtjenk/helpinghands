@@ -125,12 +125,16 @@
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <label class="col-md-3 control-label">Description</label>
-                        <div class="col-md-9">
-                            <textarea class="editTextArea" cols="200" rows="6" readonly>{{ $event->description }}
+                        <div class='row'>
+                            <label class="control-label">Description</label>
+                        </div>
+                        <div class="row">
+                            <textarea class="editTextArea" cols="" rows="10" readonly>{{ $event->description }}
                             </textarea>
                         </div>
-                        <label class="col-md-3 control-label">Attachments:</label>
+                        <div class='row'>
+                            <label class="control-label">Attachments</label>
+                        </div>
                         <div class="col-md-11 col-md-offset-1">
                         @foreach ($event->files as $file)
                             <div class="col-md-2">
