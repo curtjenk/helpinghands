@@ -20,4 +20,14 @@ class Organization extends Model
     {
         return $this->hasMany('App\Event');
     }
+
+    public function teams()
+    {
+        return $this->hasMany('App\Team');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
 }

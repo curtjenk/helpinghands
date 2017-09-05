@@ -17,6 +17,7 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('organization_id')->unsigned();
+            $table->integer('team_id')->unsigned()->nullable();
             $table->string('subject');
             $table->longtext('description')->nullable();
             $table->date('date_start')->nullable();
@@ -26,7 +27,7 @@ class CreateEventsTable extends Migration
             $table->integer('updated_user_id')->unsigned()->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->integer('event_type_id')->unsigned()->nullable();
-            $table->integer('signup_limit')->unsigned()->nullable();
+            $table->integer('signup_limit')->unsigned()->nullable();            
             $table->timestamps();
 
             $table->foreign('status_id')->references('id')->on('statuses');

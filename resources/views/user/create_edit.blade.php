@@ -119,7 +119,7 @@
                 </div>
             </div>
         @endif
-        @if(Gate::check('update', $user) || Gate::check('create', $user))
+        {{-- @if(Gate::check('update', $user) || Gate::check('create', $user)) --}}
             <div class="form-group{{ $errors->has('org_id') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Organization</label>
                 <div class="col-md-8">
@@ -135,7 +135,7 @@
                     @endif
                 </div>
             </div>
-        @else
+        {{-- @else
             <div class="form-group">
                 <label class="control-label col-md-4 text-right">Organization</label>
                 <div class="control-text-left col-md-8">
@@ -144,14 +144,14 @@
                     </u>
                 </div>
             </div>
-        @endif
-        @if(Gate::check('update', $user) || Gate::check('create', $user))
+        @endif --}}
+        {{-- @if(Gate::check('update', $user) || Gate::check('create', $user)) --}}
             <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">Role</label>
                 <div class="col-md-8">
                     <select id="role_id" name="role_id">
                         @foreach ($roles as $role)
-                            <option {{ $user->role_id==$role->id ? 'selected' : '' }} value="{{ $role->id }}"> {{$role->name}}</option>
+                            <option value="{{ $role->id }}"> {{$role->name}}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('role_id'))
@@ -161,7 +161,7 @@
                     @endif
                 </div>
             </div>
-        @else
+        {{-- @else
             <div class="form-group">
                 <label class="control-label col-md-4 text-right">Show Email</label>
                 <div class="control-text-left col-md-8">
@@ -170,7 +170,7 @@
                     </u>
                 </div>
             </div>
-        @endif
+        @endif --}}
             <hr />
         @can ('administer')
             <div class="form-group{{ $errors->has('opt_receive_evite') ? ' has-error' : '' }}">

@@ -34,7 +34,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
+    public function organizations()
+    {
+        return $this->belongsToMany('App\Organization');
+    }
+
+    /** TODO:  will this go away!
      * Get list organizations this user has access to
      * @return Collection of App\Organization
      */
@@ -70,10 +75,19 @@ class User extends Authenticatable
     /**
      * Get the Role for this user.
      */
-    public function role()
+    // public function role()
+    // {
+    //     return $this->belongsTo('App\Role');
+    // }
+
+    /**
+     * Get the Roles for this user.
+     */
+    public function roles()
     {
-        return $this->belongsTo('App\Role');
+        return $this->belongsToMany('App\Role');
     }
+
     /**
      * Check if the User has a specific Permission
      */
@@ -131,5 +145,10 @@ class User extends Authenticatable
             ->where('id', $this->role_id)
             ->where('name', 'Organization Admin')
             ->count() > 0;
+    }
+
+    public function allowed_roles()
+    {
+        
     }
 }

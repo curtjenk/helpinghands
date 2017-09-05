@@ -262,20 +262,24 @@ class UserController extends Controller
     {
         $self = Auth::user();
         $user = App\User::findOrFail($id);
+        $current_roles = $user->roles;
         //$this->authorize('update', $user);
-        $roles = App\Role::where('roles.id', '>=', $self->role_id)
-            ->where('roles.name', '!=', 'Super User')
-            ->get();
-        $orgs = App\Organization::select('organizations.*')
-            ->when($self->is_orgLevel(), function($q) use($self) {
-                return $q->where('organizations.id', $self->organization_id);
-            })
-            ->get();
+        $roles = App\Role::whereIn('roles.name', ['Organization User', 'Organization Admin'])
+                ->get();
+        $orgs = App\Organization::all();
+
+        $orgs_roles = [];
+        foreach ($orgs as $org) {
+            foreach ($roles as $role) {
+                $orgs_roles = ['org'=>$org, 'role'=>$role];
+            }
+        }
 
         return view('user.create_edit', [
             'user'=>$user,
             'roles'=>$roles,
-            'orgs'=>$orgs
+            'orgs'=>$orgs,
+            'orgs_roles' => $orgs_roles,
         ]);
     }
 

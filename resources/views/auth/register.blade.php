@@ -62,7 +62,7 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                             </div>
                         </div>
-                        <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
+                        {{-- <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
                             <label for="organization_id" class="col-md-4 control-label">Organization</label>
                             <div class="col-md-4 text">
                                 @if ($errors->has('organization_id'))
@@ -97,7 +97,7 @@
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
