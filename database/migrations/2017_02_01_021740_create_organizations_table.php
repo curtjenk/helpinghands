@@ -22,7 +22,13 @@ class CreateOrganizationsTable extends Migration
             $table->string('zipcode', 32)->nullable();
             $table->string('state')->nullable();
             $table->string('phone', 63)->nullable();
+            $table->integer('updated_user_id')->unsigned();
             $table->timestamps();
+
+            $table->unique(['name']);
+
+            $table->foreign('updated_user_id')
+                  ->references('id')->on('users');
         });
     }
 
