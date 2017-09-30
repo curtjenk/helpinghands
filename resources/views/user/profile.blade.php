@@ -7,9 +7,9 @@
             <div class="pull-left header">Member Profile</div>
         </div>
     </section>
-  
+
     <memberprofile
-        username="{{ $user->name }}"
+        :user0="{{ $user }}"
     >
     </memberprofile>
 

@@ -31,6 +31,7 @@
     "moment": "^2.17.1",
     "vue": "^2.1.10",
     "vue-chartjs": "^2.6.5",
+    "vue-cleave": "^1.2.2",
     "vue-events": "^3.0.1",
     "vuetable-2": "^1.6.0"
   }

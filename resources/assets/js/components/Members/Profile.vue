@@ -2,35 +2,35 @@
   <div class="col-lg-12 col-sm-12">
     <div class="card hovercard">
         <div class="card-background">
-            <img class="card-bkimg" alt="" src="http://lorempixel.com/100/100/people/3/">
+            <img class="card-bkimg" alt="" src="http://lorempixel.com/150/150/people/3/">
         </div>
         <div class="useravatar">
-            <img alt="" src="http://lorempixel.com/100/100/people/3/">
+            <img alt="" src="http://lorempixel.com/150/150/people/3/">
         </div>
-        <div class="card-info">
+        <!-- <div class="card-info">
           <span class="card-title">{{ username }}</span>
-        </div>
+        </div> -->
     </div>
 
     <div class="btn-pref btn-group btn-group-justified" role="group" aria-label="...">
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(0)" type="button" id="myinfo" class="btn btn-primary" href="#tab1" data-toggle="tab"><span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            <button v-on:click="changetab(0)" type="button" id="myinfo" class="btn btn-primary" href="#tab1" data-toggle="tab"><span class="fa fa-star" aria-hidden="true"></span>
                 <div class="hidden-xs">Personal Information</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(1)" type="button" id="myprefs" class="btn btn-default" href="#tab2" data-toggle="tab"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+            <button v-on:click="changetab(1)" type="button" id="myprefs" class="btn btn-default" href="#tab2" data-toggle="tab"><span class="fa fa-heart" aria-hidden="true"></span>
                 <div class="hidden-xs">Preferences</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(2)" type="button" id="myactivity" class="btn btn-default" href="#tab3" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <button v-on:click="changetab(2)" type="button" id="myactivity" class="btn btn-default" href="#tab3" data-toggle="tab"><span class="fa fa-hourglass" aria-hidden="true"></span>
                 <div class="hidden-xs">My Activity</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(3)" type="button" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                <div class="hidden-xs">Change Password</div>
+            <button v-on:click="changetab(3)" type="button" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab"><span class="fa fa-key" aria-hidden="true"></span>
+                <div class="hidden-xs">Username/Password</div>
             </button>
         </div>
     </div>
@@ -38,8 +38,66 @@
     <div class="well">
       <div class="tab-content">
         <div class="tab-pane fade in active" id="tab1">
-          <h3>This is tab 1</h3>
+          <div class="form-horizontal">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                    <label for="name" class="col-md-2 control-label">Name</label>
+                    <div class="col-md-6">
+                        <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
+                        <!-- <p id="name" class="form-control">{{ user.name }}</p> -->
+                    </div>
+                  </div>
+                <div class="form-group">
+                    <label for="nickname" class="col-md-2 control-label">Nick Name</label>
+                    <div class="col-md-6">
+                      <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
+                        <!-- <p id="name" class="form-control">{{ user.nickname }}</p> -->
+                    </div>
+                  </div>
+                <div class="form-group">
+                    <label for="phone1" class="col-md-2 control-label">Phone 1</label>
+                    <div class="col-md-6">
+                      <input id="phone1" v-model="user.homephone" type="text" class="editInfo" name="phone1">
+                        <!-- <p id="phone1" class="form-control">{{ user.homephone }}</p> -->
+                    </div>
+                  </div>
+                <div class="form-group">
+                    <label for="phone2" class="col-md-2 control-label">Phone 2</label>
+                    <div class="col-md-6">
+                      <input id="phone2" v-model="user.mobilephone" type="text" class="editInfo" name="phone2">
+                        <!-- <p id="phone2" class="form-control">{{ user.mobilephone }}</p> -->
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-3">
+                <!-- <div class="form-group"> -->
+                <div v-if="isInitial || isSaving">
+                  <!-- <label for="newavatar" class="col-md-3 control-label">Update Picture</label> -->
+                  <div class="dropbox">
+                    <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"  @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*" class="input-file"/>
+                    <p v-if="isInitial">
+                        Drag your picture here <br />  or click to browse
+                    </p>
+                    <p v-if="isSaving">
+                      Uploading {{ fileCount }} files...
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                 Nothing here yet!
+              </div>
+            </div>
+            <div class="row block text-center">
+              <button type="submit" class="btn btn-primary" name="submit">
+                <i class="fa fa-btn fa-check"></i> Update Information
+              </button>
+            </div>
+          </div>
         </div>
+        <!--End of tab1  -->
         <div class="tab-pane fade in" id="tab2">
           <h3>This is tab 2</h3>
         </div>
@@ -55,23 +113,92 @@
 </template>
 
 <script>
+//https://www.npmjs.com/package/vue-cleave   For formatting "stuff"
+import Cleave from 'vue-cleave';
+const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
+    Cleave
   },
-  props: [
-    'username'
-  ],
+  props: {
+    user0: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
-
+      user: {},
+      uploadedFiles: [],
+      uploadError: null,
+      currentStatus: null,
+      uploadFieldName: 'photos'
+    }
+  },
+  mounted: function () {
+    this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
+      this.user = this.user0;
+      this.resetAvatar();
+    })
+  },
+  computed: {
+    isInitial() {
+      return this.currentStatus === STATUS_INITIAL;
+    },
+    isSaving() {
+      return this.currentStatus === STATUS_SAVING;
+    },
+    isSuccess() {
+      return this.currentStatus === STATUS_SUCCESS;
+    },
+    isFailed() {
+      return this.currentStatus === STATUS_FAILED;
     }
   },
   methods: {
+    resetAvatar() {
+        // reset form to initial state
+        this.currentStatus = STATUS_INITIAL;
+        this.uploadedFiles = [];
+        this.uploadError = null;
+    },
+    save(formData) {
+      // upload data to the server
+      // this.currentStatus = STATUS_SAVING;
+      //
+      // upload(formData)
+      //   .then(x => {
+      //     this.uploadedFiles = [].concat(x);
+      //     this.currentStatus = STATUS_SUCCESS;
+      //   })
+      //   .catch(err => {
+      //     this.uploadError = err.response;
+      //     this.currentStatus = STATUS_FAILED;
+      //   });
+    },
+    filesChange(fieldName, fileList) {
+      // // handle file changes
+      // const formData = new FormData();
+      //
+      // if (!fileList.length) return;
+      //
+      // // append the files to FormData
+      // Array
+      //   .from(Array(fileList.length).keys())
+      //   .map(x => {
+      //     formData.append(fieldName, fileList[x], fileList[x].name);
+      //   });
+      //
+      // // save it
+      // this.save(formData);
+
+    },
     changetab: function (ndx) {
       var tabs = $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
       for (var i=0; i<tabs.length; i++) {
         if (i===ndx) {
           $(tabs[i]).removeClass("btn-default").addClass("btn-primary");
+          break;
         }
       }
     }//End changetab
@@ -79,13 +206,50 @@ export default {
 } //End of export
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+/*  file upload            */
+.dropbox {
+    outline: 2px dashed grey; /* the dash box */
+    outline-offset: -10px;
+    background: lightcyan;
+    color: dimgray;
+    padding: 2px 2px;
+    min-height: 50px; /* minimum height */
+    position: relative;
+    cursor: pointer;
+  }
+
+  .input-file {
+    opacity: 0; /* invisible but it's there! */
+    width: 50%;
+    height: 50px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .dropbox:hover {
+    background: lightblue; /* when mouse over to the drop zone, change color */
+  }
+
+  .dropbox p {
+    font-size: 1.2em;
+    text-align: center;
+    padding: 25px 0;
+  }
+/*   */
+label {
+  padding-left: 0px;
+}
+.editInfo {
+  background-color: #f5f5f5;
+}
 .well {
   border-radius: 0px;
+  font-size: 12px;
 }
 /* USER PROFILE PAGE */
  .card {
-    margin-top: 20px;
+    margin-top: 5px;
     padding: 30px;
     background-color: rgba(214, 224, 226, 0.2);
     -webkit-border-top-left-radius:5px;
@@ -107,7 +271,7 @@ export default {
     background-color: rgba(255, 255, 255, 1);
 }
 .card.hovercard .card-background {
-    height: 250px;
+    height: 200px;
 }
 .card-background img {
     -webkit-filter: blur(25px);

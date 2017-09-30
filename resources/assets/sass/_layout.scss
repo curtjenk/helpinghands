@@ -32,7 +32,7 @@ main {
 }
 .page-header {
   margin-top: 40px !important;
-  margin-bottom: 10px !important;
+  margin-bottom: 5px !important;
   padding: 0 !important;
 }
 // section.page-header {
@@ -77,13 +77,14 @@ input {
     border-color: $blue;
   }
 }
-
 textarea {
   resize: none;
 }
 .editTextArea {
   outline: 0;
+  font-weight: bold;
   border: 1px solid $input;
+  padding-top: 5px;
   width: 100%;
   &:hover {
     outline: 0;
@@ -101,26 +102,28 @@ textarea {
 
 .editInfo {
   outline: 0;
+  font-weight: bold;
   border-width: 0 0 1px 0;
   border-color: $input;
-  width: 75%;
+  padding-top: 5px;
+  width: 100%;
   background-color: white;
   &:hover {
     outline: 0;
     border-width: 0 0 1px 0;
     border-color: $blue;
-    width: 75%;
+    width: 95%;
   }
   &:active {
     outline: 0;
     border-width: 0 0 1px 0;
     border-color: $blue;
-    width: 75%;
+    width: 95%;
   }
   &:focus {
     outline: 0;
     border-width: 0 0 1px 0;
     border-color: $blue;
-    width: 75%;
+    width: 95%;
   }
 }

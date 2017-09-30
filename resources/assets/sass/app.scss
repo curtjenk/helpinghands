@@ -30,14 +30,16 @@ html, body {
 }
 // override bootstrap from-group
 .form-group {
-    margin-bottom: 10px !important;
+    margin-bottom: 5px !important;
 }
 .flex-center {
     align-items: center;
     display: flex;
     justify-content: center;
 }
-
+.boxcol {
+    border: 1px solid;
+}
 .position-ref {
     position: relative;
 }
