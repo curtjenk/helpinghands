@@ -248,7 +248,7 @@ class UserController extends Controller
         //dump("here");
         $user = App\User::findOrFail($id);
         $this->authorize('show',$user);
-        return view('user.show', [
+        return view('user.profile', [
             'user'=>$user,
         ]);
     }
@@ -262,24 +262,15 @@ class UserController extends Controller
     {
         $self = Auth::user();
         $user = App\User::findOrFail($id);
-        $current_roles = $user->roles;
+
         //$this->authorize('update', $user);
-        $roles = App\Role::whereIn('roles.name', ['Organization User', 'Organization Admin'])
-                ->get();
-        $orgs = App\Organization::all();
+        $roles = App\Role::whereNotIn('name', ['Admin'])->get();
+        $orgs = App\Organization::with(['teams'])->get();
 
-        $orgs_roles = [];
-        foreach ($orgs as $org) {
-            foreach ($roles as $role) {
-                $orgs_roles = ['org'=>$org, 'role'=>$role];
-            }
-        }
-
-        return view('user.create_edit', [
+        return view('user.profile', [
             'user'=>$user,
             'roles'=>$roles,
             'orgs'=>$orgs,
-            'orgs_roles' => $orgs_roles,
         ]);
     }
 

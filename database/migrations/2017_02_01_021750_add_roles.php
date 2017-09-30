@@ -15,10 +15,9 @@ class AddRoles extends Migration
     {
 
         DB::table('roles')->insert([
-            ['name'=>'Super User'],
             ['name'=>'Admin'],
-            ['name'=>'Organization Admin'],
-            ['name'=>'Organization User'],
+            ['name'=>'Lead'],
+            ['name'=>'Member'],
         ]);
     }
 

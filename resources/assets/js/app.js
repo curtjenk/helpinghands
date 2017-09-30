@@ -14,14 +14,9 @@ import './organization';
 import './bs_common';
 import './common';
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
 Vue.component('example', require('./components/Example.vue'));
 Vue.component('memberslist', require('./components/Members/MembersVuetable.vue'));
+Vue.component('memberprofile', require('./components/Members/Profile.vue'));
 Vue.component('eventslist', require('./components/Events/EventsVuetable.vue'));
 Vue.component('dashboardcharts', require('./components/Charts/Dashboard.vue'));
 

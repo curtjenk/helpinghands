@@ -3,10 +3,10 @@
 @section('content')
     <div class="content" style="margin-top: 70px">
         <div class="title m-b-md">
-            Legacy Builders
+            Connect->Grow->Serve->Go
         </div>
         <div class="subtitle m-b-sm">
-            A Christian Men's Ministry
+            Helping Your Ministry Engage
         </div>
         <div class="links">
             <a href="http://cornerstonesbc.net">
