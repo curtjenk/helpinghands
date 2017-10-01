@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->integer('birth_mm')->nullable();
             $table->integer('birth_dd')->nullable();
             $table->integer('birth_yyyy')->nullable();
+            $table->string('avatar_filename')->nullable();
             $table->boolean('opt_show_email')->nullable()->default(true);
             $table->boolean('opt_receive_evite')->nullable()->default(true);
             $table->boolean('opt_show_mobilephone')->nullable()->default(false);

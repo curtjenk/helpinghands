@@ -33,8 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');
     Route::get('member/signups/{eventid}', 'UserController@signups');
     Route::post('member/eventpay/{eventid}', 'UserController@pay');
-
     Route::resource('member', 'UserController');
+    Route::post('member/{id}/avatar', 'UserController@avatar');
     Route::get('member.destroy', 'UserController@destroy');
 
     Route::get('administrator', 'HomeController@administrator');
@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('evite/{id}', 'EviteController@send_evites');
 //
 // Session stuff
-// 
+//
     Route::post('session', 'SessionController@store');
     Route::get('session', 'SessionController@index');
 

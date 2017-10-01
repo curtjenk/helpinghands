@@ -8,6 +8,8 @@ use App;
 use Auth;
 use DB;
 use Log;
+use Storage;
+use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 
 class UserController extends Controller
 {
@@ -205,6 +207,32 @@ class UserController extends Controller
         }
 
         return redirect()->back();
+    }
+    /**
+     * Save user's avatar
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
+    public function avatar(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        // $this->authorize('update', $user);
+
+        $dir = 'avatars/'.$user->id;
+        $upload = $request->file('photo');
+
+        if (isset($upload)) {
+            // Log::debug("about to upload");
+            // Log::debug(print_r($upload, true));
+            $original = $upload->getClientOriginalName();
+            $filename = $upload->store($dir, 'public');
+            // Log::debug(Storage::disk('public')->url($filename));
+            $user->avatar_filename = $filename;
+            $user->save();
+        }
+        return response()->json($user->filename);
     }
     /**
      * Store a newly created resource in storage.

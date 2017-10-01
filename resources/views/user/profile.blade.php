@@ -10,6 +10,7 @@
 
     <memberprofile
         :user0="{{ $user }}"
+        avatar0="{{ asset($user->avatar_filename) }}"
     >
     </memberprofile>
 

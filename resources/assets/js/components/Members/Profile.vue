@@ -2,14 +2,13 @@
   <div class="col-lg-12 col-sm-12">
     <div class="card hovercard">
         <div class="card-background">
+            <img class="card-bkimg" alt=""  v-if="avatar_url" :src="avatar_url">
             <img class="card-bkimg" alt="" src="http://lorempixel.com/150/150/people/3/">
         </div>
         <div class="useravatar">
-            <img alt="" src="http://lorempixel.com/150/150/people/3/">
+            <img alt="" v-if="avatar_url" :src="avatar_url">
+            <img alt="" v-else src="http://lorempixel.com/150/150/people/3/">
         </div>
-        <!-- <div class="card-info">
-          <span class="card-title">{{ username }}</span>
-        </div> -->
     </div>
 
     <div class="btn-pref btn-group btn-group-justified" role="group" aria-label="...">
@@ -42,41 +41,40 @@
             <div class="row">
               <div class="col-md-5">
                 <div class="form-group">
-                    <label for="name" class="col-md-2 control-label">Name</label>
-                    <div class="col-md-6">
+                    <label for="name" class="col-md-2 col-sm-2 control-label">Name</label>
+                    <div class="col-md-5 col-sm-5">
                         <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
-                        <!-- <p id="name" class="form-control">{{ user.name }}</p> -->
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="nickname" class="col-md-2 control-label">Nick Name</label>
-                    <div class="col-md-6">
+                    <label for="nickname" class="col-md-2 col-sm-2 control-label">Nick Name</label>
+                    <div class="col-md-5 col-sm-5">
                       <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
-                        <!-- <p id="name" class="form-control">{{ user.nickname }}</p> -->
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="phone1" class="col-md-2 control-label">Phone 1</label>
-                    <div class="col-md-6">
-                      <input id="phone1" v-model="user.homephone" type="text" class="editInfo" name="phone1">
-                        <!-- <p id="phone1" class="form-control">{{ user.homephone }}</p> -->
+                    <label for="phone1" class="col-md-2 col-sm-2 control-label">Phone 1</label>
+                    <div class="col-md-5 col-sm-5">
+                      <input id="phone1" v-model="user.homephone" type="tel" v-mask="'(###) ###-####'"
+                        placeholder="" class="editInfo" name="phone1">
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="phone2" class="col-md-2 control-label">Phone 2</label>
-                    <div class="col-md-6">
-                      <input id="phone2" v-model="user.mobilephone" type="text" class="editInfo" name="phone2">
-                        <!-- <p id="phone2" class="form-control">{{ user.mobilephone }}</p> -->
+                    <label for="phone2" class="col-md-2 col-sm-2 control-label">Phone 2</label>
+                    <div class="col-md-5 col-sm-5">
+                      <input id="phone2" v-model="user.mobilephone" type="text" v-mask="'(###) ###-####'"
+                        placeholder="" class="editInfo" name="phone2">
                     </div>
                   </div>
               </div>
-              <div class="col-md-1"></div>
-              <div class="col-md-3">
+              <div class="col-md-1 col-sm-1"></div>
+              <div class="col-md-3 col-sm-3">
                 <!-- <div class="form-group"> -->
-                <div v-if="isInitial || isSaving">
-                  <!-- <label for="newavatar" class="col-md-3 control-label">Update Picture</label> -->
+                <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving || isSuccess">
                   <div class="dropbox">
-                    <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"  @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*" class="input-file"/>
+                    <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"
+                        @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*"
+                        class="input-file"/>
                     <p v-if="isInitial">
                         Drag your picture here <br />  or click to browse
                     </p>
@@ -84,9 +82,9 @@
                       Uploading {{ fileCount }} files...
                     </p>
                   </div>
-                </div>
+                </form>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3 col-sm-3">
                  Nothing here yet!
               </div>
             </div>
@@ -113,31 +111,35 @@
 </template>
 
 <script>
-//https://www.npmjs.com/package/vue-cleave   For formatting "stuff"
-import Cleave from 'vue-cleave';
+import {TheMask} from 'vue-the-mask'
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    Cleave
+    TheMask
   },
   props: {
     user0: {
       type: Object,
       required: true
+    },
+    avatar0: {
+      type: String
     }
   },
   data () {
     return {
       user: {},
+      avatar_url: '',
       uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
-      uploadFieldName: 'photos'
+      newavatar: 'photo'
     }
   },
   mounted: function () {
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.user = this.user0;
+      this.avatar_url = this.avatar0;
       this.resetAvatar();
     })
   },
@@ -162,9 +164,9 @@ export default {
         this.uploadedFiles = [];
         this.uploadError = null;
     },
-    save(formData) {
+    saveAvatar(formData) {
       // upload data to the server
-      // this.currentStatus = STATUS_SAVING;
+      this.currentStatus = STATUS_SAVING;
       //
       // upload(formData)
       //   .then(x => {
@@ -175,22 +177,33 @@ export default {
       //     this.uploadError = err.response;
       //     this.currentStatus = STATUS_FAILED;
       //   });
+      var url = '/member/' + this.user.id  + '/avatar';
+      axios.post(url, formData)
+      .then(  (response) => {
+        this.uploadedFiles = [].concat(response);
+        this.currentStatus = STATUS_SUCCESS;
+        window.location.reload();
+      }).catch((error) => {
+        this.uploadError = error.response;
+        this.currentStatus = STATUS_FAILED;
+        console.log(error)
+      });
     },
     filesChange(fieldName, fileList) {
-      // // handle file changes
-      // const formData = new FormData();
-      //
-      // if (!fileList.length) return;
-      //
-      // // append the files to FormData
-      // Array
-      //   .from(Array(fileList.length).keys())
-      //   .map(x => {
-      //     formData.append(fieldName, fileList[x], fileList[x].name);
-      //   });
-      //
-      // // save it
-      // this.save(formData);
+      // handle file changes
+      const formData = new FormData();
+
+      if (!fileList.length) return;
+
+      // append the files to FormData
+      Array
+        .from(Array(fileList.length).keys())
+        .map(x => {
+          formData.append(fieldName, fileList[x], fileList[x].name);
+        });
+
+      // save it
+      this.saveAvatar(formData);
 
     },
     changetab: function (ndx) {

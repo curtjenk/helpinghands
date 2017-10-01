@@ -13,9 +13,6 @@ class AddPermissionRole extends Migration
      */
     public function up()
     {
-        $su = App\Role::where('name','Super User')->first();
-        $su->permissions()->sync(App\Permission::all()->pluck('id'));
-
         $admin = App\Role::where('name','Admin')->first();
         $admin->permissions()
               ->sync(App\Permission::whereIn('name',
@@ -37,25 +34,8 @@ class AddPermissionRole extends Migration
                             ])
                         ->pluck('id'));
 
-        $orgadmin = App\Role::where('name','Organization Admin')->first();
-        $orgadmin->permissions()
-              ->sync(App\Permission::whereIn('name',
-                            ['Create user',
-                             'Delete user',
-                             'Show user',
-                             'Update user',
-                             'List users',
-                             'Show organization',
-                             'Update organization',
-                             'Create event',
-                             'Delete event',
-                             'Show event',
-                             'Update event',
-                             'List events'
-                            ])
-                        ->pluck('id'));
 
-        $orguser = App\Role::where('name','Organization User')->first();
+        $orguser = App\Role::where('name','Member')->first();
         $orguser->permissions()
               ->sync(App\Permission::whereIn('name',
                             ['Show user',

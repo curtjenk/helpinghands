@@ -10,7 +10,8 @@ window._ = require('lodash');
 window.$ = window.jQuery = require('jquery');
 
 require('jquery-ui-bundle');
-require('bootstrap-sass');
+// require('bootstrap-sass');
+require('bootstrap');
 require('bootstrap-switch');
 require('fullcalendar');
 require('vue-chartjs');

@@ -20,7 +20,6 @@
   "dependencies": {
     "accounting": "^0.4.1",
     "babel-preset-env": "^1.5.2",
-    "bootstrap-sass": "^3.3.7",
     "bootstrap-switch": "^3.3.4",
     "chart.js": "^2.6.0",
     "chart.piecelabel.js": "^0.6.0",
@@ -31,8 +30,8 @@
     "moment": "^2.17.1",
     "vue": "^2.1.10",
     "vue-chartjs": "^2.6.5",
-    "vue-cleave": "^1.2.2",
     "vue-events": "^3.0.1",
+    "vue-the-mask": "^0.11.0-alpha.2",
     "vuetable-2": "^1.6.0"
   }
 }
