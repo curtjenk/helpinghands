@@ -15,23 +15,18 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            //passthru is from the laravel-nomad package
-            //https://packagist.org/packages/shiftonelabs/laravel-nomad
-            // $table->passthru('citext', 'name');
-            // $table->passthru('citext', 'nickname')->nullable();
-            // $table->passthru('citext', 'email')->unique();
             $table->string('name');
             $table->string('nickname')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('mobilephone',64)->nullable();
             $table->string('homephone',64)->nullable();
-            // $table->integer('role_id')->nullable();
             $table->integer('organization_id')->nullable();
             $table->integer('birth_mm')->nullable();
             $table->integer('birth_dd')->nullable();
             $table->integer('birth_yyyy')->nullable();
             $table->string('avatar_filename')->nullable();
+            $table->boolean('active')->nullable()->default(true);
             $table->boolean('opt_show_email')->nullable()->default(true);
             $table->boolean('opt_receive_evite')->nullable()->default(true);
             $table->boolean('opt_show_mobilephone')->nullable()->default(false);

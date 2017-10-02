@@ -224,8 +224,9 @@ class UserController extends Controller
         $upload = $request->file('photo');
 
         if (isset($upload)) {
-            // Log::debug("about to upload");
-            // Log::debug(print_r($upload, true));
+            //Delete previous photo/avatar
+            Storage::disk('public')->deleteDirectory($dir);
+
             $original = $upload->getClientOriginalName();
             $filename = $upload->store($dir, 'public');
             // Log::debug(Storage::disk('public')->url($filename));
@@ -311,37 +312,50 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dump($request->all());
+        Log::debug($request->all());
         $this->validate($request, [
             'name' => 'required|max:255|min:5',
             'email' => 'required|max:255',
             'nickname' => 'max:255',
             'mobilephone' => 'max:255',
             'homephone' => 'max:255',
-            'org_id' => 'required|exists:organizations,id',
-            'role_id' => 'required|exists:roles,id',
+            // 'org_id' => 'required|exists:organizations,id',
+            // 'role_id' => 'required|exists:roles,id',
             //'new_password' => 'confirmed|required_with:old_password',
         ]);
         $user = App\User::findOrFail($id);
         $self = Auth::user();
-        $this->authorize('update', $user);
-        $user->email = $request->input('email');
-        $user->name = $request->input('name');
-        $user->nickname = $request->input('nickname');
-        $user->mobilephone = $request->input('mobilephone');
-        $user->homephone = $request->input('homephone');
-        $user->organization_id = $request->input('org_id');
-        $user->role_id = $request->input('role_id');
+        // $this->authorize('update', $user);
+        if ($request->has('email')) {
+            $user->email = $request->input('email');
+        }
+        if ($request->has('name')) {
+            $user->name = $request->input('name');
+        }
+        if ($request->has('nickname')) {
+            $user->nickname = $request->input('nickname');
+        }
 
-        $user->opt_receive_evite = $request->has('opt_receive_evite') ? true : false;
-        $user->opt_show_email = $request->has('opt_show_email') ? true : false;
-        $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
-        $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
+        if ($request->has('mobilephone')) {
+            $user->mobilephone = $request->input('mobilephone');
+        }
+
+        if ($request->has('homephone')) {
+            $user->homephone = $request->input('homephone');
+        }
+
+        // $user->organization_id = $request->input('org_id');
+        // $user->role_id = $request->input('role_id');
+
+        // $user->opt_receive_evite = $request->has('opt_receive_evite') ? true : false;
+        // $user->opt_show_email = $request->has('opt_show_email') ? true : false;
+        // $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
+        // $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
         $user->save();
-        return view('user.show', [
-            'user'=>$user,
-        ]);
-        //return redirect('/member/'.$id);
+        // return view('user.show', [
+        //     'user'=>$user,
+        // ]);
+        return response()->json($user->id);
     }
 
     /**

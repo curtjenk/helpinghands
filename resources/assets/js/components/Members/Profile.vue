@@ -23,13 +23,15 @@
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(2)" type="button" id="myactivity" class="btn btn-default" href="#tab3" data-toggle="tab"><span class="fa fa-hourglass" aria-hidden="true"></span>
-                <div class="hidden-xs">My Activity</div>
+            <button v-on:click="changetab(2)" type="button" id="organizations" class="btn btn-default" href="#tab3" data-toggle="tab">
+              <span class="fa fa-sitemap" aria-hidden="true"></span>
+              <div class="hidden-xs">Organizations</div>
             </button>
         </div>
         <div class="btn-group" role="group">
-            <button v-on:click="changetab(3)" type="button" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab"><span class="fa fa-key" aria-hidden="true"></span>
-                <div class="hidden-xs">Username/Password</div>
+            <button v-on:click="changetab(3)" type="button" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab">
+              <span class="fa fa-key" aria-hidden="true"></span>
+              <div class="hidden-xs">Username/Password</div>
             </button>
         </div>
     </div>
@@ -39,7 +41,13 @@
         <div class="tab-pane fade in active" id="tab1">
           <div class="form-horizontal">
             <div class="row">
-              <div class="col-md-5">
+              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your information was updated.</div>
+              <div class="alert alert-danger" v-if="updateFailed" transition="expand">
+                  Sorry, unable to update your information at this time.
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
                 <div class="form-group">
                     <label for="name" class="col-md-2 col-sm-2 control-label">Name</label>
                     <div class="col-md-5 col-sm-5">
@@ -67,10 +75,10 @@
                     </div>
                   </div>
               </div>
-              <div class="col-md-1 col-sm-1"></div>
               <div class="col-md-3 col-sm-3">
                 <!-- <div class="form-group"> -->
-                <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving || isSuccess">
+                <!-- <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving"> -->
+                <form enctype="multipart/form-data" novalidate>
                   <div class="dropbox">
                     <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"
                         @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*"
@@ -83,24 +91,78 @@
                     </p>
                   </div>
                 </form>
+                <div v-if="isFailed">
+                    <div>Upload Failed</div>
+                    <pre>{{ uploadError }}</pre>
+                </div>
               </div>
-              <div class="col-md-3 col-sm-3">
-                 Nothing here yet!
-              </div>
+              <div class="col-md-5 col-sm-4"></div>
             </div>
+            <br>
             <div class="row block text-center">
-              <button type="submit" class="btn btn-primary" name="submit">
-                <i class="fa fa-btn fa-check"></i> Update Information
-              </button>
+              <div class="col-md-offset-1 col-md-2">
+                <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                  <i class="fa fa-btn fa-check"></i> Update Information
+                </button>
+              </div>.
+              <div class="col-md-7"></div>
             </div>
           </div>
         </div>
         <!--End of tab1  -->
         <div class="tab-pane fade in" id="tab2">
-          <h3>This is tab 2</h3>
+          <div class="form-horizontal">
+            <div class="row">
+              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your preferences were updated.</div>
+              <div class="alert alert-danger" v-if="updateFailed" transition="expand">
+                  Sorry, unable to update your preferences at this time.
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 col-sm-3">
+                <div>
+                  <switches v-model="user.opt_receive_evite" theme="bootstrap" type-bold="true" color="success"
+                    text-enabled="I Want Evites"
+                    text-disabled="I Don't Want Evites"
+                  ></switches>
+                <div>
+                </div>
+                  <switches v-model="user.opt_show_email" theme="bootstrap" type-bold="true" color="success"
+                    text-enabled="Others Can See My Email Address"
+                    text-disabled="My Email - My Eyes Only"
+                  ></switches>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                <div>
+                  <switches v-model="user.opt_show_mobilephone" theme="bootstrap" type-bold="true" color="warning"
+                    text-enabled="Show My Phone1"
+                    text-disabled="Hide My Phone1"
+                  ></switches>
+                <div>
+                </div>
+                  <switches v-model="user.opt_show_homephone" theme="bootstrap" type-bold="true" color="warning"
+                  text-enabled="Show My Phone2"
+                  text-disabled="Hide My Phone2"
+                  ></switches>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-4"></div>
+            </div>
+            <br>
+            <div class="row block text-center">
+              <div class="col-md-offset-1 col-md-2">
+                <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                  <i class="fa fa-btn fa-check"></i> Update Preferences
+                </button>
+              </div>.
+              <div class="col-md-7"></div>
+            </div>
+          </div>
         </div>
         <div class="tab-pane fade in" id="tab3">
           <h3>This is tab 3</h3>
+
         </div>
         <div class="tab-pane fade in" id="tab4">
           <h3>This is tab 4</h3>
@@ -111,11 +173,13 @@
 </template>
 
 <script>
-import {TheMask} from 'vue-the-mask'
+import {TheMask} from 'vue-the-mask';
+import Switches from 'vue-switches';
+const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask
+    TheMask, Switches
   },
   props: {
     user0: {
@@ -128,6 +192,8 @@ export default {
   },
   data () {
     return {
+      updateStatus: null,
+      orgTreeData: {},
       user: {},
       avatar_url: '',
       uploadedFiles: [],
@@ -155,6 +221,12 @@ export default {
     },
     isFailed() {
       return this.currentStatus === STATUS_FAILED;
+    },
+    updateSuccess() {
+      return this.updateStatus === STATUS_SUCCESS;
+    },
+    updateFailed() {
+      return this.updateStatus === STATUS_FAILED;
     }
   },
   methods: {
@@ -164,19 +236,28 @@ export default {
         this.uploadedFiles = [];
         this.uploadError = null;
     },
+    update() {
+      var url = '/member/' + this.user.id;
+      axios.put(url, this.user)
+      .then(  (response) => {
+        console.log(response)
+        this.updateStatus = STATUS_SUCCESS;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION);
+      }).catch((error) => {
+        console.log(error)
+        this.updateStatus = STATUS_FAILED;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION);
+      });
+    },
     saveAvatar(formData) {
-      // upload data to the server
+      // upload photo to the server
       this.currentStatus = STATUS_SAVING;
-      //
-      // upload(formData)
-      //   .then(x => {
-      //     this.uploadedFiles = [].concat(x);
-      //     this.currentStatus = STATUS_SUCCESS;
-      //   })
-      //   .catch(err => {
-      //     this.uploadError = err.response;
-      //     this.currentStatus = STATUS_FAILED;
-      //   });
       var url = '/member/' + this.user.id  + '/avatar';
       axios.post(url, formData)
       .then(  (response) => {
@@ -201,7 +282,6 @@ export default {
         .map(x => {
           formData.append(fieldName, fileList[x], fileList[x].name);
         });
-
       // save it
       this.saveAvatar(formData);
 
@@ -252,6 +332,10 @@ export default {
 /*   */
 label {
   padding-left: 0px;
+  padding-right:0px;
+}
+.cbSwitch {
+  margin-top: 3px;
 }
 .editInfo {
   background-color: #f5f5f5;
