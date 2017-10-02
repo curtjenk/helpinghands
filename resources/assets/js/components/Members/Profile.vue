@@ -49,26 +49,26 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                    <label for="name" class="col-md-2 col-sm-2 control-label">Name</label>
+                    <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
                     <div class="col-md-5 col-sm-5">
                         <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="nickname" class="col-md-2 col-sm-2 control-label">Nick Name</label>
+                    <label for="nickname" class="col-md-3 col-sm-3 control-label">Nick Name</label>
                     <div class="col-md-5 col-sm-5">
                       <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="phone1" class="col-md-2 col-sm-2 control-label">Phone 1</label>
+                    <label for="phone1" class="col-md-3 col-sm-3 control-label">Phone 1</label>
                     <div class="col-md-5 col-sm-5">
                       <input id="phone1" v-model="user.homephone" type="tel" v-mask="'(###) ###-####'"
                         placeholder="" class="editInfo" name="phone1">
                     </div>
                   </div>
                 <div class="form-group">
-                    <label for="phone2" class="col-md-2 col-sm-2 control-label">Phone 2</label>
+                    <label for="phone2" class="col-md-3 col-sm-3 control-label">Phone 2</label>
                     <div class="col-md-5 col-sm-5">
                       <input id="phone2" v-model="user.mobilephone" type="text" v-mask="'(###) ###-####'"
                         placeholder="" class="editInfo" name="phone2">
@@ -160,9 +160,18 @@
             </div>
           </div>
         </div>
+        <!--End of tab2  -->
         <div class="tab-pane fade in" id="tab3">
-          <h3>This is tab 3</h3>
-
+          <div v-for="org in this.orgData">
+            <input type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
+            <span v-if="org.teams.length">
+              <a href="#"><span @click="org.editing = !org.editing">{{ org.name }}</span></a>
+            </span>
+            <span v-else @click="org.editing = !org.editing">{{ org.name }}</span>
+            <div v-for="team in org.teams" v-show="org.editing">
+              <input style="margin-left: 20px;" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">{{ team.name}}
+            </div>
+          </div>
         </div>
         <div class="tab-pane fade in" id="tab4">
           <h3>This is tab 4</h3>
@@ -199,7 +208,18 @@ export default {
       uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
-      newavatar: 'photo'
+      newavatar: 'photo',
+      orgData: [
+        {name: 'Org 1', checked: true, editing: false,
+            teams: [
+                {id:1, name: 'Team 1', checked: false},
+                {id:2, name: 'Team 2', checked: true}
+            ]},
+        {name: 'Org 2', checked: true, editing: false,
+            teams: []},
+        {name: 'Org 3', checked: false, editing: false,
+            teams: [{id:1, name: 'Team 1', checked: false}]},
+      ]
     }
   },
   mounted: function () {
@@ -230,6 +250,13 @@ export default {
     }
   },
   methods: {
+    uncheckTeams (org) {
+     if (!org.checked) {
+        for (let i=0; i<org.teams.length; i++) {
+          org.teams[i].checked = false;
+        }
+      }
+    },
     resetAvatar() {
         // reset form to initial state
         this.currentStatus = STATUS_INITIAL;
