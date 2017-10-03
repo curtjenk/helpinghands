@@ -18,7 +18,7 @@ class CreateTeamsTable extends Migration
             $table->integer('organization_id')->unsigned();
             $table->string('name');
             $table->longtext('description')->nullable();
-            $table->integer('updated_user_id')->unsigned();
+            $table->integer('updated_user_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->unique(['organization_id', 'name']);

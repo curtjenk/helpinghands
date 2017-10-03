@@ -21,6 +21,15 @@ class Organization extends Model
         return $this->hasMany('App\Event');
     }
 
+    public function parent()
+    {
+        return $this->belongsTo('App\Organization', 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\Organization', 'parent_id');
+    }
     public function teams()
     {
         return $this->hasMany('App\Team');

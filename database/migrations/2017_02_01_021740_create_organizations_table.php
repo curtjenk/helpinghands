@@ -15,6 +15,7 @@ class CreateOrganizationsTable extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('parent_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('address1', 255)->nullable();
             $table->string('address2', 255)->nullable();
@@ -22,7 +23,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('zipcode', 32)->nullable();
             $table->string('state')->nullable();
             $table->string('phone', 63)->nullable();
-            $table->integer('updated_user_id')->unsigned();
+            $table->integer('updated_user_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->unique(['name']);

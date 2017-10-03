@@ -14,16 +14,20 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('list-organizations');
+        // $this->authorize('list-organizations');
         $user = Auth::user();
 
-        $query=App\Organization::all();
+        $query=App\Organization::with('teams')->get();
 
-        return view('organization.index', [
-                'organizations'=>$query,
-            ]);
+        // if ($request->ajax()) {
+            return response()->json($query);
+        // } else {
+        //     return view('organization.index', [
+        //         'organizations'=>$query,
+        //     ]);
+        // }
     }
 
     /**
