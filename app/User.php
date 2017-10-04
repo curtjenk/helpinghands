@@ -39,16 +39,9 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Organization');
     }
 
-    /** TODO:  will this go away!
-     * Get list organizations this user has access to
-     * @return Collection of App\Organization
-     */
-    public function allowed_organizations()
+    public function teams()
     {
-        return App\Organization::select('organizations.*')
-            ->when($this->is_orgLevel(), function($q) {
-                return $q->where('organizations.id', $this->organization_id);
-            })->get();
+        return $this->belongsToMany('App\Team');
     }
 
     public function signedup($event_id, $helping='yes')
@@ -80,13 +73,13 @@ class User extends Authenticatable
     //     return $this->belongsTo('App\Role');
     // }
 
-    /**
-     * Get the Roles for this user.
-     */
-    public function roles()
-    {
-        return $this->belongsToMany('App\Role');
-    }
+    // /**
+    //  * Get the Roles for this user.
+    //  */
+    // public function roles()
+    // {
+    //     return $this->belongsToMany('App\Role');
+    // }
 
     /**
      * Check if the User has a specific Permission
@@ -149,6 +142,6 @@ class User extends Authenticatable
 
     public function allowed_roles()
     {
-        
+
     }
 }

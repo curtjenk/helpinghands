@@ -274,7 +274,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //dump("here");
+        dump("here");
         $user = App\User::findOrFail($id);
         $this->authorize('show',$user);
         return view('user.profile', [
@@ -293,13 +293,12 @@ class UserController extends Controller
         $user = App\User::findOrFail($id);
 
         //$this->authorize('update', $user);
-        $roles = App\Role::whereNotIn('name', ['Admin'])->get();
-        $orgs = App\Organization::with(['teams'])->get();
 
         return view('user.profile', [
             'user'=>$user,
-            'roles'=>$roles,
-            'orgs'=>$orgs,
+            'userorgs'=>$user->organizations,
+            'userteams'=>$user->teams,
+            'orgteams'=> App\Organization::with('teams')->get()
         ]);
     }
 

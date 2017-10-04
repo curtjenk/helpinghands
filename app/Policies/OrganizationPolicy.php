@@ -10,6 +10,10 @@ class OrganizationPolicy
 {
     use HandlesAuthorization;
 
+    // private function getPermissions()
+    // {
+    //
+    // }
     /**
      * Determine whether the user can view the organization.
      *
@@ -19,8 +23,8 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
-        return $user->has_permission('Show organization')&&
-        ($user->is_admin() || $user->organization_id == $organization->id);
+        // return $user->has_permission('Show organization')&&
+        // ($user->is_admin() || $user->organization_id == $organization->id);
     }
     public function show(User $user, Organization $organization)
     {

@@ -26,6 +26,11 @@ class AddPermissionRole extends Migration
                              'Show organization',
                              'Update organization',
                              'List organizations',
+                             'Create team',
+                             'Delete team',
+                             'Show team',
+                             'Update team',
+                             'List teams',
                              'Create event',
                              'Delete event',
                              'Show event',
@@ -34,15 +39,30 @@ class AddPermissionRole extends Migration
                             ])
                         ->pluck('id'));
 
+        $lead = App\Role::where('name','Admin')->first();
+        $lead->permissions()
+              ->sync(App\Permission::whereIn('name',
+                            [
+                             'Update team',
+                             'List teams',
+                             'Create event',
+                             'Delete event',
+                             'Show event',
+                             'Update event',
+                            ])
+                        ->pluck('id'));
 
-        $orguser = App\Role::where('name','Member')->first();
-        $orguser->permissions()
+        $member = App\Role::where('name','Member')->first();
+        $member->permissions()
               ->sync(App\Permission::whereIn('name',
                             ['Show user',
                              'List users',
                              'Update user',
                              'Show organization',
+                             'Show team',
                              'Show event',
+                             'List organizations',
+                             'List teams',
                              'List events'
                             ])
                         ->pluck('id'));

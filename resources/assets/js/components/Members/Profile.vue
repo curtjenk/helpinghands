@@ -195,6 +195,18 @@ export default {
       type: Object,
       required: true
     },
+    userorgs0: {
+      type: Array,
+      required: true
+    },
+    userteams0: {
+      type: Array,
+      required: true
+    },
+    orgteams0: {
+      type: Array,
+      required: true
+    },
     avatar0: {
       type: String
     }
@@ -279,7 +291,7 @@ export default {
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION);
+        }, MESSAGE_DURATION + 1000);
       });
     },
     saveAvatar(formData) {

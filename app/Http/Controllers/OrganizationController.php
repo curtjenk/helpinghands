@@ -16,18 +16,9 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        // $this->authorize('list-organizations');
         $user = Auth::user();
-
         $query=App\Organization::with('teams')->get();
-
-        // if ($request->ajax()) {
-            return response()->json($query);
-        // } else {
-        //     return view('organization.index', [
-        //         'organizations'=>$query,
-        //     ]);
-        // }
+        return response()->json($query);
     }
 
     /**

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'city'=>'Lithia Springs',
             'state'=>'Georgia'
         ]);
-        DB::table('teams')->insertGetId([
+        $team1 = DB::table('teams')->insertGetId([
             'name'=> "Fellowship",
             'organization_id'=>$childOrg1,
             'description'=>'Responsibile for fellowship activities'
@@ -42,9 +42,19 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('abc123'),
         ]);
         DB::table('organization_user')->insert([
+            'organization_id'=>$org1,
+            'user_id'=>$user,
+            'role_id'=>App\Role::where('name','Admin')->pluck('id')->first()
+        ]);
+        DB::table('organization_user')->insert([
             'organization_id'=>$childOrg1,
             'user_id'=>$user,
             'role_id'=>App\Role::where('name','Admin')->pluck('id')->first()
+        ]);
+        DB::table('team_user')->insert([
+            'team_id'=>$team1,
+            'user_id'=>$user,
+            'role_id'=>App\Role::where('name','Lead')->pluck('id')->first()
         ]);
         //Add other test users;
 

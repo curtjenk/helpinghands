@@ -10,6 +10,9 @@
 
     <memberprofile
         :user0="{{ $user }}"
+        :userorgs0="{{ $userorgs }}"
+        :userteams0="{{ $userteams }}"
+        :orgteams0="{{ $orgteams }}"
         avatar0="{{ asset($user->avatar_filename) }}"
     >
     </memberprofile>

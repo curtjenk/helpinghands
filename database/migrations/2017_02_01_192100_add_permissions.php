@@ -25,6 +25,12 @@ class AddPermissions extends Migration
             ['name'=>'Update organization'],
             ['name'=>'List organizations'],
 
+            ['name'=>'Create team'],
+            ['name'=>'Delete team'],
+            ['name'=>'Show team'],
+            ['name'=>'Update team'],
+            ['name'=>'List teams'],
+
             ['name'=>'Create event'],
             ['name'=>'Delete event'],
             ['name'=>'Show event'],
