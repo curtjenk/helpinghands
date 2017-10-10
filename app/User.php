@@ -81,11 +81,12 @@ class User extends Authenticatable
     //     return $this->belongsToMany('App\Role');
     // }
 
-    /**
-     * Check if the User has a specific Permission
-     */
+    // /**
+    //  * Check if the User has a specific Permission
+    //  */
     public function has_permission($name)
     {
+        return true;
         return DB::table('permission_role')
                 ->join('permissions', 'permission_role.permission_id', '=',
                        'permissions.id')
@@ -93,55 +94,56 @@ class User extends Authenticatable
                 ->where('permissions.name', $name)
                 ->count() > 0;
     }
-    /**
-     * Check if the user has any administrative right
-     * across all organizations
-     */
+    // /**
+    //  * Check if the user has any administrative right
+    //  * across all organizations
+    //  */
     public function is_admin()
     {
-        return DB::table('roles')
-            ->where('id', $this->role_id)
-            ->whereIn('name', ['Admin'])
-            ->count() > 0;
+        return true;
+        // return DB::table('roles')
+        //     ->where('id', $this->role_id)
+        //     ->whereIn('name', ['Admin'])
+        //     ->count() > 0;
     }
-
-    /**
-     * System level user.
-     * @return boolean [description]
-     */
-    public function is_superuser()
-    {
-        return DB::table('roles')
-            ->where('id', $this->role_id)
-            ->whereIn('name', ['Super User'])
-            ->count() > 0;
-    }
-
-    /**
-     * Member of an organization whether the org's Admin or normal user
-     * @return boolean [description]
-     */
-    public function is_orgLevel()
-    {
-        return DB::table('roles')
-            ->where('id', $this->role_id)
-            ->whereIn('name', ['Organization Admin', 'Organization User'])
-            ->count() > 0;
-    }
-    /**
-     * Admin of an organization
-     * @return boolean [description]
-     */
-    public function is_orgAdmin()
-    {
-        return DB::table('roles')
-            ->where('id', $this->role_id)
-            ->where('name', 'Organization Admin')
-            ->count() > 0;
-    }
-
-    public function allowed_roles()
-    {
-
-    }
+    //
+    // /**
+    //  * System level user.
+    //  * @return boolean [description]
+    //  */
+    // public function is_superuser()
+    // {
+    //     return DB::table('roles')
+    //         ->where('id', $this->role_id)
+    //         ->whereIn('name', ['Super User'])
+    //         ->count() > 0;
+    // }
+    //
+    // /**
+    //  * Member of an organization whether the org's Admin or normal user
+    //  * @return boolean [description]
+    //  */
+    // public function is_orgLevel()
+    // {
+    //     return DB::table('roles')
+    //         ->where('id', $this->role_id)
+    //         ->whereIn('name', ['Organization Admin', 'Organization User'])
+    //         ->count() > 0;
+    // }
+    // /**
+    //  * Admin of an organization
+    //  * @return boolean [description]
+    //  */
+    // public function is_orgAdmin()
+    // {
+    //     return DB::table('roles')
+    //         ->where('id', $this->role_id)
+    //         ->where('name', 'Organization Admin')
+    //         ->count() > 0;
+    // }
+    //
+    // public function allowed_roles()
+    // {
+    //
+    // }
 }

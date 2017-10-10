@@ -163,9 +163,12 @@
         <!--End of tab2  -->
         <div class="tab-pane fade in" id="tab3">
           <div v-for="org in this.orgData">
+            <div class="col-md-1 col-sm-1">
+              <i  @click="org.editing = !org.editing" class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
+            </div>
             <input type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
             <span v-if="org.teams.length">
-              <a href="#"><span @click="org.editing = !org.editing">{{ org.name }}</span></a>
+                <a href="#"><span @click="org.editing = !org.editing">&nbsp;{{ org.name }}</span></a>
             </span>
             <span v-else @click="org.editing = !org.editing">{{ org.name }}</span>
             <div v-for="team in org.teams" v-show="org.editing">

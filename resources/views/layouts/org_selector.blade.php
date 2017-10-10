@@ -5,7 +5,8 @@
         if (isset($specific)) {
             $orgs = App\Organization::where('id', $specific)->first();
         } else {
-            $orgs = Auth::user()->allowed_organizations();
+            $orgs = [];
+            // $orgs = Auth::user()->allowed_organizations();
             if(Request::session()->has('orgid')) {
                 $org_id = Request::session()->get('orgid');
             } else {
