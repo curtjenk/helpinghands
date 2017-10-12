@@ -274,7 +274,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        dump("here");
+        //dump("here");
         $user = App\User::findOrFail($id);
         $this->authorize('show',$user);
         return view('user.profile', [
@@ -290,14 +290,10 @@ class UserController extends Controller
     public function edit($id)
     {
         $self = Auth::user();
-        $user = App\User::findOrFail($id);
-
+        $user = App\User::where('id',$id)->with('organizations.teams')->first();
         //$this->authorize('update', $user);
-
         return view('user.profile', [
             'user'=>$user,
-            'userorgs'=>$user->organizations,
-            'userteams'=>$user->teams,
             'orgteams'=> App\Organization::with('teams')->get()
         ]);
     }

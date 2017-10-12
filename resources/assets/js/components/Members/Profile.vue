@@ -111,7 +111,7 @@
         </div>
         <!--End of tab1  -->
         <div class="tab-pane fade in" id="tab2">
-          <div class="form-horizontal">
+          <!-- <div class="form-horizontal"> -->
             <div class="row">
               <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your preferences were updated.</div>
               <div class="alert alert-danger" v-if="updateFailed" transition="expand">
@@ -158,7 +158,7 @@
               </div>.
               <div class="col-md-7"></div>
             </div>
-          </div>
+          <!-- </div> -->
         </div>
         <!--End of tab2  -->
         <div class="tab-pane fade in" id="tab3">
@@ -169,7 +169,8 @@
             </div>
           </div>
           <div class="col-md-offset-1 col-sm-offset-1 orgbox" v-for="org in this.orgData">
-              <i  @click="org.editing = !org.editing" class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
+              <i  v-if="org.teams.length" @click="org.editing = !org.editing" class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
+              <i  v-else class="fa fa-lg fa-circle-o">&nbsp;</i>
               <input class="orgcheck" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
               <span @click="org.editing = !org.editing">{{ org.name }}</span>
               <div >
@@ -178,13 +179,14 @@
                 </div>
               </div>
           </div>
+          <br>
           <div class="row block text-center">
-            <div class="col-md-offset-1 col-md-2">
+            <div class="col-md-offset-1 col-sm-offset-2 col-md-2 col-sm-2">
               <button type="submit" class="btn btn-primary" name="submit" @click="update">
                 <i class="fa fa-btn fa-check"></i> Update Membership
               </button>
             </div>.
-            <div class="col-md-7"></div>
+            <div class="col-md-7 col-sm-7"></div>
           </div>
         </div>
         <div class="tab-pane fade in" id="tab4">
@@ -209,14 +211,6 @@ export default {
       type: Object,
       required: true
     },
-    userorgs0: {
-      type: Array,
-      required: true
-    },
-    userteams0: {
-      type: Array,
-      required: true
-    },
     orgteams0: {
       type: Array,
       required: true
@@ -228,7 +222,6 @@ export default {
   data () {
     return {
       updateStatus: null,
-      orgTreeData: {},
       user: {},
       avatar_url: '',
       uploadedFiles: [],
@@ -236,14 +229,14 @@ export default {
       currentStatus: null,
       newavatar: 'photo',
       orgData: [
-        {name: 'Org 1', checked: true, editing: false,
+        {id:1, name: 'Org 1', checked: true, editing: false,
             teams: [
                 {id:1, name: 'Team 1', checked: false},
                 {id:2, name: 'Team 2', checked: true}
             ]},
-        {name: 'Org 2', checked: true, editing: false,
+        {id:2, name: 'Org 2', checked: true, editing: false,
             teams: []},
-        {name: 'Org 3', checked: false, editing: false,
+        {id:3, name: 'Org 3', checked: false, editing: false,
             teams: [{id:1, name: 'Team 1', checked: false}]},
       ]
     }
@@ -253,6 +246,30 @@ export default {
       this.user = this.user0;
       this.avatar_url = this.avatar0;
       this.resetAvatar();
+      this.orgData = [];
+      this.orgteams0.forEach( org0 => {
+        let teams = [];
+        let orgCheckedItem=null;
+        //look if the user is in this organization
+        this.user.organizations.forEach( userOrgItem => {
+          if (userOrgItem.id == org0.id) {
+            orgCheckedItem=userOrgItem;
+          }
+        })
+        org0.teams.forEach( team0 => {
+          let teamCheckedItem=null;
+          if (orgCheckedItem) {
+            orgCheckedItem.teams.forEach (userTeamItem => {
+              if (userTeamItem.id == team0.id)
+                teamCheckedItem = userTeamItem;
+            })
+          }
+          teams.push({id:team0.id, name:team0.name, checked: teamCheckedItem ? true: false});
+        })
+        this.orgData.push({id: org0.id, name: org0.name,
+            checked: orgCheckedItem ? true: false, editing: false, teams: teams});
+      });
+
     })
   },
   computed: {
@@ -293,14 +310,14 @@ export default {
       var url = '/member/' + this.user.id;
       axios.put(url, this.user)
       .then(  (response) => {
-        console.log(response)
+        // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
         }, MESSAGE_DURATION);
       }).catch((error) => {
-        console.log(error)
+        // console.log(error)
         this.updateStatus = STATUS_FAILED;
         var self = this;
         setTimeout(function(){
