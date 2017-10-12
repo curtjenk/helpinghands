@@ -25,7 +25,7 @@
         <div class="btn-group" role="group">
             <button v-on:click="changetab(2)" type="button" id="organizations" class="btn btn-default" href="#tab3" data-toggle="tab">
               <span class="fa fa-sitemap" aria-hidden="true"></span>
-              <div class="hidden-xs">Organizations</div>
+              <div class="hidden-xs">Membership</div>
             </button>
         </div>
         <div class="btn-group" role="group">
@@ -119,7 +119,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-3 col-sm-3">
+              <div class="col-md-offset-1 col-sm-offset-1 col-md-3 col-sm-3">
                 <div>
                   <switches v-model="user.opt_receive_evite" theme="bootstrap" type-bold="true" color="success"
                     text-enabled="I Want Evites"
@@ -162,18 +162,29 @@
         </div>
         <!--End of tab2  -->
         <div class="tab-pane fade in" id="tab3">
-          <div v-for="org in this.orgData">
-            <div class="col-md-1 col-sm-1">
+          <div class="row">
+            <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your memberships were updated.</div>
+            <div class="alert alert-danger" v-if="updateFailed" transition="expand">
+                Sorry, unable to update your memberships at this time.
+            </div>
+          </div>
+          <div class="col-md-offset-1 col-sm-offset-1 orgbox" v-for="org in this.orgData">
               <i  @click="org.editing = !org.editing" class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
-            </div>
-            <input type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
-            <span v-if="org.teams.length">
-                <a href="#"><span @click="org.editing = !org.editing">&nbsp;{{ org.name }}</span></a>
-            </span>
-            <span v-else @click="org.editing = !org.editing">{{ org.name }}</span>
-            <div v-for="team in org.teams" v-show="org.editing">
-              <input style="margin-left: 20px;" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">{{ team.name}}
-            </div>
+              <input class="orgcheck" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
+              <span @click="org.editing = !org.editing">{{ org.name }}</span>
+              <div >
+                <div v-for="team in org.teams" v-show="org.editing" class="teambox">
+                  <input class="teamcheck" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">{{ team.name}}
+                </div>
+              </div>
+          </div>
+          <div class="row block text-center">
+            <div class="col-md-offset-1 col-md-2">
+              <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                <i class="fa fa-btn fa-check"></i> Update Membership
+              </button>
+            </div>.
+            <div class="col-md-7"></div>
           </div>
         </div>
         <div class="tab-pane fade in" id="tab4">
@@ -342,6 +353,23 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.orgcheck {
+  margin-left: 1px;
+  margin-right: 5px;
+}
+.teamcheck {
+  margin-left: 20px;
+  margin-right: 5px;
+}
+.orgbox {
+  font-weight: bold;
+  background: #efeded;
+  padding: 2px 2px;
+}
+.teambox {
+  padding-left: 20px;
+  background: white;
+}
 /*  file upload            */
 .dropbox {
     outline: 2px dashed grey; /* the dash box */
