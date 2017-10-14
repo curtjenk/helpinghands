@@ -119,44 +119,44 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-offset-1 col-sm-offset-1 col-md-3 col-sm-3">
-                <div>
-                  <switches v-model="user.opt_receive_evite" theme="bootstrap" type-bold="true" color="success"
-                    text-enabled="I Want Evites"
-                    text-disabled="I Don't Want Evites"
-                  ></switches>
-                <div>
-                </div>
-                  <switches v-model="user.opt_show_email" theme="bootstrap" type-bold="true" color="success"
-                    text-enabled="Others Can See My Email Address"
-                    text-disabled="My Email - My Eyes Only"
-                  ></switches>
-                </div>
+              <div class="col-md-offset-2 col-sm-offset-2 col-md-4 col-sm-4">
+                <!-- <toggle-button v-model="user.opt_receive_evite"
+                  :sync="true"
+                  :value="user.opt_receive_evite"
+                  :labels="{checked: 'I want Evites', unchecked: 'I don\'t want Evites' }"
+                  :width="150"
+                ></toggle-button> -->
+                <toggle-button v-model="user.opt_show_email"
+                  :sync="true"
+                  :value="user.opt_show_email"
+                  :labels="{checked: 'Show My Email Address', unchecked: 'Hide My Email Address' }"
+                  :width="150"
+                ></toggle-button>
+
+                <toggle-button v-model="user.opt_show_mobilephone"
+                  :sync="true"
+                  :value="user.opt_show_mobilephone"
+                  :labels="{checked: 'Show My Phone 1', unchecked: 'Hide My Phone 1' }"
+                  :width="150"
+                ></toggle-button>
+                <toggle-button v-model="user.opt_show_homephone"
+                  :sync="true"
+                  :value="user.opt_show_homephone"
+                  :labels="{checked: 'Show My Phone 2', unchecked: 'Hide My Phone 2'}"
+                  :width="150"
+                ></toggle-button>
+
               </div>
-              <div class="col-md-3 col-sm-3">
-                <div>
-                  <switches v-model="user.opt_show_mobilephone" theme="bootstrap" type-bold="true" color="warning"
-                    text-enabled="Show My Phone1"
-                    text-disabled="Hide My Phone1"
-                  ></switches>
-                <div>
-                </div>
-                  <switches v-model="user.opt_show_homephone" theme="bootstrap" type-bold="true" color="warning"
-                  text-enabled="Show My Phone2"
-                  text-disabled="Hide My Phone2"
-                  ></switches>
-                </div>
-              </div>
-              <div class="col-md-5 col-sm-4"></div>
+              <div class="col-md-5 col-sm-5"></div>
             </div>
             <br>
             <div class="row block text-center">
-              <div class="col-md-offset-1 col-md-2">
+              <div class="col-md-offset-1 col-md-5">
                 <button type="submit" class="btn btn-primary" name="submit" @click="update">
                   <i class="fa fa-btn fa-check"></i> Update Preferences
                 </button>
               </div>.
-              <div class="col-md-7"></div>
+              <div class="col-md-6"></div>
             </div>
           <!-- </div> -->
         </div>
@@ -199,12 +199,14 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-import Switches from 'vue-switches';
+// import Switches from 'vue-switches';
+
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask, Switches
+    TheMask
+    // Switches
   },
   props: {
     user0: {
@@ -249,25 +251,27 @@ export default {
       this.orgData = [];
       this.orgteams0.forEach( org0 => {
         let teams = [];
-        let orgCheckedItem=null;
+        let userOrgCheckedItem=null;
         //look if the user is in this organization
         this.user.organizations.forEach( userOrgItem => {
           if (userOrgItem.id == org0.id) {
-            orgCheckedItem=userOrgItem;
+            userOrgCheckedItem=userOrgItem;
           }
         })
+
         org0.teams.forEach( team0 => {
-          let teamCheckedItem=null;
-          if (orgCheckedItem) {
-            orgCheckedItem.teams.forEach (userTeamItem => {
+          let isChecked=false;
+          if (userOrgCheckedItem != null) {
+            this.user.teams.forEach (userTeamItem => {
               if (userTeamItem.id == team0.id)
-                teamCheckedItem = userTeamItem;
+                isChecked = true;
             })
           }
-          teams.push({id:team0.id, name:team0.name, checked: teamCheckedItem ? true: false});
+          teams.push({id:team0.id, name:team0.name, checked: isChecked});
         })
+        let isChecked = userOrgCheckedItem != null ? true: false;
         this.orgData.push({id: org0.id, name: org0.name,
-            checked: orgCheckedItem ? true: false, editing: false, teams: teams});
+            checked: isChecked, editing: false, teams: teams});
       });
 
     })
@@ -308,7 +312,7 @@ export default {
     },
     update() {
       var url = '/member/' + this.user.id;
-      axios.put(url, this.user)
+      axios.put(url, {user: this.user, org: this.orgData})
       .then(  (response) => {
         // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
@@ -513,4 +517,5 @@ label {
 .btn-pref .btn {
     -webkit-border-radius:0 !important;
 }
+
 </style>

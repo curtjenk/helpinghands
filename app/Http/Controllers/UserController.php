@@ -290,8 +290,9 @@ class UserController extends Controller
     public function edit($id)
     {
         $self = Auth::user();
-        $user = App\User::where('id',$id)->with('organizations.teams')->first();
+        $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
         //$this->authorize('update', $user);
+        // dump($user);
         return view('user.profile', [
             'user'=>$user,
             'orgteams'=> App\Organization::with('teams')->get()
@@ -307,49 +308,45 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::debug($request->all());
-        $this->validate($request, [
-            'name' => 'required|max:255|min:5',
-            'email' => 'required|max:255',
-            'nickname' => 'max:255',
-            'mobilephone' => 'max:255',
-            'homephone' => 'max:255',
-            // 'org_id' => 'required|exists:organizations,id',
-            // 'role_id' => 'required|exists:roles,id',
-            //'new_password' => 'confirmed|required_with:old_password',
-        ]);
+        // Log::debug($request->all());
+
         $user = App\User::findOrFail($id);
         $self = Auth::user();
         // $this->authorize('update', $user);
-        if ($request->has('email')) {
-            $user->email = $request->input('email');
-        }
-        if ($request->has('name')) {
-            $user->name = $request->input('name');
-        }
-        if ($request->has('nickname')) {
-            $user->nickname = $request->input('nickname');
+        $updUser = $request->input('user');
+        $updOrg  = $request->input('org');
+
+        if ($user->id != $updUser['id']) {
+            App::abort(400, 'Not you. Cant update');
         }
 
-        if ($request->has('mobilephone')) {
-            $user->mobilephone = $request->input('mobilephone');
+        $user->email = $updUser['email'];
+        $user->name = $updUser['name'];
+        $user->nickname = $updUser['nickname'];
+        $user->mobilephone = $updUser['mobilephone'];
+        $user->homephone = $updUser['homephone'];
+
+        // $user->opt_receive_evite = $updUser['opt_receive_evite'];
+        $user->opt_show_email = $updUser['opt_show_email'];
+        $user->opt_show_mobilephone = $updUser['opt_show_mobilephone'];
+        $user->opt_show_homephone = $updUser['opt_show_homephone'];
+
+        $user->organizations()->detach();
+        $user->teams()->detach();
+
+        foreach($updOrg as $org){
+            if ($org['checked']) {
+                $user->organizations()->attach($org['id'], ['role_id'=>3]);
+            }
+            foreach($org['teams'] as $team) {
+                if($team['checked']) {
+                    $user->teams()->attach($team['id'], ['role_id'=>3]);
+                }
+            }
         }
 
-        if ($request->has('homephone')) {
-            $user->homephone = $request->input('homephone');
-        }
-
-        // $user->organization_id = $request->input('org_id');
-        // $user->role_id = $request->input('role_id');
-
-        // $user->opt_receive_evite = $request->has('opt_receive_evite') ? true : false;
-        // $user->opt_show_email = $request->has('opt_show_email') ? true : false;
-        // $user->opt_show_mobilephone = $request->has('opt_show_mobilephone') ? true : false;
-        // $user->opt_show_homephone = $request->has('opt_show_homephone') ? true : false;
         $user->save();
-        // return view('user.show', [
-        //     'user'=>$user,
-        // ]);
+        //
         return response()->json($user->id);
     }
 

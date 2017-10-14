@@ -38,7 +38,9 @@
             </div>
             <br/>
             <div>
-                <b>{{ $event->description }}</b>
+                <b><pre>
+                    {{ $event->description }}
+                </pre></b>
             </div>
         </p>
     </div>

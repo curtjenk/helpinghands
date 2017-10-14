@@ -11,7 +11,7 @@ window.$ = window.jQuery = require('jquery');
 
 require('jquery-ui-bundle');
 require('bootstrap-sass');
-require('bootstrap-switch');
+
 require('fullcalendar');
 require('vue-chartjs');
 //Require chart.piecelabel.js AFTER vue-chartjs

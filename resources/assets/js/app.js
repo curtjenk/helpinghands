@@ -14,6 +14,9 @@ import './organization';
 import './bs_common';
 import './common';
 
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
+
 Vue.component('example', require('./components/Example.vue'));
 Vue.component('memberslist', require('./components/Members/MembersVuetable.vue'));
 Vue.component('memberprofile', require('./components/Members/Profile.vue'));

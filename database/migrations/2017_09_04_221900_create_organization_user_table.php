@@ -19,8 +19,7 @@ class CreateOrganizationUserTable extends Migration
             $table->integer('role_id')->unsigned();
 
             $table->foreign('organization_id')
-                  ->references('id')->on('organizations')
-                  ->onDelete('cascade');
+                  ->references('id')->on('organizations');
 
             $table->foreign('user_id')
                   ->references('id')->on('users')
