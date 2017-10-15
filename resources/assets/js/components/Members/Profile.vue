@@ -155,7 +155,7 @@
                 <button type="submit" class="btn btn-primary" name="submit" @click="update">
                   <i class="fa fa-btn fa-check"></i> Update Preferences
                 </button>
-              </div>.
+              </div>
               <div class="col-md-6"></div>
             </div>
           <!-- </div> -->
@@ -192,28 +192,61 @@
         <div class="tab-pane fade in" id="tab4">
           <div class="form-horizontal">
             <div class="row">
+              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your ...... was updated.</div>
+              <div class="alert alert-danger" v-if="updateFailed" transition="expand">
+                  Sorry, unable to update your ..... at this time.
+              </div>
+            </div>
+            <div class="row">
               <div class="col-md-6 col-sm-6">
                 <div class="form-group">
-                    <label for="name" class="col-md-3 col-sm-3 control-label">Current Email/Username</label>
-                    <div class="col-md-5 col-sm-5">
+                    <label class="col-md-4 col-sm-4 control-label">Current Email</label>
+                    <div class="col-md-7 col-sm-7">
                       <input type="text" class="editInfo" maxlength="255" :value="user.email" disabled>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email" class="col-md-3 col-sm-3 control-label">New Email/Username</label>
-                    <div class="col-md-5 col-sm-5">
-                        <input id="email" v-model="newEmail" type="email" class="editInfo" name="email" maxlength="255">
+                    <label for="email" class="col-md-4 col-sm-4 control-label">New Email</label>
+                    <div class="col-md-7 col-sm-7">
+                        <input id="email" v-model="newEmail" type="email" class="editInfo" name="username" maxlength="255">
                     </div>
+                </div>
+                <br>
+                <div class="row block text-center">
+                  <div class="col-md-offset-5 col-md-5">
+                    <button type="submit" class="btn btn-primary" name="submit" @click="updateEmail">
+                      <i class="fa fa-btn fa-check"></i> Change Username
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="col-md-6 col-sm-6">
                 <div class="form-group">
-                    <label for="oldpassword" class="col-md-3 col-sm-3 control-label">Old Password</label>
-                    <div class="col-md-5 col-sm-5">
-                      <input id="oldpassword" name="oldpassword" type="text" class="editInfo" maxlength="255">
+                    <label for="oldpassword" class="col-md-4 col-sm-4 control-label">Old Password</label>
+                    <div class="col-md-7 col-sm-7">
+                      <input id="oldpassword" v-model="oldPassword" name="oldpassword" type="text" class="editInfo" maxlength="255">
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label for="newpassword" class="col-md-4 col-sm-4 control-label">New Password</label>
+                    <div class="col-md-7 col-sm-7">
+                      <input id="newpassword" v-model="newPassword" name="newpassword" type="text" class="editInfo" maxlength="255">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newpasswordconfirm" class="col-md-4 col-sm-4 control-label">Confirm Password</label>
+                    <div class="col-md-7 col-sm-7">
+                      <input id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="text" class="editInfo" maxlength="255">
+                    </div>
+                </div>
+                <br>
+                <div class="row block text-center">
+                  <div class="col-md-offset-5 col-md-5">
+                    <button type="submit" class="btn btn-primary" name="submit" @click="updatePassword">
+                      <i class="fa fa-btn fa-check"></i> Change Password
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -253,8 +286,9 @@ export default {
   data () {
     return {
       newEmail: '',
-      newPswd: '',
-      newPswdConfirm: '',
+      oldPassword: '',
+      newPassword: '',
+      newPasswordConfirm: '',
       updateStatus: null,
       user: {},
       avatar_url: '',
@@ -345,6 +379,25 @@ export default {
     update() {
       var url = '/member/' + this.user.id;
       axios.put(url, {user: this.user, org: this.orgData})
+      .then(  (response) => {
+        // console.log(response)
+        this.updateStatus = STATUS_SUCCESS;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION);
+      }).catch((error) => {
+        // console.log(error)
+        this.updateStatus = STATUS_FAILED;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION + 1000);
+      });
+    },
+    updateEmail() {
+      var url = '/member/' + this.user.id + '/email';
+      axios.put(url, {newEmail: this.newEmail})
       .then(  (response) => {
         // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
