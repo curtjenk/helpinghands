@@ -53,7 +53,7 @@
                     <div class="col-md-5 col-sm-5">
                         <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
                     </div>
-                  </div>
+                </div>
                 <div class="form-group">
                     <label for="nickname" class="col-md-3 col-sm-3 control-label">Nick Name</label>
                     <div class="col-md-5 col-sm-5">
@@ -190,10 +190,39 @@
           </div>
         </div>
         <div class="tab-pane fade in" id="tab4">
-          <h3>This is tab 4</h3>
+          <div class="form-horizontal">
+            <div class="row">
+              <div class="col-md-6 col-sm-6">
+                <div class="form-group">
+                    <label for="name" class="col-md-3 col-sm-3 control-label">Current Email/Username</label>
+                    <div class="col-md-5 col-sm-5">
+                      <input type="text" class="editInfo" maxlength="255" :value="user.email" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-md-3 col-sm-3 control-label">New Email/Username</label>
+                    <div class="col-md-5 col-sm-5">
+                        <input id="email" v-model="newEmail" type="email" class="editInfo" name="email" maxlength="255">
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6">
+                <div class="form-group">
+                    <label for="oldpassword" class="col-md-3 col-sm-3 control-label">Old Password</label>
+                    <div class="col-md-5 col-sm-5">
+                      <input id="oldpassword" name="oldpassword" type="text" class="editInfo" maxlength="255">
+                    </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
         </div>
+
       </div>
     </div>
+
   </div>
 </template>
 
@@ -223,6 +252,9 @@ export default {
   },
   data () {
     return {
+      newEmail: '',
+      newPswd: '',
+      newPswdConfirm: '',
       updateStatus: null,
       user: {},
       avatar_url: '',
