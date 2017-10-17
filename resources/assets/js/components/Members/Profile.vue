@@ -224,19 +224,22 @@
                 <div class="form-group">
                     <label for="oldpassword" class="col-md-4 col-sm-4 control-label">Old Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <input id="oldpassword" v-model="oldPassword" name="oldpassword" type="text" class="editInfo" maxlength="255">
+                      <input id="oldpassword" v-model="oldPassword" name="oldpassword" type="password" class="editInfo" maxlength="255">
                     </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group"> -->
                     <label for="newpassword" class="col-md-4 col-sm-4 control-label">New Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <input id="newpassword" v-model="newPassword" name="newpassword" type="text" class="editInfo" maxlength="255">
+                      <vue-password id="newpassword" v-model="newPassword" name="newpassword"
+                        placeholder="enter 8 characters or more"
+                        classes="editInfo input"
+                        :user-inputs="[user.email]"></vue-password>
                     </div>
-                </div>
+                <!-- </div> -->
                 <div class="form-group">
                     <label for="newpasswordconfirm" class="col-md-4 col-sm-4 control-label">Confirm Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <input id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="text" class="editInfo" maxlength="255">
+                      <input id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
                     </div>
                 </div>
                 <br>
@@ -261,14 +264,13 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-// import Switches from 'vue-switches';
+import VuePassword from 'vue-password'
 
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask
-    // Switches
+    TheMask, VuePassword
   },
   props: {
     user0: {
@@ -362,6 +364,11 @@ export default {
       return this.updateStatus === STATUS_FAILED;
     }
   },
+  watch: {
+    newPasswordConfirm () {
+      console.log(this.newPasswordConfirm);
+    }
+  },
   methods: {
     uncheckTeams (org) {
      if (!org.checked) {
@@ -398,6 +405,29 @@ export default {
     updateEmail() {
       var url = '/member/' + this.user.id + '/email';
       axios.put(url, {newEmail: this.newEmail})
+      .then(  (response) => {
+        // console.log(response)
+        this.updateStatus = STATUS_SUCCESS;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION);
+      }).catch((error) => {
+        // console.log(error)
+        this.updateStatus = STATUS_FAILED;
+        var self = this;
+        setTimeout(function(){
+            self.updateStatus = STATUS_INITIAL;
+        }, MESSAGE_DURATION + 1000);
+      });
+    },
+    updatePassword() {
+      var url = '/member/' + this.user.id + '/password';
+      axios.put(url, {
+        oldPassword: this.oldPassword,
+        newPassword: this.newPassword,
+        newPasswordConfirm: this.newPasswordConfirm,
+        })
       .then(  (response) => {
         // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
