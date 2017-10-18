@@ -208,7 +208,8 @@
                 <div class="form-group">
                     <label for="email" class="col-md-4 col-sm-4 control-label">New Email</label>
                     <div class="col-md-7 col-sm-7">
-                        <input id="email" v-model="newEmail" type="email" class="editInfo" name="username" maxlength="255">
+                        <input v-validate="'email'" id="email" v-model="newEmail" type="email" class="editInfo" name="email" maxlength="255">
+                        <span v-show="errors.has('email')" class="alert alert-danger">{{ errors.first('email') }}</span>
                     </div>
                 </div>
                 <br>
@@ -227,19 +228,20 @@
                       <input id="oldpassword" v-model="oldPassword" name="oldpassword" type="password" class="editInfo" maxlength="255">
                     </div>
                 </div>
-                <!-- <div class="form-group"> -->
+                <div class="form-group">
                     <label for="newpassword" class="col-md-4 col-sm-4 control-label">New Password</label>
                     <div class="col-md-7 col-sm-7">
                       <vue-password id="newpassword" v-model="newPassword" name="newpassword"
-                        placeholder="enter 8 characters or more"
-                        classes="editInfo input"
+                        placeholder=""
+                        classes="bgInherit"
                         :user-inputs="[user.email]"></vue-password>
                     </div>
-                <!-- </div> -->
+                </div>
                 <div class="form-group">
                     <label for="newpasswordconfirm" class="col-md-4 col-sm-4 control-label">Confirm Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <input id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
+                      <input v-validate="'confirmed:newpassword'" id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
+                      <span v-show="errors.has('newpasswordconfirm')" class="alert alert-danger">{{ errors.first('newpasswordconfirm') }}</span>
                     </div>
                 </div>
                 <br>
@@ -264,7 +266,22 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-import VuePassword from 'vue-password'
+import VuePassword from 'vue-password';
+import VeeValidate from 'vee-validate';
+import { Validator } from 'vee-validate';
+
+Vue.use(VeeValidate);
+const dictionary = {
+  en: {
+    messages: {
+      confirmed: 'Confirm Password must match New Password'
+    }
+  }
+};
+Validator.updateDictionary(dictionary);
+const validator = new Validator({ newpasswordconfirm: 'confirmed' });
+
+validator.setLocale('en');
 
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -489,6 +506,12 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.alert {
+  padding: 0px;
+}
+.bgInherit {
+  background-color: inherit !important;
+}
 .orgcheck {
   margin-left: 1px;
   margin-right: 5px;
