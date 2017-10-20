@@ -192,9 +192,9 @@
         <div class="tab-pane fade in" id="tab4">
           <div class="form-horizontal">
             <div class="row">
-              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your ...... was updated.</div>
+              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your {{ credential }} was updated.</div>
               <div class="alert alert-danger" v-if="updateFailed" transition="expand">
-                  Sorry, unable to update your ..... at this time.
+                  <span>Sorry, {{ credentialMessage }}.</span>
               </div>
             </div>
             <div class="row">
@@ -304,6 +304,8 @@ export default {
   },
   data () {
     return {
+      credential: '',
+      credentialMessage: '',
       newEmail: '',
       oldPassword: '',
       newPassword: '',
@@ -420,18 +422,27 @@ export default {
       });
     },
     updateEmail() {
+      this.credential = 'Email';
       var url = '/member/' + this.user.id + '/email';
       axios.put(url, {newEmail: this.newEmail})
       .then(  (response) => {
         // console.log(response)
+        this.user.email = this.newEmail;
+        this.newEmail = '';
         this.updateStatus = STATUS_SUCCESS;
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
         }, MESSAGE_DURATION);
       }).catch((error) => {
-        // console.log(error)
+        // console.log(error.response)
+        if (error.response.data == 'unavailable') {
+          this.credentialMessage = 'email already in use.  Try another email';
+        } else {
+          this.credentialMessage = 'unable to change your email. Try later';
+        }
         this.updateStatus = STATUS_FAILED;
+
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
@@ -439,6 +450,7 @@ export default {
       });
     },
     updatePassword() {
+      this.credential = 'Password';
       var url = '/member/' + this.user.id + '/password';
       axios.put(url, {
         oldPassword: this.oldPassword,

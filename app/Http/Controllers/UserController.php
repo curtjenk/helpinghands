@@ -299,6 +299,23 @@ class UserController extends Controller
         ]);
     }
 
+    public function update_email(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        // $this->authorize('update', $user);
+        if ($user->id != $self->id) {
+            App::abort(400, 'Not you. Cant update');
+        }
+        $check = App\User::where('email', $request->input('newEmail'))->first();
+        if (isset($check)) {
+            return response('unavailable',400);
+        }
+
+        $user->email = $request->input('newEmail');
+        $user->save();
+        return;
+    }
     /**
      * Update the specified resource in storage.
      *

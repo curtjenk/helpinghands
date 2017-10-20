@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('member/eventpay/{eventid}', 'UserController@pay');
     Route::resource('member', 'UserController');
     Route::post('member/{id}/avatar', 'UserController@avatar');
+    Route::put('member/{id}/email', 'UserController@update_email');
     Route::get('member.destroy', 'UserController@destroy');
 
     Route::get('administrator', 'HomeController@administrator');
