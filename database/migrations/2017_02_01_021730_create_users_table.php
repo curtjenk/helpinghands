@@ -21,11 +21,12 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('mobilephone',64)->nullable();
             $table->string('homephone',64)->nullable();
-            $table->integer('organization_id')->nullable();
+            // $table->integer('organization_id')->nullable();
             $table->integer('birth_mm')->nullable();
             $table->integer('birth_dd')->nullable();
             $table->integer('birth_yyyy')->nullable();
             $table->string('avatar_filename')->nullable();
+            $table->boolean('admin')->nullable()->default(false);
             $table->boolean('active')->nullable()->default(true);
             $table->boolean('opt_show_email')->nullable()->default(true);
             $table->boolean('opt_receive_evite')->nullable()->default(true);
@@ -33,9 +34,6 @@ class CreateUsersTable extends Migration
             $table->boolean('opt_show_homephone')->nullable()->default(false);
             $table->rememberToken();
             $table->timestamps();
-
-            // $table->foreign('role_id')->references('id')->on('roles');
-            // $table->foreign('organization_id')->references('id')->on('organizations');
         });
 
         DB::query("ALTER TABLE users ALTER COLUMN name TYPE CITEXT");

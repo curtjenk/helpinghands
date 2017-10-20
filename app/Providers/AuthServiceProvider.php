@@ -30,21 +30,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('create-event', function ($user) {
             return $user->has_permission('Create event');
         });
-        Gate::define('list-events', function ($user) {
-            return $user->has_permission('List events');
-        });
+
 
         Gate::define('create-organization', function ($user) {
             return $user->has_permission('Create organization');
         });
-        Gate::define('list-organizations', function ($user) {
-            return $user->has_permission('List organizations');
-        });
-        Gate::define('administer', function($user) {
-            return $user->is_admin() ||
-                $user->is_orgAdmin() ||
-                $user->is_superuser();
-        });
+        
         Gate::define('create-user', function ($user) {
             return $user->has_permission('Create user');
         });

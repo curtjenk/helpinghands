@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role_id', 'organization_id',
+        'name', 'email', 'password',
         'mobilephone', 'homephone', 'opt_receive_evite', 'opt_show_mobilephone',
         'opt_show_homephone', 'opt_show_email',
     ];
@@ -60,10 +60,10 @@ class User extends Authenticatable
     /**
      * Get the Organization for this user.
      */
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
+    // public function organization()
+    // {
+    //     return $this->belongsTo('App\Organization');
+    // }
 
     /**
      * Get the Role for this user.
@@ -82,30 +82,33 @@ class User extends Authenticatable
     // }
 
     // /**
-    //  * Check if the User has a specific Permission
+    //  * Check if the User has a specific Organization Permission
     //  */
-    public function has_permission($name)
+    public function has_org_permission($orgid, $name)
     {
-        return true;
-        return DB::table('permission_role')
-                ->join('permissions', 'permission_role.permission_id', '=',
+        // return true;
+        return DB::table('organization_user')
+            ->join('roles', 'roles.id', '=', 'organization_user.role_id')
+            ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
+            ->join('permissions', 'permission_role.permission_id', '=',
                        'permissions.id')
-                ->where('permission_role.role_id', $this->role_id)
-                ->where('permissions.name', $name)
-                ->count() > 0;
+            ->where('permissions.name', $name)
+            ->where('organization_user.organization_id', $orgid)
+            ->where('organization_user.user_id', $this->id)
+            ->count() > 0;
     }
     // /**
     //  * Check if the user has any administrative right
     //  * across all organizations
     //  */
-    public function is_admin()
-    {
-        return true;
-        // return DB::table('roles')
-        //     ->where('id', $this->role_id)
-        //     ->whereIn('name', ['Admin'])
-        //     ->count() > 0;
-    }
+    // public function is_admin()
+    // {
+    //     return true;
+    //     // return DB::table('roles')
+    //     //     ->where('id', $this->role_id)
+    //     //     ->whereIn('name', ['Admin'])
+    //     //     ->count() > 0;
+    // }
     //
     // /**
     //  * System level user.

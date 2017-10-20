@@ -305,7 +305,7 @@ class UserController extends Controller
         $self = Auth::user();
         // $this->authorize('update', $user);
         if ($user->id != $self->id) {
-            App::abort(400, 'Not you. Cant update');
+            App::abort(401, 'Not you. Cant update');
         }
         $check = App\User::where('email', $request->input('newEmail'))->first();
         if (isset($check)) {
