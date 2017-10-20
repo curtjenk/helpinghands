@@ -316,11 +316,35 @@ class UserController extends Controller
         $user->save();
         return;
     }
+
+    public function update_password(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        // $this->authorize('update', $user);
+        if ($user->id != $self->id) {
+            App::abort(401, 'Not you. Cant update');
+        }
+        if(Hash::check($request->input('oldPassword'), $user->password))
+        {
+            $new = $request->input('newPassword');
+            $newConf = $request->input('newPasswordConfirm');
+            if ($new == $newConf) {
+                $user->password = Hash::make($new);
+                $user->save;
+                return 'ok';
+            }
+        }
+
+        return response('verify',400);
+
+    }
+
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $id 
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $user = DB::table('users')->insertGetId([
             'name' => 'Legacy Builder',
             'email' => 'cj@cj.net',
-            'password' => bcrypt('abc123'),
+            'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$org1,

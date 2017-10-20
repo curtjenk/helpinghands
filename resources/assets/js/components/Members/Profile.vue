@@ -231,10 +231,9 @@
                 <div class="form-group">
                     <label for="newpassword" class="col-md-4 col-sm-4 control-label">New Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <vue-password id="newpassword" v-model="newPassword" name="newpassword"
-                        placeholder=""
-                        classes="bgInherit"
-                        :user-inputs="[user.email]"></vue-password>
+                      <password id="newpassword" v-model="newPassword" name="newpassword"
+                        defaultClass="bgInherit"
+                        ></password>
                     </div>
                 </div>
                 <div class="form-group">
@@ -266,7 +265,7 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-import VuePassword from 'vue-password';
+import Password from 'vue-password-strength-meter';
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 
@@ -280,14 +279,13 @@ const dictionary = {
 };
 Validator.updateDictionary(dictionary);
 const validator = new Validator({ newpasswordconfirm: 'confirmed' });
-
 validator.setLocale('en');
 
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask, VuePassword
+    TheMask, Password
   },
   props: {
     user0: {
