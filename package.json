@@ -11,6 +11,7 @@
     "webpack": "node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
+    "axios": "^0.16.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
     "laravel-mix": "^0.8.3",
@@ -18,7 +19,7 @@
   },
   "dependencies": {
     "accounting": "^0.4.1",
-    "axios": "^0.16.2",
+
     "babel-preset-env": "^1.5.2",
     "bootstrap-sass": "^3.3.7",
     "chart.js": "^2.6.0",
@@ -29,14 +30,13 @@
     "jquery-ui-bundle": "^1.11.4",
     "moment": "^2.17.1",
     "vee-validate": "^2.0.0-rc.19",
-    "vue": "^2.4.4",
+    "vue": "2.4.4",
     "vue-chartjs": "^2.6.5",
     "vue-events": "^3.0.1",
     "vue-js-toggle-button": "^1.2.0",
-    "vue-password-strength-meter": "^1.1.0",
+    "vue-password": "^1.0.1",
     "vue-switches": "^2.0.1",
     "vue-the-mask": "^0.11.0-alpha.2",
-    "vuetable-2": "^1.6.0",
-    "zxcvbn": "^4.4.2"
+    "vuetable-2": "^1.6.0"
   }
 }

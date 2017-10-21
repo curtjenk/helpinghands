@@ -16,8 +16,9 @@
     </section>
     <div class="container-fluid">
         <memberslist
-         :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"  >
-        </memberslist>
+         {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
+         :is-admin="true"
+         ></memberslist>
     </div>
 </main>
 

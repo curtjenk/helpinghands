@@ -231,9 +231,10 @@
                 <div class="form-group">
                     <label for="newpassword" class="col-md-4 col-sm-4 control-label">New Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <password id="newpassword" v-model="newPassword" name="newpassword"
-                        defaultClass="bgInherit"
-                        ></password>
+                      <vue-password id="newpassword" v-model="newPassword" name="newpassword"
+                        classes="bgInherit"
+                        :user-inputs="[user.email]"
+                        ></vue-password>
                     </div>
                 </div>
                 <div class="form-group">
@@ -265,7 +266,7 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-import Password from 'vue-password-strength-meter';
+import VuePassword from 'vue-password';
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 
@@ -285,7 +286,7 @@ const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask, Password
+    TheMask, VuePassword
   },
   props: {
     user0: {
@@ -382,9 +383,9 @@ export default {
     }
   },
   watch: {
-    newPasswordConfirm () {
-      console.log(this.newPasswordConfirm);
-    }
+    // newPasswordConfirm () {
+    //   console.log(this.newPasswordConfirm);
+    // }
   },
   methods: {
     uncheckTeams (org) {
@@ -456,14 +457,19 @@ export default {
         newPasswordConfirm: this.newPasswordConfirm,
         })
       .then(  (response) => {
-        // console.log(response)
+        console.log(response)
         this.updateStatus = STATUS_SUCCESS;
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
         }, MESSAGE_DURATION);
       }).catch((error) => {
-        // console.log(error)
+        console.log(error.response)
+        if (error.response.data == 'verify') {
+          this.credentialMessage = 'please verify your input';
+        } else {
+          this.credentialMessage = 'unable to change your password. Try later';
+        }
         this.updateStatus = STATUS_FAILED;
         var self = this;
         setTimeout(function(){

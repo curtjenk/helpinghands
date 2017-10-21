@@ -106,8 +106,8 @@ export default {
         // },
         {
           title: 'Active',
-          name: 'opt_receive_evite',
-          sortField: 'opt_receive_evite',
+          name: 'active',
+          sortField: 'active',
           dataClass: 'text-primary',
           callback: 'setActiveIcon'
         },
@@ -250,18 +250,19 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
-        response.data.data.forEach(function(el){
-            //console.log(el.opt_show_email)
-            if (el.opt_show_email==false) {
-                el.email=''
-            }
-            if (el.opt_show_homephone==false){
-                el.homephone=''
-            }
-            if (el.opt_show_mobilephone==false){
-                el.mobilephone=''
-            }
-        })
+
+        // response.data.data.forEach(function(el){
+        //     //console.log(el.opt_show_email)
+        //     if (el.opt_show_email==false) {
+        //         el.email=''
+        //     }
+        //     if (el.opt_show_homephone==false){
+        //         el.homephone=''
+        //     }
+        //     if (el.opt_show_mobilephone==false){
+        //         el.mobilephone=''
+        //     }
+        // })
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)

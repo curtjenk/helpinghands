@@ -9,6 +9,7 @@ use Auth;
 use DB;
 use Log;
 use Storage;
+use Hash;
 use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 
 class UserController extends Controller
@@ -94,26 +95,24 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('list-users');
+        // $this->authorize('list-users');
         $user = Auth::user();
-        if (!$request->ajax()) {
+        if (!$request->ajax() && !$request->wantsJson()) {
+            Log::debug('not ajax');
             return view('user.memberslist', []);
         }
 
         $inputs = new Inputs($request,
             [ ]
         );
-        //Log::debug($inputs->all());
-        $organization_id = $this->getOrg($request, $user);
+        Log::debug($inputs->all());
+        // $organization_id = $this->getOrg($request, $user);
         // Log::debug('orgid='.$organization_id);
         return App\User::       //with('organization')
             select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
-            ->where('role_id', '!=', 1)
-            ->where('organization_id', $organization_id)
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
+            // ->where('role_id', '!=', 1)
+            // ->where('organization_id', $organization_id)
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
                     $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
@@ -127,29 +126,6 @@ class UserController extends Controller
             ->paginate(10);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function deleteMeOLDindex()
-    // {
-    //     $this->authorize('list-users');
-    //     $user = Auth::user();
-    //
-    //     $query=App\User::with('organization')
-    //         ->where('role_id', '!=', 1)
-    //         ->where('role_id', '>=', $user->role_id)
-    //         //->where('users.id', '!=', $user->id)
-    //         ->when($user->is_orgLevel(), function($q) use($user) {
-    //             return $q->where('organization_id', $user->organization_id);
-    //         })
-    //         ->get();
-    //
-    //     return view('user.index', [
-    //             'users'=>$query,
-    //         ]);
-    // }
     /**
      * Show the form for creating a new resource.
      *
@@ -332,7 +308,7 @@ class UserController extends Controller
             if ($new == $newConf) {
                 $user->password = Hash::make($new);
                 $user->save;
-                return 'ok';
+                return response('ok',200);
             }
         }
 
@@ -344,7 +320,7 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id 
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
