@@ -39,12 +39,6 @@ class EviteController extends Controller
                  'user'=>$user]);
         }
 
-        // if ($resp->helping != null ||
-        //     $resp->helping==0 || $resp->helping==false ||
-        //     $resp->helping==1 || $resp->helping==true){
-        //     Log::debug("Already logged response as (".$resp->helping.") ".$user->name);
-        //     return;
-        // }
 
         $resp->helping = true;
         $resp->save();

@@ -60,22 +60,16 @@ class EventController extends Controller
      */
     public function calendar(Request $request)
     {
-        $this->authorize('list-events');
+        // $this->authorize('list-events');
         $user = Auth::user();
         $organization_id = $this->getOrg($request, $user);
         $query=App\Event::select('id', 'subject', 'date_start', 'date_end')
-            ->where('organization_id', $organization_id)
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
+            // ->where('organization_id', $organization_id)
             ->orderBy('events.date_start', 'asc')
             ->get();
 
         $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY mm Mon') as interval, count(*) as num"))
-            ->where('organization_id', $organization_id)
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
+            // ->where('organization_id', $organization_id)
             ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->subMonths(3)->format('Ym')."'")
             ->groupBy('interval')
             ->orderBy('interval', 'asc')
@@ -102,11 +96,7 @@ class EventController extends Controller
         $message = $request->input('message');
         // dump($signups);
         foreach ($signups as $u) {
-            // dump($u);
-            // if ($u->id != 3){
-            // Log::debug($u->email);
             Mail::to($u)->queue(new EventNotification($event, $u, $message));
-            // }
         }
         //dump($request->input('message'));
         return redirect('/event');
@@ -118,9 +108,9 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('list-events');
+        // $this->authorize('list-events');
         $user = Auth::user();
-        if (!$request->ajax()) {
+        if (!$request->ajax() && !$request->wantsJson()) {
             return view('event.index', []);
         }
 
@@ -141,10 +131,7 @@ class EventController extends Controller
             ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
             ->join('statuses', 'statuses.id', '=', 'events.status_id')
             ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
-            ->where('organization_id', $organization_id)
+            // ->where('organization_id', $organization_id)
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
                     $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
@@ -159,14 +146,14 @@ class EventController extends Controller
             ->groupby('event_types.id');
 
         //check that it wasn't a vue-tables-2 request
-        if ($request->input('paginate') == '0') {
-            // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
-            $query = $query->where('statuses.name', 'Open')
-                ->orderby('events.date_start', 'desc');
-            return response()->json($query->get());
-        } else {
-            return $query->paginate(10);
-        }
+        // if ($request->input('paginate') == '0') {
+        //     // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
+        //     $query = $query->where('statuses.name', 'Open')
+        //         ->orderby('events.date_start', 'desc');
+        //     return response()->json($query->get());
+        // } else {
+            return $query->paginate($inputs->limit);
+        // }
     }
 
     /**
@@ -180,9 +167,9 @@ class EventController extends Controller
         $user = Auth::user();
 
         $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
+            // ->when($user->is_orgLevel(), function($q) use($user) {
+            //     return $q->where('organizations.id', $user->organization_id);
+            // })
             ->get();
 
         return view('event.create_edit',
@@ -244,13 +231,13 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $this->authorize('create-event');
+        // $this->authorize('create-event');
         $this->validate($request, [
             'subject' => 'required|max:255',
             'description' => 'string',
             'date_start' => 'date',
             'date_end' => 'date',
-            'organization_id' => 'required|exists:organizations,id',
+            // 'organization_id' => 'required|exists:organizations,id',
             'event_type_id' => 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id',
             'signup_limit'=> 'required|numeric',
@@ -265,7 +252,7 @@ class EventController extends Controller
             'user_id'=>$user->id,
             'status_id'=>$request->input('status_id'),
             'event_type_id'=>$request->input('event_type_id'),
-            'organization_id'=>$request->input('organization_id'),
+            'organization_id'=>1,
             'signup_limit'=>$request->input('signup_limit'),
             'cost'=>$request->input('cost'),
         ]);

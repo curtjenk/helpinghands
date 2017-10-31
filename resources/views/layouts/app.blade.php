@@ -56,8 +56,6 @@
                         <li>
                             <a href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
                         </li>
-                    @endif
-                    @can ('list-events')
                         <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a></li>
                         <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
                         {{-- <li class="dropdown">
@@ -72,7 +70,8 @@
                             @endcan
                             </ul>
                         </li> --}}
-                    @endcan
+                    {{-- @endcan --}}
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

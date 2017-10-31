@@ -11,11 +11,11 @@
                 Event
             </div>
             <div class="pull-left">
-            @if(isset($event))
+            {{-- @if(isset($event))
                 @include('layouts.org_selector', ['specific'=>$event->organization->id])
             @else
                 @include('layouts.org_selector')
-            @endif
+            @endif --}}
             </div>
         </div>
     </section>
@@ -37,14 +37,14 @@
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">
                 <label for="organization_id" class="col-md-3 control-label">Organization</label>
                 <div class="col-md-9">
-                    <div class="form-control-static">{{$org->name}}</div>
-                    <input type="hidden" name="organization_id" value="{{$org->id}}" />
+                    {{-- <div class="form-control-static">{{$org->name}}</div>
+                    <input type="hidden" name="organization_id" value="{{$org->id}}" /> --}}
                 </div>
             </div>
             <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                 <label for="subject" class="col-md-3 control-label">Subject</label>
                 <div class="col-md-9">
-                    <input required id="subject" type="text" class="editInfo" name="subject" autofocus maxlength="255" value="{{ isset($event) ? $event->subject : old('subject') }}">
+                    <input required id="subject" type="text" class="" name="subject" autofocus maxlength="255" value="{{ isset($event) ? $event->subject : old('subject') }}">
                     @if ($errors->has('subject'))
                         <span class="help-block">
                             <strong>{{ $errors->first('subject') }}</strong>

@@ -62,6 +62,9 @@ class Inputs
         }
         $this->limit = $request->input(
                 'limit', config('app.default_table_rows_limit'));
+        if ($request->filled('per_page')) {
+            $this->limit = $request->input('per_page');
+        }
         $this->skip = $request->input('skip', 0);
         if (!empty($request->input('export'))) {
             switch ($request->input('export'))

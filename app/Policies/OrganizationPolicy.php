@@ -23,6 +23,7 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
+        return true;
         // return $user->has_permission('Show organization')&&
         // ($user->is_admin() || $user->organization_id == $organization->id);
     }
@@ -40,8 +41,9 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        return $user->has_permission('Update organization')&&
-        ($user->is_admin() || $user->organization_id == $organization->id);
+        return true;
+        // return $user->has_permission('Update organization')&&
+        // ($user->is_admin() || $user->organization_id == $organization->id);
     }
 
     /**
@@ -53,11 +55,13 @@ class OrganizationPolicy
      */
      public function delete(User $user, Organization $organization)
      {
-         return $user->has_permission('Delete organization')&&
-         ($user->is_admin() || $user->organization_id == $organization->id);
+         return true;
+        //  return $user->has_permission('Delete organization')&&
+        //  ($user->is_admin() || $user->organization_id == $organization->id);
      }
      public function destroy(User $user, Organization $organization)
      {
-         return $this->delete($user, $organization);
+         return true;
+        //  return $this->delete($user, $organization);
      }
 }

@@ -15,7 +15,7 @@
     </section>
     <div class="container-fluid">
         <eventslist
-          :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"  >
+          :is-admin="{{  1 }}"  >
          </eventslist>
     </div>
 </main>
