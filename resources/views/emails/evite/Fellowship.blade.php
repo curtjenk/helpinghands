@@ -40,9 +40,11 @@
             </div>
             <br/>
             <div>
-                <b>{{ $event->description }}</b>
+                <pre>
+                    <b>{{ $event->description }}</b>
+                </pre>
             </div>
-        </p>        
+        </p>
     </div>
     @include('layouts.email_footer')
 </main>

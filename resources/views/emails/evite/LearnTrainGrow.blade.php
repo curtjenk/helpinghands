@@ -40,7 +40,9 @@
                 <br>
             </div>
             <div>
-                <b>{{ $event->description }}</b>
+                <pre>
+                    <b>{{ $event->description }}</b>
+                </pre>
             </div>
         </p>
     </div>
