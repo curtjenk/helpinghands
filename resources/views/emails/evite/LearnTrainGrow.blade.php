@@ -40,15 +40,7 @@
                 <br>
             </div>
             <div>
-<<<<<<< HEAD
-                <b><pre>
-                    {{ $event->description }}
-                </pre></b>
-=======
-                <pre>
-                    <b>{{ $event->description }}</b>
-                </pre>
->>>>>>> master
+                <b><pre>{{ $event->description }}</pre></b>
             </div>
         </p>
     </div>
