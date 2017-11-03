@@ -13,7 +13,7 @@
         </p>
         <br/>
         <p>
-            &nbsp;&nbsp;{{ $content }}
+            <b><pre>{{ $content }}</pre></b>
         </p>
         <hr/>
         @include('layouts.email_footer')
