@@ -16,6 +16,8 @@ class Organization extends Model
         'state', 'zipcode',
     ];
 
+    protected $hidden = array('pivot');
+
     public function events()
     {
         return $this->hasMany('App\Event');

@@ -251,8 +251,11 @@ class UserController extends Controller
     public function show($id)
     {
         //dump("here");
-        $user = App\User::findOrFail($id);
-        $this->authorize('show',$user);
+        $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
+        if (!isset($user)) {
+            abort(400);
+        }
+        $this->authorize('show', $user);
         return view('user.profile', [
             'user'=>$user,
         ]);
@@ -267,8 +270,8 @@ class UserController extends Controller
     {
         $self = Auth::user();
         $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
-        //$this->authorize('update', $user);
-        // dump($user);
+        $this->authorize('update', $user);
+        // Log::debug(print_r($user,true));
         return view('user.profile', [
             'user'=>$user,
             'orgteams'=> App\Organization::with('teams')->get()
@@ -326,16 +329,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // Log::debug($request->all());
-
         $user = App\User::findOrFail($id);
-        $self = Auth::user();
-        // $this->authorize('update', $user);
+
+        $this->authorize('update', $user);
         $updUser = $request->input('user');
         $updOrg  = $request->input('org');
-
-        if ($user->id != $updUser['id']) {
-            App::abort(400, 'Not you. Cant update');
-        }
 
         $user->email = $updUser['email'];
         $user->name = $updUser['name'];

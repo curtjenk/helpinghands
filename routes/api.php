@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,4 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'api'], function () {
     Route::get('evite/s/{tid}/{uid}/{token}', 'EviteController@response_yes');
     Route::get('evite/o/{tid}/{uid}/{token}', 'EviteController@response_no');
+});
+
+Route::middleware(['api','auth.basic'])->group(function () {
+    Route::get('user', function (Request $request, $id) {
+        $self = Auth::user();
+        $user = App\User::findOrFail($id);
+        $this->authorize('show', $user);
+
+        return response()->json($user->memberships()->get());
+    });
 });

@@ -38,6 +38,7 @@ html, body {
 }
 .boxcol {
     border: 1px solid;
+    width: calc(100% - 84px);
 }
 .position-ref {
     position: relative;

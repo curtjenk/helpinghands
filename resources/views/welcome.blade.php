@@ -2,14 +2,15 @@
 
 @section('content')
     <div class="content" style="margin-top: 70px">
-        <div class="row title flex-center">
-          <div class="boxcol col-offset-4 col-md-4">Connect</div>
-          <div class="boxcol col-md-4">Grow</div>
-        </div>
-        <div class="row title flex-center">
-          <div class="boxcol col-offset-4 col-md-4 ">Serve</div>
-          <div class="boxcol col-md-4">Go</div>
-        </div>
+        {{-- <div class="text-center">
+            <div class="col-offset-4"></div>
+            <div class="boxcol col-md-4">Connect</div>
+            <div class="boxcol col-md-4">Grow</div>
+
+            <div class="col-offset-4"></div>
+            <div class="boxcol col-md-4 ">Serve</div>
+            <div class="boxcol col-md-4">Go</div>
+        </div> --}}
         <br><br />
         <div class="row">
             <div class="subtitle m-b-sm">

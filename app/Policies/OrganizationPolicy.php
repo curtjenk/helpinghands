@@ -10,10 +10,6 @@ class OrganizationPolicy
 {
     use HandlesAuthorization;
 
-    // private function getPermissions()
-    // {
-    //
-    // }
     /**
      * Determine whether the user can view the organization.
      *
@@ -21,17 +17,24 @@ class OrganizationPolicy
      * @param  \App\Organization  $organization
      * @return mixed
      */
-    public function view(User $user, Organization $organization)
+    public function create(User $user)
     {
-        return true;
-        // return $user->has_permission('Show organization')&&
-        // ($user->is_admin() || $user->organization_id == $organization->id);
+        return $self->superuser();
     }
+    /**
+     * Determine whether the user can view the organization.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Organization  $organization
+     * @return mixed
+     */
     public function show(User $user, Organization $organization)
     {
-        return $this->view($user, $organization);
+        return $self->superuser() ||
+            $organization->users()
+                ->where('organization_user.user_id',$user->id)
+                ->count() > 0;
     }
-
     /**
      * Determine whether the user can update the organization.
      *
@@ -41,9 +44,8 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        return true;
-        // return $user->has_permission('Update organization')&&
-        // ($user->is_admin() || $user->organization_id == $organization->id);
+        return $self->superuser() ||
+        $self->has_org_role($organization->id, 'Admin');
     }
 
     /**
@@ -53,15 +55,8 @@ class OrganizationPolicy
      * @param  \App\Organization  $organization
      * @return mixed
      */
-     public function delete(User $user, Organization $organization)
-     {
-         return true;
-        //  return $user->has_permission('Delete organization')&&
-        //  ($user->is_admin() || $user->organization_id == $organization->id);
-     }
      public function destroy(User $user, Organization $organization)
      {
-         return true;
-        //  return $this->delete($user, $organization);
+        return $self->superuser();
      }
 }

@@ -27,11 +27,7 @@ class UserPolicy
      */
     public function destroy(User $self, User $user)
     {
-        return true;
-        if ($self->id == $user->id) { return false; }
-        if (!$self->has_permission('Delete user')) { return false; }
-        if (!$self->is_admin()) {return false;}
-        return true;
+        return $self->superuser();
     }
 
     /**
@@ -42,11 +38,6 @@ class UserPolicy
     public function show(User $self, User $user)
     {
         return true;
-        return $self->has_permission('Show user')&&
-        ($self->is_admin() ||
-         $self->is_orgAdmin() ||
-         $self->is_superuser() ||
-         $self->organization_id == $user->organization_id);
     }
 
     /**
@@ -56,12 +47,16 @@ class UserPolicy
      */
     public function update(User $self, User $user)
     {
-        return true;
-        $rtn = $self->has_permission('Update user') &&
-        ($self->id == $user->id ||
-        $self->is_orgAdmin() ||
-        $self->is_admin());
-        // dump($rtn);
-        return $rtn;
+        return $self->id == $user->id;
+    }
+
+    /**
+     * Return true if user can create a user
+     *
+     * @return boolean
+     */
+    public function create(User $self)
+    {
+        return $self->superuser();
     }
 }

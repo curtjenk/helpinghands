@@ -15,6 +15,8 @@ class AddRoles extends Migration
     {
 
         DB::table('roles')->insert([
+            ['name'=>'Site'],
+    //The following apply to Organizations and Teams
             ['name'=>'Admin'],
             ['name'=>'Lead'],
             ['name'=>'Member'],

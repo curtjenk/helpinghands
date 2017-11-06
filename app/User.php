@@ -31,9 +31,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
+    public function memberships()
+    {
+        $user = App\User::where('id',$this->id)->with('organizations.teams');
+        return $user;
+    }
     public function organizations()
     {
         return $this->belongsToMany('App\Organization');
@@ -57,44 +62,46 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Response');
     }
-    /**
-     * Get the Organization for this user.
-     */
-    // public function organization()
-    // {
-    //     return $this->belongsTo('App\Organization');
-    // }
 
-    /**
-     * Get the Role for this user.
-     */
-    // public function role()
-    // {
-    //     return $this->belongsTo('App\Role');
-    // }
-
-    // /**
-    //  * Get the Roles for this user.
-    //  */
-    // public function roles()
-    // {
-    //     return $this->belongsToMany('App\Role');
-    // }
-
+    public function superuser()
+    {
+        return DB::table('organization_user')
+            ->join('roles', 'roles.id', '=', 'organization_user.role_id')
+            ->where('organization_user.user_id', $this->id)
+            ->where('roles.name', 'Site')
+            ->count() > 0;
+    }
+    public function visitor()
+    {
+        return DB::table('organization_user')
+            ->where('organization_user.user_id', $this->id)
+            ->count() == 0;
+    }
     // /**
     //  * Check if the User has a specific Organization Permission
     //  */
-    public function has_org_permission($orgid, $name)
+    public function has_org_role($orgid, $name)
     {
         // return true;
         return DB::table('organization_user')
             ->join('roles', 'roles.id', '=', 'organization_user.role_id')
-            ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
-            ->join('permissions', 'permission_role.permission_id', '=',
-                       'permissions.id')
-            ->where('permissions.name', $name)
+            ->where('roles.name', $name)
             ->where('organization_user.organization_id', $orgid)
             ->where('organization_user.user_id', $this->id)
+            ->count() > 0;
+    }
+    public function has_team_role($orgid, $teamid, $name)
+    {
+        // return true;
+        return DB::table('organization_user')
+            ->join('teams', 'teams.organization_id', '=', 'organization_user.organization_id')
+            ->join('team_user', 'team_user.team_id', '=', 'teams.id')
+            ->join('roles', 'roles.id', '=', 'team_user.role_id')
+            ->where('roles.name', $name)
+            ->where('organization_user.organization_id', $orgid)
+            ->where('organization_user.user_id', $this->id)
+            ->where('team_user.user_id', $this->id)
+            ->where('team.id', $teamid)
             ->count() > 0;
     }
     // /**
