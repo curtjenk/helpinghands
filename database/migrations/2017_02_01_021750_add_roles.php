@@ -15,11 +15,11 @@ class AddRoles extends Migration
     {
 
         DB::table('roles')->insert([
-            ['name'=>'Site'],
+            ['name'=>'Site', 'level'=>0],
     //The following apply to Organizations and Teams
-            ['name'=>'Admin'],
-            ['name'=>'Lead'],
-            ['name'=>'Member'],
+            ['name'=>'Admin', 'level'=>1],
+            ['name'=>'Lead', 'level'=>2],
+            ['name'=>'Member', 'level'=>3],
         ]);
     }
 

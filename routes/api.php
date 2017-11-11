@@ -23,10 +23,9 @@ Route::group(['middleware' => 'api'], function () {
 });
 
 Route::middleware(['api','auth.basic'])->group(function () {
-    Route::get('user', function (Request $request, $id) {
+    Route::get('user/{i}', function (Request $request, $id) {
         $self = Auth::user();
         $user = App\User::findOrFail($id);
-        $this->authorize('show', $user);
 
         return response()->json($user->memberships()->get());
     });

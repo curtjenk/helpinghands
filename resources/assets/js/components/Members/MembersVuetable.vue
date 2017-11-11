@@ -11,7 +11,9 @@
         ></vuetable-pagination>
     <!-- </div> -->
     <!-- <filter-bar></filter-bar> -->
-    <filter-bar filterPlaceholder="name, nickname, email"></filter-bar>
+    <filter-bar filterPlaceholder="name, nickname, email"
+        :userid="userid"
+    ></filter-bar>
     <vuetable ref="vuetable"
       api-url="/member"
       :fields="fields"
@@ -86,9 +88,14 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  props: [
-      'isAdmin'
-  ],
+  props: {
+    userid: {
+      type: Number,
+      required: true
+    },
+    isAdmin: {
+    }
+  },
   data () {
     return {
       events: [],
@@ -268,7 +275,7 @@ export default {
     //   console.log('cellClicked: ', field.name)
 
       if ($('#'+data.id).length == 0) {
-        axios.get('/member/' + data.id )
+        axios.get('/member/' + data.id + '/yes' )
         .then(  (response) => {
           data.events = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
@@ -282,10 +289,12 @@ export default {
     },
   },
   events: {
-      'filter-set' (filterText) {
+      'filter-set' (filterText, orgid, teamid) {
        // console.log("<",filterText,">")
         this.moreParams = {
-          filter: filterText
+          filter: filterText,
+          orgid: orgid,
+          teamid: teamid
         }
         Vue.nextTick( () => this.$refs.vuetable.refresh() )
       },

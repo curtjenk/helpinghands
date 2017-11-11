@@ -88,6 +88,14 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    public function membership(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $this->authorize("show", $user);
+        // if ($request->wantsJson() && $request->ajax()) {
+            return response()->json($user->memberships());
+        // }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -98,32 +106,31 @@ class UserController extends Controller
         // $this->authorize('list-users');
         $user = Auth::user();
         if (!$request->ajax() && !$request->wantsJson()) {
-            Log::debug('not ajax');
+            // Log::debug('not ajax');
             return view('user.memberslist', []);
         }
 
         $inputs = new Inputs($request,
             [ ]
         );
-        Log::debug($inputs->all());
-        // $organization_id = $this->getOrg($request, $user);
-        // Log::debug('orgid='.$organization_id);
-        return App\User::       //with('organization')
-            select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
+        // Log::debug($user->peers()->get());
+        $query = $user->peers()
+            ->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
-            // ->where('role_id', '!=', 1)
-            // ->where('organization_id', $organization_id)
-            ->when($inputs->filter, function($q) use($inputs){
-                return $q->where(function($q2) use($inputs) {
-                    $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
-                    ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
-                });
-            })
+            // ->when($inputs->filter, function($q) use($inputs){
+            //     return $q->where(function($q2) use($inputs) {
+            //         $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
+            //         ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
+            //     });
+            // })
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
-            ->groupby('users.id')
-            ->paginate(10);
+            ->groupby('users.id');
+        Log::debug($query->get());
+        Log::debug($query->toSql());
+        Log::debug($query->getBindings());
+        return $query->paginate(10);
     }
 
     /**

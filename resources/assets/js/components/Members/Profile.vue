@@ -270,7 +270,8 @@ import VuePassword from 'vue-password';
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 
-Vue.use(VeeValidate);
+// Vue.use(VeeValidate);
+Vue.use(VeeValidate, {fieldsBagName: 'formFields'})
 const dictionary = {
   en: {
     messages: {

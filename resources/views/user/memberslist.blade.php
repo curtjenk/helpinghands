@@ -5,19 +5,13 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header">Members</div>
-            <div class="pull-left">
-            {{-- @if(isset($event))
-                @include('layouts.org_selector', ['specific'=>$event->organization->id])
-            @else --}}
-                @include('layouts.org_selector')
-            {{-- @endif --}}
-            </div>
         </div>
     </section>
     <div class="container-fluid">
         <memberslist
          {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
          :is-admin="true"
+         :userid="{{ Auth::user()->id }}"
          ></memberslist>
     </div>
 </main>

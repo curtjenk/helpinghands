@@ -36,8 +36,10 @@ class User extends Authenticatable
 
     public function memberships()
     {
-        $user = App\User::where('id',$this->id)->with('organizations.teams');
-        return $user;
+        return App\User::with('organizations.teams')
+            ->where('id',$this->id)
+            ->first()
+            ->organizations;
     }
     public function organizations()
     {
@@ -76,6 +78,20 @@ class User extends Authenticatable
         return DB::table('organization_user')
             ->where('organization_user.user_id', $this->id)
             ->count() == 0;
+    }
+    /**
+     * Get list of users who are part of the same organization(s) as me
+     * @return [type] [description]
+     */
+    public function peers()
+    {
+        return DB::table('users as u1')->select('users.*')
+            ->join('organization_user as ou1', 'ou1.user_id','=','u1.id')
+            ->join('organization_user as ou2','ou2.organization_id', '=','ou1.organization_id')
+            ->join('users', 'users.id', '=', 'ou2.user_id')
+            ->where('u1.id', $this->id)
+            ->distinct();
+
     }
     // /**
     //  * Check if the User has a specific Organization Permission
