@@ -306,11 +306,12 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
-        $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
-            ->get();
+        // $orgs = App\Organization::select('organizations.*')
+        //     ->when($user->is_orgLevel(), function($q) use($user) {
+        //         return $q->where('organizations.id', $user->organization_id);
+        //     })
+            // ->get();
+        $orgs = [];
         return view('event.create_edit', [
             'event'=>$event,
             'orgs'=>$orgs,
@@ -328,7 +329,7 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Log::debug(print_r(Cache::all(),true));
+        Log::debug(print_r($request->all(),true));
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
@@ -337,7 +338,7 @@ class EventController extends Controller
             'description' => 'string',
             'date_start' => 'date',
             'date_end' => 'date',
-            'organization_id' => 'required|exists:organizations,id',
+            // 'organization_id' => 'required|exists:organizations,id',
             'event_type_id'=> 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id',
             'signup_limit'=> 'required|numeric',
@@ -349,7 +350,7 @@ class EventController extends Controller
         $event->date_start = $request->input('date_start');
         $event->date_end = $request->input('date_end');
         $event->updated_user_id = $user->id;
-        $event->organization_id = $request->input('organization_id');
+        $event->organization_id = 1;
         $event->status_id = $request->input('status_id');
         $event->event_type_id = $request->input('event_type_id');
         $event->signup_limit = $request->input('signup_limit');

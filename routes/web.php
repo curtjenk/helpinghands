@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('event/notify/{id}', 'EventController@notify');
     Route::resource('event', 'EventController');
 
-    Route::get('member', 'UserController@members');
+    // Route::get('member', 'UserController@members');
     Route::get('member/{id}/membership', 'UserController@membership');
     Route::get('member/{id}/yes', 'UserController@yes_responses');
     Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');

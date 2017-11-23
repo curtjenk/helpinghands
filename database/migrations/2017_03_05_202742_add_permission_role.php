@@ -16,13 +16,16 @@ class AddPermissionRole extends Migration
         //skip this stuff
         //
         return;
-        
+
         $visitor = App\Role::where('name','Visitor')->first();
         $visitor->permissions()
               ->sync(App\Permission::whereIn('name',
                             [
-                             'Show user',
-                             'Update user',
+                             'List users',
+                             'List organizations',
+                             'List teams',
+                             'Show event',
+                             'List events',
                             ])
                         ->pluck('id'));
         $site = App\Role::where('name','Site')->first();

@@ -28,10 +28,11 @@
     @endif
           {{ csrf_field() }}
           @php
-              $org = Auth::user()->organization;
-              if (Request::session()->has('orgid')) {
-                 $org = App\Organization::find(Request::session()->get('orgid'));
-              }
+              // dump($event);
+              // $org = Auth::user()->organization;
+              // if (Request::session()->has('orgid')) {
+              //    $org = App\Organization::find(Request::session()->get('orgid'));
+              // }
           @endphp
           <div class="col-md-5">
             <div class="form-group{{ $errors->has('organization_id') ? ' has-error' : '' }}">

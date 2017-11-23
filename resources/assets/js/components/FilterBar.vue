@@ -2,21 +2,19 @@
     <div class="filter-bar">
       <form class="form-inline">
         <div class="form-group">
-          <div class="pull-left">
-          <label>Search for:</label>
-          <input type="text" v-model="filterText" class="form-control"
-                  @keyup.enter="doFilter"
-                  :placeholder="filterPlaceholder">
-          </div>
-          <div class="pull-left">
-            <filter-memberships :userid="userid"
-                @orgTeamSelected="gotit"
-            ></filter-memberships>
-          </div>
-          <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
-          <button class="btn" @click.prevent="resetFilter">Reset</button>
-
+            <label>Search for:</label>
+            <input type="text" v-model="filterText" class="form-control"
+                    @keyup.enter="doFilter"
+                    :placeholder="filterPlaceholder">
         </div>
+        <div class="form-group">
+          <filter-memberships
+              :userid="userid"
+              @orgTeamSelected="gotit"
+          ></filter-memberships>
+        </div>
+        <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
+        <button class="btn" @click.prevent="resetFilter">Reset</button>
       </form>
     </div>
 </template>
@@ -45,7 +43,7 @@
     },
     methods: {
       gotit (selectedOrgId, selectedTeamId) {
-         console.log(selectedOrgId, selectedTeamId)
+         // console.log(selectedOrgId, selectedTeamId)
          this.filterOrgId = selectedOrgId;
          this.filterTeamId = selectedTeamId;
       },

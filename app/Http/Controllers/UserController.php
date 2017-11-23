@@ -106,30 +106,26 @@ class UserController extends Controller
         // $this->authorize('list-users');
         $user = Auth::user();
         if (!$request->ajax() && !$request->wantsJson()) {
-            // Log::debug('not ajax');
             return view('user.memberslist', []);
         }
 
         $inputs = new Inputs($request,
             [ ]
         );
-        // Log::debug($user->peers()->get());
+
         $query = $user->peers()
             ->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
-            // ->when($inputs->filter, function($q) use($inputs){
-            //     return $q->where(function($q2) use($inputs) {
-            //         $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
-            //         ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
-            //     });
-            // })
+            ->when($inputs->filter, function($q) use($inputs){
+                return $q->where(function($q2) use($inputs) {
+                    $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
+                    ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
+                });
+            })
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
             ->groupby('users.id');
-        Log::debug($query->get());
-        Log::debug($query->toSql());
-        Log::debug($query->getBindings());
         return $query->paginate(10);
     }
 

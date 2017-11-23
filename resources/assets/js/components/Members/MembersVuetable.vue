@@ -1,15 +1,10 @@
 <template>
   <div>
-      <!-- <div class="vuetable-pagination"> -->
-        <!-- <vuetable-pagination-info ref="paginationInfoTop"
-          info-class="pagination-info"
-        ></vuetable-pagination-info> -->
-        <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-          :css="css.pagination"
-          :icons="css.icons"
-          @vuetable-pagination:change-page="onChangePage"
-        ></vuetable-pagination>
-    <!-- </div> -->
+    <vuetable-pagination ref="paginationTop" style="padding-top:20px"
+      :css="css.pagination"
+      :icons="css.icons"
+      @vuetable-pagination:change-page="onChangePage"
+    ></vuetable-pagination>
     <!-- <filter-bar></filter-bar> -->
     <filter-bar filterPlaceholder="name, nickname, email"
         :userid="userid"
@@ -100,17 +95,6 @@ export default {
     return {
       events: [],
       fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
         {
           title: 'Active',
           name: 'active',
@@ -127,13 +111,6 @@ export default {
           name: 'email',
           sortField: 'email'
         },
-        // {
-        //   name: 'birthdate',
-        //   sortField: 'birthdate',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
         {
           name: 'nickname',
           sortField: 'nickname'
@@ -146,19 +123,6 @@ export default {
           dataClass: 'text-center',
           titleClass: 'text-center',
         },
-        // {
-        //   name: 'salary',
-        //   sortField: 'salary',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:member-custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // },
         {
           name: '__slot:actions',   // <----
           title: 'Actions',
@@ -192,6 +156,16 @@ export default {
       moreParams: {}
     }
   },
+  // mounted: function() {
+  //   axios.get('/member')
+  //   .then( response => {
+  //     console.log(response.data)
+  //     this.rows = response.data;
+  //   })
+  //   .catch( error => {
+  //     console.log(error);
+  //   });
+  // },
   methods: {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
@@ -257,19 +231,6 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
-
-        // response.data.data.forEach(function(el){
-        //     //console.log(el.opt_show_email)
-        //     if (el.opt_show_email==false) {
-        //         el.email=''
-        //     }
-        //     if (el.opt_show_homephone==false){
-        //         el.homephone=''
-        //     }
-        //     if (el.opt_show_mobilephone==false){
-        //         el.mobilephone=''
-        //     }
-        // })
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
@@ -289,20 +250,20 @@ export default {
     },
   },
   events: {
-      'filter-set' (filterText, orgid, teamid) {
-       // console.log("<",filterText,">")
-        this.moreParams = {
-          filter: filterText,
-          orgid: orgid,
-          teamid: teamid
-        }
-        Vue.nextTick( () => this.$refs.vuetable.refresh() )
-      },
-      'filter-reset' () {
-        this.moreParams = {}
-        this.collapseAllDetailRows();
-        Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    'filter-set' (filterText, orgid, teamid) {
+     // console.log("<",filterText,">")
+      this.moreParams = {
+        filter: filterText,
+        orgid: orgid,
+        teamid: teamid
       }
+      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    },
+    'filter-reset' () {
+      this.moreParams = {}
+      this.collapseAllDetailRows();
+      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    }
   }
 }
 </script>

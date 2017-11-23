@@ -14,7 +14,7 @@ class Event extends Model
      */
     protected $fillable = [
         'subject', 'description', 'evite_sent', 'date_start', 'organization_id',
-        'date_end', 'cost', 'user_id', 'status_id', 'event_type_id'
+        'date_end', 'cost', 'user_id', 'status_id', 'event_type_id','signup_limit'
     ];
     /**
      * Get the Files/Attachments for this Event.

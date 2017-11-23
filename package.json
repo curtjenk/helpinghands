@@ -38,6 +38,6 @@
     "vue-password": "^1.0.1",
     "vue-switches": "^2.0.1",
     "vue-the-mask": "^0.11.0-alpha.2",
-    "vuetable-2": "^1.6.0"
+    "vuetable-2": "^1.6.5"
   }
 }

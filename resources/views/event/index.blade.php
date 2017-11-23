@@ -5,7 +5,6 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header"> Events</div>
-            <div class="pull-left">@include('layouts.org_selector')</div>
             <div class="pull-right">
                 @can ('create-event')
                     <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
@@ -15,8 +14,9 @@
     </section>
     <div class="container-fluid">
         <eventslist
-          :is-admin="{{  1 }}"  >
-         </eventslist>
+          :is-admin="{{  1 }}"
+          :userid="{{ Auth::user()->id }}"
+        ></eventslist>
     </div>
 </main>
 <div class="modal fade" id="eventPay" tabindex="-1" user="dialog" aria-labelledby="Log Event Payment">

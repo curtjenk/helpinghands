@@ -93,9 +93,14 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  props: [
-      'isAdmin'
-  ],
+  props: {
+    userid: {
+      type: Number,
+      required: true
+    },
+    isAdmin: {
+    }
+  },
   data () {
     return {
       fields: [
@@ -341,7 +346,9 @@ export default {
   events: {
     'filter-set' (filterText) {
       this.moreParams = {
-        filter: filterText
+        filter: filterText,
+        orgid: orgid,
+        teamid: teamid
       }
       Vue.nextTick( () =>
             this.$refs.vuetable.refresh()
