@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,23 +12,22 @@ class DatabaseSeeder extends Seeder
     {
 
         // $this->call(UsersTableSeeder::class);
-        $visitor = DB::table('users')->insertGetId([
-            'name' => 'Visitor',
-            'email' => 'visitor@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
+
         $user = DB::table('users')->insertGetId([
             'name' => 'Site',
             'email' => 'site@me.net',
             'password' => Hash::make('abc123'),
         ]);
 
-        $org0 = DB::table('organizations')->insertGetId([
-            'name'=>'Ministry Engage',
-            'parent_id'=>null,
-            'city'=>'Lithia Springs',
-            'state'=>'Georgia'
+        $visitor = DB::table('users')->insertGetId([
+            'name' => 'Visitor',
+            'email' => 'visitor@me.net',
+            'password' => Hash::make('abc123'),
         ]);
+
+        $org0 = App\Organization::where('name','Ministry Engage')
+            ->pluck('id')->first();
+
         DB::table('organization_user')->insert([
             'organization_id'=>$org0,
             'user_id'=>$user,

@@ -22,7 +22,7 @@ class AddRoles extends Migration
             ['name'=>'Member', 'level'=>3],
     //Person can see lists of orgs, teams, events and see event details
     //"The Browser".  Role given to everyone upon initial signup.
-            ['name'=>'Visitor', 'level'=>99],
+    //        ['name'=>'Visitor', 'level'=>99],
         ]);
     }
 

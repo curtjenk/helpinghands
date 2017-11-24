@@ -13,9 +13,6 @@ class AddPermissionRole extends Migration
      */
     public function up()
     {
-        //skip this stuff
-        //
-        return;
 
         $visitor = App\Role::where('name','Visitor')->first();
         $visitor->permissions()
@@ -104,7 +101,6 @@ class AddPermissionRole extends Migration
 
                             'Show event',
                             'List events',
-
                             ])
                         ->pluck('id'));
 

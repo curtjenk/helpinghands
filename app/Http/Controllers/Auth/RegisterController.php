@@ -66,10 +66,17 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            // 'role_id' => $data['role_id'],
-            // 'organization_id' => $data['organization_id'],
-            // 'opt_show_email' => 1,
-            // 'opt_receive_evite' => 1
+        ]);
+
+        $org0 = App\Organization::where('name','Ministry Engage')
+            ->pluck('id')->first();
+        $visitor = App\Role::where('name','Visitor')
+            ->pluck('id')->first();
+
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$user->id,
+            'role_id'=>$visitor
         ]);
 
         $this->redirectTo = "/member/$user->id/edit";

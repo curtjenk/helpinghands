@@ -93,9 +93,48 @@ class User extends Authenticatable
             ->distinct();
 
     }
-    // /**
-    //  * Check if the User has a specific Organization Permission
-    //  */
+    /*
+        Get list of permissions
+     */
+    public function permissions()
+    {
+        return DB::table('permissions')
+            ->select('organization_user.organization_id','permissions.*')
+            ->join('permission_role','permission_role.permission_id','=','permissions.id')
+            ->join('roles','roles.id','=','permission_role.role_id')
+            ->join('organization_user','organization_user.role_id','=','roles.id')
+            ->where('organization_user.user_id', $this->id)
+            ->distinct()
+            ->get();
+    }
+    /**
+     * Check if the User has a specific Organization Permission
+     */
+    public function has_org_permission($orgid, $name)
+    {
+        return DB::table('permissions')
+            ->join('permission_role','permission_role.permission_id','=','permissions.id')
+            ->join('roles','roles.id','=','permission_role.role_id')
+            ->join('organization_user','organization_user.role_id','=','roles.id')
+            ->where('organization_user.user_id', $this->id)
+            ->where('permissions.name', $name)
+            ->where('organization_user.organization_id', $orgid)
+            ->count() > 0;
+    }
+    public function has_team_permission($orgid, $name)
+    {
+        return DB::table('permissions')
+            ->join('permission_role','permission_role.permission_id','=','permissions.id')
+            ->join('roles','roles.id','=','permission_role.role_id')
+            ->join('organization_user','organization_user.role_id','=','roles.id')
+            ->where('organization_user.user_id', $this->id)
+            ->where('permissions.name', $name)
+            ->where('organization_user.organization_id', $orgid)
+            ->count() > 0;
+    }
+    /**
+     * Check if the User has a specific Organization role
+     */
     public function has_org_role($orgid, $name)
     {
         // return true;
