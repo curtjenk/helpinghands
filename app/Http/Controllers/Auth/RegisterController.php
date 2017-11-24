@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Organization;
+use App\Role;
+use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -68,9 +71,9 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
-        $org0 = App\Organization::where('name','Ministry Engage')
+        $org0 = Organization::where('name','Ministry Engage')
             ->pluck('id')->first();
-        $visitor = App\Role::where('name','Visitor')
+        $visitor = Role::where('name','Visitor')
             ->pluck('id')->first();
 
         DB::table('organization_user')->insert([
