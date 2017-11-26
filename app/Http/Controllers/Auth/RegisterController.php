@@ -75,7 +75,7 @@ class RegisterController extends Controller
             ->pluck('id')->first();
         $visitor = Role::where('name','Visitor')
             ->pluck('id')->first();
-
+        
         DB::table('organization_user')->insert([
             'organization_id'=>$org0,
             'user_id'=>$user->id,

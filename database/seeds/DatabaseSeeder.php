@@ -12,43 +12,10 @@ class DatabaseSeeder extends Seeder
     {
 
         // $this->call(UsersTableSeeder::class);
-
-        $user = DB::table('users')->insertGetId([
-            'name' => 'Site',
-            'email' => 'site@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
-
-        $visitor = DB::table('users')->insertGetId([
-            'name' => 'Visitor',
-            'email' => 'visitor@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
-
+        //Create Organizations
         $org0 = App\Organization::where('name','Ministry Engage')
             ->pluck('id')->first();
 
-        DB::table('organization_user')->insert([
-            'organization_id'=>$org0,
-            'user_id'=>$user,
-            'role_id'=>App\Role::where('name','Site')->pluck('id')->first()
-        ]);
-
-        $testUser1 =DB::table('users')->insertGetId([
-            'name' => 'Test 1',
-            'email' => 'test1@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
-        $testUser2 =DB::table('users')->insertGetId([
-            'name' => 'Test 2',
-            'email' => 'test2@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
-        $testUser3 =DB::table('users')->insertGetId([
-            'name' => 'Test 3',
-            'email' => 'test3@me.net',
-            'password' => Hash::make('abc123'),
-        ]);
         $org1 = DB::table('organizations')->insertGetId([
             'name'=>'Cornerstone Baptist Church',
             'parent_id'=>null,
@@ -73,10 +40,44 @@ class DatabaseSeeder extends Seeder
             'state'=>'Georgia'
         ]);
 
+        //Create users
+        $user = DB::table('users')->insertGetId([
+            'name' => 'Site',
+            'email' => 'site@me.net',
+            'password' => Hash::make('abc123'),
+        ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$user,
+            'role_id'=>App\Role::where('name','Site')->pluck('id')->first()
+        ]);
+        //Visitor user
+        $visitor = DB::table('users')->insertGetId([
+            'name' => 'Visitor',
+            'email' => 'visitor@me.net',
+            'password' => Hash::make('abc123'),
+        ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$visitor,
+            'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        ]);
+        //TEST user 1
+        $testUser1 =DB::table('users')->insertGetId([
+            'name' => 'Test 1',
+            'email' => 'test1@me.net',
+            'password' => Hash::make('abc123'),
+        ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$org1,
             'user_id'=>$testUser1,
             'role_id'=>App\Role::where('name','Member')->pluck('id')->first()
+        ]);
+        //TEST user 2
+        $testUser2 =DB::table('users')->insertGetId([
+            'name' => 'Test 2',
+            'email' => 'test2@me.net',
+            'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$org1,
@@ -87,6 +88,12 @@ class DatabaseSeeder extends Seeder
             'organization_id'=>$childOrg1,
             'user_id'=>$testUser2,
             'role_id'=>App\Role::where('name','Lead')->pluck('id')->first()
+        ]);
+        //TEST user 3
+        $testUser3 =DB::table('users')->insertGetId([
+            'name' => 'Test 3',
+            'email' => 'test3@me.net',
+            'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$childOrg1,
@@ -98,6 +105,27 @@ class DatabaseSeeder extends Seeder
             'user_id'=>$testUser3,
             'role_id'=>App\Role::where('name','Lead')->pluck('id')->first()
         ]);
+
+        //Everyone becomes a "Visitor" of the site by default
+        // DB::table('organization_user')->insert([
+        //     'organization_id'=>$org0,
+        //     'user_id'=>$testUser1,
+        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        // ]);
+        // DB::table('organization_user')->insert([
+        //     'organization_id'=>$org0,
+        //     'user_id'=>$testUser2,
+        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        // ]);
+        // DB::table('organization_user')->insert([
+        //     'organization_id'=>$org0,
+        //     'user_id'=>$testUser3,
+        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        // ]);
+        //----------------------------
+
+
+
         //Add other test users;
 
 

@@ -38,6 +38,7 @@ class User extends Authenticatable
     {
         return App\User::with('organizations.teams')
             ->where('id',$this->id)
+            ->where('organizations.name','!=','Ministry Engage')
             ->first()
             ->organizations;
     }
@@ -88,8 +89,10 @@ class User extends Authenticatable
         return DB::table('users as u1')->select('users.*')
             ->join('organization_user as ou1', 'ou1.user_id','=','u1.id')
             ->join('organization_user as ou2','ou2.organization_id', '=','ou1.organization_id')
+            ->join('organizations','organizations.id','=','ou2.organization_id')
             ->join('users', 'users.id', '=', 'ou2.user_id')
             ->where('u1.id', $this->id)
+            ->where('organizations.name','!=','Ministry Edge')
             ->distinct();
 
     }
@@ -107,6 +110,26 @@ class User extends Authenticatable
             ->distinct()
             ->get();
     }
+    public function has_permission($name, $orgid=null, $teamid=null)
+    {
+        return DB::table('permissions')
+            ->join('permission_role','permission_role.permission_id','=','permissions.id')
+            ->join('roles','roles.id','=','permission_role.role_id')
+            ->join('organization_user','organization_user.role_id','=','roles.id')
+            ->where('organization_user.user_id', $this->id)
+            ->when($orgid, function($q) use($orgid) {
+                $q->where('organization_user.organization_id', $orgid)
+                ->orWhere('roles.name','Site');
+            })
+            ->when($teamid, function($q) use($teamid) {
+                $q->join('team_user','team_user.role_id','=','roles.id')
+                ->where('team_user.organization_id', $teamid)
+                ->where('team_user.user_id', $this->id)
+                ->orWhere('roles.name','Site');;
+            })
+            ->where('permissions.name', $name)
+            ->count() > 0;
+    }
     /**
      * Check if the User has a specific Organization Permission
      */
@@ -119,6 +142,7 @@ class User extends Authenticatable
             ->where('organization_user.user_id', $this->id)
             ->where('permissions.name', $name)
             ->where('organization_user.organization_id', $orgid)
+            ->orWhere('roles.name','Site')
             ->count() > 0;
     }
     public function has_team_permission($orgid, $name)
@@ -130,35 +154,38 @@ class User extends Authenticatable
             ->where('organization_user.user_id', $this->id)
             ->where('permissions.name', $name)
             ->where('organization_user.organization_id', $orgid)
+            ->orWhere('roles.name','Site')
             ->count() > 0;
     }
     /**
      * Check if the User has a specific Organization role
      */
-    public function has_org_role($orgid, $name)
-    {
-        // return true;
-        return DB::table('organization_user')
-            ->join('roles', 'roles.id', '=', 'organization_user.role_id')
-            ->where('roles.name', $name)
-            ->where('organization_user.organization_id', $orgid)
-            ->where('organization_user.user_id', $this->id)
-            ->count() > 0;
-    }
-    public function has_team_role($orgid, $teamid, $name)
-    {
-        // return true;
-        return DB::table('organization_user')
-            ->join('teams', 'teams.organization_id', '=', 'organization_user.organization_id')
-            ->join('team_user', 'team_user.team_id', '=', 'teams.id')
-            ->join('roles', 'roles.id', '=', 'team_user.role_id')
-            ->where('roles.name', $name)
-            ->where('organization_user.organization_id', $orgid)
-            ->where('organization_user.user_id', $this->id)
-            ->where('team_user.user_id', $this->id)
-            ->where('team.id', $teamid)
-            ->count() > 0;
-    }
+    // public function has_org_role($orgid, $name)
+    // {
+    //     // return true;
+    //     return DB::table('organization_user')
+    //         ->join('roles', 'roles.id', '=', 'organization_user.role_id')
+    //         ->where('roles.name', $name)
+    //         ->where('organization_user.organization_id', $orgid)
+    //         ->where('organization_user.user_id', $this->id)
+    //         ->orWhere('roles.name','Site')
+    //         ->count() > 0;
+    // }
+    // public function has_team_role($orgid, $teamid, $name)
+    // {
+    //     // return true;
+    //     return DB::table('organization_user')
+    //         ->join('teams', 'teams.organization_id', '=', 'organization_user.organization_id')
+    //         ->join('team_user', 'team_user.team_id', '=', 'teams.id')
+    //         ->join('roles', 'roles.id', '=', 'team_user.role_id')
+    //         ->where('roles.name', $name)
+    //         ->where('organization_user.organization_id', $orgid)
+    //         ->where('organization_user.user_id', $this->id)
+    //         ->where('team_user.user_id', $this->id)
+    //         ->where('team.id', $teamid)
+    //         ->orWhere('roles.name','Site')
+    //         ->count() > 0;
+    // }
     // /**
     //  * Check if the user has any administrative right
     //  * across all organizations

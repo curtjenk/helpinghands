@@ -103,7 +103,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // $this->authorize('list-users');
+        $this->authorize('list-users');
         $user = Auth::user();
         if (!$request->ajax() && !$request->wantsJson()) {
             return view('user.memberslist', []);
@@ -277,7 +277,9 @@ class UserController extends Controller
         // Log::debug(print_r($user,true));
         return view('user.profile', [
             'user'=>$user,
-            'orgteams'=> App\Organization::with('teams')->get()
+            'orgteams'=> App\Organization::with('teams')
+                ->where('organizations.name','!=','Ministry Engage')
+                ->get()
         ]);
     }
 

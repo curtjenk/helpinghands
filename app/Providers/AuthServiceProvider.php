@@ -19,6 +19,27 @@ class AuthServiceProvider extends ServiceProvider
         App\Event::class => App\Policies\EventPolicy::class,
     ];
 
+/*
+
+['name'=>'Create organization'],
+['name'=>'Delete organization'],
+['name'=>'Show organization'],
+['name'=>'Update organization'],
+['name'=>'List organizations'],
+
+['name'=>'Create team'],
+['name'=>'Delete team'],
+['name'=>'Show team'],
+['name'=>'Update team'],
+['name'=>'List teams'],
+
+['name'=>'Create event'],
+['name'=>'Delete event'],
+['name'=>'Show event'],
+['name'=>'Update event'],
+['name'=>'List events'],
+
+ */
     /**
      * Register any authentication / authorization services.
      *
@@ -27,9 +48,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        Gate::define('create-event', function ($user) {
-            return true;
-            // return $user->has_permission('Create event');
+        Gate::define('create-event', function ($user, $org, $team) {
+            return $user->has_permission('Create event',$org->id,$team->id);
         });
 
 
@@ -43,7 +63,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->has_permission('Create user');
         });
         Gate::define('list-users', function ($user) {
-            return true;
             return $user->has_permission('List users');
         });
         Gate::define('send-evites', function ($user) {
