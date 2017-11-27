@@ -92,9 +92,7 @@ class UserController extends Controller
     {
         $user = App\User::findOrFail($id);
         $this->authorize("show", $user);
-        // if ($request->wantsJson() && $request->ajax()) {
-            return response()->json($user->memberships());
-        // }
+        return response()->json($user->memberships());
     }
     /**
      * Display a listing of the resource.
@@ -113,7 +111,7 @@ class UserController extends Controller
             [ ]
         );
 
-        $query = $user->peers()
+        $query = $user->peers($inputs->orgid, $inputs->teamid)
             ->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->when($inputs->filter, function($q) use($inputs){
@@ -356,11 +354,13 @@ class UserController extends Controller
 
         foreach($updOrg as $org){
             if ($org['checked']) {
-                $user->organizations()->attach($org['id'], ['role_id'=>3]);
+                $user->organizations()->attach($org['id'],
+                    ['role_id'=>App\Role::where('name','Member')->pluck('id')->first()]);
             }
             foreach($org['teams'] as $team) {
                 if($team['checked']) {
-                    $user->teams()->attach($team['id'], ['role_id'=>3]);
+                    $user->teams()->attach($team['id'],
+                    ['role_id'=>App\Role::where('name','Member')->pluck('id')->first()]);
                 }
             }
         }

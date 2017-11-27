@@ -107,21 +107,21 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //Everyone becomes a "Visitor" of the site by default
-        // DB::table('organization_user')->insert([
-        //     'organization_id'=>$org0,
-        //     'user_id'=>$testUser1,
-        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
-        // ]);
-        // DB::table('organization_user')->insert([
-        //     'organization_id'=>$org0,
-        //     'user_id'=>$testUser2,
-        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
-        // ]);
-        // DB::table('organization_user')->insert([
-        //     'organization_id'=>$org0,
-        //     'user_id'=>$testUser3,
-        //     'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
-        // ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$testUser1,
+            'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$testUser2,
+            'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$org0,
+            'user_id'=>$testUser3,
+            'role_id'=>App\Role::where('name','Visitor')->pluck('id')->first()
+        ]);
         //----------------------------
 
 

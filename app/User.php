@@ -36,9 +36,10 @@ class User extends Authenticatable
 
     public function memberships()
     {
-        return App\User::with('organizations.teams')
+        return App\User::with(['organizations' => function($q) {
+                $q->where('organizations.name','!=','Ministry Engage');
+            }, 'organizations.teams'])
             ->where('id',$this->id)
-            ->where('organizations.name','!=','Ministry Engage')
             ->first()
             ->organizations;
     }
@@ -84,17 +85,23 @@ class User extends Authenticatable
      * Get list of users who are part of the same organization(s) as me
      * @return [type] [description]
      */
-    public function peers()
+    public function peers($orgid=null, $teamid=null)
     {
         return DB::table('users as u1')->select('users.*')
             ->join('organization_user as ou1', 'ou1.user_id','=','u1.id')
             ->join('organization_user as ou2','ou2.organization_id', '=','ou1.organization_id')
             ->join('organizations','organizations.id','=','ou2.organization_id')
             ->join('users', 'users.id', '=', 'ou2.user_id')
+            ->when($orgid, function($q) use($orgid) {
+                $q->where('ou2.organization_id', $orgid);
+            })
+            ->when($teamid, function($q) use($teamid) {
+                $q->join('team_user','team_user.organization_id','=','ou2.organization_id')
+                ->where('team_user.organization_id', $teamid);
+            })
             ->where('u1.id', $this->id)
             ->where('organizations.name','!=','Ministry Edge')
             ->distinct();
-
     }
     /*
         Get list of permissions
