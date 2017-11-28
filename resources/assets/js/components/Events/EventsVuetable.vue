@@ -10,7 +10,9 @@
           @vuetable-pagination:change-page="onChangePage"
         ></vuetable-pagination>
     <!-- </div> -->
-    <filter-bar filterPlaceholder=" subject, description"></filter-bar>
+    <filter-bar filterPlaceholder=" subject, description"
+      :userid="userid"
+    ></filter-bar>
 
     <vuetable ref="vuetable"
       api-url="/event"

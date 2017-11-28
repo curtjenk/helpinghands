@@ -48,8 +48,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        Gate::define('create-event', function ($user, $org, $team) {
-            return $user->has_permission('Create event',$org->id,$team->id);
+        Gate::define('create-event', function ($user) {
+            return $user->has_permission('Create event');
         });
 
 

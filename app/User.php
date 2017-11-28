@@ -87,7 +87,11 @@ class User extends Authenticatable
      */
     public function peers($orgid=null, $teamid=null)
     {
-        return DB::table('users as u1')->select('users.*')
+        // return DB::table('users as u1')->select('users.*')
+        return App\User::with(['organizations' => function($q) {
+                $q->where('organizations.name','!=','Ministry Engage');
+            }, 'organizations.teams'])
+            ->from('users as u1')->select('users.*')
             ->join('organization_user as ou1', 'ou1.user_id','=','u1.id')
             ->join('organization_user as ou2','ou2.organization_id', '=','ou1.organization_id')
             ->join('organizations','organizations.id','=','ou2.organization_id')
@@ -100,7 +104,7 @@ class User extends Authenticatable
                 ->where('team_user.organization_id', $teamid);
             })
             ->where('u1.id', $this->id)
-            ->where('organizations.name','!=','Ministry Edge')
+            ->where('organizations.name','!=','Ministry Engage')
             ->distinct();
     }
     /*
