@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App;
+use Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -48,18 +49,23 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        Gate::define('administer', function($user) {
+            return $user->permissions()
+                ->where('permissions.name', 'LIKE', "%Create%")
+                ->count();
+        });
         Gate::define('create-event', function ($user) {
             return $user->has_permission('Create event');
         });
 
-
         Gate::define('create-organization', function ($user) {
-            return true;
             return $user->has_permission('Create organization');
+        });
+        Gate::define('list-organizations', function ($user) {
+            return $user->has_permission('List organizations');
         });
 
         Gate::define('create-user', function ($user) {
-            return true;
             return $user->has_permission('Create user');
         });
         Gate::define('list-users', function ($user) {

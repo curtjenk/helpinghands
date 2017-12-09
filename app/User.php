@@ -112,14 +112,13 @@ class User extends Authenticatable
      */
     public function permissions()
     {
-        return DB::table('permissions')
+        return DB::table('permissions')->with(['teams'])
             ->select('organization_user.organization_id','permissions.*')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
             ->join('organization_user','organization_user.role_id','=','roles.id')
             ->where('organization_user.user_id', $this->id)
-            ->distinct()
-            ->get();
+            ->distinct();
     }
     public function has_permission($name, $orgid=null, $teamid=null)
     {
@@ -146,26 +145,43 @@ class User extends Authenticatable
      */
     public function has_org_permission($orgid, $name)
     {
-        return DB::table('permissions')
+        $query = DB::table('permissions')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
             ->join('organization_user','organization_user.role_id','=','roles.id')
             ->where('organization_user.user_id', $this->id)
-            ->where('permissions.name', $name)
-            ->where('organization_user.organization_id', $orgid)
-            ->orWhere('roles.name','Site')
-            ->count() > 0;
+            ->where(function($q) use($orgid, $name){
+                $q->where(function($q) use($orgid, $name) {
+                    $q->where('permissions.name', $name)
+                    ->where('organization_user.organization_id', $orgid);
+                })
+                ->orWhere('roles.name','Site');
+            });
+
+        // Log::debug($query->toSql());
+        // Log::debug($query->getBindings());
+        return $query->count() > 0;
     }
-    public function has_team_permission($orgid, $name)
+    /**
+     * [has_team_permission description]
+     * @param  [type]  $teamid [description]
+     * @param  [type]  $name   name of the permission
+     * @return boolean         [description]
+     */
+    public function has_team_permission($teamid, $name)
     {
         return DB::table('permissions')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
-            ->join('organization_user','organization_user.role_id','=','roles.id')
-            ->where('organization_user.user_id', $this->id)
-            ->where('permissions.name', $name)
-            ->where('organization_user.organization_id', $orgid)
-            ->orWhere('roles.name','Site')
+            ->join('team_user','team_user.role_id', '=','roles.id')
+            ->where('team_user.user_id', $this->id)
+            ->where(function($q) use($teamid, $name){
+                $q->where(function($q) use($teamid, $name) {
+                    $q->where('permissions.name', $name)
+                    ->where('team_user.team_id', $teamid);
+                })
+                ->orWhere('roles.name','Site');
+            })
             ->count() > 0;
     }
     /**

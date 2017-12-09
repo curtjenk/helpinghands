@@ -44,8 +44,9 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        return $self->superuser() ||
-        $self->has_org_role($organization->id, 'Admin');
+        return $user->has_org_permission($organization->id, 'Update organization');
+        // return $self->superuser() ||
+        // $self->has_org_role($organization->id, 'Admin');
     }
 
     /**
@@ -57,6 +58,7 @@ class OrganizationPolicy
      */
      public function destroy(User $user, Organization $organization)
      {
-        return $self->superuser();
+         return true;
+        // return $self->superuser();
      }
 }

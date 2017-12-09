@@ -16,9 +16,14 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
-        $query=App\Organization::with('teams')->get();
-        return response()->json($query);
+        if ($request->wantsJson()) {
+            $query=App\Organization::with('teams')->get();
+            return response()->json($query);
+        }
+
+        return view('organization.index', [
+            'organizations'=>App\Organization::all()
+        ]);
     }
 
     /**

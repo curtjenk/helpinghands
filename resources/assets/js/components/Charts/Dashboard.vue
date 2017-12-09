@@ -1,44 +1,57 @@
-partdata<template>
-    <div class="">
-        <div class="container-fluid">
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                    Overall Participation Rate
-                </div>
-                <div class="panel-body">
-                    <pie-chart id="p1" :data="partdata"
-                        :labels="partlabels"
-                        :bgColors="partBGColors"
-                        :hoverBGColors="partHoverBGColors"
-                        :options="partoptions">
-                    </pie-chart>
-                </div>
-            </div>
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                     Year-To-Date Count Per Event Type
-                </div>
-                <div class="panel-body">
-                    <doughnut-chart id="d1" :data="doughnutdata1"
-                        :labels="doughnutlabels1"
-                        :bgColors="doughnutBGColors1"
-                        :hoverBGColors="doughnutHoverBGColors1"
-                        :options="doughnutoptions1">
-                    </doughnut-chart>
-                </div>
-            </div>
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                    Year-To-Date Events Per Month
-                </div>
-                <div class="panel-body">
-                    <bar-chart id="b1" :datasets="bardata1"
-                        :labels="barlabels1"
-                        :options="baroptions1">
-                    </bar-chart>
+<template>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                  <h1>How are we doing?</h1>
+                  <div class="form-group">
+                      <filter-memberships
+                          :userid="userid"
+                          @orgTeamSelected="get_data"
+                      ></filter-memberships>
+                  </div>
                 </div>
             </div>
         </div>
+      </div>
+      <div class="col-md-6 panel panel-default">
+          <div class="panel-heading text-center">
+              Overall Participation Rate
+          </div>
+          <div class="panel-body">
+              <pie-chart id="p1" :data="partdata"
+                  :labels="partlabels"
+                  :bgColors="partBGColors"
+                  :hoverBGColors="partHoverBGColors"
+                  :options="partoptions">
+              </pie-chart>
+          </div>
+      </div>
+      <div class="col-md-6 panel panel-default">
+          <div class="panel-heading text-center">
+               Year-To-Date Count Per Event Type
+          </div>
+          <div class="panel-body">
+              <doughnut-chart id="d1" :data="doughnutdata1"
+                  :labels="doughnutlabels1"
+                  :bgColors="doughnutBGColors1"
+                  :hoverBGColors="doughnutHoverBGColors1"
+                  :options="doughnutoptions1">
+              </doughnut-chart>
+          </div>
+      </div>
+      <div class="col-md-6 panel panel-default">
+          <div class="panel-heading text-center">
+              Year-To-Date Events Per Month
+          </div>
+          <div class="panel-body">
+              <bar-chart id="b1" :datasets="bardata1"
+                  :labels="barlabels1"
+                  :options="baroptions1">
+              </bar-chart>
+          </div>
+      </div>
     </div>
 </template>
 
@@ -69,20 +82,32 @@ export default {
       partoptions: {},
     }
   },
+  props: {
+    userid: {
+      type: Number,
+      required: false
+    }
+  },
   mounted () {
-    // console.log("mounted.")
-    axios('/db')
-    .then(response => {
-      this.bar1(response.data.EventTypesOverTime);
-      this.doughnut1(response.data.TotalByType);
-      this.participation(response.data.ParticpationRate);
-    })
-    .catch(e => {
-      console.log(e);
-    })
-
+    this.get_data(null,null);
   },
   methods: {
+    get_data(selectedOrgId, selectedTeamId) {
+       console.log(selectedOrgId, selectedTeamId)
+      let params = {
+          orgid: selectedOrgId,
+          teamid: selectedTeamId
+      }
+      axios.get('/db', {params: params})
+      .then(response => {
+        this.bar1(response.data.EventTypesOverTime);
+        this.doughnut1(response.data.TotalByType);
+        this.participation(response.data.ParticpationRate);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    },
     participation(data) {
     // pie chart
       this.partlabels = ['Yes', 'No', 'NoReply'];
