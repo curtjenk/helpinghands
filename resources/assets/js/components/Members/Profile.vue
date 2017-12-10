@@ -173,7 +173,7 @@
               <i  v-else class="fa fa-lg fa-circle-o">&nbsp;</i>
               <input class="orgcheck" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
               <span @click="org.editing = !org.editing">{{ org.name }}</span>
-              <div >
+              <div>
                 <div v-for="team in org.teams" v-show="org.editing" class="teambox">
                   <input class="teamcheck" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">{{ team.name}}
                 </div>

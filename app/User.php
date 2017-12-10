@@ -112,7 +112,7 @@ class User extends Authenticatable
      */
     public function permissions()
     {
-        return DB::table('permissions')->with(['teams'])
+        return DB::table('permissions')
             ->select('organization_user.organization_id','permissions.*')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
