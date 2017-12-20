@@ -21,10 +21,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::view('/member', 'user.memberslist');
     Route::view('/dashboard', 'dashboard');
     Route::view('/organization', 'organization.index');
-    // Route::get('/home', 'HomeController@index');
-    //Route::get('/db', 'DashboardController@index');
+    Route::view('/event', 'event.index');
+    
     Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
         Route::get('/dashboard', 'DashboardController@index');
+        Route::get('/event', 'EventController@index');
         Route::get('/member', 'UserController@index');
         Route::get('member/{id}/membership', 'UserController@membership');
         Route::get('member/{id}/yes', 'UserController@yes_responses');
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('member/{id}/email', 'UserController@update_email');
         Route::put('member/{id}/password', 'UserController@update_password');
         Route::get('member.destroy', 'UserController@destroy');
+        Route::get('/organization', 'OrganizationController@index');
     });
 
     Route::get('event/{id}/members', 'EventController@members');
@@ -42,14 +44,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('event/{eid}/download/{fid}', 'EventController@download');
     Route::get('event/calendar', 'EventController@calendar');
     Route::post('event/notify/{id}', 'EventController@notify');
-    Route::resource('event', 'EventController');
 
-
+    // Route::resource('event', 'EventController');
     //Route::resource('member', 'UserController');
 
     Route::get('administrator', 'HomeController@administrator');
 
-    Route::resource('organization', 'OrganizationController');
+    // Route::resource('organization', 'OrganizationController');
 
     Route::get('evite/{id}', 'EviteController@send_evites');
 //

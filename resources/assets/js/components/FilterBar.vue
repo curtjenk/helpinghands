@@ -7,7 +7,7 @@
                     @keyup.enter="doFilter"
                     :placeholder="filterPlaceholder">
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="filterByMemberships">
           <filter-memberships
               :userid="userid"
               @orgTeamSelected="gotit"
@@ -25,6 +25,10 @@
       userid: {
         type: Number,
         required: true
+      },
+      filterByMemberships: {
+        type: Boolean,
+        required: false
       },
       filterPlaceholder: {
         type: String

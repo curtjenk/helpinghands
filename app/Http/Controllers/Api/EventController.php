@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Common\Inputs;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -108,49 +109,45 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        //TODO  Delete this method
-        return;
-
-        // $user = Auth::user();
-        // if (!$request->ajax() && !$request->wantsJson()) {
-        //     return view('event.index', []);
-        // }
-        //
-        // $inputs = new Inputs($request,
-        //     [ ]
-        // );
+        $user = Auth::user();
+        $inputs = new Inputs($request,
+            [ ]
+        );
         // $organization_id = $this->getOrg($request, $user);
-        // $query = App\Event::
-        //     select('events.*', 'statuses.name as status', 'event_types.name as type',
-        //         DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
-        //         DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
-        //     )
-        //     ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
-        //     ->join('statuses', 'statuses.id', '=', 'events.status_id')
-        //     ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
-        //     // ->where('organization_id', $organization_id)
-        //     ->when($inputs->filter, function($q) use($inputs){
-        //         return $q->where(function($q2) use($inputs) {
-        //             $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
-        //             ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
-        //         });
-        //     })
-        //     ->when($inputs->sort, function($q) use($inputs){
-        //         return $q->orderby($inputs->sort, $inputs->direction);
-        //     })
-        //     ->groupby('events.id')
-        //     ->groupby('statuses.id')
-        //     ->groupby('event_types.id');
-        //
-        // //check that it wasn't a vue-tables-2 request
-        // // if ($request->input('paginate') == '0') {
-        // //     // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
-        // //     $query = $query->where('statuses.name', 'Open')
-        // //         ->orderby('events.date_start', 'desc');
-        // //     return response()->json($query->get());
-        // // } else {
-        //     return $query->paginate($inputs->limit);
-        // // }
+
+        //TODO: return only the events the user can see
+        //TODO: ie. where he/she is a member of the events organizations/teams
+        $query = App\Event::
+            select('events.*', 'statuses.name as status', 'event_types.name as type',
+                DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
+                DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
+            )
+            ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
+            ->join('statuses', 'statuses.id', '=', 'events.status_id')
+            ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
+            // ->where('organization_id', $organization_id)
+            ->when($inputs->filter, function($q) use($inputs){
+                return $q->where(function($q2) use($inputs) {
+                    $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
+                    ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
+                });
+            })
+            ->when($inputs->sort, function($q) use($inputs){
+                return $q->orderby($inputs->sort, $inputs->direction);
+            })
+            ->groupby('events.id')
+            ->groupby('statuses.id')
+            ->groupby('event_types.id');
+
+        //check that it wasn't a vue-tables-2 request
+        // if ($request->input('paginate') == '0') {
+        //     // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
+        //     $query = $query->where('statuses.name', 'Open')
+        //         ->orderby('events.date_start', 'desc');
+        //     return response()->json($query->get());
+        // } else {
+            return $query->paginate($inputs->limit);
+        // }
     }
 
     /**

@@ -16,7 +16,7 @@
       :css="css.table"
       :sort-order="sortOrder"
       :multi-sort="true"
-      :per-page="3"
+      :per-page="15"
       detail-row-component="member-detail-row"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
@@ -133,7 +133,7 @@ export default {
       ],
       css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
+          tableClass: 'table table-bordered table-striped table-hover table-condensed',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down'
         },

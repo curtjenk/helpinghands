@@ -35,6 +35,8 @@ class CreateEventsTable extends Migration
             $table->foreign('team_id')->references('id')->on('teams');
             $table->foreign('organization_id')->references('id')->on('organizations');
         });
+        DB::statement("ALTER TABLE events ALTER COLUMN subject TYPE CITEXT");
+        DB::statement("ALTER TABLE events ALTER COLUMN description TYPE CITEXT");
     }
 
     /**

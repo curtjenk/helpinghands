@@ -34,9 +34,9 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        DB::query("ALTER TABLE users ALTER COLUMN name TYPE CITEXT");
-        DB::query("ALTER TABLE users ALTER COLUMN nickname TYPE CITEXT");
-        DB::query("ALTER TABLE users ALTER COLUMN email TYPE CITEXT");
+        DB::statement("ALTER TABLE users ALTER COLUMN name TYPE CITEXT");
+        DB::statement("ALTER TABLE users ALTER COLUMN nickname TYPE CITEXT");
+        DB::statement("ALTER TABLE users ALTER COLUMN email TYPE CITEXT");
     }
 
     /**

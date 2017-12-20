@@ -1,21 +1,16 @@
 <template>
   <div>
-      <!-- <div class="vuetable-pagination"> -->
-        <!-- <vuetable-pagination-info ref="paginationInfoTop"
-          info-class="pagination-info"
-        ></vuetable-pagination-info> -->
-        <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-          :css="css.pagination"
-          :icons="css.icons"
-          @vuetable-pagination:change-page="onChangePage"
-        ></vuetable-pagination>
-    <!-- </div> -->
+    <!-- <vuetable-pagination ref="paginationTop" style="padding-top:20px"
+      :css="css.pagination"
+      :icons="css.icons"
+      @vuetable-pagination:change-page="onChangePage"
+      ></vuetable-pagination> -->
     <filter-bar filterPlaceholder=" subject, description"
       :userid="userid"
     ></filter-bar>
 
     <vuetable ref="vuetable"
-      api-url="/event"
+      api-url="/api/event"
       :fields="fields"
       pagination-path=""
       :css="css.table"
@@ -207,7 +202,7 @@ export default {
       ],
       css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
+          tableClass: 'table table-bordered table-striped table-hover table-condensed',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down',
           thumbsup: 'fa fa-thumbs-o-up'
@@ -243,7 +238,7 @@ export default {
     getSignupsPay (data, index) {
     //   console.log(data);
       $("#payups").empty();
-      axios('/member/signups/'+data.id)
+      axios.get('/member/signups/'+data.id)
       .then(response => {
         for(var i=0; i< response.data.length; i++)
         {
@@ -315,7 +310,7 @@ export default {
         return '$'+value;
     },
     onPaginationData (paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+      //this.$refs.paginationTop.setPaginationData(paginationData)      // <----
      // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
 
       this.$refs.pagination.setPaginationData(paginationData)
@@ -331,7 +326,7 @@ export default {
       // console.log('cellClicked: ', field.name)
       if (field.name=='yes_responses' || field.name=='no_responses') {
         if ($('#'+data.id).length == 0) {
-          axios.get('/event/' + data.id + '/members')
+          axios.get('/api/event/' + data.id + '/members')
           .then(  (response) => {
            // console.log(response.data);
             data.members = response.data;

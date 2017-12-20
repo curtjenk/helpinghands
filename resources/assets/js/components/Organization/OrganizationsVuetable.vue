@@ -1,19 +1,16 @@
 <template>
   <div>
-    <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-      :css="css.pagination"
-      :icons="css.icons"
-      @vuetable-pagination:change-page="onChangePage"
-    ></vuetable-pagination>
-    <!-- <filter-bar></filter-bar> -->
-    <filter-bar filterPlaceholder="name, nickname, email"
+    <filter-bar filterPlaceholder="name"
         :userid="userid"
+        :filterByMemberships="false"
+
     ></filter-bar>
     <vuetable ref="vuetable"
-      api-url="/api/member"
+      api-url="/api/organization"
       :fields="fields"
       pagination-path=""
       :css="css.table"
+      :per-page="10"
       :sort-order="sortOrder"
       :multi-sort="true"
       detail-row-component="member-detail-row"
@@ -24,26 +21,12 @@
     >
         <template slot="actions" scope="props">
           <div class="">
-            <span data-toggle="tooltip" title="View profile" data-placement="left" class="">
+            <span data-toggle="tooltip" title="View organization" data-placement="left" class="">
                 <a href="#" type="button" class=""
-                  @click="showMember(props.rowData, props.rowIndex)">
+                  @click="showOrganization(props.rowData, props.rowIndex)">
                   <i class="fa fa-address-card-o fa-lg fa-fw"></i>
                 </a>
             </span>
-            <!--     // data-toggle="modal" data-target="#proxySignup"
-             :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id" -->
-            <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="button" class=""
-                    @click="getEvents(props.rowData, props.rowIndex)"
-                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
-                    <i class="fa fa-user-plus fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <!-- <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class="">
-                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
-             </a>
-            </span> -->
           </div>
         </template>
     </vuetable>
@@ -68,13 +51,13 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-import CustomActions from './MembersCustomActions'
-import DetailRow from './MembersDetailRow'
+import CustomActions from './OrganizationsCustomActions'
+import DetailRow from './OrganizationsDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-Vue.component('member-custom-actions', CustomActions)
-Vue.component('member-detail-row', DetailRow)
+Vue.component('organization-custom-actions', CustomActions)
+Vue.component('organization-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
 export default {
@@ -96,32 +79,25 @@ export default {
       events: [],
       fields: [
         {
-          title: 'Active',
-          name: 'active',
-          sortField: 'active',
-          dataClass: 'text-primary',
-          callback: 'setActiveIcon'
-        },
-        {
           name: 'name',
           sortField: 'name',
           dataClass: 'text-primary'
         },
         {
-          name: 'email',
-          sortField: 'email'
+          title: 'Address',
+          name: 'address1',
+          sortField: 'address1',
+          callback: 'combine_address'
         },
         {
-          name: 'nickname',
-          sortField: 'nickname'
+          name: 'city',
+          sortField: 'city'
         //   callback: 'allcap'
         },
         {
-          title: '<i class="fa fa-thumbs-o-up fa-w"> Events</i>',
-          name: 'yes_responses',
-          sortField: 'yes_responses',
-          dataClass: 'text-center',
-          titleClass: 'text-center',
+          name: 'state',
+          sortField: 'state'
+        //   callback: 'allcap'
         },
         {
           name: '__slot:actions',   // <----
@@ -151,7 +127,7 @@ export default {
         }
       },
       sortOrder: [
-        { field: 'email', sortField: 'email', direction: 'asc'}
+        { field: 'name', sortField: 'name', direction: 'asc'}
       ],
       moreParams: {}
     }
@@ -167,8 +143,8 @@ export default {
   //   });
   // },
   methods: {
-    showMember (data, index) {
-          window.location.href = '/member/'+data.id+'/edit';
+    showOrganization (data, index) {
+          window.location.href = '/organization/'+data.id+'/edit';
     },
     getEvents (data, index) {
       console.log(data);
@@ -207,21 +183,19 @@ export default {
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
     },
-    // genderLabel (value) {
-    //   return value === 'M'
-    //     ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-    //     : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    combine_address: function(value) {
+
+    },
+    // formatNumber (value) {
+    //   return accounting.formatNumber(value, 2)
     // },
-    formatNumber (value) {
-      return accounting.formatNumber(value, 2)
-    },
-    formatDate (value, fmt = 'D MMM YYYY') {
-      return (value == null)
-        ? ''
-        : moment(value, 'YYYY-MM-DD').format(fmt)
-    },
+    // formatDate (value, fmt = 'D MMM YYYY') {
+    //   return (value == null)
+    //     ? ''
+    //     : moment(value, 'YYYY-MM-DD').format(fmt)
+    // },
     onPaginationData (paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+    //  this.$refs.paginationTop.setPaginationData(paginationData)      // <----
      // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
 
       this.$refs.pagination.setPaginationData(paginationData)
@@ -235,17 +209,17 @@ export default {
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
 
-      if ($('#'+data.id).length == 0) {
-        axios.get('/member/' + data.id + '/yes' )
-        .then(  (response) => {
-          data.events = response.data;
-          this.$refs.vuetable.toggleDetailRow(data.id)
-        }).catch((error) => {
-            console.log(error)
-        });
-      } else {
-         this.$refs.vuetable.toggleDetailRow(data.id)
-      }
+      // if ($('#'+data.id).length == 0) {
+      //   axios.get('/member/' + data.id + '/yes' )
+      //   .then(  (response) => {
+      //     data.events = response.data;
+      //     this.$refs.vuetable.toggleDetailRow(data.id)
+      //   }).catch((error) => {
+      //       console.log(error)
+      //   });
+      // } else {
+      //    this.$refs.vuetable.toggleDetailRow(data.id)
+      // }
 
     },
   },

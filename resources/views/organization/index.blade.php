@@ -12,55 +12,11 @@
             </div>
         </div>
     </section>
-    <div class="container">
-        <table class="table col-md-12">
-            <thead>
-                <tr><td>Name</td>
-                    {{-- <td>Phone</td> --}}
-                    <td>Address</td>
-                    <td>City</td>
-                    <td>State</td>
-                    {{-- <td>ZipCode</td> --}}
-                    <td class="text-center">Action</td>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach ($organizations as $org)
-                <tr>
-                    <td class="col-md-3">
-                        <a href="{{ url('/organization/'.$org->id) }}">{{ $org->name }}</a>
-                    </td>
-                    {{-- <td class="col-md-1">
-                        {{ $org->phone}}
-                    </td> --}}
-                    <td class="col-md-3">
-                        {{ $org->address1 }} {{ $org->address2}}
-                    </td>
-                    <td class="col-md-2">
-                        {{ $org->city}}
-                    </td>
-                    <td class="col-md-1">
-                        {{ $org->state}}
-                    </td>
-                    {{-- <td class="col-md-1">
-                        {{ $org->zipcode}}
-                    </td> --}}
-                    <td class="col-md-1 text-center">
-                    @can ('update', $org)
-                        <a href="{{ url('/organization/'.$org->id.'/edit') }}" class="btn btn-xs btn-default" data-toggle="tooltip" title="Edit" data-placement="left"><i class="fa fa-pencil"></i></a>
-                    @endcan
-                    {{-- @can ('destroy', $org)
-                    <span data-toggle="tooltip" title="Delete" data-placement="left" class="">
-                      <a href="#" type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#deleteOrganization" data-id="{{ $org->id }}" data-name="{{ $org->name}}" name="delete_{{ $org->id }}">
-                          <i class="fa fa-trash"></i>
-                      </a>
-                    </span>
-                    @endcan --}}
-                    </td>
-                </tr>
-            @endforeach
-            <tbody>
-        </table>
+    <div class="container-fluid">
+        <organizationslist
+          :is-admin="{{  1 }}"
+          :userid="{{ Auth::user()->id }}"
+        ></organizationslist>
     </div>
 </main>
 
