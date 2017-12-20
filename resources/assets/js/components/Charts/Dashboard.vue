@@ -98,15 +98,34 @@ export default {
           orgid: selectedOrgId,
           teamid: selectedTeamId
       }
-      axios.get('/db', {params: params})
+      axios.get('/api/dashboard', {params: params})
       .then(response => {
         this.bar1(response.data.EventTypesOverTime);
         this.doughnut1(response.data.TotalByType);
         this.participation(response.data.ParticpationRate);
       })
-      .catch(e => {
-        console.log(e);
-      })
+      // axios.get('/api/db?q=ETOT', {params: params})
+      // .then(response => {
+      //   this.bar1(response.data.EventTypesOverTime);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+      // axios.get('/api/db?q=TBT', {params: params})
+      // .then(response => {
+      //   this.doughnut1(response.data.TotalByType);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+      // axios.get('/api/db?q=PR', {params: params})
+      // .then(response => {
+      //   this.participation(response.data.ParticpationRate);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+
     },
     participation(data) {
     // pie chart

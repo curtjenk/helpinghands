@@ -18,8 +18,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/home', 'HomeController@index');
-    Route::get('/db', 'DashboardController@index');
+    Route::view('/dashboard', 'dashboard');  //this is really the dashboard
+    // Route::get('/home', 'HomeController@index');
+    //Route::get('/db', 'DashboardController@index');
+    Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
+        Route::get('/dashboard', 'DashboardController@index');
+    });
 
     Route::get('event/{id}/members', 'EventController@members');
     Route::get('event/{id}/signup', 'EventController@signup');

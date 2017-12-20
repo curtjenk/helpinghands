@@ -46,12 +46,9 @@
                     <ul class="nav navbar-nav">
                         <li style="height: 1px; margin-left:100px;">
                         </li>
-                        {{-- @if (Auth::user())
-                        <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                        @endif --}}
                     @if (Auth::user())
                         <li>
-                            <a href="{{ url('/home') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
+                            <a href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
