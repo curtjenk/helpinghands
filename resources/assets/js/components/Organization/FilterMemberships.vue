@@ -36,7 +36,7 @@ export default {
     }
   },
   mounted: function () {
-    axios('/member/'+this.userid+'/membership')
+    axios('/api/member/'+this.userid+'/membership')
     .then(response => {
       // console.log(response.data)
       this.memberships = response.data;

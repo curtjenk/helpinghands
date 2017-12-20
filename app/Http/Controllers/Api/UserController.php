@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Common\Inputs;
 use App;
 use Auth;
@@ -25,14 +26,6 @@ class UserController extends Controller
         ->where('responses.helping', true)
         ->orderby('events.date_end','asc')
         ->get();
-
-        // $responses = App\User::
-        //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
-        //     ->leftjoin('events', 'events.id', '=', 'responses.event_id')
-        //     ->groupby('users.id')
-        //     ->groupby('responses.id')
-        //     ->groupby('events.id')
-        //     ->paginate(10);
 
         return response()->json($responses);
     }
@@ -103,16 +96,18 @@ class UserController extends Controller
     {
         $this->authorize('list-users');
         $user = Auth::user();
-        if (!$request->ajax() && !$request->wantsJson()) {
-            return view('user.memberslist', []);
-        }
 
         $inputs = new Inputs($request,
             [ ]
         );
 
-        $query = $user->peers($inputs->orgid, $inputs->teamid)
-            ->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
+        if ($user->superuser()) {
+            $query = App\User::with(['organizations','organizations.teams']);
+        } else {
+            $query = $user->peers($inputs->orgid, $inputs->teamid);
+        }
+
+        $query = $query->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
             ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
@@ -124,7 +119,8 @@ class UserController extends Controller
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
             ->groupby('users.id');
-        return $query->paginate(10);
+
+        return $query->paginate($inputs->limit);
     }
 
     /**

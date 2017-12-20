@@ -18,11 +18,23 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::view('/dashboard', 'dashboard');  //this is really the dashboard
+    Route::view('/member', 'user.memberslist');
+    Route::view('/dashboard', 'dashboard');
+    Route::view('/organization', 'organization.index');
     // Route::get('/home', 'HomeController@index');
     //Route::get('/db', 'DashboardController@index');
     Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
         Route::get('/dashboard', 'DashboardController@index');
+        Route::get('/member', 'UserController@index');
+        Route::get('member/{id}/membership', 'UserController@membership');
+        Route::get('member/{id}/yes', 'UserController@yes_responses');
+        Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');
+        Route::get('member/signups/{eventid}', 'UserController@signups');
+        Route::post('member/eventpay/{eventid}', 'UserController@pay');
+        Route::post('member/{id}/avatar', 'UserController@avatar');
+        Route::put('member/{id}/email', 'UserController@update_email');
+        Route::put('member/{id}/password', 'UserController@update_password');
+        Route::get('member.destroy', 'UserController@destroy');
     });
 
     Route::get('event/{id}/members', 'EventController@members');
@@ -32,17 +44,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('event/notify/{id}', 'EventController@notify');
     Route::resource('event', 'EventController');
 
-    // Route::get('member', 'UserController@members');
-    Route::get('member/{id}/membership', 'UserController@membership');
-    Route::get('member/{id}/yes', 'UserController@yes_responses');
-    Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');
-    Route::get('member/signups/{eventid}', 'UserController@signups');
-    Route::post('member/eventpay/{eventid}', 'UserController@pay');
-    Route::resource('member', 'UserController');
-    Route::post('member/{id}/avatar', 'UserController@avatar');
-    Route::put('member/{id}/email', 'UserController@update_email');
-    Route::put('member/{id}/password', 'UserController@update_password');
-    Route::get('member.destroy', 'UserController@destroy');
+
+    //Route::resource('member', 'UserController');
 
     Route::get('administrator', 'HomeController@administrator');
 

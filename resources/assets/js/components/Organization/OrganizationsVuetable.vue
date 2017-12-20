@@ -1,10 +1,10 @@
 <template>
   <div>
-    <!-- <vuetable-pagination ref="paginationTop" style="padding-top:20px"
+    <vuetable-pagination ref="paginationTop" style="padding-top:20px"
       :css="css.pagination"
       :icons="css.icons"
       @vuetable-pagination:change-page="onChangePage"
-    ></vuetable-pagination> -->
+    ></vuetable-pagination>
     <!-- <filter-bar></filter-bar> -->
     <filter-bar filterPlaceholder="name, nickname, email"
         :userid="userid"
@@ -16,7 +16,6 @@
       :css="css.table"
       :sort-order="sortOrder"
       :multi-sort="true"
-      :per-page="3"
       detail-row-component="member-detail-row"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
@@ -157,6 +156,16 @@ export default {
       moreParams: {}
     }
   },
+  // mounted: function() {
+  //   axios.get('/member')
+  //   .then( response => {
+  //     console.log(response.data)
+  //     this.rows = response.data;
+  //   })
+  //   .catch( error => {
+  //     console.log(error);
+  //   });
+  // },
   methods: {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
@@ -164,7 +173,7 @@ export default {
     getEvents (data, index) {
       console.log(data);
       $("#proxySignup select").empty();
-      axios.get('/api/event?paginate=0')
+      axios('/event?paginate=0')
       .then(response => {
         for(var i=0; i< response.data.length; i++)
         {
@@ -212,7 +221,7 @@ export default {
         : moment(value, 'YYYY-MM-DD').format(fmt)
     },
     onPaginationData (paginationData) {
-      // this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
      // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
 
       this.$refs.pagination.setPaginationData(paginationData)
