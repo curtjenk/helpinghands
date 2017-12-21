@@ -7,6 +7,7 @@
       ></vuetable-pagination> -->
     <filter-bar filterPlaceholder=" subject, description"
       :userid="userid"
+      :filterByMemberships="true"
     ></filter-bar>
 
     <vuetable ref="vuetable"

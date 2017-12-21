@@ -13,7 +13,7 @@
       :per-page="10"
       :sort-order="sortOrder"
       :multi-sort="true"
-      detail-row-component="member-detail-row"
+      detail-row-component="organization-detail-row"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
@@ -21,10 +21,10 @@
     >
         <template slot="actions" scope="props">
           <div class="">
-            <span data-toggle="tooltip" title="View organization" data-placement="left" class="">
+            <span data-toggle="tooltip" title="Manage organization" data-placement="left" class="">
                 <a href="#" type="button" class=""
                   @click="showOrganization(props.rowData, props.rowIndex)">
-                  <i class="fa fa-address-card-o fa-lg fa-fw"></i>
+                  <i class="fa fa-pencil"></i>
                 </a>
             </span>
           </div>
@@ -51,12 +51,12 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
-import CustomActions from './OrganizationsCustomActions'
+// import CustomActions from './OrganizationsCustomActions'
 import DetailRow from './OrganizationsDetailRow'
 import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
-Vue.component('organization-custom-actions', CustomActions)
+// Vue.component('organization-custom-actions', CustomActions)
 Vue.component('organization-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
@@ -108,7 +108,7 @@ export default {
       ],
       css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
+          tableClass: 'table table-bordered table-striped table-hover table-condensed',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down'
         },
@@ -132,41 +132,31 @@ export default {
       moreParams: {}
     }
   },
-  // mounted: function() {
-  //   axios.get('/member')
-  //   .then( response => {
-  //     console.log(response.data)
-  //     this.rows = response.data;
-  //   })
-  //   .catch( error => {
-  //     console.log(error);
-  //   });
-  // },
   methods: {
     showOrganization (data, index) {
           window.location.href = '/organization/'+data.id+'/edit';
     },
-    getEvents (data, index) {
-      console.log(data);
-      $("#proxySignup select").empty();
-      axios('/event?paginate=0')
-      .then(response => {
-        for(var i=0; i< response.data.length; i++)
-        {
-          if (response.data[i].status=='Open') {
-            $("#proxySignup select").append(
-               $('<option>').text(response.data[i].subject).val(response.data[i].id)
-            );
-          }
-        }
-        $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-        $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
-        $("#proxySignup").modal('show');
-      })
-      .catch(e => {
-        console.log(e);
-      })
-    },
+    // getEvents (data, index) {
+    //   console.log(data);
+    //   $("#proxySignup select").empty();
+    //   axios('/event?paginate=0')
+    //   .then(response => {
+    //     for(var i=0; i< response.data.length; i++)
+    //     {
+    //       if (response.data[i].status=='Open') {
+    //         $("#proxySignup select").append(
+    //            $('<option>').text(response.data[i].subject).val(response.data[i].id)
+    //         );
+    //       }
+    //     }
+    //     $('#proxySignup h4').text('Signup/Decline for ' + data.name);
+    //     $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
+    //     $("#proxySignup").modal('show');
+    //   })
+    //   .catch(e => {
+    //     console.log(e);
+    //   })
+    // },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
           return item.id
@@ -208,6 +198,7 @@ export default {
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
+    this.$refs.vuetable.toggleDetailRow(data.id)
 
       // if ($('#'+data.id).length == 0) {
       //   axios.get('/member/' + data.id + '/yes' )

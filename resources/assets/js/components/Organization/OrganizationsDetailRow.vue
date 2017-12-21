@@ -1,45 +1,38 @@
 <template>
-  <div @click="onClick" :id="rowData.id">
-    <!-- <div class="col-md-3">
-        <div class="inline field">
-          <label>Name: </label>
-          <span>{{rowData.name}}</span>
-        </div>
-        <div class="inline field">
-          <label>Email: </label>
-          <span>{{rowData.email}}</span>
-        </div>
-        <div class="inline field">
-          <label>Nickname: </label>
-          <span>{{rowData.nickname}}</span>
-        </div>
-    </div> -->
-    <!-- <div class="col-md-3">
-        <div class="inline field">
-          <label>Mobile: </label>
-          <span>{{rowData.mobilephone}}</span>
-        </div>
-        <div class="inline field">
-          <label>Home: </label>
-          <span>{{rowData.homephone}}</span>
-        </div>
-    </div> -->
-    <span v-if="rowData.events != null">
-    <!-- <div class="col-md-2">
-        <h5 class="">
-            {{ rowData.events.length }} Event(s)
-        </h5>
-    </div> -->
-    <div class="col-md-12" id="scrollarea-invalid">
-        <div id="scrollarea-content">
-            <ol id="">
-              <li v-for="item in rowData.events" class="col-md-4">
-                {{ item.subject.ellipsisText(50) }}
-              </li>
-           </ol>
-        </div>
-    </div>
-    </span>
+  <div @click="onClick" :id="rowData.id" class="container-fluid">
+    <template v-if="rowData.teams.length > 0">
+      <div class="col-sm-offset-2 col-mdm-offset-2  col-md-8 col-sm-8">
+        <table class="table table-responsive table-striped table-condensed">
+          <thead>
+            <tr class="info">
+              <th colspan="3" class="text-center text-primary"><i>{{rowData.name}} : Team(s)</i></th>
+            </tr>
+            <tr class="info">
+              <th class="text-center"><i>Name</i></th>
+              <th class="text-center"><i>Description</i></th>
+              <th class="text-center"><i>Members</i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="team in rowData.teams">
+              <td>{{team.name}}</td>
+              <td>{{team.description}}</td>
+              <td class="text-center">{{team.users.length}}
+                <span v-if="team.users.length>1" class="text-success">
+                  <i class="fa fa-users"></i>
+                </span>
+                <span v-else-if="team.users.length==1" class="text-warning">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span v-else class="text-danger">
+                  <i class="fa fa-exclamation"></i>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -61,21 +54,6 @@ export default {
     }
   },
   events: {
-    // 'hide-detail' () {
-    //   console.log('hide-detail')
-    // },
-    // 'show-detail' () {
-    //   console.log('show-detail')
-    //   axios.get('/member/' + this.rowData.id )
-    //   .then(  (response) => {
-    //    console.log(response.data);
-    //   }).catch((error) => {
-    //       console.log('detail:', error)
-    //   });
-    // },
-    // 'filter-reset' () {
-    //     console.log('filter-reset caught in detailrow')
-    // }
   }
 }
 </script>
@@ -83,11 +61,11 @@ export default {
 ol {
     list-style-type: circle;
 }
-.scrollbox {
+/*.scrollbox {
     height: 50px;
     overflow-y: scroll;
     overflow-x:hidden;
-}
+}*/
 #scrollarea-invalid {
     padding-left: 0;
     overflow-y: scroll;

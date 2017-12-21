@@ -7,7 +7,8 @@
     ></vuetable-pagination> -->
     <!-- <filter-bar></filter-bar> -->
     <filter-bar filterPlaceholder="name, nickname, email"
-        :userid="userid"
+      :userid="userid"
+      :filterByMemberships="true"
     ></filter-bar>
     <vuetable ref="vuetable"
       api-url="/api/member"

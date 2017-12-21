@@ -23,7 +23,7 @@ class OrganizationController extends Controller
             [ ]
         );
 
-        $query=App\Organization::with('teams')
+        $query=App\Organization::with(['teams','teams.users'])
         ->where('organizations.name','!=','Ministry Engage')
         ->when($inputs->filter, function($q) use($inputs){
             Log::debug("Filter on ".$inputs->filter);
