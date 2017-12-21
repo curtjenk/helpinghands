@@ -20,9 +20,8 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     Route::view('/member', 'user.memberslist');
     Route::view('/dashboard', 'dashboard');
-    Route::view('/organization', 'organization.index');
     Route::view('/event', 'event.index');
-    
+
     Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
         Route::get('/dashboard', 'DashboardController@index');
         Route::get('/event', 'EventController@index');
@@ -50,7 +49,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('administrator', 'HomeController@administrator');
 
-    // Route::resource('organization', 'OrganizationController');
+    Route::resource('organization', 'OrganizationController',
+        ['only'=>['index','show']]
+    );
 
     Route::get('evite/{id}', 'EviteController@send_evites');
 //

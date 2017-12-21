@@ -133,30 +133,9 @@ export default {
     }
   },
   methods: {
-    showOrganization (data, index) {
-          window.location.href = '/organization/'+data.id+'/edit';
+    showOrganization: function (data, index) {
+          window.location.href = '/organization/'+data.id
     },
-    // getEvents (data, index) {
-    //   console.log(data);
-    //   $("#proxySignup select").empty();
-    //   axios('/event?paginate=0')
-    //   .then(response => {
-    //     for(var i=0; i< response.data.length; i++)
-    //     {
-    //       if (response.data[i].status=='Open') {
-    //         $("#proxySignup select").append(
-    //            $('<option>').text(response.data[i].subject).val(response.data[i].id)
-    //         );
-    //       }
-    //     }
-    //     $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-    //     $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
-    //     $("#proxySignup").modal('show');
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   })
-    // },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
           return item.id
@@ -164,11 +143,6 @@ export default {
     },
     collapseAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = []
-    },
-    setActiveIcon (value) {
-          return value == true
-            ? '<span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Yes</span>'
-            : '<span class="label label-danger"><i class="glyphicon glyphicon-remove"></i> No</span>'
     },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()

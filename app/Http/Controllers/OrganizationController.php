@@ -16,14 +16,7 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            $query=App\Organization::with('teams')->get();
-            return response()->json($query);
-        }
-
-        return view('organization.index', [
-            'organizations'=>App\Organization::all()
-        ]);
+        return view('organization.index', []);
     }
 
     /**
@@ -31,11 +24,11 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $this->authorize('create-organization');
-        return view('organization.create');
-    }
+    // public function create()
+    // {
+    //     $this->authorize('create-organization');
+    //     return view('organization.create');
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -43,32 +36,32 @@ class OrganizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // $user = Auth::user();
-        $this->authorize('create-organization');
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'phone' => 'max:15',
-            'address1' => 'required|max:255',
-            'address2' => 'max:255',
-            'city' => 'max:80',
-            'state' => 'max:40',
-            'zipcode' => 'required|max:10',
-        ]);
-        $organization = App\Organization::create([
-            'name'=>$request->input('name'),
-            'phone'=>$request->input('phone'),
-            'address1'=>$request->input('address1'),
-            'address2'=>$request->input('address2'),
-            'city'=>$request->input('city'),
-            'state'=>$request->input('state'),
-            'zipcode'=>$request->input('zipcode')
-        ]);
-        return view('organization.show', [
-            'organization'=>$organization,
-        ]);
-    }
+    // public function store(Request $request)
+    // {
+    //     // $user = Auth::user();
+    //     $this->authorize('create-organization');
+    //     $this->validate($request, [
+    //         'name' => 'required|max:255',
+    //         'phone' => 'max:15',
+    //         'address1' => 'required|max:255',
+    //         'address2' => 'max:255',
+    //         'city' => 'max:80',
+    //         'state' => 'max:40',
+    //         'zipcode' => 'required|max:10',
+    //     ]);
+    //     $organization = App\Organization::create([
+    //         'name'=>$request->input('name'),
+    //         'phone'=>$request->input('phone'),
+    //         'address1'=>$request->input('address1'),
+    //         'address2'=>$request->input('address2'),
+    //         'city'=>$request->input('city'),
+    //         'state'=>$request->input('state'),
+    //         'zipcode'=>$request->input('zipcode')
+    //     ]);
+    //     return view('organization.show', [
+    //         'organization'=>$organization,
+    //     ]);
+    // }
 
     /**
      * Display the specified resource.
@@ -92,14 +85,14 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $organization = App\Organization::findOrFail($id);
-        $this->authorize('update', $organization);
-        return view('organization.create', [
-            'organization'=>$organization,
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $organization = App\Organization::findOrFail($id);
+    //     $this->authorize('update', $organization);
+    //     return view('organization.create', [
+    //         'organization'=>$organization,
+    //     ]);
+    // }
 
     /**
      * Update the specified resource in storage.
