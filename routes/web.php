@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('event/notify/{id}', 'EventController@notify');
 
     // Route::resource('event', 'EventController');
-    //Route::resource('member', 'UserController');
+    Route::resource('member', 'UserController', ['only'=>['edit']]);
 
     Route::get('administrator', 'HomeController@administrator');
 

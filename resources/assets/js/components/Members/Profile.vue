@@ -240,7 +240,7 @@
                 <div class="form-group">
                     <label for="newpasswordconfirm" class="col-md-4 col-sm-4 control-label">Confirm Password</label>
                     <div class="col-md-7 col-sm-7">
-                      <input v-validate="'confirmed:newpassword'" id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
+                      <input v-validate="'required|confirmed:newpassword'" data-vv-as="password" id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
                       <span v-show="errors.has('newpasswordconfirm')" class="alert alert-danger">{{ errors.first('newpasswordconfirm') }}</span>
                     </div>
                 </div>
@@ -272,16 +272,6 @@ import { Validator } from 'vee-validate';
 
 // Vue.use(VeeValidate);
 Vue.use(VeeValidate, {fieldsBagName: 'formFields'})
-const dictionary = {
-  en: {
-    messages: {
-      confirmed: 'Confirm Password must match New Password'
-    }
-  }
-};
-Validator.updateDictionary(dictionary);
-const validator = new Validator({ newpasswordconfirm: 'confirmed' });
-validator.setLocale('en');
 
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
@@ -403,7 +393,7 @@ export default {
         this.uploadError = null;
     },
     update() {
-      var url = '/member/' + this.user.id;
+      var url = '/api/member/' + this.user.id;
       axios.put(url, {user: this.user, org: this.orgData})
       .then(  (response) => {
         // console.log(response)
@@ -423,7 +413,7 @@ export default {
     },
     updateEmail() {
       this.credential = 'Email';
-      var url = '/member/' + this.user.id + '/email';
+      var url = '/api/member/' + this.user.id + '/email';
       axios.put(url, {newEmail: this.newEmail})
       .then(  (response) => {
         // console.log(response)
@@ -451,7 +441,7 @@ export default {
     },
     updatePassword() {
       this.credential = 'Password';
-      var url = '/member/' + this.user.id + '/password';
+      var url = '/api/member/' + this.user.id + '/password';
       axios.put(url, {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
@@ -481,7 +471,7 @@ export default {
     saveAvatar(formData) {
       // upload photo to the server
       this.currentStatus = STATUS_SAVING;
-      var url = '/member/' + this.user.id  + '/avatar';
+      var url = '/api/member/' + this.user.id  + '/avatar';
       axios.post(url, formData)
       .then(  (response) => {
         this.uploadedFiles = [].concat(response);
