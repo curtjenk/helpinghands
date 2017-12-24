@@ -122,23 +122,27 @@ class User extends Authenticatable
     }
     public function has_permission($name, $orgid=null, $teamid=null)
     {
-        return DB::table('permissions')
+
+        $query = DB::table('permissions')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
             ->join('organization_user','organization_user.role_id','=','roles.id')
             ->where('organization_user.user_id', $this->id)
-            ->when($orgid, function($q) use($orgid) {
+            ->when(isset($orgid), function($q) use($orgid) {
                 $q->where('organization_user.organization_id', $orgid)
                 ->orWhere('roles.name','Site');
             })
-            ->when($teamid, function($q) use($teamid) {
+            ->when(isset($teamid), function($q) use($teamid) {
                 $q->join('team_user','team_user.role_id','=','roles.id')
                 ->where('team_user.organization_id', $teamid)
                 ->where('team_user.user_id', $this->id)
                 ->orWhere('roles.name','Site');;
             })
-            ->where('permissions.name', $name)
-            ->count() > 0;
+            ->where('permissions.name', $name);
+
+        // Log::debug($query->toSql());
+        // Log::debug($query->getBindings());
+        return $query->count() > 0;
     }
     /**
      * Check if the User has a specific Organization Permission

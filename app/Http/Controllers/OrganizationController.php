@@ -71,10 +71,13 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $organization = App\Organization::findOrFail($id);
+        $organization = App\Organization::with('teams')
+        ->where('id', $id)
+        ->first();
+
         $this->authorize('show', $organization);
 
-        return view('organization.show', [
+        return view('organization.manage', [
             'organization'=>$organization,
         ]);
     }

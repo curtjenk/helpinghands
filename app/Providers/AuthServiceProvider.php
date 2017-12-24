@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models;
 use App;
 use Log;
 
@@ -20,27 +21,6 @@ class AuthServiceProvider extends ServiceProvider
         App\Event::class => App\Policies\EventPolicy::class,
     ];
 
-/*
-
-['name'=>'Create organization'],
-['name'=>'Delete organization'],
-['name'=>'Show organization'],
-['name'=>'Update organization'],
-['name'=>'List organizations'],
-
-['name'=>'Create team'],
-['name'=>'Delete team'],
-['name'=>'Show team'],
-['name'=>'Update team'],
-['name'=>'List teams'],
-
-['name'=>'Create event'],
-['name'=>'Delete event'],
-['name'=>'Show event'],
-['name'=>'Update event'],
-['name'=>'List events'],
-
- */
     /**
      * Register any authentication / authorization services.
      *
@@ -49,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
         Gate::define('administer', function($user) {
             return $user->permissions()
                 ->where('permissions.name', 'LIKE', "%Create%")

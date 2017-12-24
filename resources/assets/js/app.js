@@ -24,6 +24,7 @@ Vue.component('filter-memberships', require('./components/Organization/FilterMem
 Vue.component('memberslist', require('./components/Members/MembersVuetable.vue'));
 Vue.component('memberprofile', require('./components/Members/Profile.vue'));
 Vue.component('organizationslist', require('./components/Organization/OrganizationsVuetable.vue'));
+Vue.component('organization-manager', require('./components/Organization/OrganizationManager.vue'));
 
 const app = new Vue({
     el: '#app'

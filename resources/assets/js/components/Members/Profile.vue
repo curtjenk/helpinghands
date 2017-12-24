@@ -66,7 +66,7 @@
                       <input id="phone1" v-model="user.homephone" type="tel" v-mask="'(###) ###-####'"
                         placeholder="" class="editInfo" name="phone1">
                     </div>
-                  </div>
+                </div>
                 <div class="form-group">
                     <label for="phone2" class="col-md-3 col-sm-3 control-label">Phone 2</label>
                     <div class="col-md-5 col-sm-5">

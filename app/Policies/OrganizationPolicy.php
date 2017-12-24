@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Organization;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Log;
 
 class OrganizationPolicy
 {
@@ -30,7 +31,7 @@ class OrganizationPolicy
      */
     public function show(User $user, Organization $organization)
     {
-        return $user->has_org_permission($organization->id, 'Show organization');
+        return $user->has_permission('Show organization', $organization->id);
     }
     /**
      * Determine whether the user can update the organization.
