@@ -77,7 +77,7 @@ class OrganizationController extends Controller
         ->first();
 
         $orgmembers = $organization->users()
-        ->select('organization_id', 'users.id as user_id', 'users.name as user_name','roles.name as role_name')
+        ->select('organization_id', 'users.id as user_id', 'users.name as name','roles.name as role_name')
         ->join('roles','roles.id','=','role_id')
         ->get();
 
