@@ -71,14 +71,21 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
+
         $organization = App\Organization::with('teams')
         ->where('id', $id)
         ->first();
+
+        $orgmembers = $organization->users()
+        ->select('organization_id', 'users.id as user_id', 'users.name as user_name','roles.name as role_name')
+        ->join('roles','roles.id','=','role_id')
+        ->get();
 
         $this->authorize('show', $organization);
 
         return view('organization.manage', [
             'organization'=>$organization,
+            'members'=>$orgmembers
         ]);
     }
 

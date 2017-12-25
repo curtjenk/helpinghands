@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="form-horizontal">
+    <div class="form-horizontal col-md-7 col-sm-7">
       <div class="form-group">
           <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
           <div class="col-md-5">
@@ -37,22 +37,20 @@
                   name="city" class="editInfo" maxlength="255">
           </div>
       </div>
-      <!-- <div class="form-inline"> -->
-        <div class="form-group">
-          <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
-          <div class="col-md-2">
-            <input id="state" v-model="org_state" type="text"
-                  name="state" class="" maxlength="2" size="2">
-          </div>
+      <div class="form-group">
+        <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
+        <div class="col-md-2">
+          <input id="state" v-model="org_state" type="text"
+                name="state" class="" maxlength="255">
         </div>
-        <div class="form-group">
-          <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-          <div class="col-md-2">
-            <input id="zip" v-model="org_zip" type="text"
-                name="zip" class="" maxlength="5" size="5">
-          </div>
+      </div>
+      <div class="form-group">
+        <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
+        <div class="col-md-2">
+          <input id="zip" v-model="org_zip" type="text"
+              name="zip" class="" maxlength="5" size="5">
         </div>
-      <!-- </div> -->
+      </div>
       <hr />
       <div class="block text-center">
           <button type="submit" class="btn btn-primary" name="submit">
@@ -60,7 +58,59 @@
           </button>
       </div>
     </div>
-
+    <div class="form-horizontal col-md-5 col-sm-5">
+      <div>
+        <strong>Administrator(s)</strong>&nbsp;&nbsp;&nbsp;
+        <span v-if="members && members.length>0 && !isAddingAdmin"
+          data-toggle="tooltip" title="" data-placement="right" class="">
+            <a href="#" type="button" class="text-success"
+              @click="toggleIsAddingAdmin()">
+              <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+            </a>
+        </span>
+      </div>
+      <table  class="table table-responsive table-striped table-condensed">
+        <tbody>
+          <tr v-if="isAddingAdmin">
+            <td>
+              <select v-model="new_admin">
+                <option disabled value="">Please select one</option>
+                <option v-for="member in members" v-bind:value="member">
+                  {{ member.user_name }}
+               </option>
+              </select>
+            </td>
+            <td>
+              <span data-toggle="tooltip" title="Save" data-placement="top" class="">
+                  <a href="#" type="button" class="text-primary"
+                    @click="saveNewAdmin()">
+                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                  </a>
+              </span>
+              <span data-toggle="tooltip" title="Cancel" data-placement="top" class="">
+                  <a href="#" type="button" class="text-danger"
+                    @click="toggleIsAddingAdmin()">
+                    <i class="fa fa-ban fa-lg fa-fw"></i>
+                  </a>
+              </span>
+            </td>
+          </tr>
+          <tr v-for="admin in administrators" >
+            <td>
+              {{ admin.user_name }}
+            </td>
+            <td>
+              <span data-toggle="tooltip" title="Remove as Administrator" data-placement="right" class="">
+                  <a href="#" type="button" class="text-danger"
+                    @click="removeAdmin(admin)">
+                    <i class="fa fa-trash-o fa-fw"></i>
+                  </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -81,26 +131,53 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    members0: {
+      type: Array,
+      required: false,
+      default: null
     }
   },
   data () {
     return {
+      isAddingAdmin: false,
+      new_admin: null,
       currentMode: MODE_SHOW,
       org_name: '',
       org_address1: '',
       org_address2: '',
-      org_phone: ''
-
+      org_phone: '',
+      org_city: '',
+      org_state: '',
+      org_zip: '',
+      administrators: [],
+      members: []
     }
   },
   mounted: function () {
     if (this.orgteams0 != null) {
       this.org_name = this.orgteams0.name
       this.org_address1 = this.orgteams0.address1
+      this.org_address2 = this.orgteams0.address2
+      this.org_city = this.orgteams0.city
+      this.org_state = this.orgteams0.state
+      this.org_zip = this.orgteams0.zip
+    }
+    if (this.members0 != null) {
+      this.administrators = this.members0.filter( function(k) {
+        return k.role_name == 'Admin';
+      })
+      this.members = this.members0.filter( function(k) {
+        return k.role_name != 'Admin';
+      })
     }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
 
     })
+  },
+  updated: function() {
+    // console.log('dom updated')
+    $('[data-toggle="tooltip"]').tooltip();
   },
   computed: {
     isShowing() {
@@ -119,7 +196,40 @@ export default {
     // }
   },
   methods: {
+    remove_user(array, user_name) {
+      return array.filter(e=> e.user_name != user_name);
+    },
+    toggleIsAddingAdmin () {
+      this.isAddingAdmin = !this.isAddingAdmin
+      if (!this.isAddingAdmin) {
+        this.new_admin = null
+      }
+    },
+    removeAdmin (admin) {
+      // console.log(admin.user_name)
+      //1 post to backend controller.  If successful
+      //TODO controller method and axios call
 
+      //2 add to this.members
+      this.members.push(admin)
+      //3 remove from this.administrators
+      this.administrators = this.remove_user(this.administrators, admin.user_name);
+    },
+    saveNewAdmin: function() {
+      if (this.new_admin == null) {
+        return;
+      }
+
+      this.isAddingAdmin = false;
+      //1 post to backend controller.  If successful
+      //TODO controller method and axios call
+
+      //2 add to this.administrators
+      this.administrators.push(this.new_admin)
+      //3 remove from this.members
+
+      this.members = this.remove_user(this.members, this.new_admin.user_name);
+    },
     update() {
       var url = '/api/member/' + this.user.id;
       axios.put(url, {user: this.user, org: this.orgData})

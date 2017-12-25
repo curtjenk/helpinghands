@@ -19,7 +19,9 @@
     <div class="container-fluid">
         <organization-manager
             :user0="{{ Auth::user() }}"
-            {{-- :orgteams0="{{ $organization }}" --}}
+            :orgteams0="{{ $organization }}"
+            :members0="{{ $members }}"
+
         ></organization-manager>
     </div>
 </main>
