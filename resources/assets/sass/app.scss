@@ -134,3 +134,7 @@ input[type=checkbox].red-cb:not(old):checked + label > span:before{
   text-shadow : 0 0 0.0714em rgb(115,153,77);
   font-weight : bold;
 }
+.vue-tooltip.tooltip-small {
+    font-size: 0.750em;
+    font-weight: bold;
+}

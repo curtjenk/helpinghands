@@ -15,6 +15,15 @@ import './bs_common';
 import './common';
 
 import ToggleButton from 'vue-js-toggle-button'
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/css/index.css';
+Vue.use(Tooltip, {
+    delay: 200,
+    placement: 'right',
+    class: 'tooltip-small',
+    triggers: ['hover'],
+    offset: 2
+});
 Vue.use(ToggleButton)
 
 // Vue.component('example', require('./components/Example.vue'));

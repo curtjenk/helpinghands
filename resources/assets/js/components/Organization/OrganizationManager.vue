@@ -1,17 +1,17 @@
 <template>
   <div class="">
     <div class="row">
-      <div class="form-horizontal col-md-7 col-sm-7">
+      <div class="form-horizontal col-md-8 col-sm-8">
         <div class="form-group">
             <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-            <div class="col-md-5">
+            <div class="col-md-6 col-sm-6">
                 <input required id="name" v-model="org_name" type="text"
                     name="name" autofocus class="editInfo" maxlength="255">
             </div>
         </div>
         <div class="form-group">
             <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
-            <div class="col-md-5 col-sm-5">
+            <div class="col-md-6 col-sm-6">
               <input id="phone" v-model="org_phone" type="tel" v-mask="'(###) ###-####'"
                 name="phone" class="editInfo">
             </div>
@@ -19,45 +19,45 @@
 
         <div class="form-group">
             <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
-            <div class="col-md-5">
+            <div class="col-md-6 col-sm-6">
                 <input id="address1" v-model="org_address1" type="text"
                     name="address1" class="editInfo" maxlength="255">
             </div>
         </div>
         <div class="form-group">
             <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
-            <div class="col-md-5">
+            <div class="col-md-6 col-sm-6">
                 <input id="address2" v-model="org_address2" type="text"
                     name="address2" class="editInfo" maxlength="255">
             </div>
         </div>
         <div class="form-group">
             <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
-            <div class="col-md-5">
+            <div class="col-md-6 col-sm-6">
                 <input id="city" v-model="org_city" type="text"
                     name="city" class="editInfo" maxlength="255">
             </div>
         </div>
         <div class="form-group">
           <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2">
             <input id="state" v-model="org_state" type="text"
                   name="state" class="" maxlength="255">
           </div>
         </div>
         <div class="form-group">
           <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2">
             <input id="zip" v-model="org_zip" type="text"
                 name="zip" class="" maxlength="5" size="5">
           </div>
         </div>
       </div>
-      <div class="form-horizontal col-md-5 col-sm-5">
+      <div class="form-horizontal col-md-4 col-sm-4">
         <div class="caption">
           <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
           <span v-if="members && members.length>0 && !isAddingAdmin"
-          data-toggle="tooltip" title="Add" data-placement="top">
+        v-tooltip.right="'Add Administrator'">
             <a  href="#" type="button" class="text-success"
               @click="toggleIsAddingAdmin()">
               <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -76,13 +76,13 @@
               </select>
             </td>
             <td>
-              <span data-toggle="tooltip" title="Done" data-placement="top" class="">
+              <span v-tooltip.top="'Done'">
                   <a href="#" type="button" class="text-primary"
                     @click="saveNewAdmin()">
                     <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                   </a>
               </span>
-              <span data-toggle="tooltip" title="Cancel" data-placement="top" class="">
+              <span v-tooltip.top="'Quit'">
                   <a href="#" type="button" class="text-danger"
                     @click="toggleIsAddingAdmin()">
                     <i class="fa fa-ban fa-lg fa-fw"></i>
@@ -95,7 +95,7 @@
               {{ admin.name }}
             </td>
             <td>
-              <span data-toggle="tooltip" title="Remove as Administrator" data-placement="right" class="">
+              <span v-tooltip.right="'Remove'" class="">
                   <a href="#" type="button" class="text-danger"
                     @click="removeAdmin(admin)">
                     <i class="fa fa-trash-o fa-fw"></i>
@@ -117,8 +117,7 @@
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <div class="caption">
           <span>Team(s)</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="!isAddingTeam"
-            data-toggle="tooltip" title="" data-placement="right" class="">
+          <span v-if="!isAddingTeam" v-tooltip.right="'Add Team'">
               <a href="#" type="button" class="text-success"
                 @click="toggleIsAddingTeam()">
                 <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -142,13 +141,13 @@
                 <input v-model="new_team_description" type="text" required />
               </td>
               <td>
-                <span data-toggle="tooltip" title="Done" data-placement="top" class="">
+                <span v-tooltip.top="'Done'"class="">
                     <a href="#" type="button" class="text-primary"
                       @click="saveNewTeam()">
                       <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                     </a>
                 </span>
-                <span data-toggle="tooltip" title="Cancel" data-placement="top" class="">
+                <span v-tooltip.top="'Quit'">
                     <a href="#" type="button" class="text-danger"
                       @click="toggleIsAddingTeam()">
                       <i class="fa fa-ban fa-lg fa-fw"></i>
@@ -160,7 +159,7 @@
               <td>{{ team.name }}</td>
               <td>{{ team.description }}</td>
               <td>
-                <span data-toggle="tooltip" title="Remove Team" data-placement="right" class="">
+                <span v-tooltip.right="'Remove'">
                     <a href="#" type="button" class="text-danger"
                       @click="removeTeam(team)">
                       <i class="fa fa-trash-o fa-fw"></i>
