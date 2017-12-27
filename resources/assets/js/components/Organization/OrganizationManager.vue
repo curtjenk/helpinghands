@@ -135,10 +135,11 @@
           <tbody>
             <tr v-if="isAddingTeam">
               <td>
-                  <input v-model="new_team_name" type="text" required :value="new_team_name"/>
+                  <input v-model="new_team_name" type="text" required :value="new_team_name"
+                    class="editInfo" maxlength="255"/>
               </td>
               <td>
-                <input v-model="new_team_description" type="text" required />
+                <input v-model="new_team_description" type="text" required class="editInfo" maxlength="255"/>
               </td>
               <td>
                 <span v-tooltip.top="'Done'"class="">
