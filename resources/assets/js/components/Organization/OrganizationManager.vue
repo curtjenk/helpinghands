@@ -2,6 +2,12 @@
   <div class="">
     <div class="row">
       <div class="form-horizontal col-md-8 col-sm-8">
+        <div class="col-md-offset-2 col-md-8 text-center">
+          <div class="alert alert-success" v-if="saveStatusSuccess" transition="expand">Organization information was saved/updated.</div>
+          <div class="alert alert-danger" v-if="saveStatusFailed" transition="expand">
+              <span>Sorry, unable to save/update changes</span>
+          </div>
+        </div>
         <div class="form-group">
             <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
             <div class="col-md-6 col-sm-6">
@@ -51,6 +57,11 @@
             <input id="zip" v-model="org_zip" type="text"
                 name="zip" class="" maxlength="5" size="5">
           </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+                <i class="fa fa-btn fa-check"></i> Save Organization
+            </button>
         </div>
       </div>
       <div class="form-horizontal col-md-4 col-sm-4">
@@ -108,11 +119,6 @@
       </div>
     </div>
     <hr/>
-    <div class="block pull-right">
-        <button type="submit" class="btn btn-primary" name="submit">
-            <i class="fa fa-btn fa-check"></i> Save All Changes
-        </button>
-    </div>
     <div class="row">
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <div class="caption">
@@ -179,6 +185,8 @@
 <script>
 import {TheMask} from 'vue-the-mask';
 
+const MESSAGE_DURATION = 2500;
+const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 const MODE_SHOW = 0, MODE_EDIT = 1, MODE_CREATE = 2;
 
 export default {
@@ -203,6 +211,7 @@ export default {
   },
   data () {
     return {
+      saveStatus: null,
       tip_admin: "Add Administrator",
       isAddingAdmin: false,
       isAddingTeam: false,
@@ -259,14 +268,14 @@ export default {
     // console.log('dom updated')
   },
   computed: {
-    isShowing() {
-      return this.currentMode === MODE_SHOW;
+    saveStatusInitial() {
+      return this.saveStatus === STATUS_INITIAL;
     },
-    isEditing() {
-      return this.currentMode === MODE_EDIT;
+    saveStatusSuccess() {
+      return this.saveStatus === STATUS_SUCCESS;
     },
-    isCreating() {
-      return this.currentMode === MODE_CREATE;
+    saveStatusFailed() {
+      return this.saveStatus === STATUS_FAILED;
     }
   },
   watch: {
@@ -301,7 +310,7 @@ export default {
       if (this.new_admin == null) {
         return;
       }
-
+      console.log("new_admin",this.new_admin)
       this.isAddingAdmin = false;
       //1 post to backend controller.  If successful
       //TODO controller method and axios call
@@ -339,25 +348,30 @@ export default {
       this.teams.push(team)
 
     },
+    saveOrganization() {
+      var url = '/api/organization';
+      this.saveStatus = STATUS_SUCCESS;
+      var self = this;
+      setTimeout(function(){
+          self.saveStatus = STATUS_INITIAL;
+      }, MESSAGE_DURATION);
 
-    update() {
-      var url = '/api/member/' + this.user.id;
-      axios.put(url, {user: this.user, org: this.orgData})
-      .then(  (response) => {
-        // console.log(response)
-        this.updateStatus = STATUS_SUCCESS;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION);
-      }).catch((error) => {
-        // console.log(error)
-        this.updateStatus = STATUS_FAILED;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION + 1000);
-      });
+      // axios.put(url, {user: this.user, org: this.orgData})
+      // .then(  (response) => {
+      //   // console.log(response)
+      //   this.updateStatus = STATUS_SUCCESS;
+      //   var self = this;
+      //   setTimeout(function(){
+      //       self.updateStatus = STATUS_INITIAL;
+      //   }, MESSAGE_DURATION);
+      // }).catch((error) => {
+      //   // console.log(error)
+      //   this.updateStatus = STATUS_FAILED;
+      //   var self = this;
+      //   setTimeout(function(){
+      //       self.updateStatus = STATUS_INITIAL;
+      //   }, MESSAGE_DURATION + 1000);
+      // });
     },
     updateEmail() {
       this.credential = 'Email';
