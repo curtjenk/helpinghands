@@ -169,29 +169,6 @@
             </tr>
           </thead>
           <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
-            <!-- <tr v-if="isAddingTeam">
-              <td>
-                  <input v-model="new_team_name" type="text" required :value="new_team_name"
-                    class="editInfo" maxlength="255"/>
-              </td>
-              <td>
-                <input v-model="new_team_description" type="text" required class="editInfo" maxlength="255"/>
-              </td>
-              <td>
-                <span v-tooltip.top="'Done'"class="">
-                    <a href="#" type="button" class="text-primary"
-                      @click="saveNewTeam()">
-                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                    </a>
-                </span>
-                <span v-tooltip.top="'Quit'">
-                    <a href="#" type="button" class="text-danger"
-                      @click="toggleIsAddingTeam()">
-                      <i class="fa fa-ban fa-lg fa-fw"></i>
-                    </a>
-                </span>
-              </td>
-            </tr> -->
             <tr v-for="team in teams" v-bind:key="team.id" class="list-item">
               <td>{{ team.name }}</td>
               <td>{{ team.description }}</td>
