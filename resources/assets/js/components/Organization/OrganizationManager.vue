@@ -132,31 +132,33 @@
         </div>
         <div v-if="isAddingTeam" class="panel panel-default">
           <div class="form-group row panel-body">
-            <div class="col-md-3 col-sm-3">
-              <float-label>
-                <input id="ntn" v-model="new_team_name" type="text" required :value="new_team_name"
-                  class="editInfo" size="100" maxlength="255" placeholder="Name"/>
-              </float-label>
-            </div>
-            <div class="col-md-4 col-sm-4">
-              <float-label>
-                <input id="ntd" v-model="new_team_description" type="text" required
-                  class="editInfo" maxlength="255" placeholder="Description"/>
-              </float-label>
-            </div>
-            <div class="col-md-1 col-sm-2" style="padding: 0px;">
-              <span v-tooltip.top="'Done'"class="">
-                  <a href="#" type="button" class="text-primary"
-                    @click="saveNewTeam()">
-                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                  </a>
-              </span>
-              <span v-tooltip.top="'Quit'">
-                  <a href="#" type="button" class="text-danger"
-                    @click="toggleIsAddingTeam()">
-                    <i class="fa fa-ban fa-lg fa-fw"></i>
-                  </a>
-              </span>
+            <div class="">
+              <div class="col-md-4 col-sm-4">
+                <float-label>
+                  <input id="ntn" v-model="new_team_name" type="text" required :value="new_team_name"
+                    class="editInfo" size="100" maxlength="255" placeholder="Name"/>
+                </float-label>
+              </div>
+              <div class="col-md-6 col-sm-6">
+                <float-label>
+                  <input id="ntd" v-model="new_team_description" type="text" required
+                    class="editInfo" maxlength="255" placeholder="Description"/>
+                </float-label>
+              </div>
+              <div class="col-md-1 col-sm-2" style="padding: 0px;">
+                <span v-tooltip.top="'Done'"class="">
+                    <a href="#" type="button" class="text-primary"
+                      @click="saveNewTeam()">
+                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                    </a>
+                </span>
+                <span v-tooltip.top="'Quit'">
+                    <a href="#" type="button" class="text-danger"
+                      @click="toggleIsAddingTeam()">
+                      <i class="fa fa-ban fa-lg fa-fw"></i>
+                    </a>
+                </span>
+              </div>
             </div>
           </div>
         </div>
