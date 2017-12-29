@@ -130,7 +130,37 @@
               </a>
           </span>
         </div>
-        <table  class="table table-responsive table-striped table-condensed">
+        <div v-if="isAddingTeam" class="panel panel-default">
+          <div class="form-group row panel-body">
+            <div class="col-md-3 col-sm-3">
+              <float-label>
+                <input id="ntn" v-model="new_team_name" type="text" required :value="new_team_name"
+                  class="editInfo" size="100" maxlength="255" placeholder="Name"/>
+              </float-label>
+            </div>
+            <div class="col-md-4 col-sm-4">
+              <float-label>
+                <input id="ntd" v-model="new_team_description" type="text" required
+                  class="editInfo" maxlength="255" placeholder="Description"/>
+              </float-label>
+            </div>
+            <div class="col-md-1 col-sm-2" style="padding: 0px;">
+              <span v-tooltip.top="'Done'"class="">
+                  <a href="#" type="button" class="text-primary"
+                    @click="saveNewTeam()">
+                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                  </a>
+              </span>
+              <span v-tooltip.top="'Quit'">
+                  <a href="#" type="button" class="text-danger"
+                    @click="toggleIsAddingTeam()">
+                    <i class="fa fa-ban fa-lg fa-fw"></i>
+                  </a>
+              </span>
+            </div>
+          </div>
+        </div>
+        <table class="table table-responsive table-striped table-condensed">
           <thead>
             <tr>
               <th>Name</th>
@@ -138,8 +168,8 @@
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-if="isAddingTeam">
+          <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
+            <!-- <tr v-if="isAddingTeam">
               <td>
                   <input v-model="new_team_name" type="text" required :value="new_team_name"
                     class="editInfo" maxlength="255"/>
@@ -161,8 +191,8 @@
                     </a>
                 </span>
               </td>
-            </tr>
-            <tr v-for="team in teams" >
+            </tr> -->
+            <tr v-for="team in teams" v-bind:key="team.id" class="list-item">
               <td>{{ team.name }}</td>
               <td>{{ team.description }}</td>
               <td>
@@ -211,6 +241,7 @@ export default {
   },
   data () {
     return {
+      ready: false,
       saveStatus: null,
       tip_admin: "Add Administrator",
       isAddingAdmin: false,
@@ -261,7 +292,7 @@ export default {
       })
     }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
-
+      this.ready = true;
     })
   },
   updated: function() {
@@ -329,7 +360,9 @@ export default {
       this.teams = this.remove_by_name(this.teams, team.name);
     },
     saveNewTeam: function() {
-      if (this.new_team_name == '') {
+      this.new_team_name = this.new_team_name.trim();
+      this.new_team_description = this.new_team_description.trim();
+      if (this.new_team_name == '' || this.new_team_description == '') {
         return;
       }
 
@@ -437,6 +470,15 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.list-item {
+}
+.list-enter-active {
+  transition: all 5s;
+}
+.list-enter {
+  background: yellow;
+}
+
 .alert {
   padding: 0px;
 }

@@ -15,6 +15,9 @@ import './bs_common';
 import './common';
 
 import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
+import VueFloatLabel from 'vue-float-label'
+Vue.use(VueFloatLabel)
 import Tooltip from 'vue-directive-tooltip';
 import 'vue-directive-tooltip/css/index.css';
 Vue.use(Tooltip, {
@@ -24,7 +27,6 @@ Vue.use(Tooltip, {
     triggers: ['hover'],
     offset: 2
 });
-Vue.use(ToggleButton)
 
 // Vue.component('example', require('./components/Example.vue'));
 Vue.component('eventslist', require('./components/Events/EventsVuetable.vue'));
