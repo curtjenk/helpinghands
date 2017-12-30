@@ -16,6 +16,14 @@ import './common';
 
 import ToggleButton from 'vue-js-toggle-button'
 Vue.use(ToggleButton)
+import VuejsDialog from "vuejs-dialog"
+Vue.use(VuejsDialog, {
+    html: true,
+    loader: true,
+    okText: 'Proceed',
+    cancelText: 'Cancel',
+    animation: 'zoom',  //bounce, zoom, fade
+})
 import VueFloatLabel from 'vue-float-label'
 Vue.use(VueFloatLabel)
 import Tooltip from 'vue-directive-tooltip';

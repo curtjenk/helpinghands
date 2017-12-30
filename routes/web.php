@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('member/{id}/email', 'UserController@update_email');
         Route::put('member/{id}/password', 'UserController@update_password');
         Route::get('member.destroy', 'UserController@destroy');
-        Route::get('/organization', 'OrganizationController@index');
+        Route::resource('/organization', 'OrganizationController');
     });
 
     Route::get('event/{id}/members', 'EventController@members');
@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('administrator', 'HomeController@administrator');
 
     Route::resource('organization', 'OrganizationController',
-        ['only'=>['index','show']]
+        ['only'=>['index','show','create']]
     );
 
     Route::get('evite/{id}', 'EviteController@send_evites');

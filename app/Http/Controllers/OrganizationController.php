@@ -24,11 +24,21 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function create()
-    // {
-    //     $this->authorize('create-organization');
-    //     return view('organization.create');
-    // }
+    public function create()
+    {
+        $this->authorize('create-organization');
+        // $organization = App\Organization::with('teams')
+        // ->where('id', 3)
+        // ->first();
+        // $orgmembers = $organization->users()
+        // ->select('organization_id', 'users.id as user_id', 'users.name as name','roles.name as role_name')
+        // ->join('roles','roles.id','=','role_id')
+        // ->get();
+        return view('organization.manage', [
+            'organization'=> json_encode(null),
+            'members'=> json_encode(null)
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -71,7 +81,6 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-
         $organization = App\Organization::with('teams')
         ->where('id', $id)
         ->first();

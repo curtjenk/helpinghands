@@ -75,40 +75,43 @@
             </a>
           </span>
         </div>
+        <div v-if="isAddingAdmin" class="panel panel-default">
+          <div class="form-group row panel-body">
+              <div class="col-md-7 col-sm-7">
+                <select v-model="new_admin">
+                  <option disabled value="">Please select one</option>
+                  <option v-for="member in members" v-bind:value="member">
+                    {{ member.name }}
+                 </option>
+                </select>
+              </div>
+              <div class="col-md-4 col-sm-4">
+                <span v-tooltip.top="'Save'">
+                    <a href="#" type="button" class="text-primary"
+                      @click="saveNewAdmin()">
+                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                    </a>
+                </span>
+                <span v-tooltip.top="'Cancel'">
+                    <a href="#" type="button" class="text-danger"
+                      @click="toggleIsAddingAdmin()">
+                      <i class="fa fa-ban fa-lg fa-fw"></i>
+                    </a>
+                </span>
+              </div>
+
+          </div>
+        </div>
         <table  class="table table-responsive table-striped table-condensed">
-        <tbody>
-          <tr v-if="isAddingAdmin">
-            <td>
-              <select v-model="new_admin">
-                <option disabled value="">Please select one</option>
-                <option v-for="member in members" v-bind:value="member">
-                  {{ member.name }}
-               </option>
-              </select>
-            </td>
-            <td>
-              <span v-tooltip.top="'Done'">
-                  <a href="#" type="button" class="text-primary"
-                    @click="saveNewAdmin()">
-                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                  </a>
-              </span>
-              <span v-tooltip.top="'Quit'">
-                  <a href="#" type="button" class="text-danger"
-                    @click="toggleIsAddingAdmin()">
-                    <i class="fa fa-ban fa-lg fa-fw"></i>
-                  </a>
-              </span>
-            </td>
-          </tr>
-          <tr v-for="admin in administrators" >
+        <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
+          <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
             <td>
               {{ admin.name }}
             </td>
             <td>
               <span v-tooltip.right="'Remove'" class="">
                   <a href="#" type="button" class="text-danger"
-                    @click="removeAdmin(admin)">
+                        @click="removeAdmin(admin)">
                     <i class="fa fa-trash-o fa-fw"></i>
                   </a>
               </span>
@@ -146,13 +149,13 @@
                 </float-label>
               </div>
               <div class="col-md-1 col-sm-2" style="padding: 0px;">
-                <span v-tooltip.top="'Done'"class="">
+                <span v-tooltip.top="'Save'"class="">
                     <a href="#" type="button" class="text-primary"
                       @click="saveNewTeam()">
                       <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                     </a>
                 </span>
-                <span v-tooltip.top="'Quit'">
+                <span v-tooltip.top="'Cancel'">
                     <a href="#" type="button" class="text-danger"
                       @click="toggleIsAddingTeam()">
                       <i class="fa fa-ban fa-lg fa-fw"></i>
@@ -208,12 +211,12 @@ export default {
       required: true
     },
     orgteams0: {
-      type: Object,
+      // type: Object,
       required: false,
       default: null
     },
     members0: {
-      type: Array,
+      // type: Array,
       required: false,
       default: null
     }
@@ -307,14 +310,30 @@ export default {
       this.new_team_description = ''
     },
     removeAdmin (admin) {
-      // console.log(admin.user_name)
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
+      let message = '<i>Remove <span class="text-danger"><b>' + admin.name
+                  + '\'s </b></span> administrator privileges?</i>';
+      this.$dialog.confirm(message, {
+        // loader: false,
+        // animation: 'zoom'
+      })
+      .then( (dialog)=> {
+          console.log('Clicked on proceed')
+          //1 post to backend controller.  If successful
+          //TODO controller method and axios call
+          // close dialog: setTimeout is temporary
+          setTimeout(() => {
+            //2 add to this.members
+            this.members.push(admin)
+            //3 remove from this.administrators
+            this.administrators = this.remove_by_name(this.administrators, admin.name);
+            console.log('Delete action completed ');
+            dialog.close();
+          }, 2000);
+      })
+      .catch( ()=> {
+          console.log('Clicked on cancel')
+      });
 
-      //2 add to this.members
-      this.members.push(admin)
-      //3 remove from this.administrators
-      this.administrators = this.remove_by_name(this.administrators, admin.name);
     },
     saveNewAdmin: function() {
       if (this.new_admin == null) {
@@ -334,9 +353,25 @@ export default {
     removeTeam (team) {
       //1 post to backend controller.  If successful
       //TODO controller method and axios call
-
-      //3 remove from this.administrators
-      this.teams = this.remove_by_name(this.teams, team.name);
+      let message = '<i>Team <span class="text-danger"><b>' + team.name
+                  + '</b></span> will be permanently deleted!</i>';
+      message += "now is the time for all good men to come to the aid of their country";
+      this.$dialog.confirm(message, {})
+      .then( (dialog)=> {
+          console.log('Clicked on proceed')
+          //1 post to backend controller.  If successful
+          //TODO controller method and axios call
+          // close dialog: setTimeout is temporary
+          setTimeout(() => {
+            //2 remove team from list
+            this.teams = this.remove_by_name(this.teams, team.name);
+            console.log('Delete action completed ');
+            dialog.close();
+          }, 2000);
+      })
+      .catch( ()=> {
+          console.log('Clicked on cancel')
+      });
     },
     saveNewTeam: function() {
       this.new_team_name = this.new_team_name.trim();

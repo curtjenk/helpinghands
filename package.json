@@ -40,6 +40,7 @@
     "vue-switches": "^2.0.1",
     "vue-template-compiler": "2.4.4",
     "vue-the-mask": "^0.11.0-alpha.2",
+    "vuejs-dialog": "^0.4.5",
     "vuetable-2": "^1.6.5"
   }
 }
