@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('administrator', 'HomeController@administrator');
 
     Route::resource('organization', 'OrganizationController',
-        ['only'=>['index','show','create']]
+        ['only'=>['index','show','create','edit']]
     );
 
     Route::get('evite/{id}', 'EviteController@send_evites');

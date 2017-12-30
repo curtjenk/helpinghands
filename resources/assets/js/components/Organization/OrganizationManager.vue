@@ -211,12 +211,12 @@ export default {
       required: true
     },
     orgteams0: {
-      // type: Object,
+      type: Object,
       required: false,
       default: null
     },
     members0: {
-      // type: Array,
+      type: Array,
       required: false,
       default: null
     }
@@ -246,7 +246,9 @@ export default {
     }
   },
   mounted: function () {
+    this.currentMode = MODE_SHOW
     if (this.orgteams0 != null) {
+      this.currentMode = MODE_EDIT
       this.org_id = this.orgteams0.id
       this.org_name = this.orgteams0.name
       this.org_address1 = this.orgteams0.address1

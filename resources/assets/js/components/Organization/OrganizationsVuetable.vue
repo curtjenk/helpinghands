@@ -21,7 +21,13 @@
     >
         <template slot="actions" scope="props">
           <div class="">
-            <span data-toggle="tooltip" title="Manage organization" data-placement="left" class="">
+            <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
+                <a href="#" type="button" class=""
+                  @click="editOrganization(props.rowData, props.rowIndex)">
+                  <i class="fa fa-pencil"></i>
+                </a>
+            </span>
+            <span data-toggle="tooltip" title="View" data-placement="left" class="">
                 <a href="#" type="button" class=""
                   @click="showOrganization(props.rowData, props.rowIndex)">
                   <i class="fa fa-pencil"></i>
@@ -135,6 +141,9 @@ export default {
   methods: {
     showOrganization: function (data, index) {
           window.location.href = '/organization/'+data.id
+    },
+    editOrganization: function (data, index) {
+          window.location.href = '/organization/'+data.id+'?mode=edit'
     },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
