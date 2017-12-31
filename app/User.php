@@ -144,7 +144,7 @@ class User extends Authenticatable
         return $query->count() > 0;
     }
     /**
-     * Check if the User has a specific Organization Permission
+     * Check if the User has A Permission for any org or for a specific org.
      */
     public function has_org_permission($orgid, $name)
     {
@@ -154,9 +154,15 @@ class User extends Authenticatable
             ->join('organization_user','organization_user.role_id','=','roles.id')
             ->where('organization_user.user_id', $this->id)
             ->where(function($q) use($orgid, $name){
+                // $q->where(function($q) use($orgid, $name) {
+                //     $q->where('permissions.name', $name)
+                //     ->where('organization_user.organization_id', $orgid);
+                // })
                 $q->where(function($q) use($orgid, $name) {
-                    $q->where('permissions.name', $name)
-                    ->where('organization_user.organization_id', $orgid);
+                    $q->when(isset($orgid), function($q) use($orgid) {
+                        $q->where('organization_user.organization_id', $orgid);
+                    })
+                    ->where('permissions.name', $name);
                 })
                 ->orWhere('roles.name','Site');
             });
@@ -166,7 +172,7 @@ class User extends Authenticatable
         return $query->count() > 0;
     }
     /**
-     * [has_team_permission description]
+     * Checks if A Permission for any team or for a specific team.
      * @param  [type]  $teamid [description]
      * @param  [type]  $name   name of the permission
      * @return boolean         [description]
@@ -180,8 +186,10 @@ class User extends Authenticatable
             ->where('team_user.user_id', $this->id)
             ->where(function($q) use($teamid, $name){
                 $q->where(function($q) use($teamid, $name) {
-                    $q->where('permissions.name', $name)
-                    ->where('team_user.team_id', $teamid);
+                    $q->when(isset($teamid), function($q) use($teamid) {
+                        $q->where('team_user.team_id', $teamid);
+                    })
+                    ->where('permissions.name', $name);
                 })
                 ->orWhere('roles.name','Site');
             })

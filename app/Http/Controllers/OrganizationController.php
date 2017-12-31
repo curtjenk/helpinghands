@@ -43,7 +43,7 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $organization = App\Organization::with('teams')
+        $organization = App\Organization::with(['teams','teams.users'])
         ->where('id', $id)
         ->first();
 

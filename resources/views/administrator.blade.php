@@ -22,13 +22,31 @@
             @endcan
             </div> --}}
             <div class="row">
-            @can ('list-organizations')
+            @can ('manage-organization')
                 <div class="col-md-6 col-md-offset-3">
                     <a href="{{ url('/organization') }}" name="manage_orgs" style="text-decoration: none;">
                         {{-- <div> --}}
                         <div class="thumbnail">
                             <i class="fa fa-sitemap fa-5x adminIcons"></i>
                             <p class="">Manage Organizations</p>
+                        </div>
+                    </a>
+                </div>
+            @endcan
+            </div>
+            <div class="row">
+            @can ('manage-team')
+                <div class="col-md-6 col-md-offset-3">
+                    <a href="{{ url('/team') }}" name="manage_orgs" style="text-decoration: none;">
+                        {{-- <div> --}}
+                        <div class="thumbnail">
+                            <div class="">
+                                <i class="fa fa-sitemap fa-5x adminIcons"></i>
+                            </div>
+                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                            <p class="">Manage teams</p>
                         </div>
                     </a>
                 </div>

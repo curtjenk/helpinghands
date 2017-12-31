@@ -40,7 +40,20 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('create-organization', function ($user) {
-            return $user->has_permission('Create organization');
+            return $user->has_org_permission(null, 'Create organization');
+        });
+        Gate::define('manage-organization', function ($user) {
+            return $user->has_org_permission(null, 'Create organization')
+                || $user->has_org_permission(null, 'Update organization')
+                || $user->has_org_permission(null, 'Delete organization');
+        });
+        Gate::define('create-team', function ($user) {
+            return $user->has_team_permission(null, 'Create team');
+        });
+        Gate::define('manage-team', function ($user) {
+            return $user->has_team_permission(null, 'Create team')
+                || $user->has_team_permission(null, 'Update team')
+                || $user->has_team_permission(null, 'Delete team');
         });
         Gate::define('list-organizations', function ($user) {
             return $user->has_permission('List organizations');
