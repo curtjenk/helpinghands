@@ -30,7 +30,7 @@
             <span data-toggle="tooltip" title="View" data-placement="left" class="">
                 <a href="#" type="button" class=""
                   @click="showOrganization(props.rowData, props.rowIndex)">
-                  <i class="fa fa-pencil"></i>
+                  <i class="fa fa-eye"></i>
                 </a>
             </span>
           </div>
@@ -140,10 +140,10 @@ export default {
   },
   methods: {
     showOrganization: function (data, index) {
-          window.location.href = '/organization/'+data.id
+          window.location.href = '/organization/'+data.id;
     },
     editOrganization: function (data, index) {
-          window.location.href = '/organization/'+data.id+'?mode=edit'
+          window.location.href = '/organization/'+data.id+'/edit'
     },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {

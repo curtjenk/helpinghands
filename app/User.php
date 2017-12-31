@@ -122,7 +122,6 @@ class User extends Authenticatable
     }
     public function has_permission($name, $orgid=null, $teamid=null)
     {
-
         $query = DB::table('permissions')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')

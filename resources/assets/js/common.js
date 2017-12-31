@@ -4,7 +4,6 @@
  */
 export const common = common || {};
 
-
 common.change_organization = function(event)
 {
   let orgid=$('#selected_org_id').val();

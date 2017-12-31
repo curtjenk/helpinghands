@@ -18,6 +18,7 @@
     </section>
     <div class="container-fluid">
         <organization-manager
+            mode0="{{ $mode }}"
             :user0="{{ Auth::user() }}"
             :orgteams0="{{ $organization }}"
             :members0="{{ $members }}"

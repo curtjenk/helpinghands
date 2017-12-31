@@ -1,74 +1,121 @@
 <template>
   <div class="">
     <div class="row">
-      <div class="form-horizontal col-md-8 col-sm-8">
-        <div class="col-md-offset-2 col-md-8 text-center">
-          <div class="alert alert-success" v-if="saveStatusSuccess" transition="expand">Organization information was saved/updated.</div>
-          <div class="alert alert-danger" v-if="saveStatusFailed" transition="expand">
-              <span>Sorry, unable to save/update changes</span>
+      <span v-if="modeShow">
+        <div class="form-horizontal col-md-8 col-sm-8">
+          <div class="form-group">
+              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
+              <div class="col-md-6 col-sm-6">
+                <p id="name" class="form-control-static">{{ org_name }}</p>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
+              <div class="col-md-6 col-sm-6">
+                <p id="phone" class="form-control-static">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</p>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
+              <div class="col-md-6 col-sm-6">
+                <p id="address1" class="form-control-static">{{ org_address1 }}</p>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
+              <div class="col-md-6 col-sm-6">
+                    <p id="address2" class="form-control-static">{{ org_address2 }}</p>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
+              <div class="col-md-6 col-sm-6">
+                  <p id="city" class="form-control-static">{{ org_city }}</p>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
+            <div class="col-md-2 col-sm-2">
+              <p id="state" class="form-control-static">{{ org_state }}</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
+            <div class="col-md-2 col-sm-2">
+              <p id="zip" class="form-control-static">{{ org_zip }}</p>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-            <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-            <div class="col-md-6 col-sm-6">
-                <input required id="name" v-model="org_name" type="text"
-                    name="name" autofocus class="editInfo" maxlength="255">
+      </span>
+      <span v-else>
+        <div class="form-horizontal col-md-8 col-sm-8">
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
+            <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+                <span>Sorry, unable to save/update changes</span>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
-            <div class="col-md-6 col-sm-6">
-              <input id="phone" v-model="org_phone" type="tel" v-mask="'(###) ###-####'"
-                name="phone" class="editInfo">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
-            <div class="col-md-6 col-sm-6">
-                <input id="address1" v-model="org_address1" type="text"
-                    name="address1" class="editInfo" maxlength="255">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
-            <div class="col-md-6 col-sm-6">
-                <input id="address2" v-model="org_address2" type="text"
-                    name="address2" class="editInfo" maxlength="255">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
-            <div class="col-md-6 col-sm-6">
-                <input id="city" v-model="org_city" type="text"
-                    name="city" class="editInfo" maxlength="255">
-            </div>
-        </div>
-        <div class="form-group">
-          <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
-          <div class="col-md-2 col-sm-2">
-            <input id="state" v-model="org_state" type="text"
-                  name="state" class="" maxlength="255">
           </div>
-        </div>
-        <div class="form-group">
-          <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-          <div class="col-md-2 col-sm-2">
-            <input id="zip" v-model="org_zip" type="text"
-                name="zip" class="" maxlength="5" size="5">
+          <div class="form-group">
+              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
+              <div class="col-md-6 col-sm-6">
+                  <input required id="name" v-model="org_name" type="text"
+                      name="name" autofocus class="editInfo" maxlength="255">
+              </div>
           </div>
-        </div>
-        <div class="text-center">
+          <div class="form-group">
+              <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
+              <div class="col-md-6 col-sm-6">
+                <input id="phone" v-model="org_phone" type="tel" v-mask="'(###) ###-####'"
+                  name="phone" class="editInfo">
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
+              <div class="col-md-6 col-sm-6">
+                  <input id="address1" v-model="org_address1" type="text"
+                      name="address1" class="editInfo" maxlength="255">
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
+              <div class="col-md-6 col-sm-6">
+                  <input id="address2" v-model="org_address2" type="text"
+                      name="address2" class="editInfo" maxlength="255">
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
+              <div class="col-md-6 col-sm-6">
+                  <input id="city" v-model="org_city" type="text"
+                      name="city" class="editInfo" maxlength="255">
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
+            <div class="col-md-2 col-sm-2">
+              <input id="state" v-model="org_state" type="text"
+                    name="state" class="" maxlength="255">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
+            <div class="col-md-2 col-sm-2">
+              <input id="zip" v-model="org_zip" type="text"
+                  name="zip" class="" maxlength="5" size="5">
+            </div>
+          </div>
+          <div class="text-center">
             <button type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
                 <i class="fa fa-btn fa-check"></i> Save Organization
             </button>
         </div>
-      </div>
+        </div>
+      </span>
       <div class="form-horizontal col-md-4 col-sm-4">
         <div class="caption">
           <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="members && members.length>0 && !isAddingAdmin"
-        v-tooltip.right="'Add Administrator'">
+          <span v-if="members && members.length>0 && !isAddingAdmin && modeEdit"
+              v-tooltip.right="'Add Administrator'">
             <a  href="#" type="button" class="text-success"
               @click="toggleIsAddingAdmin()">
               <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -99,7 +146,6 @@
                     </a>
                 </span>
               </div>
-
           </div>
         </div>
         <table  class="table table-responsive table-striped table-condensed">
@@ -108,7 +154,7 @@
             <td>
               {{ admin.name }}
             </td>
-            <td>
+            <td v-if="modeEdit">
               <span v-tooltip.right="'Remove'" class="">
                   <a href="#" type="button" class="text-danger"
                         @click="removeAdmin(admin)">
@@ -126,7 +172,7 @@
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <div class="caption">
           <span>Team(s)</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="!isAddingTeam" v-tooltip.right="'Add Team'">
+          <span v-if="!isAddingTeam && modeEdit" v-tooltip.right="'Add Team'">
               <a href="#" type="button" class="text-success"
                 @click="toggleIsAddingTeam()">
                 <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -170,7 +216,7 @@
             <tr>
               <th>Name</th>
               <th>Description</th>
-              <th>Action</th>
+              <th v-if="modeEdit" >Action</th>
             </tr>
           </thead>
           <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
@@ -178,7 +224,7 @@
               <td>{{ team.name }}</td>
               <td>{{ team.description }}</td>
               <td>
-                <span v-tooltip.right="'Remove'">
+                <span v-tooltip.right="'Remove'" v-if="modeEdit" >
                     <a href="#" type="button" class="text-danger"
                       @click="removeTeam(team)">
                       <i class="fa fa-trash-o fa-fw"></i>
@@ -196,16 +242,19 @@
 
 <script>
 import {TheMask} from 'vue-the-mask';
-
-const MESSAGE_DURATION = 2500;
-const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
-const MODE_SHOW = 0, MODE_EDIT = 1, MODE_CREATE = 2;
+import {commonMixins} from '../../mixins/common';
+import {MESSAGE_DURATION} from '../../mixins/constants';
 
 export default {
+  mixins: [commonMixins],
   components: {
     TheMask
   },
   props: {
+    mode0: {
+      type: String,
+      required: true
+    },
     user0: {
       type: Object,
       required: true
@@ -224,14 +273,12 @@ export default {
   data () {
     return {
       ready: false,
-      saveStatus: null,
-      tip_admin: "Add Administrator",
+      // tip_admin: "Add Administrator",
       isAddingAdmin: false,
       isAddingTeam: false,
       new_admin: null,
       new_team_name: '',
       new_team_description: '',
-      currentMode: MODE_SHOW,
       org_id: '',
       org_name: '',
       org_address1: '',
@@ -246,11 +293,14 @@ export default {
     }
   },
   mounted: function () {
-    this.currentMode = MODE_SHOW
+    // console.log(MODES)
+    console.log(this.mode0)
+    // console.log(MODES[this.mode0])
+    this.setMode(this.mode0);
     if (this.orgteams0 != null) {
-      this.currentMode = MODE_EDIT
       this.org_id = this.orgteams0.id
       this.org_name = this.orgteams0.name
+      this.org_phone = this.orgteams0.phone
       this.org_address1 = this.orgteams0.address1
       this.org_address2 = this.orgteams0.address2
       this.org_city = this.orgteams0.city
@@ -283,15 +333,7 @@ export default {
     // console.log('dom updated')
   },
   computed: {
-    saveStatusInitial() {
-      return this.saveStatus === STATUS_INITIAL;
-    },
-    saveStatusSuccess() {
-      return this.saveStatus === STATUS_SUCCESS;
-    },
-    saveStatusFailed() {
-      return this.saveStatus === STATUS_FAILED;
-    }
+
   },
   watch: {
     // newPasswordConfirm () {
@@ -399,10 +441,10 @@ export default {
     },
     saveOrganization() {
       var url = '/api/organization';
-      this.saveStatus = STATUS_SUCCESS;
+      this.setStatusSuccess();
       var self = this;
       setTimeout(function(){
-          self.saveStatus = STATUS_INITIAL;
+          self.setStatusInitial();
       }, MESSAGE_DURATION);
 
       // axios.put(url, {user: this.user, org: this.orgData})
