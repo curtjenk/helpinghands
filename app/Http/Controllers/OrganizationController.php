@@ -43,6 +43,9 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
+        if ($user->superuser()) {
+        }
         $organization = App\Organization::with(['teams','teams.users'])
         ->where('id', $id)
         ->first();

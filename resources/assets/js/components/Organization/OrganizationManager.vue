@@ -69,11 +69,16 @@
                   name="phone" class="editInfo">
               </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" :class="{ 'has-error' : errors.address1 } ">
               <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
               <div class="col-md-6 col-sm-6">
                   <input id="address1" v-model="org_address1" type="text"
                       name="address1" class="editInfo" maxlength="255">
+                  <form-error v-if="errors.address1" :errors="errors">
+                      <div v-for="msg in errors.address1">
+                          {{ msg }}
+                      </div>
+                  </form-error>
               </div>
           </div>
           <div class="form-group">
@@ -97,18 +102,23 @@
                     name="state" class="" maxlength="255">
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" :class="{ 'has-error' : errors.zipcode } ">
             <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-            <div class="col-md-2 col-sm-2">
-              <input id="zip" v-model="org_zip" type="text"
-                  name="zip" class="" maxlength="5" size="5">
+            <div class="col-md-6 col-sm-6">
+                <input id="zip" v-model="org_zip" type="text"
+                    name="zip" class="" maxlength="10" size="10">
+              <form-error v-if="errors.zipcode" :errors="errors">
+                  <div v-for="msg in errors.zipcode">
+                      {{ msg }}
+                  </div>
+              </form-error>
             </div>
           </div>
           <div class="text-center">
             <button type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
                 <i class="fa fa-btn fa-check"></i> Save Organization
             </button>
-        </div>
+          </div>
         </div>
       </span>
       <div class="form-horizontal col-md-4 col-sm-4">
@@ -244,11 +254,12 @@
 import {TheMask} from 'vue-the-mask';
 import {commonMixins} from '../../mixins/common';
 import {MESSAGE_DURATION} from '../../mixins/constants';
+import FormError from '../FormError';
 
 export default {
   mixins: [commonMixins],
   components: {
-    TheMask
+    TheMask, FormError
   },
   props: {
     mode0: {
@@ -273,6 +284,7 @@ export default {
   data () {
     return {
       ready: false,
+      errors: {},
       // tip_admin: "Add Administrator",
       isAddingAdmin: false,
       isAddingTeam: false,
@@ -305,7 +317,7 @@ export default {
       this.org_address2 = this.orgteams0.address2
       this.org_city = this.orgteams0.city
       this.org_state = this.orgteams0.state
-      this.org_zip = this.orgteams0.zip
+      this.org_zip = this.orgteams0.zipcode
       if (this.orgteams0.teams.length > 0) {
         this.teams = this.orgteams0.teams.map(function(k) {
           return {
@@ -399,7 +411,6 @@ export default {
       //TODO controller method and axios call
       let message = '<i>Team <span class="text-danger"><b>' + team.name
                   + '</b></span> will be permanently deleted!</i>';
-      message += "now is the time for all good men to come to the aid of their country";
       this.$dialog.confirm(message, {})
       .then( (dialog)=> {
           console.log('Clicked on proceed')
@@ -440,29 +451,42 @@ export default {
 
     },
     saveOrganization() {
-      var url = '/api/organization';
-      this.setStatusSuccess();
-      var self = this;
-      setTimeout(function(){
-          self.setStatusInitial();
-      }, MESSAGE_DURATION);
+      let url = '/api/organization';
+      let method = 'post';
+      if (this.modeEdit) {
+        method = 'put';
+        url += '/'+this.org_id;
+      }
 
-      // axios.put(url, {user: this.user, org: this.orgData})
-      // .then(  (response) => {
-      //   // console.log(response)
-      //   this.updateStatus = STATUS_SUCCESS;
-      //   var self = this;
-      //   setTimeout(function(){
-      //       self.updateStatus = STATUS_INITIAL;
-      //   }, MESSAGE_DURATION);
-      // }).catch((error) => {
-      //   // console.log(error)
-      //   this.updateStatus = STATUS_FAILED;
-      //   var self = this;
-      //   setTimeout(function(){
-      //       self.updateStatus = STATUS_INITIAL;
-      //   }, MESSAGE_DURATION + 1000);
-      // });
+      axios({
+        method: method,
+        url: url,
+        data: {
+          user_id: this.user0.id,
+          name: this.org_name,
+          phone: this.org_phone,
+          address1: this.org_address1,
+          address2: this.org_address2,
+          city: this.org_city,
+          state: this.org_state,
+          zipcode: this.org_zip
+        }
+      }).then( (response) => {
+        // console.log(response)
+        this.setStatusSuccess();
+        let self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION);
+
+      }).catch( (error) => {
+        this.errors = error.response.data.errors
+        this.setStatusFailed();
+        let self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 2000);
+      });
     },
     updateEmail() {
       this.credential = 'Email';

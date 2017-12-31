@@ -19,11 +19,16 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $inputs = new Inputs($request,
             [ ]
         );
-
-        $query=App\Organization::with(['teams','teams.users'])
+        if ($user->superuser()) {
+            $query=App\Organization::with(['teams','teams.users']);
+        } else {
+            $query=$user->organizations()->with(['teams','teams.users']);
+        }
+        $query=$query
         ->where('organizations.name','!=','Ministry Engage')
         ->when($inputs->filter, function($q) use($inputs){
             Log::debug("Filter on ".$inputs->filter);
@@ -47,11 +52,11 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $this->authorize('create-organization');
-        return view('organization.create');
-    }
+    // public function create()
+    // {
+    //     $this->authorize('create-organization');
+    //     return view('organization.create');
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -131,11 +136,12 @@ class OrganizationController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'phone' => 'max:15',
-            'address1' => 'required|max:255',
+            'address1' => 'required|max:255|min:5',
             'address2' => 'max:255',
             'city' => 'max:80',
             'state' => 'max:40',
-            'zipcode' => 'required|max:10',
+            'zipcode' => 'required|regex:/^[0-9]{5}(\-[0-9]{4})?$/',
+            'zipcode' => 'required|regex:/^[0-9]{5}([0-9]{4})?$/',  //"OR" without hyphen
         ]);
 
         $organization->name = $request->input('name');
@@ -147,9 +153,7 @@ class OrganizationController extends Controller
         $organization->zipcode = $request->input('zipcode');
         $organization->save();
 
-        return view('organization.show', [
-            'organization'=>$organization,
-        ]);
+        return;
     }
 
     /**
