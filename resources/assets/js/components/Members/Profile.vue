@@ -271,7 +271,10 @@ import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
 
 // Vue.use(VeeValidate);
-Vue.use(VeeValidate, {fieldsBagName: 'formFields'})
+Vue.use(VeeValidate, {
+  errorBagName: 'vErrors',
+  fieldsBagName: 'vformFields'
+})
 
 const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;

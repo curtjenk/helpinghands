@@ -74,7 +74,7 @@
               <div class="col-md-6 col-sm-6">
                   <input id="address1" v-model="org_address1" type="text"
                       name="address1" class="editInfo" maxlength="255">
-                  <form-error v-if="errors.address1" :errors="errors">
+                  <form-error v-if="errors.address1" >
                       <div v-for="msg in errors.address1">
                           {{ msg }}
                       </div>
@@ -306,7 +306,7 @@ export default {
   },
   mounted: function () {
     // console.log(MODES)
-    console.log(this.mode0)
+    //console.log(this.mode0)
     // console.log(MODES[this.mode0])
     this.setMode(this.mode0);
     if (this.orgteams0 != null) {
@@ -373,7 +373,7 @@ export default {
         // animation: 'zoom'
       })
       .then( (dialog)=> {
-          console.log('Clicked on proceed')
+          //console.log('Clicked on proceed')
           //1 post to backend controller.  If successful
           //TODO controller method and axios call
           // close dialog: setTimeout is temporary
@@ -387,7 +387,7 @@ export default {
           }, 2000);
       })
       .catch( ()=> {
-          console.log('Clicked on cancel')
+          //console.log('Clicked on cancel')
       });
 
     },
@@ -473,6 +473,8 @@ export default {
         }
       }).then( (response) => {
         // console.log(response)
+        // clear previous form errors
+        this.errors = {}
         this.setStatusSuccess();
         let self = this;
         setTimeout(function(){
@@ -481,6 +483,7 @@ export default {
 
       }).catch( (error) => {
         this.errors = error.response.data.errors
+
         this.setStatusFailed();
         let self = this;
         setTimeout(function(){

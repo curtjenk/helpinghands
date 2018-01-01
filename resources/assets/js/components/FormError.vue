@@ -6,7 +6,6 @@
 
 <script>
     export default {
-        // props: ['errors'],
-        // vuejs seems to add an 'errors' property by default
+        props: ['errors'],
     }
 </script>

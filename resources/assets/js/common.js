@@ -4,32 +4,100 @@
  */
 export const common = common || {};
 
-common.change_organization = function(event)
-{
-  let orgid=$('#selected_org_id').val();
-  let url=$('#selected_org_id').parent().attr('data-url');
-  axios.post('/session', {
-      orgid: orgid
-  })
-  .then(function (response) {
-    // console.log(response.data);
-    window.location.href=url;
-  })
-  .catch(function (error) {
-    console.log(error);
-    console.log(error.response);
-    if (error.response.status===401) {
-      window.location.href = 'login';
+/**
+ * Check if the session is still alive
+ */
+common.session_check = function() {
+  axios({
+    method: 'GET',
+    url: '/ajax/session'
+  }).then( (response) =>{
+    console.log(response);
+    let str = response.data;
+    if (parseInt(str) < 0) {
+      window.location.reload();  //no activity timeout
+    } else {
+      common.session_timeout_helper();
     }
+  }).catch( (error)=> {
+    let stat = error.response.stat;
+    if (stat == 401) {
+      $('#errorModal div.modal-body').html(
+          'Your session expired and it will close in 3 seconds.');
+      setTimeout(function() {
+        window.location.replace('/login');
+      }, 3000);
+    } else if (stat == 403) {
+      $('#errorModal div.modal-body').html(
+          'You are not authorized. Contact your administrator.');
+    }
+    $('#errorModal').modal('show');
   });
-}
+};
+
+
+/**
+ * Run setTimeout for session check
+ * This function is to have things centralized, like the timeout time.
+ */
+common.session_timeout_helper = function() {
+  setTimeout(function() {
+    common.session_check();
+  }, 120000);
+};
+
+/**
+ * Fill-out the text of a tag with the result of converting to local time a UTC
+ * time stored in a data attribute (named data-datetime).
+ * @param {jQuery} obj - tag with the data-datetime attribute.
+ */
+common.convert_to_local_time = function(obj) {
+  $(obj).html(moment.utc($(obj).data('datetime')).local()
+      .format('l LTS'));
+};
+/**
+ * Helper tool which goes over the children that need time convertion.
+ * @param {jQuery} obj - tag with the data-datetime attribute.
+ */
+common.convert_descendants_to_local_time = function(obj) {
+  $(obj).find('[data-datetime]').each(function() {
+    common.convert_to_local_time(this);
+  });
+};
+
+// common.change_organization = function(event)
+// {
+//   let orgid=$('#selected_org_id').val();
+//   let url=$('#selected_org_id').parent().attr('data-url');
+//   axios.post('/session', {
+//       orgid: orgid
+//   })
+//   .then(function (response) {
+//     // console.log(response.data);
+//     window.location.href=url;
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//     console.log(error.response);
+//     if (error.response.status===401) {
+//       window.location.href = 'login';
+//     }
+//   });
+// }
  /**
   * Initialization of events.
   */
  $(function() {
-     $('#selected_org_id').on('change', function(event) {
-       common.change_organization(event);
-     });
+  if (window.location.pathname != '/login') {
+    common.session_timeout_helper();
+  } else {
+    setTimeout(() => {
+      location.reload();
+    }, 14*60000);
+  }
+     // $('#selected_org_id').on('change', function(event) {
+     //   common.change_organization(event);
+     // });
  });
  /**
   * truncate a string and add ellipsis ... html compatible

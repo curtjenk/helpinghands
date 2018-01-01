@@ -40,6 +40,9 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+        'timeout' => [
+            \App\Http\Middleware\SessionTimeout::class,
+        ],
     ];
 
     /**
