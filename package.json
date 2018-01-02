@@ -29,7 +29,7 @@
     "jquery-ui-bundle": "^1.11.4",
     "moment": "^2.17.1",
     "vee-validate": "^2.0.0-rc.19",
-    "vue": "2.4.4",
+    "vue": "^2.5.13",
     "vue-chartjs": "^2.6.5",
     "vue-directive-tooltip": "^1.4.2",
     "vue-events": "^3.0.1",
@@ -38,9 +38,9 @@
     "vue-js-toggle-button": "^1.2.0",
     "vue-password": "^1.0.1",
     "vue-switches": "^2.0.1",
-    "vue-template-compiler": "2.4.4",
+    "vue-template-compiler": "^2.5.13",
     "vue-the-mask": "^0.11.0-alpha.2",
     "vuejs-dialog": "^0.4.5",
-    "vuetable-2": "^1.6.5"
+    "vuetable-2": "^1.7.2"
   }
 }
