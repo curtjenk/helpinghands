@@ -31,9 +31,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('administer', function($user) {
-            return $user->permissions()
-                ->where('permissions.name', 'LIKE', "%Create%")
-                ->count();
+            $okRole = $user->roles()->contains(function($value, $key) {
+                return $value == 'Admin' || $value == 'Lead';
+            });
         });
         Gate::define('create-event', function ($user) {
             return $user->has_permission('Create event');

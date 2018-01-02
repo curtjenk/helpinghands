@@ -118,6 +118,11 @@ class User extends Authenticatable
      */
     public function permissions()
     {
+        return $this->organization_permissions()->select('permissions.name')
+            ->union($this->team_permissions()->select('permissions.name'));
+    }
+    public function organization_permissions()
+    {
         return DB::table('permissions')
             ->select('organization_user.organization_id','permissions.*')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
@@ -126,6 +131,43 @@ class User extends Authenticatable
             ->where('organization_user.user_id', $this->id)
             ->distinct();
     }
+    public function team_permissions()
+    {
+        return DB::table('permissions')
+            ->select('team_user.team_id','permissions.*')
+            ->join('permission_role','permission_role.permission_id','=','permissions.id')
+            ->join('roles','roles.id','=','permission_role.role_id')
+            ->join('team_user','team_user.role_id','=','roles.id')
+            ->where('team_user.user_id', $this->id)
+            ->distinct();
+    }
+    /*
+        Get list of roles
+    */
+    public function roles()
+    {
+        return $this->organization_roles()->select('roles.name')
+            ->union($this->team_roles()->select('roles.name'));
+    }
+
+    public function organization_roles()
+    {
+        return DB::table('roles')
+        ->select('organization_user.organization_id','roles.*')
+        ->join('organization_user','organization_user.role_id','=','roles.id')
+        ->where('organization_user.user_id', $this->id)
+        ->distinct();
+    }
+
+    public function team_roles()
+    {
+        return DB::table('roles')
+        ->select('team_user.team_id','roles.*')
+        ->join('team_user','team_user.role_id','=','roles.id')
+        ->where('team_user.user_id', $this->id)
+        ->distinct();
+    }
+
     public function has_permission($name, $orgid=null, $teamid=null)
     {
         $query = DB::table('permissions')
@@ -201,6 +243,7 @@ class User extends Authenticatable
             })
             ->count() > 0;
     }
+
     /**
      * Check if the User has a specific Organization role
      */

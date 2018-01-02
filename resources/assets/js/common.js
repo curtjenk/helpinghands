@@ -68,26 +68,6 @@ common.convert_descendants_to_local_time = function(obj) {
     common.convert_to_local_time(this);
   });
 };
-
-// common.change_organization = function(event)
-// {
-//   let orgid=$('#selected_org_id').val();
-//   let url=$('#selected_org_id').parent().attr('data-url');
-//   axios.post('/session', {
-//       orgid: orgid
-//   })
-//   .then(function (response) {
-//     // console.log(response.data);
-//     window.location.href=url;
-//   })
-//   .catch(function (error) {
-//     console.log(error);
-//     console.log(error.response);
-//     if (error.response.status===401) {
-//       window.location.href = 'login';
-//     }
-//   });
-// }
  /**
   * Initialization of events.
   */

@@ -209,7 +209,7 @@
                     <label for="email" class="col-md-4 col-sm-4 control-label">New Email</label>
                     <div class="col-md-7 col-sm-7">
                         <input v-validate="'email'" id="email" v-model="newEmail" type="email" class="editInfo" name="email" maxlength="255">
-                        <span v-show="errors.has('email')" class="alert alert-danger">{{ errors.first('email') }}</span>
+                        <span v-show="vErrors.has('email')" class="alert alert-danger">{{ vErrors.first('email') }}</span>
                     </div>
                 </div>
                 <br>
@@ -241,7 +241,7 @@
                     <label for="newpasswordconfirm" class="col-md-4 col-sm-4 control-label">Confirm Password</label>
                     <div class="col-md-7 col-sm-7">
                       <input v-validate="'required|confirmed:newpassword'" data-vv-as="password" id="newpasswordconfirm" v-model="newPasswordConfirm" name="newpasswordconfirm" type="password" class="editInfo" maxlength="255">
-                      <span v-show="errors.has('newpasswordconfirm')" class="alert alert-danger">{{ errors.first('newpasswordconfirm') }}</span>
+                      <span v-show="vErrors.has('newpasswordconfirm')" class="alert alert-danger">{{ vErrors.first('newpasswordconfirm') }}</span>
                     </div>
                 </div>
                 <br>

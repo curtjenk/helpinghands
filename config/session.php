@@ -30,7 +30,7 @@ return [
     */
 
     // 'lifetime' => 120,  // 120 min = 2 hrs
-    'lifetime' => 1,
+    'lifetime' => 45,
 
     'expire_on_close' => true,
 
