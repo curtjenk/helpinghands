@@ -102,7 +102,16 @@ class UserController extends Controller
         );
 
         if ($user->superuser()) {
-            $query = App\User::with(['organizations','organizations.teams']);
+            $query = App\User::with(['organizations','organizations.teams'])
+                ->when($inputs->orgid, function($q) use($inputs) {
+                    $q->join('organization_user','organization_user.user_id','=','users.id')
+                    ->where('organization_user.organization_id', $inputs->orgid);
+                })
+                ->when($inputs->teamid, function($q) use($inputs) {
+                    Log::debug('f1');
+                    $q->join('team_user','team_user.user_id','=','users.id')
+                    ->where('team_user.team_id', $inputs->teamid);
+                });
         } else {
             $query = $user->peers($inputs->orgid, $inputs->teamid);
         }

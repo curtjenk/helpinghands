@@ -46,7 +46,7 @@ class Inputs
         }
 
         $this->orgid = $request->input('orgid', null);
-        $this->team = $request->input('teamid', null);
+        $this->teamid = $request->input('teamid', null);
 
         $this->skip = $request->input('skip', 0);
         if (!empty($request->input('export'))) {

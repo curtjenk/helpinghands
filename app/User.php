@@ -36,12 +36,18 @@ class User extends Authenticatable
 
     public function memberships()
     {
-        return App\User::with(['organizations' => function($q) {
-                $q->where('organizations.name','!=','Ministry Engage');
-            }, 'organizations.teams'])
-            ->where('id',$this->id)
-            ->first()
-            ->organizations;
+        // Log::debug("SuperUser ".$this->superuser());
+        if ($this->superuser()) {
+            return App\Organization::with(['teams'])->get();
+        } else {
+            return App\User::with(['organizations' => function($q) {
+                    $q->where('organizations.name','!=','Ministry Engage');
+                }, 'organizations.teams'])
+                ->where('id',$this->id)
+                ->first()
+                ->organizations;
+        }
+
     }
     public function organizations()
     {

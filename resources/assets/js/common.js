@@ -12,7 +12,7 @@ common.session_check = function() {
     method: 'GET',
     url: '/ajax/session'
   }).then( (response) =>{
-    console.log(response);
+    // console.log(response);
     let str = response.data;
     if (parseInt(str) < 0) {
       window.location.reload();  //no activity timeout
@@ -20,16 +20,20 @@ common.session_check = function() {
       common.session_timeout_helper();
     }
   }).catch( (error)=> {
-    let stat = error.response.stat;
-    if (stat == 401) {
+    console.log(error.response);
+    let status = error.response.status;
+    let data = error.response.data;
+    if (status == 401) {
       $('#errorModal div.modal-body').html(
           'Your session expired and it will close in 3 seconds.');
       setTimeout(function() {
         window.location.replace('/login');
       }, 3000);
-    } else if (stat == 403) {
+    } else if (status == 403) {
       $('#errorModal div.modal-body').html(
           'You are not authorized. Contact your administrator.');
+    } else {
+      $('#errorModal div.modal-body').html(data);
     }
     $('#errorModal').modal('show');
   });
@@ -91,6 +95,8 @@ common.convert_descendants_to_local_time = function(obj) {
   if (window.location.pathname != '/login') {
     common.session_timeout_helper();
   } else {
+    // If I'm on the login screen, refresh frequently to avoid
+    // "session timeout" due to token expiration
     setTimeout(() => {
       location.reload();
     }, 14*60000);
