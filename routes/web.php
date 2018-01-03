@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
             Route::resource('organization', 'OrganizationController');
+            Route::resource('team', 'TeamController');
         });
 
         Route::get('event/{id}/members', 'EventController@members');
@@ -59,6 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('organization', 'OrganizationController',
             ['only'=>['index','show','create','edit']]
+        );
+        Route::resource('team', 'TeamController',
+            ['only'=>['index','show', 'edit']]
         );
 
         Route::get('evite/{id}', 'EviteController@send_evites');

@@ -7,7 +7,7 @@
         {{ org.name }}
      </option>
     </select>
-    <select v-model="selectedTeam" @change="tellParent" id="" name="team">Team
+    <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" id="" name="team">Team
       <option disabled value="">Select Team</option>
       <option value="0">--- Show All ---</option>
       <option v-for="team in selectedOrg.teams" v-bind:value="team">
@@ -26,6 +26,11 @@ export default {
     userid: {
       type: Number,
       required: true
+    },
+    filterByTeam: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   data () {

@@ -10,6 +10,7 @@
         <div class="form-group" v-if="filterByMemberships">
           <filter-memberships
               :userid="userid"
+              :filterByTeam="filterByTeam"
               @orgTeamSelected="gotit"
           ></filter-memberships>
         </div>
@@ -29,6 +30,11 @@
       filterByMemberships: {
         type: Boolean,
         required: false
+      },
+      filterByTeam: {
+        type: Boolean,
+        required: false,
+        default: true
       },
       filterPlaceholder: {
         type: String

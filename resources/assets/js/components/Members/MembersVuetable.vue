@@ -228,7 +228,7 @@ export default {
     //   console.log('cellClicked: ', field.name)
 
       if ($('#'+data.id).length == 0) {
-        axios.get('/member/' + data.id + '/yes' )
+        axios.get('/api/member/' + data.id + '/yes' )
         .then(  (response) => {
           data.events = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
