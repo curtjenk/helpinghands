@@ -194,7 +194,7 @@
             <div class="">
               <div class="col-md-4 col-sm-4">
                 <float-label>
-                  <input id="ntn" v-model="new_team_name" type="text" required :value="new_team_name"
+                  <input id="ntn" v-model="new_team_name" type="text" required
                     class="editInfo" size="100" maxlength="255" placeholder="Name"/>
                 </float-label>
               </div>
