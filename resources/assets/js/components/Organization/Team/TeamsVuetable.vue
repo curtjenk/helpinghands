@@ -130,6 +130,7 @@ export default {
           window.location.href = '/team/'+data.id;
     },
     editTeam: function (data, index) {
+      console.log(data)
           window.location.href = '/team/'+data.id+'/edit'
     },
     combine_address: function(value) {

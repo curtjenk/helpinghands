@@ -227,7 +227,9 @@ class User extends Authenticatable
      */
     public function has_team_permission($teamid, $name)
     {
-        return DB::table('permissions')
+        if ($this->superuser()) { return true; }
+
+        $query = DB::table('permissions')
             ->join('permission_role','permission_role.permission_id','=','permissions.id')
             ->join('roles','roles.id','=','permission_role.role_id')
             ->join('team_user','team_user.role_id', '=','roles.id')
@@ -240,8 +242,11 @@ class User extends Authenticatable
                     ->where('permissions.name', $name);
                 })
                 ->orWhere('roles.name','Site');
-            })
-            ->count() > 0;
+            });
+            // Log::debug($query->toSql());
+            // Log::debug($query->getBindings());
+
+        return $query->count() > 0;
     }
 
     /**

@@ -24,18 +24,18 @@ class TeamController extends Controller
             [ ]
         );
         if ($user->superuser()) {
-            $query=App\Organization::with(['teams','teams.users'])
-            ->join('teams','teams.organization_id','=','organizations.id')
+            $query=App\Organization::
+            join('teams','teams.organization_id','=','organizations.id')
             ->leftJoin('team_user','team_user.team_id','=','teams.id')
             ->leftJoin('users','users.id','=','team_user.user_id');
         } else {
-            $query=$user->organizations()->with(['teams','teams.users'])
-            ->join('teams','teams.organization_id','=','organizations.id')
+            $query=$user->organizations()->
+            join('teams','teams.organization_id','=','organizations.id')
             ->leftJoin('team_user','team_user.team_id','=','teams.id')
             ->leftJoin('users','users.id','=','team_user.user_id');
         }
         $query=$query
-        ->selectRaw("organizations.name as organization_name,
+        ->selectRaw("teams.id, organizations.name as organization_name,
             teams.name as team_name, count(users.id) as member_count")
         ->where('organizations.name','!=','Ministry Engage')
         ->when(isset($inputs->orgid), function($q) use($inputs) {
@@ -51,6 +51,7 @@ class TeamController extends Controller
         ->when($inputs->sort, function($q) use($inputs){
             return $q->orderby($inputs->sort, $inputs->direction);
         })
+        ->groupby('teams.id')
         ->groupBy("organizations.name")
         ->groupBy("teams.name");
         return $query->paginate($inputs->limit);

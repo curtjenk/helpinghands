@@ -45,6 +45,7 @@ Vue.component('memberprofile', require('./components/Members/Profile.vue'));
 Vue.component('organizationslist', require('./components/Organization/OrganizationsVuetable.vue'));
 Vue.component('organization-manager', require('./components/Organization/OrganizationManager.vue'));
 Vue.component('teamslist', require('./components/Organization/Team/TeamsVuetable.vue'));
+Vue.component('team-manager', require('./components/Organization/Team/TeamManager.vue'));
 
 const app = new Vue({
     el: '#app'
