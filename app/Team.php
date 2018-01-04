@@ -16,6 +16,8 @@ class Team extends Model
         'organization_id', 'name', 'description'
     ];
 
+    protected $hidden = ['pivot'];
+
     /**
      * Get the Organization for this Team.
      */
@@ -35,7 +37,7 @@ class Team extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withPivot('role_id');
     }
 
 }

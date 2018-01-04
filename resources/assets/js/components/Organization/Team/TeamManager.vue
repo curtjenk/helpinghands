@@ -1,6 +1,6 @@
 <template>
   <div>
-     <div class="row">
+    <div class="row">
       <span v-if="modeShow">
         <div class="form-horizontal col-md-8 col-sm-8">
           <div class="form-group">
@@ -47,6 +47,44 @@
         </div>
       </span>
     </div>
+    <hr/>
+    <div class="row">
+      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
+        <div class="caption">
+          <span>Team Members</span>&nbsp;&nbsp;&nbsp;
+        </div>
+        <table class="table table-responsive table-striped table-condensed">
+          <thead>
+            <tr>
+              <th v-if="modeEdit" >Leader</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
+            <tr v-for="member in members" v-bind:key="member.id" class="list-item">
+              <td v-if="modeEdit">
+                <span v-if="member.role=='Lead'" v-tooltip.right="'Remve as Leader'">
+                      <a href="#" type="button" class="text-primary"
+                        @click="">
+                        <i class="fa fa-check-square-o fa-fw"></i>
+                      </a>
+                </span>
+                <span v-else v-tooltip.right="'Make Leader'">
+                  <a href="#" type="button" class=""
+                    @click="">
+                    <i class="fa fa-square-o fa-fw"></i>
+                  </a>
+                </span>
+              </td>
+              <td>{{ member.name }}</td>
+              <td>{{ member.email }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -75,7 +113,7 @@ export default {
       required: false,
       default: null
     },
-    orgmembers0: {
+    teammembers0: {
       type: Array,
       required: false,
       default: null
@@ -85,25 +123,16 @@ export default {
     return {
       ready: false,
       errors: {},
-      // tip_admin: "Add Administrator",
-      isAddingAdmin: false,
-      isAddingTeam: false,
-      new_admin: null,
-      new_team_name: '',
-      new_team_description: '',
-      org_id: '',
       team_name: '',
       team_description: '',
-      administrators: [],
-      members: [],
-      teams: []
+      members: []
     }
   },
   mounted: function () {
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
+    this.members = this.teammembers0;
     this.setMode(this.mode0);
-
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
     })

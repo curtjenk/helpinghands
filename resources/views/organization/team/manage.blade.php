@@ -15,7 +15,7 @@
             mode0="{{ $mode }}"
             :user0="{{ Auth::user() }}"
             :team0="{{ $team }}"
-            :orgmembers0="{{ $members }}"
+            :teammembers0="{{ $members }}"
         ></team-manager>
     </div>
 </main>
