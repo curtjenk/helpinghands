@@ -491,63 +491,63 @@ export default {
         }, MESSAGE_DURATION + 2000);
       });
     },
-    updateEmail() {
-      this.credential = 'Email';
-      var url = '/api/member/' + this.user.id + '/email';
-      axios.put(url, {newEmail: this.newEmail})
-      .then(  (response) => {
-        // console.log(response)
-        this.user.email = this.newEmail;
-        this.newEmail = '';
-        this.updateStatus = STATUS_SUCCESS;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION);
-      }).catch((error) => {
-        // console.log(error.response)
-        if (error.response.data == 'unavailable') {
-          this.credentialMessage = 'email already in use.  Try another email';
-        } else {
-          this.credentialMessage = 'unable to change your email. Try later';
-        }
-        this.updateStatus = STATUS_FAILED;
-
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION + 1000);
-      });
-    },
-    updatePassword() {
-      this.credential = 'Password';
-      var url = '/api/member/' + this.user.id + '/password';
-      axios.put(url, {
-        oldPassword: this.oldPassword,
-        newPassword: this.newPassword,
-        newPasswordConfirm: this.newPasswordConfirm,
-        })
-      .then(  (response) => {
-        console.log(response)
-        this.updateStatus = STATUS_SUCCESS;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION);
-      }).catch((error) => {
-        console.log(error.response)
-        if (error.response.data == 'verify') {
-          this.credentialMessage = 'please verify your input';
-        } else {
-          this.credentialMessage = 'unable to change your password. Try later';
-        }
-        this.updateStatus = STATUS_FAILED;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION + 1000);
-      });
-    },
+    // updateEmail() {
+    //   this.credential = 'Email';
+    //   var url = '/api/member/' + this.user.id + '/email';
+    //   axios.put(url, {newEmail: this.newEmail})
+    //   .then(  (response) => {
+    //     // console.log(response)
+    //     this.user.email = this.newEmail;
+    //     this.newEmail = '';
+    //     this.updateStatus = STATUS_SUCCESS;
+    //     var self = this;
+    //     setTimeout(function(){
+    //         self.updateStatus = STATUS_INITIAL;
+    //     }, MESSAGE_DURATION);
+    //   }).catch((error) => {
+    //     // console.log(error.response)
+    //     if (error.response.data == 'unavailable') {
+    //       this.credentialMessage = 'email already in use.  Try another email';
+    //     } else {
+    //       this.credentialMessage = 'unable to change your email. Try later';
+    //     }
+    //     this.updateStatus = STATUS_FAILED;
+    //
+    //     var self = this;
+    //     setTimeout(function(){
+    //         self.updateStatus = STATUS_INITIAL;
+    //     }, MESSAGE_DURATION + 1000);
+    //   });
+    // },
+    // updatePassword() {
+    //   this.credential = 'Password';
+    //   var url = '/api/member/' + this.user.id + '/password';
+    //   axios.put(url, {
+    //     oldPassword: this.oldPassword,
+    //     newPassword: this.newPassword,
+    //     newPasswordConfirm: this.newPasswordConfirm,
+    //     })
+    //   .then(  (response) => {
+    //     console.log(response)
+    //     this.updateStatus = STATUS_SUCCESS;
+    //     var self = this;
+    //     setTimeout(function(){
+    //         self.updateStatus = STATUS_INITIAL;
+    //     }, MESSAGE_DURATION);
+    //   }).catch((error) => {
+    //     console.log(error.response)
+    //     if (error.response.data == 'verify') {
+    //       this.credentialMessage = 'please verify your input';
+    //     } else {
+    //       this.credentialMessage = 'unable to change your password. Try later';
+    //     }
+    //     this.updateStatus = STATUS_FAILED;
+    //     var self = this;
+    //     setTimeout(function(){
+    //         self.updateStatus = STATUS_INITIAL;
+    //     }, MESSAGE_DURATION + 1000);
+    //   });
+    // },
 
 
   } //End of methods

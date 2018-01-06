@@ -67,9 +67,16 @@ class TeamController extends Controller
         ->join('roles','roles.id','=','role_id')
         ->get();
 
+        $others = $team->organization->users()
+        ->selectRaw("$id as team_id, users.id, users.name,
+            users.email, 'Member' as role")
+        ->whereNotIn('id', $team_members->pluck('id')->toArray())
+        ->get();
+
         return view('organization.team.manage', [
             'team'=>$team,
             'members'=>$team_members,
+            'other_org_members'=>$others,
             'mode'=>'edit'
         ]);
     }

@@ -59,26 +59,35 @@
               <th v-if="modeEdit" >Leader</th>
               <th>Name</th>
               <th>Email</th>
+              <th v-if="modeEdit" >Action</th>
             </tr>
           </thead>
           <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
             <tr v-for="member in members" v-bind:key="member.id" class="list-item">
               <td v-if="modeEdit">
-                <span v-if="member.role=='Lead'" v-tooltip.right="'Remve as Leader'">
+                <span v-if="member.role=='Lead'" v-tooltip.right="'Remove as Leader'">
                       <a href="#" type="button" class="text-primary"
-                        @click="">
+                        @click="removeLeader(member)">
                         <i class="fa fa-check-square-o fa-fw"></i>
                       </a>
                 </span>
                 <span v-else v-tooltip.right="'Make Leader'">
                   <a href="#" type="button" class=""
-                    @click="">
+                    @click="makeLeader(member)">
                     <i class="fa fa-square-o fa-fw"></i>
                   </a>
                 </span>
               </td>
               <td>{{ member.name }}</td>
               <td>{{ member.email }}</td>
+              <td>
+                <span v-tooltip.right="'Remove'" v-if="modeEdit" >
+                    <a href="#" type="button" class="text-danger"
+                      @click="removeMember(member)">
+                      <i class="fa fa-trash-o fa-fw"></i>
+                    </a>
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -113,7 +122,12 @@ export default {
       required: false,
       default: null
     },
-    teammembers0: {
+    team_members0: {
+      type: Array,
+      required: false,
+      default: null
+    },
+    other_org_members0: {
       type: Array,
       required: false,
       default: null
@@ -125,13 +139,15 @@ export default {
       errors: {},
       team_name: '',
       team_description: '',
-      members: []
+      members: [],
+      other_org_members: []
     }
   },
   mounted: function () {
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
-    this.members = this.teammembers0;
+    this.members = this.team_members0;
+    this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
@@ -149,21 +165,55 @@ export default {
     // }
   },
   methods: {
-    remove_by_name(array, name) {
-      return array.filter(e=> e.name != name);
+    remove_by_email(array, email) {
+      return array.filter(e=> e.email != email);
     },
-    toggleIsAddingAdmin () {
-      this.isAddingAdmin = !this.isAddingAdmin
-      this.new_admin = null
+    // toggleIsAddingAdmin () {
+    //   this.isAddingAdmin = !this.isAddingAdmin
+    //   this.new_admin = null
+    // },
+    // toggleIsAddingTeam () {
+    //   this.isAddingTeam = !this.isAddingTeam
+    //   this.new_team_name = ''
+    //   this.new_team_description = ''
+    // },
+    removeMember (member) {
+      let message = '<i>Delete <span class="text-danger"><b>' + member.name
+                  + ' </b></span> from the team?</i>';
+      this.$dialog.confirm(message, {
+        // loader: false,
+        // animation: 'zoom'
+      })
+      .then( (dialog)=> {
+          //console.log('Clicked on proceed')
+          //1 post to backend controller.  If successful
+          //TODO controller method and axios call
+          // close dialog: setTimeout is temporary
+          setTimeout(() => {
+            //2 change role (incase the Lead was deleted) and add to the "all members" list
+            member.role = 'Member'
+            this.other_org_members.push(member)
+            //3 remove member from members list
+            this.members = this.remove_by_email(this.members, member.email);
+            console.log('Delete action completed ');
+            dialog.close();
+          }, 1000);
+      })
+      .catch( ()=> {
+          //console.log('Clicked on cancel')
+      });
     },
-    toggleIsAddingTeam () {
-      this.isAddingTeam = !this.isAddingTeam
-      this.new_team_name = ''
-      this.new_team_description = ''
+    makeLeader (member) {
+      //1 post to backend controller.  If successful
+      //TODO controller method and axios call
+
+      //2 set role
+      member.role="Lead"
+
     },
-    removeAdmin (admin) {
-      let message = '<i>Remove <span class="text-danger"><b>' + admin.name
-                  + '\'s </b></span> administrator privileges?</i>';
+    removeLeader (member) {
+      let message = '<i>Remove <span class="text-danger"><b>' + member.name
+                  + '\'s </b></span> team leader privileges?</i>';
       this.$dialog.confirm(message, {
         // loader: false,
         // animation: 'zoom'
@@ -175,10 +225,9 @@ export default {
           // close dialog: setTimeout is temporary
           setTimeout(() => {
             //2 add to this.members
-            this.members.push(admin)
+            member.role="Member"
             //3 remove from this.administrators
-            this.administrators = this.remove_by_name(this.administrators, admin.name);
-            console.log('Delete action completed ');
+
             dialog.close();
           }, 2000);
       })
