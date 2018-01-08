@@ -22,7 +22,7 @@
           <div class="col-md-offset-2 col-md-8 text-center">
             <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
             <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                <span>Sorry, unable to save/update changes</span>
+                <span>Sorry, unable to save your change(s)</span>
             </div>
           </div>
           <div class="form-group">
@@ -40,7 +40,7 @@
               </div>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+            <button type="submit" class="btn btn-primary" name="submit" @click="saveTeam">
                 <i class="fa fa-btn fa-check"></i> Save Team
             </button>
           </div>
@@ -172,6 +172,7 @@ export default {
       errors: {},
       isAddingMember: false,
       new_member: null,
+      team_id: '',
       team_name: '',
       team_description: '',
       members: [],
@@ -179,6 +180,7 @@ export default {
     }
   },
   mounted: function () {
+    this.team_id = this.team0.id;
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
     this.members = this.team_members0;
@@ -282,31 +284,31 @@ export default {
       this.other_org_members =
         this.remove_by_email(this.other_org_members, this.new_member.email);
     },
-    updateEmail() {
-      this.credential = 'Email';
-      var url = '/api/member/' + this.user.id + '/email';
-      axios.put(url, {newEmail: this.newEmail})
+    saveTeam () {
+      axios({
+        method: 'put',
+        url: '/api/organization/team',
+        data: {
+          auth_user_id: this.user0.id,
+          team_id: this.team_id,
+          team_name: this.team_name,
+          team_description: this.team_description
+        }
+      })
       .then(  (response) => {
         // console.log(response)
-        this.user.email = this.newEmail;
-        this.newEmail = '';
-        this.updateStatus = STATUS_SUCCESS;
+        this.setStatusSuccess();
         var self = this;
         setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
+            self.setStatusInitial();
         }, MESSAGE_DURATION);
       }).catch((error) => {
         // console.log(error.response)
-        if (error.response.data == 'unavailable') {
-          this.credentialMessage = 'email already in use.  Try another email';
-        } else {
-          this.credentialMessage = 'unable to change your email. Try later';
-        }
-        this.updateStatus = STATUS_FAILED;
 
+        this.setStatusFailed();
         var self = this;
         setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
+            self.setStatusInitial();
         }, MESSAGE_DURATION + 1000);
       });
     },

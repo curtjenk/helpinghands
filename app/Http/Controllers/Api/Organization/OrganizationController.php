@@ -162,6 +162,6 @@ class OrganizationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Log::debug("organization destroy");
     }
 }

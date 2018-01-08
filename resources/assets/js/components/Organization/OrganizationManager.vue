@@ -52,7 +52,7 @@
           <div class="col-md-offset-2 col-md-8 text-center">
             <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
             <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                <span>Sorry, unable to save/update changes</span>
+                <span>Sorry, unable to save your change(s)</span>
             </div>
           </div>
           <div class="form-group">
@@ -378,8 +378,8 @@ export default {
           url: '/api/organization/admin',
           data: {
             auth_user_id: this.user0.id,
-            user_id: admin.id,
-            org_id: this.org_id,
+            user_id: admin.user_id,
+            organization_id: this.org_id,
           }
         })
         .then( (response) => {
@@ -389,7 +389,7 @@ export default {
           dialog.close();
         })
         .catch( (error)=>{
-          console.log('Delete action completed ');
+          console.log('Delete action failed ');
           dialog.close();
         });
       })
@@ -401,7 +401,8 @@ export default {
       if (this.new_admin == null) {
         return;
       }
-      console.log("new_admin",this.new_admin)
+      // console.log("new_admin",this.new_admin)
+      // console.log(this.org_id)
       this.isAddingAdmin = false;
       axios({
         method: 'post',
@@ -414,13 +415,9 @@ export default {
       }).then( (response) => {
         this.administrators.push(this.new_admin)
         this.members = this.remove_by_name(this.members, this.new_admin.name);
+        this.new_admin = null;
       }).catch( (error) => {
         this.errors = error.response.data.errors;
-        // this.setStatusFailed();
-        // let self = this;
-        // setTimeout(function(){
-        //     self.setStatusInitial();
-        // }, MESSAGE_DURATION + 2000);
       });
     },
     removeTeam (team) {
