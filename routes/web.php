@@ -43,7 +43,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/email', 'UserController@update_email');
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
-            Route::resource('organization', 'OrganizationController');
+            Route::resource('organization/admin','Organization\UserController',
+                ['only'=>['store','delete']]
+            );
+            Route::resource('organization/team','Organization\TeamController',
+                ['only'=>['update','store','delete']]
+            );
+            Route::resource('organization', 'Organization\OrganizationController');
             Route::resource('team', 'TeamController');
         });
 

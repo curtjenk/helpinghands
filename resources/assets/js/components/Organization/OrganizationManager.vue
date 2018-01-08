@@ -371,28 +371,31 @@ export default {
     removeAdmin (admin) {
       let message = '<i>Remove <span class="text-danger"><b>' + admin.name
                   + '\'s </b></span> administrator privileges?</i>';
-      this.$dialog.confirm(message, {
-        // loader: false,
-        // animation: 'zoom'
-      })
+      this.$dialog.confirm(message, {})
       .then( (dialog)=> {
-          //console.log('Clicked on proceed')
-          //1 post to backend controller.  If successful
-          //TODO controller method and axios call
-          // close dialog: setTimeout is temporary
-          setTimeout(() => {
-            //2 add to this.members
-            this.members.push(admin)
-            //3 remove from this.administrators
-            this.administrators = this.remove_by_name(this.administrators, admin.name);
-            console.log('Delete action completed ');
-            dialog.close();
-          }, 2000);
+        axios({
+          method: 'delete',
+          url: '/api/organization/admin',
+          data: {
+            auth_user_id: this.user0.id,
+            user_id: admin.id,
+            org_id: this.org_id,
+          }
+        })
+        .then( (response) => {
+          this.members.push(admin)
+          this.administrators = this.remove_by_name(this.administrators, admin.name);
+          console.log('Delete action completed ');
+          dialog.close();
+        })
+        .catch( (error)=>{
+          console.log('Delete action completed ');
+          dialog.close();
+        });
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
       });
-
     },
     saveNewAdmin: function() {
       if (this.new_admin == null) {
@@ -400,14 +403,25 @@ export default {
       }
       console.log("new_admin",this.new_admin)
       this.isAddingAdmin = false;
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-
-      //2 add to this.administrators
-      this.administrators.push(this.new_admin)
-      //3 remove from this.members
-
-      this.members = this.remove_by_name(this.members, this.new_admin.name);
+      axios({
+        method: 'post',
+        url: '/api/organization/admin',
+        data: {
+          auth_user_id: this.user0.id,
+          user_id: this.new_admin.user_id,
+          organization_id: this.org_id
+        }
+      }).then( (response) => {
+        this.administrators.push(this.new_admin)
+        this.members = this.remove_by_name(this.members, this.new_admin.name);
+      }).catch( (error) => {
+        this.errors = error.response.data.errors;
+        // this.setStatusFailed();
+        // let self = this;
+        // setTimeout(function(){
+        //     self.setStatusInitial();
+        // }, MESSAGE_DURATION + 2000);
+      });
     },
     removeTeam (team) {
       //1 post to backend controller.  If successful
