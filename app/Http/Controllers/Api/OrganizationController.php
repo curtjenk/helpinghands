@@ -75,7 +75,8 @@ class OrganizationController extends Controller
             'address2' => 'max:255',
             'city' => 'max:80',
             'state' => 'max:40',
-            'zipcode' => 'required|max:10',
+            'zipcode' => 'required|regex:/^[0-9]{5}(\-[0-9]{4})?$/',
+            'zipcode' => 'required|regex:/^[0-9]{5}([0-9]{4})?$/',  //"OR" without hyphen
         ]);
         $organization = App\Organization::create([
             'name'=>$request->input('name'),
@@ -86,26 +87,23 @@ class OrganizationController extends Controller
             'state'=>$request->input('state'),
             'zipcode'=>$request->input('zipcode')
         ]);
-        return view('organization.show', [
-            'organization'=>$organization,
-        ]);
+        return response()->json(['id'=>$organization->id]);
     }
-
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $organization = App\Organization::findOrFail($id);
-        $this->authorize('show', $organization);
-
-        return view('organization.show', [
-            'organization'=>$organization,
-        ]);
-    }
+    // public function show($id)
+    // {
+    //     $organization = App\Organization::findOrFail($id);
+    //     $this->authorize('show', $organization);
+    //
+    //     return view('organization.show', [
+    //         'organization'=>$organization,
+    //     ]);
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -113,14 +111,14 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $organization = App\Organization::findOrFail($id);
-        $this->authorize('update', $organization);
-        return view('organization.create', [
-            'organization'=>$organization,
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $organization = App\Organization::findOrFail($id);
+    //     $this->authorize('update', $organization);
+    //     return view('organization.create', [
+    //         'organization'=>$organization,
+    //     ]);
+    // }
 
     /**
      * Update the specified resource in storage.

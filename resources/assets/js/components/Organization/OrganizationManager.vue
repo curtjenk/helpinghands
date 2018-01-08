@@ -115,8 +115,11 @@
             </div>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+            <button v-if="modeCreate" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
                 <i class="fa fa-btn fa-check"></i> Save Organization
+            </button>
+            <button v-if="modeEdit" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+                <i class="fa fa-btn fa-check"></i> Update Organization
             </button>
           </div>
         </div>
@@ -457,7 +460,6 @@ export default {
         method = 'put';
         url += '/'+this.org_id;
       }
-
       axios({
         method: method,
         url: url,
@@ -476,9 +478,12 @@ export default {
         // clear previous form errors
         this.errors = {}
         this.setStatusSuccess();
+        this.setModeEdit;
+        this.org_id = response.data.id;
         let self = this;
         setTimeout(function(){
             self.setStatusInitial();
+
         }, MESSAGE_DURATION);
 
       }).catch( (error) => {

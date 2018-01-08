@@ -52,6 +52,39 @@
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <div class="caption">
           <span>Team Members</span>&nbsp;&nbsp;&nbsp;
+          <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit"
+              v-tooltip.right="'Add Team Member'">
+            <a  href="#" type="button" class="text-success"
+              @click="toggleIsAddingMember()">
+              <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+            </a>
+          </span>
+        </div>
+        <div v-if="isAddingMember" class="panel panel-default">
+          <div class="form-group row panel-body">
+              <div class="col-md-5 col-sm-5">
+                <select v-model="new_member">
+                  <option disabled value="">Please select one</option>
+                  <option v-for="oom in other_org_members" v-bind:value="oom">
+                    {{ oom.name }} &nbsp;< {{oom.email}} >
+                 </option>
+                </select>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                <span v-tooltip.top="'Save'">
+                    <a href="#" type="button" class="text-primary"
+                      @click="saveNewMember()">
+                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                    </a>
+                </span>
+                <span v-tooltip.top="'Cancel'">
+                    <a href="#" type="button" class="text-danger"
+                      @click="toggleIsAddingMember()">
+                      <i class="fa fa-ban fa-lg fa-fw"></i>
+                    </a>
+                </span>
+              </div>
+          </div>
         </div>
         <table class="table table-responsive table-striped table-condensed">
           <thead>
@@ -137,6 +170,8 @@ export default {
     return {
       ready: false,
       errors: {},
+      isAddingMember: false,
+      new_member: null,
       team_name: '',
       team_description: '',
       members: [],
@@ -172,11 +207,10 @@ export default {
     //   this.isAddingAdmin = !this.isAddingAdmin
     //   this.new_admin = null
     // },
-    // toggleIsAddingTeam () {
-    //   this.isAddingTeam = !this.isAddingTeam
-    //   this.new_team_name = ''
-    //   this.new_team_description = ''
-    // },
+    toggleIsAddingMember () {
+      this.isAddingMember = !this.isAddingMember;
+      this.new_member = null;
+    },
     removeMember (member) {
       let message = '<i>Delete <span class="text-danger"><b>' + member.name
                   + ' </b></span> from the team?</i>';
@@ -229,112 +263,24 @@ export default {
             //3 remove from this.administrators
 
             dialog.close();
-          }, 2000);
+          }, 1000);
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
       });
 
     },
-    saveNewAdmin: function() {
-      if (this.new_admin == null) {
-        return;
-      }
-      console.log("new_admin",this.new_admin)
-      this.isAddingAdmin = false;
+    saveNewMember: function() {
+      this.isAddingMember = false;
       //1 post to backend controller.  If successful
       //TODO controller method and axios call
 
-      //2 add to this.administrators
-      this.administrators.push(this.new_admin)
-      //3 remove from this.members
+      //2 add to this.members
+      this.members.push(this.new_member)
+      //3 remove from this.other_org_members
 
-      this.members = this.remove_by_name(this.members, this.new_admin.name);
-    },
-    removeTeam (team) {
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-      let message = '<i>Team <span class="text-danger"><b>' + team.name
-                  + '</b></span> will be permanently deleted!</i>';
-      this.$dialog.confirm(message, {})
-      .then( (dialog)=> {
-          console.log('Clicked on proceed')
-          //1 post to backend controller.  If successful
-          //TODO controller method and axios call
-          // close dialog: setTimeout is temporary
-          setTimeout(() => {
-            //2 remove team from list
-            this.teams = this.remove_by_name(this.teams, team.name);
-            console.log('Delete action completed ');
-            dialog.close();
-          }, 2000);
-      })
-      .catch( ()=> {
-          console.log('Clicked on cancel')
-      });
-    },
-    saveNewTeam: function() {
-      this.new_team_name = this.new_team_name.trim();
-      this.new_team_description = this.new_team_description.trim();
-      if (this.new_team_name == '' || this.new_team_description == '') {
-        return;
-      }
-
-      this.isAddingTeam = false;
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-
-      //2 add to this.teams
-      let team =  {
-        id: 0,   //need id from axios response
-        organization_id: this.org_id,
-        name: this.new_team_name,
-        description: this.new_team_description
-      };
-
-      this.teams.push(team)
-
-    },
-    saveOrganization() {
-      let url = '/api/organization';
-      let method = 'post';
-      if (this.modeEdit) {
-        method = 'put';
-        url += '/'+this.org_id;
-      }
-
-      axios({
-        method: method,
-        url: url,
-        data: {
-          user_id: this.user0.id,
-          name: this.org_name,
-          phone: this.org_phone,
-          address1: this.org_address1,
-          address2: this.org_address2,
-          city: this.org_city,
-          state: this.org_state,
-          zipcode: this.org_zip
-        }
-      }).then( (response) => {
-        // console.log(response)
-        // clear previous form errors
-        this.errors = {}
-        this.setStatusSuccess();
-        let self = this;
-        setTimeout(function(){
-            self.setStatusInitial();
-        }, MESSAGE_DURATION);
-
-      }).catch( (error) => {
-        this.errors = error.response.data.errors
-
-        this.setStatusFailed();
-        let self = this;
-        setTimeout(function(){
-            self.setStatusInitial();
-        }, MESSAGE_DURATION + 2000);
-      });
+      this.other_org_members =
+        this.remove_by_email(this.other_org_members, this.new_member.email);
     },
     updateEmail() {
       this.credential = 'Email';
@@ -364,37 +310,6 @@ export default {
         }, MESSAGE_DURATION + 1000);
       });
     },
-    updatePassword() {
-      this.credential = 'Password';
-      var url = '/api/member/' + this.user.id + '/password';
-      axios.put(url, {
-        oldPassword: this.oldPassword,
-        newPassword: this.newPassword,
-        newPasswordConfirm: this.newPasswordConfirm,
-        })
-      .then(  (response) => {
-        console.log(response)
-        this.updateStatus = STATUS_SUCCESS;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION);
-      }).catch((error) => {
-        console.log(error.response)
-        if (error.response.data == 'verify') {
-          this.credentialMessage = 'please verify your input';
-        } else {
-          this.credentialMessage = 'unable to change your password. Try later';
-        }
-        this.updateStatus = STATUS_FAILED;
-        var self = this;
-        setTimeout(function(){
-            self.updateStatus = STATUS_INITIAL;
-        }, MESSAGE_DURATION + 1000);
-      });
-    },
-
-
   } //End of methods
 } //End of export
 </script>
