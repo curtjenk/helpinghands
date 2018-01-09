@@ -236,8 +236,14 @@
             <tr v-for="team in teams" v-bind:key="team.id" class="list-item">
               <td>{{ team.name }}</td>
               <td>{{ team.description }}</td>
-              <td>
-                <span v-tooltip.right="'Remove'" v-if="modeEdit" >
+              <td v-if="modeEdit">
+                <span v-tooltip.left="'Edit'" >
+                    <a href="#" type="button" class=""
+                      @click="editTeam(team)">
+                      <i class="fa fa-pencil-square-o fa-fw"></i>
+                    </a>
+                </span>
+                <span v-tooltip.right="'Remove'" >
                     <a href="#" type="button" class="text-danger"
                       @click="removeTeam(team)">
                       <i class="fa fa-trash-o fa-fw"></i>
@@ -401,8 +407,6 @@ export default {
       if (this.new_admin == null) {
         return;
       }
-      // console.log("new_admin",this.new_admin)
-      // console.log(this.org_id)
       this.isAddingAdmin = false;
       axios({
         method: 'post',
@@ -420,23 +424,35 @@ export default {
         this.errors = error.response.data.errors;
       });
     },
+    editTeam: function (team) {
+          window.location.href = '/team/'+team.id+'/edit'
+    },
     removeTeam (team) {
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
       let message = '<i>Team <span class="text-danger"><b>' + team.name
                   + '</b></span> will be permanently deleted!</i>';
       this.$dialog.confirm(message, {})
       .then( (dialog)=> {
-          console.log('Clicked on proceed')
-          //1 post to backend controller.  If successful
-          //TODO controller method and axios call
-          // close dialog: setTimeout is temporary
-          setTimeout(() => {
-            //2 remove team from list
-            this.teams = this.remove_by_name(this.teams, team.name);
-            console.log('Delete action completed ');
-            dialog.close();
-          }, 2000);
+        axios({
+          method: 'delete',
+          url: '/api/organization/team',
+          data: {
+            auth_user_id: this.user0.id,
+            organization_id: this.org_id,
+            team_id: team.id
+          }
+        }).then( (response) => {
+          this.errors = {}
+          this.teams = this.remove_by_name(this.teams, team.name);
+          // console.log('Delete action completed ');
+          dialog.close();
+        }).catch( (error) => {
+          console.log(error.response)
+          this.setStatusFailed();
+          let self = this;
+          setTimeout(function(){
+              self.setStatusInitial();
+          }, MESSAGE_DURATION + 2000);
+        });
       })
       .catch( ()=> {
           console.log('Clicked on cancel')
@@ -448,23 +464,39 @@ export default {
       if (this.new_team_name == '' || this.new_team_description == '') {
         return;
       }
-
       this.isAddingTeam = false;
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-
-      //2 add to this.teams
-      let team =  {
-        id: 0,   //need id from axios response
-        organization_id: this.org_id,
-        name: this.new_team_name,
-        description: this.new_team_description
-      };
-
-      this.teams.push(team)
-
+      axios({
+        method: 'post',
+        url: '/api/organization/team',
+        data: {
+          auth_user_id: this.user0.id,
+          organization_id: this.org_id,
+          name: this.new_team_name,
+          description: this.new_team_description
+        }
+      }).then( (response) => {
+        this.errors = {}
+        let team =  {
+          id: response.data.id,
+          organization_id: this.org_id,
+          name: this.new_team_name,
+          description: this.new_team_description
+        };
+        this.teams.push(team)
+      }).catch( (error) => {
+        console.log(error.response)
+        if (error.response.data.errors != undefined) {
+          this.errors = error.response.data.errors
+        }
+        this.setStatusFailed();
+        let self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 2000);
+      });
     },
     saveOrganization() {
+      console.log('save-org');
       let url = '/api/organization';
       let method = 'post';
       if (this.modeEdit) {
@@ -507,65 +539,6 @@ export default {
         }, MESSAGE_DURATION + 2000);
       });
     },
-    // updateEmail() {
-    //   this.credential = 'Email';
-    //   var url = '/api/member/' + this.user.id + '/email';
-    //   axios.put(url, {newEmail: this.newEmail})
-    //   .then(  (response) => {
-    //     // console.log(response)
-    //     this.user.email = this.newEmail;
-    //     this.newEmail = '';
-    //     this.updateStatus = STATUS_SUCCESS;
-    //     var self = this;
-    //     setTimeout(function(){
-    //         self.updateStatus = STATUS_INITIAL;
-    //     }, MESSAGE_DURATION);
-    //   }).catch((error) => {
-    //     // console.log(error.response)
-    //     if (error.response.data == 'unavailable') {
-    //       this.credentialMessage = 'email already in use.  Try another email';
-    //     } else {
-    //       this.credentialMessage = 'unable to change your email. Try later';
-    //     }
-    //     this.updateStatus = STATUS_FAILED;
-    //
-    //     var self = this;
-    //     setTimeout(function(){
-    //         self.updateStatus = STATUS_INITIAL;
-    //     }, MESSAGE_DURATION + 1000);
-    //   });
-    // },
-    // updatePassword() {
-    //   this.credential = 'Password';
-    //   var url = '/api/member/' + this.user.id + '/password';
-    //   axios.put(url, {
-    //     oldPassword: this.oldPassword,
-    //     newPassword: this.newPassword,
-    //     newPasswordConfirm: this.newPasswordConfirm,
-    //     })
-    //   .then(  (response) => {
-    //     console.log(response)
-    //     this.updateStatus = STATUS_SUCCESS;
-    //     var self = this;
-    //     setTimeout(function(){
-    //         self.updateStatus = STATUS_INITIAL;
-    //     }, MESSAGE_DURATION);
-    //   }).catch((error) => {
-    //     console.log(error.response)
-    //     if (error.response.data == 'verify') {
-    //       this.credentialMessage = 'please verify your input';
-    //     } else {
-    //       this.credentialMessage = 'unable to change your password. Try later';
-    //     }
-    //     this.updateStatus = STATUS_FAILED;
-    //     var self = this;
-    //     setTimeout(function(){
-    //         self.updateStatus = STATUS_INITIAL;
-    //     }, MESSAGE_DURATION + 1000);
-    //   });
-    // },
-
-
   } //End of methods
 } //End of export
 </script>
