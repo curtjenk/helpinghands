@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
         DB::table('organization_user')->insert([
             'organization_id'=>$childOrg1,
             'user_id'=>$testUser2,
-            'role_id'=>App\Role::where('name','Lead')->pluck('id')->first()
+            'role_id'=>App\Role::where('name','Admin')->pluck('id')->first()
         ]);
         //TEST user 3
         $testUser3 =DB::table('users')->insertGetId([

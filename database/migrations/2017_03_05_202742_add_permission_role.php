@@ -14,7 +14,7 @@ class AddPermissionRole extends Migration
     public function up()
     {
         /*
-        permissions are inherited/cumulative.  Everyone gets "Visitor" role and
+        Everyone gets "Visitor" role and
         associated permissions. Then when user "joins"
         an organization the person adds "Member" permissions, and so on.
         At the end of the day a person can have multiple roles.
@@ -63,14 +63,14 @@ class AddPermissionRole extends Migration
         $admin->permissions()
               ->sync(App\Permission::whereIn('name',
                             [
-                             // 'Show organization',
+                             'Show organization',
                              'Update organization',
 
                              'Create team',
                              'Delete team',
-                             // 'Show team',
+                             'Show team',
                              'Update team',
-                             // 'List teams',
+                             'List teams',
 
                              'Create event',
                              'Delete event',
@@ -99,10 +99,11 @@ class AddPermissionRole extends Migration
                             'Show user',
                             'List users',
 
-                            // 'Show organization',
+                            'Show organization',
+                            'List organizations',
 
-                            // 'Show team',
-                            // 'List teams',
+                            'Show team',
+                            'List teams',
 
                             'Show event',
                             'List events',

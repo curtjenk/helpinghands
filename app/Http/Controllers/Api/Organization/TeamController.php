@@ -57,7 +57,7 @@ class TeamController extends Controller
         $organization = App\Organization::findOrFail($request->organization_id);
         $team = App\Team::findOrFail($request->team_id);
         $this->authorize('update', $organization);
-        $this->authorize('destroy', $team);
+        // $this->authorize('destroy', $team);
         $this->validate($request, [
             'auth_user_id' => 'required',
         ]);

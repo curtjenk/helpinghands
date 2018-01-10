@@ -61,7 +61,7 @@ class TeamController extends Controller
     public function edit($id)
     {
         $team = App\Team::findOrFail($id);
-
+    
         $this->authorize('update', $team);
 
         $team_members = $team->users()

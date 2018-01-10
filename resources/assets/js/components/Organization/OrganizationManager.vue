@@ -447,6 +447,7 @@ export default {
           dialog.close();
         }).catch( (error) => {
           console.log(error.response)
+          dialog.close();
           this.setStatusFailed();
           let self = this;
           setTimeout(function(){
