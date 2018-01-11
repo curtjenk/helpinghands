@@ -212,7 +212,7 @@ class UserController extends Controller
             $original = $upload->getClientOriginalName();
             $filename = $upload->store($dir, 'public');
             // Log::debug(Storage::disk('public')->url($filename));
-            $user->avatar_filename = $filename;
+            $user->avatar_filename = 'storage/'.$filename;
             $user->save();
         }
         return response()->json($user->filename);

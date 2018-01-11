@@ -125,7 +125,30 @@
           </tbody>
         </table>
       </div>
-
+    </div>
+    <div class="row">
+      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
+        <vue-good-table
+            title="Demo Table"
+            :columns="gColumns"
+            :rows="gRows"
+            :paginate="true"
+            :lineNumbers="false">
+          <template slot="table-row-before" slot-scope="props">
+            <td></td>
+          </template>
+          <!-- all the regular row items will be populated here-->
+          <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
+            <td>
+              <a href="#" type="button" class="text-danger"
+                @click="removeMember(member)">
+                <i class="fa fa-trash-o fa-fw"></i>
+              </a>
+            </td>
+            <!-- <td><button @click="doSomething(props.index)">show</button></td> -->
+          </template>
+        </vue-good-table>
+      </div>
     </div>
   </div>
 </template>
@@ -135,6 +158,10 @@
 import {commonMixins} from '../../../mixins/common';
 import {MESSAGE_DURATION} from '../../../mixins/constants';
 import FormError from '../../FormError';
+
+import VueGoodTable from 'vue-good-table';
+
+Vue.use(VueGoodTable);
 
 export default {
   mixins: [commonMixins],
@@ -168,6 +195,22 @@ export default {
   },
   data () {
     return {
+      gRows: [],
+      gColumns: [
+        {
+          label: 'Name',
+          field: 'name',
+          filterable: true,
+        },
+        {
+          label: 'Email',
+          field: 'email',
+          filterable: true,
+        },
+        {
+          label: 'Actions'
+        }
+      ],
       ready: false,
       errors: {},
       isAddingMember: false,
@@ -184,6 +227,9 @@ export default {
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
     this.members = this.team_members0;
+
+    this.gRows = this.members;
+
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
