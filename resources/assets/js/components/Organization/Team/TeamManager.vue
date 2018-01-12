@@ -128,20 +128,38 @@
     </div>
     <div class="row">
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <vue-good-table
+        <vue-good-table v-show="ready"
             title="Demo Table"
             :columns="gColumns"
             :rows="gRows"
             :paginate="true"
-            :lineNumbers="false">
-          <template slot="table-row-before" slot-scope="props">
-            <td></td>
+            :perPage="10"
+            :lineNumbers="false"
+            styleClass="table condensed table-striped">
+          <div slot="emptystate" class="text-center">
+            No members on this team
+          </div>
+          <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
+            <td>
+              <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
+                    <a href="#" type="button" class="text-primary"
+                      @click="removeLeader2(props.index)">
+                      <i class="fa fa-check-square-o fa-fw"></i>
+                    </a>
+              </span>
+              <span v-else v-tooltip.right="'Make Leader'">
+                <a href="#" type="button" class=""
+                  @click="makeLeader2(props.index)">
+                  <i class="fa fa-square-o fa-fw"></i>
+                </a>
+              </span>
+            </td>
           </template>
           <!-- all the regular row items will be populated here-->
           <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
             <td>
               <a href="#" type="button" class="text-danger"
-                @click="removeMember(member)">
+                @click="removeMember2(props.index)">
                 <i class="fa fa-trash-o fa-fw"></i>
               </a>
             </td>
@@ -198,6 +216,10 @@ export default {
       gRows: [],
       gColumns: [
         {
+          label: 'Leader',
+          hidden: true
+        },
+        {
           label: 'Name',
           field: 'name',
           filterable: true,
@@ -208,7 +230,8 @@ export default {
           filterable: true,
         },
         {
-          label: 'Actions'
+          label: 'Actions',
+          hidden: true
         }
       ],
       ready: false,
@@ -232,6 +255,8 @@ export default {
 
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
+    this.gColumns[0].hidden = this.modeShow;    //Leader column
+    this.gColumns[3].hidden = this.modeShow;    //Actions column
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
     })
@@ -258,6 +283,12 @@ export default {
     toggleIsAddingMember () {
       this.isAddingMember = !this.isAddingMember;
       this.new_member = null;
+    },
+    removeMember2 (index) {
+      //use by vue-good-table
+      console.log(index);
+      let member = this.gRows[index];
+      console.log(index, member);
     },
     removeMember (member) {
       let message = '<i>Delete <span class="text-danger"><b>' + member.name
