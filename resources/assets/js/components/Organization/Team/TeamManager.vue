@@ -86,7 +86,7 @@
               </div>
           </div>
         </div>
-        <table class="table table-responsive table-striped table-condensed">
+        <!-- <table class="table table-responsive table-striped table-condensed">
           <thead>
             <tr>
               <th v-if="modeEdit" >Leader</th>
@@ -123,15 +123,14 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
       </div>
     </div>
     <div class="row">
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <vue-good-table v-show="ready"
-            title="Demo Table"
             :columns="gColumns"
-            :rows="gRows"
+            :rows="members"
             :paginate="true"
             :perPage="10"
             :lineNumbers="false"
@@ -213,7 +212,6 @@ export default {
   },
   data () {
     return {
-      gRows: [],
       gColumns: [
         {
           label: 'Leader',
@@ -250,9 +248,6 @@ export default {
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
     this.members = this.team_members0;
-
-    this.gRows = this.members;
-
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
     this.gColumns[0].hidden = this.modeShow;    //Leader column
@@ -285,12 +280,7 @@ export default {
       this.new_member = null;
     },
     removeMember2 (index) {
-      //use by vue-good-table
-      console.log(index);
-      let member = this.gRows[index];
-      console.log(index, member);
-    },
-    removeMember (member) {
+      let member = this.members[index];
       let message = '<i>Delete <span class="text-danger"><b>' + member.name
                   + ' </b></span> from the team?</i>';
       this.$dialog.confirm(message, {
@@ -316,38 +306,81 @@ export default {
           //console.log('Clicked on cancel')
       });
     },
-    makeLeader (member) {
+    // removeMember (member) {
+    //   let message = '<i>Delete <span class="text-danger"><b>' + member.name
+    //               + ' </b></span> from the team?</i>';
+    //   this.$dialog.confirm(message, {
+    //     // loader: false,
+    //     // animation: 'zoom'
+    //   })
+    //   .then( (dialog)=> {
+    //       //console.log('Clicked on proceed')
+    //       //1 post to backend controller.  If successful
+    //       //TODO controller method and axios call
+    //       // close dialog: setTimeout is temporary
+    //       setTimeout(() => {
+    //         //2 change role (incase the Lead was deleted) and add to the "all members" list
+    //         member.role = 'Member'
+    //         this.other_org_members.push(member)
+    //         //3 remove member from members list
+    //         this.members = this.remove_by_email(this.members, member.email);
+    //         console.log('Delete action completed ');
+    //         dialog.close();
+    //       }, 1000);
+    //   })
+    //   .catch( ()=> {
+    //       //console.log('Clicked on cancel')
+    //   });
+    // },
+    // makeLeader (member) {
+    //   //1 post to backend controller.  If successful
+    //   //TODO controller method and axios call
+    //
+    //   //2 set role
+    //   member.role="Lead"
+    //
+    // },
+    makeLeader2 (index) {
       //1 post to backend controller.  If successful
       //TODO controller method and axios call
 
       //2 set role
-      member.role="Lead"
+      this.members[index].role="Lead"
 
     },
-    removeLeader (member) {
-      let message = '<i>Remove <span class="text-danger"><b>' + member.name
-                  + '\'s </b></span> team leader privileges?</i>';
-      this.$dialog.confirm(message, {
-        // loader: false,
-        // animation: 'zoom'
-      })
-      .then( (dialog)=> {
-          //console.log('Clicked on proceed')
-          //1 post to backend controller.  If successful
-          //TODO controller method and axios call
-          // close dialog: setTimeout is temporary
-          setTimeout(() => {
-            //2 add to this.members
-            member.role="Member"
-            //3 remove from this.administrators
-
-            dialog.close();
-          }, 1000);
-      })
-      .catch( ()=> {
-          //console.log('Clicked on cancel')
-      });
-
+    // removeLeader (member) {
+    //   let message = '<i>Remove <span class="text-danger"><b>' + member.name
+    //               + '\'s </b></span> team leader privileges?</i>';
+    //   this.$dialog.confirm(message, {
+    //     // loader: false,
+    //     // animation: 'zoom'
+    //   })
+    //   .then( (dialog)=> {
+    //       //console.log('Clicked on proceed')
+    //       //1 post to backend controller.  If successful
+    //       //TODO controller method and axios call
+    //       // close dialog: setTimeout is temporary
+    //       setTimeout(() => {
+    //         //2 add to this.members
+    //         member.role="Member"
+    //         //3 remove from this.administrators
+    //
+    //         dialog.close();
+    //       }, 1000);
+    //   })
+    //   .catch( ()=> {
+    //       //console.log('Clicked on cancel')
+    //   });
+    //
+    // },
+    removeLeader2 (index) {
+      let member = this.members[index];
+      //console.log('Clicked on proceed')
+      //1 post to backend controller.  If successful
+      //TODO controller method and axios call
+      //2 add to this.members
+      member.role="Member"
+      //3 remove from this.administrators
     },
     saveNewMember: function() {
       this.isAddingMember = false;
