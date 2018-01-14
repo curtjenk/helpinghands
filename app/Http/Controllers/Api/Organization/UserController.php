@@ -21,7 +21,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store_admin(Request $request)
     {
         $organization = App\Organization::findOrFail($request->organization_id);
         $this->authorize('update', $organization);
@@ -37,7 +37,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy_admin(Request $request)
     {
         $organization = App\Organization::findOrFail($request->organization_id);
         $this->authorize('update', $organization);

@@ -44,12 +44,17 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
 
-            Route::post('organization/admin','Organization\UserController@store');
-            Route::delete('organization/admin','Organization\UserController@destroy');
+            Route::post('organization/admin','Organization\UserController@store_admin');
+            Route::delete('organization/admin','Organization\UserController@destroy_admin');
 
-            Route::post('organization/team','Organization\TeamController@store');
-            Route::put('organization/team','Organization\TeamController@update');
-            Route::delete('organization/team','Organization\TeamController@destroy');
+            Route::post('organization/team','Organization\Team\TeamController@store');
+            Route::put('organization/team','Organization\Team\TeamController@update');
+            Route::delete('organization/team','Organization\Team\TeamController@destroy');
+
+            Route::post('organization/team/lead','Organization\Team\UserController@store_lead');
+            Route::delete('organization/team/lead','Organization\Team\UserController@destroy_lead');
+            Route::post('organization/team/member','Organization\Team\UserController@store_member');
+            Route::delete('organization/team/member','Organization\Team\UserController@destroy_member');
 
             Route::resource('organization', 'Organization\OrganizationController',
                 ['except'=>['destroy']]

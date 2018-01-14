@@ -62,68 +62,29 @@
         </div>
         <div v-if="isAddingMember" class="panel panel-default">
           <div class="form-group row panel-body">
-              <div class="col-md-5 col-sm-5">
-                <select v-model="new_member">
-                  <option disabled value="">Please select one</option>
-                  <option v-for="oom in other_org_members" v-bind:value="oom">
-                    {{ oom.name }} &nbsp;< {{oom.email}} >
-                 </option>
-                </select>
-              </div>
-              <div class="col-md-3 col-sm-3">
-                <span v-tooltip.top="'Save'">
-                    <a href="#" type="button" class="text-primary"
-                      @click="saveNewMember()">
-                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                    </a>
-                </span>
-                <span v-tooltip.top="'Cancel'">
-                    <a href="#" type="button" class="text-danger"
-                      @click="toggleIsAddingMember()">
-                      <i class="fa fa-ban fa-lg fa-fw"></i>
-                    </a>
-                </span>
-              </div>
+            <div class="col-md-8 col-sm-8">
+              <select v-model="new_member">
+                <option disabled value="">Please select one</option>
+                <option v-for="oom in other_org_members" v-bind:value="oom">
+                  {{ oom.name }} &nbsp;< {{oom.email}} >
+               </option>
+              </select>
+              &nbsp;&nbsp;
+              <span v-tooltip.top="'Save'">
+                  <a href="#" type="button" class="text-primary"
+                    @click="saveNewMember()">
+                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                  </a>
+              </span>
+              <span v-tooltip.top="'Cancel'">
+                  <a href="#" type="button" class="text-danger"
+                    @click="toggleIsAddingMember()">
+                    <i class="fa fa-ban fa-lg fa-fw"></i>
+                  </a>
+              </span>
+            </div>
           </div>
         </div>
-        <!-- <table class="table table-responsive table-striped table-condensed">
-          <thead>
-            <tr>
-              <th v-if="modeEdit" >Leader</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th v-if="modeEdit" >Action</th>
-            </tr>
-          </thead>
-          <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
-            <tr v-for="member in members" v-bind:key="member.id" class="list-item">
-              <td v-if="modeEdit">
-                <span v-if="member.role=='Lead'" v-tooltip.right="'Remove as Leader'">
-                      <a href="#" type="button" class="text-primary"
-                        @click="removeLeader(member)">
-                        <i class="fa fa-check-square-o fa-fw"></i>
-                      </a>
-                </span>
-                <span v-else v-tooltip.right="'Make Leader'">
-                  <a href="#" type="button" class=""
-                    @click="makeLeader(member)">
-                    <i class="fa fa-square-o fa-fw"></i>
-                  </a>
-                </span>
-              </td>
-              <td>{{ member.name }}</td>
-              <td>{{ member.email }}</td>
-              <td>
-                <span v-tooltip.right="'Remove'" v-if="modeEdit" >
-                    <a href="#" type="button" class="text-danger"
-                      @click="removeMember(member)">
-                      <i class="fa fa-trash-o fa-fw"></i>
-                    </a>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table> -->
       </div>
     </div>
     <div class="row">
@@ -142,13 +103,13 @@
             <td>
               <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
                     <a href="#" type="button" class="text-primary"
-                      @click="removeLeader2(props.index)">
+                      @click="updateLeader('delete', props.index)">
                       <i class="fa fa-check-square-o fa-fw"></i>
                     </a>
               </span>
               <span v-else v-tooltip.right="'Make Leader'">
                 <a href="#" type="button" class=""
-                  @click="makeLeader2(props.index)">
+                  @click="updateLeader('post', props.index)">
                   <i class="fa fa-square-o fa-fw"></i>
                 </a>
               </span>
@@ -271,13 +232,32 @@ export default {
     remove_by_email(array, email) {
       return array.filter(e=> e.email != email);
     },
-    // toggleIsAddingAdmin () {
-    //   this.isAddingAdmin = !this.isAddingAdmin
-    //   this.new_admin = null
-    // },
     toggleIsAddingMember () {
       this.isAddingMember = !this.isAddingMember;
       this.new_member = null;
+    },
+    saveNewMember: function() {
+      this.isAddingMember = false;
+      axios({
+        method: 'post',
+        url: '/api/organization/team/member',
+        data: {
+          auth_user_id: this.user0.id,
+          team_id: this.team_id,
+          user_id: this.new_member.id
+        }
+      })
+      .then(  (response) => {
+        this.members.push(this.new_member)
+        this.other_org_members =
+            this.remove_by_email(this.other_org_members, this.new_member.email);
+      }).catch((error) => {
+        this.setStatusFailed();
+        var self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 1000);
+      });
     },
     removeMember2 (index) {
       let member = this.members[index];
@@ -288,111 +268,60 @@ export default {
         // animation: 'zoom'
       })
       .then( (dialog)=> {
-          //console.log('Clicked on proceed')
-          //1 post to backend controller.  If successful
-          //TODO controller method and axios call
-          // close dialog: setTimeout is temporary
-          setTimeout(() => {
-            //2 change role (incase the Lead was deleted) and add to the "all members" list
-            member.role = 'Member'
-            this.other_org_members.push(member)
-            //3 remove member from members list
-            this.members = this.remove_by_email(this.members, member.email);
-            console.log('Delete action completed ');
-            dialog.close();
-          }, 1000);
+        axios({
+          method: 'delete',
+          url: '/api/organization/team/member',
+          data: {
+            auth_user_id: this.user0.id,
+            team_id: this.team_id,
+            user_id: this.members[index].id
+          }
+        })
+        .then(  (response) => {
+          this.other_org_members.push(this.members[index])
+          this.members = this.remove_by_email(this.members, this.members[index].email);
+          console.log('Delete action completed ');
+          dialog.close();
+        }).catch((error) => {
+          dialog.close();
+          this.setStatusFailed();
+          var self = this;
+          setTimeout(function(){
+              self.setStatusInitial();
+          }, MESSAGE_DURATION + 1000);
+        });
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
       });
     },
-    // removeMember (member) {
-    //   let message = '<i>Delete <span class="text-danger"><b>' + member.name
-    //               + ' </b></span> from the team?</i>';
-    //   this.$dialog.confirm(message, {
-    //     // loader: false,
-    //     // animation: 'zoom'
-    //   })
-    //   .then( (dialog)=> {
-    //       //console.log('Clicked on proceed')
-    //       //1 post to backend controller.  If successful
-    //       //TODO controller method and axios call
-    //       // close dialog: setTimeout is temporary
-    //       setTimeout(() => {
-    //         //2 change role (incase the Lead was deleted) and add to the "all members" list
-    //         member.role = 'Member'
-    //         this.other_org_members.push(member)
-    //         //3 remove member from members list
-    //         this.members = this.remove_by_email(this.members, member.email);
-    //         console.log('Delete action completed ');
-    //         dialog.close();
-    //       }, 1000);
-    //   })
-    //   .catch( ()=> {
-    //       //console.log('Clicked on cancel')
-    //   });
-    // },
-    // makeLeader (member) {
-    //   //1 post to backend controller.  If successful
-    //   //TODO controller method and axios call
-    //
-    //   //2 set role
-    //   member.role="Lead"
-    //
-    // },
-    makeLeader2 (index) {
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-
-      //2 set role
-      this.members[index].role="Lead"
-
-    },
-    // removeLeader (member) {
-    //   let message = '<i>Remove <span class="text-danger"><b>' + member.name
-    //               + '\'s </b></span> team leader privileges?</i>';
-    //   this.$dialog.confirm(message, {
-    //     // loader: false,
-    //     // animation: 'zoom'
-    //   })
-    //   .then( (dialog)=> {
-    //       //console.log('Clicked on proceed')
-    //       //1 post to backend controller.  If successful
-    //       //TODO controller method and axios call
-    //       // close dialog: setTimeout is temporary
-    //       setTimeout(() => {
-    //         //2 add to this.members
-    //         member.role="Member"
-    //         //3 remove from this.administrators
-    //
-    //         dialog.close();
-    //       }, 1000);
-    //   })
-    //   .catch( ()=> {
-    //       //console.log('Clicked on cancel')
-    //   });
-    //
-    // },
-    removeLeader2 (index) {
-      let member = this.members[index];
-      //console.log('Clicked on proceed')
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-      //2 add to this.members
-      member.role="Member"
-      //3 remove from this.administrators
-    },
-    saveNewMember: function() {
-      this.isAddingMember = false;
-      //1 post to backend controller.  If successful
-      //TODO controller method and axios call
-
-      //2 add to this.members
-      this.members.push(this.new_member)
-      //3 remove from this.other_org_members
-
-      this.other_org_members =
-        this.remove_by_email(this.other_org_members, this.new_member.email);
+    updateLeader (method, index) {
+      //method = post = make user a Leader
+      //method = delete = make user a Member
+      axios({
+        method: method,
+        url: '/api/organization/team/lead',
+        data: {
+          auth_user_id: this.user0.id,
+          team_id: this.team_id,
+          user_id: this.members[index].id
+        }
+      })
+      .then(  (response) => {
+        // console.log(response)
+        if (method === 'post') {
+          this.members[index].role="Lead"
+        } else {
+          this.members[index].role="Member"
+        }
+      }).catch((error) => {
+        // console.log(error.response)
+        this.setStatusFailed();
+        var self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 1000);
+      });
     },
     saveTeam () {
       axios({
@@ -421,7 +350,7 @@ export default {
             self.setStatusInitial();
         }, MESSAGE_DURATION + 1000);
       });
-    },
+    }
   } //End of methods
 } //End of export
 </script>
