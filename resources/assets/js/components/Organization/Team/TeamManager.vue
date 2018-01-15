@@ -174,23 +174,24 @@ export default {
   data () {
     return {
       gColumns: [
-        {
-          label: 'Leader',
-          hidden: true
+        {label: 'Leader', hidden: true
         },
-        {
-          label: 'Name',
-          field: 'name',
-          filterable: true,
+        {label: 'Name', field: 'name', filterable: true,
+          filter: function(data, filterString) {
+            // // return data.includes(filterString); //ES6
+            let lData = data.toLowerCase();
+            let lFilterString = filterString.toLowerCase();
+            return lData.indexOf(lFilterString) != -1; //Faster method
+          }
         },
-        {
-          label: 'Email',
-          field: 'email',
-          filterable: true,
+        {label: 'Email', field: 'email', filterable: true,
+          filter: function(data, filterString) {
+            let lData = data.toLowerCase();
+            let lFilterString = filterString.toLowerCase();
+            return lData.indexOf(lFilterString) != -1; //Faster method
+          }
         },
-        {
-          label: 'Actions',
-          hidden: true
+        {label: 'Actions', hidden: true
         }
       ],
       ready: false,
@@ -280,7 +281,7 @@ export default {
         .then(  (response) => {
           this.other_org_members.push(this.members[index])
           this.members = this.remove_by_email(this.members, this.members[index].email);
-          console.log('Delete action completed ');
+          // console.log('Delete action completed ');
           dialog.close();
         }).catch((error) => {
           dialog.close();

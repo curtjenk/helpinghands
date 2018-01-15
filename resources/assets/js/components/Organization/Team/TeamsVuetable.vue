@@ -165,7 +165,6 @@ export default {
   },
   events: {
     'filter-set' (filterText, orgid, teamid) {
-     // console.log("<",filterText,">")
       this.moreParams = {
         filter: filterText,
         orgid: orgid,
@@ -175,7 +174,7 @@ export default {
     },
     'filter-reset' () {
       this.moreParams = {}
-      this.collapseAllDetailRows();
+      // this.collapseAllDetailRows();
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
   }

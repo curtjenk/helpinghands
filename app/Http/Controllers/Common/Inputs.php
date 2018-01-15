@@ -45,8 +45,11 @@ class Inputs
             $this->limit = $request->input('per_page');
         }
 
-        $this->orgid = $request->input('orgid', null);
-        $this->teamid = $request->input('teamid', null);
+        $this->orgid = $request->input('orgid', 0);
+        if ($this->orgid == 0) {$this->orgid=null;}
+        
+        $this->teamid = $request->input('teamid', 0);
+        if ($this->teamid == 0) {$this->teamid=null;}
 
         $this->skip = $request->input('skip', 0);
         if (!empty($request->input('export'))) {

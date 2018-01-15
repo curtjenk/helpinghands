@@ -68,4 +68,20 @@ class TeamController extends Controller
         $team->delete();
     }
 
+    public function update(Request $request)
+    {
+        $team = App\Team::findOrFail($request->team_id);
+        $this->authorize('update', $team);
+        $this->validate($request, [
+            'team_name' => 'required|max:255',
+            'team_description' => 'required|max:4096'
+        ]);
+
+        $team->name = $request->team_name;
+        $team->description = $request->team_description;
+        $team->save();
+
+        return;
+    }
+
 }

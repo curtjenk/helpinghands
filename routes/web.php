@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/dashboard', 'DashboardController@index');
             Route::get('/event', 'EventController@index');
             Route::get('/member', 'UserController@index');
+            Route::put('/member/{id}', 'UserController@update');
             Route::get('member/{id}/membership', 'UserController@membership');
             Route::get('member/{id}/yes', 'UserController@yes_responses');
             Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');

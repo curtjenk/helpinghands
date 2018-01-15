@@ -61,7 +61,7 @@ class UserController extends Controller
      */
     public function destroy_lead(Request $request)
     {
-        $team = App\Organization::findOrFail($request->team_id);
+        $team = App\Team::findOrFail($request->team_id);
         $this->authorize('update', $team);
         $role = App\Role::where('name','Member')->first();
         $this->update_role($request, $team, $role);
@@ -108,5 +108,4 @@ class UserController extends Controller
             ->where('user_id',$org_user->id)
             ->update(['role_id'=>$role->id]);
     }
-
 }
