@@ -21,26 +21,97 @@
       </tab-content>
       <tab-content title="Details">
         <div class="form-horizontal">
-          <!-- <div class="row">
-            <span v-if="modeShow">
-              <div class="form-group">
-                <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                <div class="col-md-9">
-                    <p id="subject" type="text" class="form-control-static">{{ event.subject }}></p>
-                </div>
-              </div>
-            </span>
-            <span v-else>
-              <div class="pull-left">
-                <label for="subject" class="col-md-2 control-label">Subject</label>
-                <div class="col-md-9">
-                    <input required name="subject" v-model="event.subject" type="text" class="" size="70" autofocus>
-                </div>
-              </div>
-            </span>
-          </div> -->
           <div class="row">
-
+            <div class="col-md-5 col-sm-5">
+              <span v-if="modeShow">
+                <div class="form-group">
+                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                  <div class="col-md-9">
+                      <p id="subject" type="text" class="form-control-static">{{ event.subject }}></p>
+                  </div>
+                </div>
+              </span>
+              <span v-else>
+                <div class="form-group">
+                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                  <div class="col-md-9 col-sm-9">
+                      <input required name="subject" v-model="event.subject" type="text" class="" size="50" autofocus>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="col-md-7 col-sm-7">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5 col-sm-5">
+              <span v-if="modeShow">
+                <div class="form-group">
+                  <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
+                  <div class="col-md-7 col-sm-7">
+                      <p id="datestart" class="form-control-static">{{ event.date_start }}></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
+                  <div class="col-md-7 col-sm-7">
+                      <p id="dateend" class="form-control-static">{{ event.date_end }}></p>
+                  </div>
+                </div>
+              </span>
+              <span v-else>
+                <div class="form-group">
+                  <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
+                  <div class="col-md-7 col-sm-7">
+                      <datepicker name="datestart" v-model="event.date_start"></datepicker>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
+                  <div class="col-md-7 col-sm-7">
+                      <datepicker name="dateend" v-model="event.date_end"></datepicker>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="col-md-6 col-sm-6">
+              <span v-if="modeShow">
+                <div class="form-group">
+                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                  <div class="col-md-9">
+                      <p id="timestart" type="text" class="form-control-static">{{ event.time_start }}></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
+                  <div class="col-md-9">
+                      <p id="timeend" type="text" class="form-control-static">{{ event.time_end }}></p>
+                  </div>
+                </div>
+              </span>
+              <span v-else>
+                <div class="form-group">
+                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                  <div class="col-md-9">
+                      <vue-timepicker name="timestart"
+                        v-model="event.time_start"
+                        format="hh:mm A"
+                        :minute-interval="15"
+                      />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
+                  <div class="col-md-9">
+                      <vue-timepicker name="timeend"
+                        v-model="event.time_end"
+                        format="hh:mm A"
+                        :minute-interval="15"
+                      />
+                  </div>
+                </div>
+              </span>
+            </div>
 
           </div>
         </div>
@@ -127,3 +198,15 @@ export default {
   } //End of methods
 } //End of export
 </script>
+
+<style lang="css" scoped>
+/* reduce column padding from 15 to 5px */
+/* [class^='col-'], [class*=' col-']{
+  padding: 0px 5px 0px 5px;
+} */
+input[type=text]{
+   /* padding:0px; */
+   /* margin-bottom:2px;  Reduced from whatever it currently is */
+   /* margin-top:2px;  Reduced from whatever it currently is */
+}
+</style>
