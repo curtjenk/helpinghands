@@ -160,20 +160,25 @@ class EventController extends Controller
      */
     public function create()
     {
-        $this->authorize('create-event');
-        $user = Auth::user();
-
-        $orgs = App\Organization::select('organizations.*')
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organizations.id', $user->organization_id);
-            // })
-            ->get();
-
-        return view('event.create_edit',
-            ['orgs'=>$orgs,
+        return view('event.manage', [            
              'statuses'=>App\Status::all(),
-             'event_types'=>App\EventType::all(),
+             'eventTypes'=>App\EventType::all(),
+             'mode'=>''
          ]);
+        // $this->authorize('create-event');
+        // $user = Auth::user();
+        //
+        // $orgs = App\Organization::select('organizations.*')
+        //     // ->when($user->is_orgLevel(), function($q) use($user) {
+        //     //     return $q->where('organizations.id', $user->organization_id);
+        //     // })
+        //     ->get();
+        //
+        // return view('event.create_edit',
+        //     ['orgs'=>$orgs,
+        //      'statuses'=>App\Status::all(),
+        //      'event_types'=>App\EventType::all(),
+        //  ]);
     }
 
     public function members(Request $request, $id)
