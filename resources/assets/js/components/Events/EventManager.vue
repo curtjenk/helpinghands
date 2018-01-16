@@ -88,6 +88,12 @@
                       <p id="timeend" type="text" class="form-control-static">{{ event.time_end }}></p>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                  <div class="col-md-9">
+                      <p id="eventtype" type="text" class="form-control-static">{{ event.type }}></p>
+                  </div>
+                </div>
               </span>
               <span v-else>
                 <div class="form-group">
@@ -95,8 +101,10 @@
                   <div class="col-md-9">
                       <vue-timepicker name="timestart"
                         v-model="event.time_start"
-                        format="hh:mm A"
+                        :time-value.sync="event.time_start"
+                        format="hh:mm a"
                         :minute-interval="15"
+                        @change="setInitialEndTime"
                       />
                   </div>
                 </div>
@@ -105,9 +113,20 @@
                   <div class="col-md-9">
                       <vue-timepicker name="timeend"
                         v-model="event.time_end"
-                        format="hh:mm A"
+                        :time-value.sync="event.time_end"
+                        format="hh:mm a"
                         :minute-interval="15"
                       />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                  <div class="col-md-9">
+                    <select v-model="selEventType">
+                      <option v-for="etype in eventtypes0" v-bind:value="etype">
+                        {{ etype.name }}
+                     </option>
+                    </select>
                   </div>
                 </div>
               </span>
@@ -120,7 +139,7 @@
           My second tab content
       </tab-content>
       <tab-content title="Attachments">
-         Yuhuuu! This seems pretty damn simple
+         Yuhuuu! This seems pretty simple
       </tab-content>
     </form-wizard>
   </div>
@@ -148,7 +167,19 @@ export default {
     },
     user0: {
       type: Object,
-      required: false
+      required: true
+    },
+    eventtypes0: {
+      type: Array,
+      required: true
+    },
+    statuses0: {
+      type: Array,
+      required: true
+    },
+    eventtypes0: {
+      type: Array,
+      required: true
     }
   },
   data () {
@@ -157,14 +188,14 @@ export default {
       errors: {},
       orgid: '',
       teamid: '',
-      user: {},
+      selEventType: {},
       event: {
         subject:'',
         description:'',
         date_start:'',
         date_end:'',
-        time_start: {hh: "08", mm: "00"},
-        time_end: {hh: "08", mm: "00"},
+        time_start: {hh: "08", mm: "00", a: "am"},
+        time_end: {hh: "08", mm: "00", a: "am"},
         cost:'',
         type:'',
         signup_limit:'',
@@ -173,7 +204,6 @@ export default {
     }
   },
   mounted: function () {
-    this.user = this.user0
     this.setMode(this.mode0);
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
@@ -188,6 +218,14 @@ export default {
   watch: {
   },
   methods: {
+    setInitialEndTime: function(timePicker) {
+      // console.log(timePicker)
+      this.event.time_start.hh = timePicker.data.hh
+      this.event.time_start.mm = timePicker.data.mm
+      this.event.time_start.a = timePicker.data.a
+      this.event.time_end = this.event.time_start
+
+    },
     wizardOnComplete: function() {
       alert('Yay. Done!')
     },

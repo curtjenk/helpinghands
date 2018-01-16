@@ -254,37 +254,37 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //dump("here");
-        $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
-        if (!isset($user)) {
-            abort(400);
-        }
-        $this->authorize('show', $user);
-        return view('user.profile', [
-            'user'=>$user,
-        ]);
-    }
+    // public function show($id)
+    // {
+    //     //dump("here");
+    //     $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
+    //     if (!isset($user)) {
+    //         abort(400);
+    //     }
+    //     $this->authorize('show', $user);
+    //     return view('user.profile', [
+    //         'user'=>$user,
+    //     ]);
+    // }
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $self = Auth::user();
-        $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
-        $this->authorize('update', $user);
-        // Log::debug(print_r($user,true));
-        return view('user.profile', [
-            'user'=>$user,
-            'orgteams'=> App\Organization::with('teams')
-                ->where('organizations.name','!=','Ministry Engage')
-                ->get()
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $self = Auth::user();
+    //     $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
+    //     $this->authorize('update', $user);
+    //     // Log::debug(print_r($user,true));
+    //     return view('user.profile', [
+    //         'user'=>$user,
+    //         'orgteams'=> App\Organization::with('teams')
+    //             ->where('organizations.name','!=','Ministry Engage')
+    //             ->get()
+    //     ]);
+    // }
 
     public function update_email(Request $request, $id)
     {

@@ -160,10 +160,16 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('event.manage', [            
-             'statuses'=>App\Status::all(),
-             'eventTypes'=>App\EventType::all(),
-             'mode'=>''
+        $event_types = App\EventType::select('id','name')
+            ->get()->toArray();
+
+        $statuses = App\Status::select('id','name')
+            ->get()->toArray();
+
+        return view('event.manage', [
+             'statuses'=>$statuses,
+             'event_types'=>$event_types,
+             'mode'=>'Create'
          ]);
         // $this->authorize('create-event');
         // $user = Auth::user();
