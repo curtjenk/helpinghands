@@ -108,12 +108,9 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        //TODO  Delete this method
-        return;
-
         // $user = Auth::user();
         // if (!$request->ajax() && !$request->wantsJson()) {
-        //     return view('event.index', []);
+        return view('event.index', []);
         // }
         //
         // $inputs = new Inputs($request,

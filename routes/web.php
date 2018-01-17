@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::view('/member', 'user.memberslist');
         Route::view('/dashboard', 'dashboard');
-        Route::view('/event', 'event.index');
+        // Route::view('/event', 'event.index');
 
         Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
             Route::get('/dashboard', 'DashboardController@index');
@@ -70,7 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('event/notify/{id}', 'EventController@notify');
 
         Route::resource('event', 'EventController',
-            ['only'=>['create']]
+            ['only'=>['index', 'create']]
         );
         Route::resource('member', 'UserController', ['only'=>['edit']]);
 
