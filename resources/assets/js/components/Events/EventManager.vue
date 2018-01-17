@@ -58,6 +58,13 @@
                       <p id="dateend" class="form-control-static">{{ event.date_end }}></p>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                  <div class="col-md-7">
+                      <p id="eventtype" class="form-control-static">{{ event.type.name }}></p>
+                  </div>
+                </div>
+
               </span>
               <span v-else>
                 <div class="form-group">
@@ -70,6 +77,23 @@
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
                       <datepicker name="dateend" v-model="event.date_end"></datepicker>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                  <div class="col-md-7">
+                    <select v-model="event.type" name="type">
+                      <option disabled value="">Select one</option>
+                      <option v-for="etype in eventtypes0" v-bind:value="etype">
+                        {{ etype.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
+                  <div class="col-md-7">
+                    <input name="cost" v-model="event.cost" type="text" class="" size="5">
                   </div>
                 </div>
               </span>
@@ -89,9 +113,15 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
-                  <div class="col-md-9">
-                      <p id="eventtype" type="text" class="form-control-static">{{ event.type }}></p>
+                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
+                  <div class="col-md-7">
+                    <p id="limit" class="form-control-static">{{ event.limit }}></p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
+                  <div class="col-md-7">
+                    <p id="status" class="form-control-static">{{ event.status.name }}></p>
                   </div>
                 </div>
               </span>
@@ -120,18 +150,24 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-9">
-                    <select v-model="selEventType">
-                      <option v-for="etype in eventtypes0" v-bind:value="etype">
-                        {{ etype.name }}
+                    <input name="limit" v-model="event.limit" type="number" max="999" class="" size="2">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
+                  <div class="col-md-9">
+                    <select v-model="event.status" name="status">
+                      <option disabled value="">Select one</option>
+                      <option v-for="stat in statuses0" v-bind:value="stat" >
+                        {{ stat.name }}
                      </option>
                     </select>
                   </div>
                 </div>
               </span>
             </div>
-
           </div>
         </div>
       </tab-content>
@@ -177,9 +213,9 @@ export default {
       type: Array,
       required: true
     },
-    eventtypes0: {
-      type: Array,
-      required: true
+    event0: {
+      type: Object,
+      required: false
     }
   },
   data () {

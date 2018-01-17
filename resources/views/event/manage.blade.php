@@ -24,9 +24,10 @@
     <div class="container-fluid">
         <event-manager
         mode0="{{ $mode }}"
+        :event0="{{ $event }}"
         :user0="{{ Auth::user() }}"
-        :statuses0="{{ json_encode($statuses) }}"
-        :eventtypes0="{{ json_encode($event_types) }}">
+        :statuses0="{{ $statuses }}"
+        :eventtypes0="{{ $event_types }}">
         </event-manager>
     </div>
 </main>
