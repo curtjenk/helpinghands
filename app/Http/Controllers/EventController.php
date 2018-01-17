@@ -164,24 +164,11 @@ class EventController extends Controller
             ->get()->toArray();
 
         return view('event.manage', [
-             'statuses'=>$statuses,
-             'event_types'=>$event_types,
-             'mode'=>'Create'
+            'event'=>json_encode(null),
+            'statuses'=>json_encode($statuses),
+            'event_types'=>json_encode($event_types),
+            'mode'=>'Create'
          ]);
-        // $this->authorize('create-event');
-        // $user = Auth::user();
-        //
-        // $orgs = App\Organization::select('organizations.*')
-        //     // ->when($user->is_orgLevel(), function($q) use($user) {
-        //     //     return $q->where('organizations.id', $user->organization_id);
-        //     // })
-        //     ->get();
-        //
-        // return view('event.create_edit',
-        //     ['orgs'=>$orgs,
-        //      'statuses'=>App\Status::all(),
-        //      'event_types'=>App\EventType::all(),
-        //  ]);
     }
 
     public function members(Request $request, $id)
@@ -295,9 +282,12 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('show', $event);
-        return view('event.show', [
-            'event'=>$event,
-        ]);
+        return view('event.manage', [
+            'event'=>json_encode($event),
+            'statuses'=>json_encode(null),
+            'event_types'=>json_encode(null),
+            'mode'=>'Show'
+         ]);
     }
 
     /**
