@@ -5,8 +5,9 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header">
-                @if(isset($event)) Edit
-                @else Create
+                @if($mode=='Edit') Edit
+                @elseif ($mode='Create') Create
+                @else View
                 @endif
                 Event
             </div>

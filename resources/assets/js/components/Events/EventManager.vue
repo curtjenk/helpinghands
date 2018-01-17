@@ -1,16 +1,27 @@
 <template>
   <div>
-    <form-wizard
+    <div class="row">
+      <div class="col-md-offset-2 col-sm-offset-2 text-center">
+        <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+            <p><strong>Sorry, unable to {{ mode0 }} event</strong></p>
+            <div v-for="msg in errors">
+                {{ msg }}
+            </div>
+        </div>
+      </div>
+    </div>
+    <form-wizard class="row"
       @on-complete="wizardOnComplete"
       color="#e67e22"
       title=""
       subtitle=""
       finishButtonText="Save Event"
     >
+
       <tab-content title="Organization/Team">
         <div class="text-center">
-          <p>
-            Use the dropdowns to select the Organization and Team as applicable
+          <p class="">
+            <strong>Use the dropdowns to select the Organization and Team as applicable</strong>
           </p>
           <filter-memberships
               :userid="user0.id"
@@ -152,7 +163,7 @@
                 <div class="form-group">
                   <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-9">
-                    <input name="limit" v-model="event.limit" type="number" max="999" class="" size="2">
+                    <input name="limit" v-model="event.limit" type="text" class="" size="3">
                   </div>
                 </div>
                 <div class="form-group">
@@ -185,7 +196,7 @@
 
 import {commonMixins} from '../../mixins/common';
 import {MESSAGE_DURATION} from '../../mixins/constants';
-import FormError from '../FormError';
+// import FormError from '../FormError';
 import {FormWizard, TabContent} from 'vue-form-wizard';
 import 'vue-form-wizard/dist/vue-form-wizard.min.css';
 import Datepicker from 'vuejs-datepicker';
@@ -194,7 +205,8 @@ import VueTimepicker from 'vue2-timepicker';
 export default {
   mixins: [commonMixins],
   components: {
-    FormError, FormWizard, TabContent, Datepicker, VueTimepicker
+    // FormError,
+    FormWizard, TabContent, Datepicker, VueTimepicker
   },
   props: {
     mode0: {
@@ -221,7 +233,7 @@ export default {
   data () {
     return {
       ready: false,
-      errors: {},
+      errors: [],
       orgid: '',
       teamid: '',
       selEventType: {},
@@ -263,7 +275,38 @@ export default {
 
     },
     wizardOnComplete: function() {
-      alert('Yay. Done!')
+      // alert('Yay. Done!')
+      this.errors = [];
+      axios({
+        method: 'post',
+        url: '/api/event',
+        data: {
+          auth_user_id: this.user0.id,
+          organization_id: this.orgid,
+          team_id: this.teamid,
+          event: this.event
+        }
+      })
+      .then(  (response) => {
+        window.location.href = "/event";
+      }).catch((error) => {
+        this.setStatusFailed();
+        if (error.response.status == 422) {
+          let messages = error.response.data.errors;
+          // console.log(messages)
+          let self = this;
+          $.each(messages, function(k,v){
+            for(let i=0;i<v.length;i++){
+              //console.log(v[i])
+              self.errors.push(v[i]);
+            }
+          });
+        }
+        var self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 1000);
+      });
     },
     setOrgTeam: function(orgid, teamid) {
       this.orgid = orgid
@@ -274,13 +317,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
-/* reduce column padding from 15 to 5px */
-/* [class^='col-'], [class*=' col-']{
-  padding: 0px 5px 0px 5px;
-} */
-input[type=text]{
-   /* padding:0px; */
-   /* margin-bottom:2px;  Reduced from whatever it currently is */
-   /* margin-top:2px;  Reduced from whatever it currently is */
+.instruction {
+  font-size: 16px;
 }
 </style>

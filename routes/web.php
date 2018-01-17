@@ -28,7 +28,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::view('/member', 'user.memberslist');
         Route::view('/dashboard', 'dashboard');
-        // Route::view('/event', 'event.index');
 
         Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
             Route::get('/dashboard', 'DashboardController@index');
@@ -44,6 +43,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/email', 'UserController@update_email');
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
+
+            Route::resource('event', 'EventController',
+                ['only'=>['store', 'update']]
+            );
 
             Route::post('organization/admin','Organization\UserController@store_admin');
             Route::delete('organization/admin','Organization\UserController@destroy_admin');
@@ -72,7 +75,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('event', 'EventController',
             ['only'=>['index', 'create']]
         );
-        Route::resource('member', 'UserController', ['only'=>['edit']]);
+        Route::resource('member', 'UserController',
+            ['only'=>['edit']]
+        );
 
         Route::get('administrator', 'HomeController@administrator');
 

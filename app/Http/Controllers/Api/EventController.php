@@ -225,49 +225,51 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        // $this->authorize('create-event');
-        $this->validate($request, [
-            'subject' => 'required|max:255',
-            'description' => 'string',
-            'date_start' => 'date',
-            'date_end' => 'date',
-            // 'organization_id' => 'required|exists:organizations,id',
-            'event_type_id' => 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric',
-            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        ]);
-        // dump($request->all());
-        $newEvent = App\Event::create([
-            'subject'=>$request->input('subject'),
-            'description'=>$request->input('description'),
-            'date_start'=>$request->input('date_start'),
-            'date_end'=>$request->input('date_end'),
-            'user_id'=>$user->id,
-            'status_id'=>$request->input('status_id'),
-            'event_type_id'=>$request->input('event_type_id'),
-            'organization_id'=>1,
-            'signup_limit'=>$request->input('signup_limit'),
-            'cost'=>$request->input('cost'),
-        ]);
-        //Store to 'pubilic'
-        //created sym link using php artisan storage:link
-        //so files are accessible from web
-        $dir = 'event_files/'.$newEvent->id;
-        $uploads = $request->file('event_file');
-        if (isset($uploads)) {
-            // Log::debug("about to upload");
-            foreach($uploads as $upload) {
-                $original = $upload->getClientOriginalName();
-                $filename = $upload->store($dir, 'public');
-                // Log::debug(Storage::disk('public')->url($filename));
-                App\EventFiles::create(['event_id'=>$newEvent->id,
-                    'filename'=>$filename,
-                    'original_filename'=>$original]);
-            }
-        }
+        $this->authorize('create-event');
 
-        return redirect("event/$newEvent->id");
+        $this->validate($request, [
+            'event.subject' => 'required|max:255',
+            'event.description' => 'required|string',
+            'event.date_start' => 'required',
+            'event.date_end' => 'required',
+            'event.organization.id' => 'required|exists:organizations,id',
+            'event.type.id' => 'required|exists:event_types,id',
+            'event.status.id' => 'required|exists:statuses,id',
+            'event.limit'=> 'required|numeric',
+            'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+        ]);
+            return;
+        // // dump($request->all());
+        // $newEvent = App\Event::create([
+        //     'subject'=>$request->input('subject'),
+        //     'description'=>$request->input('description'),
+        //     'date_start'=>$request->input('date_start'),
+        //     'date_end'=>$request->input('date_end'),
+        //     'user_id'=>$user->id,
+        //     'status_id'=>$request->input('status_id'),
+        //     'event_type_id'=>$request->input('event_type_id'),
+        //     'organization_id'=>1,
+        //     'signup_limit'=>$request->input('signup_limit'),
+        //     'cost'=>$request->input('cost'),
+        // ]);
+        // //Store to 'pubilic'
+        // //created sym link using php artisan storage:link
+        // //so files are accessible from web
+        // $dir = 'event_files/'.$newEvent->id;
+        // $uploads = $request->file('event_file');
+        // if (isset($uploads)) {
+        //     // Log::debug("about to upload");
+        //     foreach($uploads as $upload) {
+        //         $original = $upload->getClientOriginalName();
+        //         $filename = $upload->store($dir, 'public');
+        //         // Log::debug(Storage::disk('public')->url($filename));
+        //         App\EventFiles::create(['event_id'=>$newEvent->id,
+        //             'filename'=>$filename,
+        //             'original_filename'=>$original]);
+        //     }
+        // }
+        //
+        // return redirect("event/$newEvent->id");
         // return view('event.show', [
         //     'event'=>$newEvent,
         // ]);
