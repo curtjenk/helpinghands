@@ -22,7 +22,9 @@ class CreateEventsTable extends Migration
             $table->longtext('description')->nullable();
             $table->date('date_start')->nullable();
             $table->date('date_end')->nullable();
-            $table->decimal('cost',5,2)->nullable()->default(0.00);
+            $table->string('time_start')->nullable();
+            $table->string('time_end')->nullable();
+            $table->string('cost')->nullable();
             $table->date('evite_sent')->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->integer('event_type_id')->unsigned()->nullable();

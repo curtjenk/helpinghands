@@ -183,7 +183,13 @@
         </div>
       </tab-content>
       <tab-content title="Description">
-          My second tab content
+        <quill-editor v-model="event.description"
+              ref="myQuillEditor"
+              :options="editorOption"
+              @blur="onEditorBlur($event)"
+              @focus="onEditorFocus($event)"
+              @ready="onEditorReady($event)">
+        </quill-editor>
       </tab-content>
       <tab-content title="Attachments">
          Yuhuuu! This seems pretty simple
@@ -201,12 +207,17 @@ import {FormWizard, TabContent} from 'vue-form-wizard';
 import 'vue-form-wizard/dist/vue-form-wizard.min.css';
 import Datepicker from 'vuejs-datepicker';
 import VueTimepicker from 'vue2-timepicker';
+// quill require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 
 export default {
   mixins: [commonMixins],
   components: {
     // FormError,
-    FormWizard, TabContent, Datepicker, VueTimepicker
+    FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor
   },
   props: {
     mode0: {
@@ -232,6 +243,11 @@ export default {
   },
   data () {
     return {
+      //use event.description instead of editorContent
+      editorContent: '',
+      editorOption: {
+        // some quill options
+      },
       ready: false,
       errors: [],
       orgid: '',
@@ -239,7 +255,7 @@ export default {
       selEventType: {},
       event: {
         subject:'',
-        description:'',
+        description: '<h2>I am an Example</h2>',
         date_start:'',
         date_end:'',
         time_start: {hh: "08", mm: "00", a: "am"},
@@ -261,11 +277,26 @@ export default {
     // console.log('dom updated')
   },
   computed: {
-
+    editor() {
+       return this.$refs.myQuillEditor.quill
+    }
   },
   watch: {
   },
   methods: {
+    onEditorBlur(quill) {
+      // console.log('editor blur!', quill)
+    },
+    onEditorFocus(quill) {
+      // console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      // console.log('editor ready!', quill)
+    },
+    onEditorChange({ quill, html, text }) {
+      // console.log('editor change!', quill, html, text)
+      // this.editorContent = html
+    },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)
       this.event.time_start.hh = timePicker.data.hh

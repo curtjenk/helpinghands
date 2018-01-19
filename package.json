@@ -39,6 +39,7 @@
     "vue-js-popover": "^1.1.7",
     "vue-js-toggle-button": "^1.2.0",
     "vue-password": "^1.1.1",
+    "vue-quill-editor": "^3.0.4",
     "vue-switches": "^2.0.1",
     "vue-template-compiler": "^2.5.13",
     "vue-the-mask": "^0.11.0-alpha.2",

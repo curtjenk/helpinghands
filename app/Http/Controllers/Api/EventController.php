@@ -232,26 +232,26 @@ class EventController extends Controller
             'event.description' => 'required|string',
             'event.date_start' => 'required',
             'event.date_end' => 'required',
-            'event.organization.id' => 'required|exists:organizations,id',
+            'organization_id' => 'required|exists:organizations,id',
             'event.type.id' => 'required|exists:event_types,id',
             'event.status.id' => 'required|exists:statuses,id',
             'event.limit'=> 'required|numeric',
             'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
         ]);
-            return;
+        
         // // dump($request->all());
-        // $newEvent = App\Event::create([
-        //     'subject'=>$request->input('subject'),
-        //     'description'=>$request->input('description'),
-        //     'date_start'=>$request->input('date_start'),
-        //     'date_end'=>$request->input('date_end'),
-        //     'user_id'=>$user->id,
-        //     'status_id'=>$request->input('status_id'),
-        //     'event_type_id'=>$request->input('event_type_id'),
-        //     'organization_id'=>1,
-        //     'signup_limit'=>$request->input('signup_limit'),
-        //     'cost'=>$request->input('cost'),
-        // ]);
+        $newEvent = App\Event::create([
+            'subject'=>$request->input('event.subject'),
+            'description'=>$request->input('event.description'),
+            'date_start'=>$request->input('event.date_start'),
+            'date_end'=>$request->input('event.date_end'),
+            'user_id'=>$user->id,
+            'status_id'=>$request->input('event.status.id'),
+            'event_type_id'=>$request->input('event.type.id'),
+            'organization_id'=>$request->input('organization_id'),
+            'signup_limit'=>$request->input('event.limit'),
+            'cost'=>$request->input('event.cost'),
+        ]);
         // //Store to 'pubilic'
         // //created sym link using php artisan storage:link
         // //so files are accessible from web
