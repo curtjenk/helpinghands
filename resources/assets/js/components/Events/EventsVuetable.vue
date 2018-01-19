@@ -121,9 +121,10 @@ export default {
           callback: 'ellipsis|30'
         },
         {
-          name: 'description',
+          title: 'Description',
+          name: 'description_text',
           titleClass: 'text-center',
-        //   sortField: 'description'
+          dataClass: 'text-primary',
           callback: 'ellipsis|50'
         },
         {
@@ -338,6 +339,16 @@ export default {
         } else {
           this.$refs.vuetable.toggleDetailRow(data.id)
         }
+      }
+      if (field.name=='description_text') {
+        let message = "<b>hello world</b>";
+        let options = {
+          html: true,
+          loader: false,
+          okText:'',
+          cancelText: 'Close'
+        }
+        this.$dialog.confirm(message, options);
       }
     },
   },

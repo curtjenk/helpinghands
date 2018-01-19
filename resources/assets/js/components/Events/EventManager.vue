@@ -256,6 +256,7 @@ export default {
       event: {
         subject:'',
         description: '<h2>I am an Example</h2>',
+        description_text: '',
         date_start:'',
         date_end:'',
         time_start: {hh: "08", mm: "00", a: "am"},
@@ -296,6 +297,7 @@ export default {
     onEditorChange({ quill, html, text }) {
       // console.log('editor change!', quill, html, text)
       // this.editorContent = html
+      this.event.description_text = text;
     },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)

@@ -19,7 +19,8 @@ class CreateEventsTable extends Migration
             $table->integer('organization_id')->unsigned();
             $table->integer('team_id')->unsigned()->nullable();
             $table->string('subject');
-            $table->longtext('description')->nullable();
+            $table->longtext('description');
+            $table->longtext('description_text');
             $table->date('date_start')->nullable();
             $table->date('date_end')->nullable();
             $table->string('time_start')->nullable();

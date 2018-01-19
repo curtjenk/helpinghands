@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
 
+            Route::get('event/{id}/members', 'EventController@members');
             Route::resource('event', 'EventController',
                 ['only'=>['store', 'update']]
             );
@@ -66,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('team', 'TeamController');
         });
 
-        Route::get('event/{id}/members', 'EventController@members');
+
         Route::get('event/{id}/signup', 'EventController@signup');
         Route::get('event/{eid}/download/{fid}', 'EventController@download');
         Route::get('event/calendar', 'EventController@calendar');

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     onClick (event) {
-      //console.log('events-detail-row: on-click', event.target)
+      console.log('events-detail-row: on-click', event.target)
     //   console.log(this.rowData);
     }
   },
