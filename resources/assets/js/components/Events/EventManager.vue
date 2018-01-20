@@ -186,6 +186,7 @@
         <quill-editor v-model="event.description"
               ref="myQuillEditor"
               :options="editorOption"
+              @change="onEditorChange($event)"
               @blur="onEditorBlur($event)"
               @focus="onEditorFocus($event)"
               @ready="onEditorReady($event)">
@@ -255,7 +256,7 @@ export default {
       selEventType: {},
       event: {
         subject:'',
-        description: '<h2>I am an Example</h2>',
+        description: '',
         description_text: '',
         date_start:'',
         date_end:'',
@@ -297,6 +298,7 @@ export default {
     onEditorChange({ quill, html, text }) {
       // console.log('editor change!', quill, html, text)
       // this.editorContent = html
+      console.log(text)
       this.event.description_text = text;
     },
     setInitialEndTime: function(timePicker) {

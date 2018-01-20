@@ -1,10 +1,14 @@
 <template>
   <div>
-    <!-- <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-      :css="css.pagination"
-      :icons="css.icons"
-      @vuetable-pagination:change-page="onChangePage"
-      ></vuetable-pagination> -->
+    <modal name="descriptionhtml" height="auto" :scrollable="true">
+      <div slot="top-right">
+        <button @click="$modal.hide('descriptionhtml')" class="">
+           ❌ hey
+        </button>
+      </div>
+      <hr />
+      <span v-html="modaldata.descriptionhtml"></span>
+    </modal>
     <filter-bar filterPlaceholder=" subject, description"
       :userid="userid"
       :filterByMemberships="true"
@@ -101,6 +105,9 @@ export default {
   },
   data () {
     return {
+      modaldata: {
+        descriptionhtml:''
+      },
       fields: [
         // {
         //   name: '__sequence',
@@ -341,14 +348,8 @@ export default {
         }
       }
       if (field.name=='description_text') {
-        let message = "<b>hello world</b>";
-        let options = {
-          html: true,
-          loader: false,
-          okText:'',
-          cancelText: 'Close'
-        }
-        this.$dialog.confirm(message, options);
+        this.modaldata.descriptionhtml = data.description;
+        this.$modal.show('descriptionhtml');
       }
     },
   },

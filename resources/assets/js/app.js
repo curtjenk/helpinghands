@@ -16,6 +16,8 @@ import './common';
 
 import ToggleButton from 'vue-js-toggle-button'
 Vue.use(ToggleButton)
+import VModal from 'vue-js-modal'
+Vue.use(VModal)
 import VuejsDialog from "vuejs-dialog"
 Vue.use(VuejsDialog, {
     html: true,

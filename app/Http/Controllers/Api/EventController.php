@@ -238,11 +238,12 @@ class EventController extends Controller
             'event.limit'=> 'required|numeric',
             'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
         ]);
-        
+
         // // dump($request->all());
         $newEvent = App\Event::create([
             'subject'=>$request->input('event.subject'),
             'description'=>$request->input('event.description'),
+            'description_text'=>$request->input('event.description_text'),
             'date_start'=>$request->input('event.date_start'),
             'date_end'=>$request->input('event.date_end'),
             'user_id'=>$user->id,
