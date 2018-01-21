@@ -203,8 +203,70 @@
 
 
       <tab-content title="Attachments">
-         Yuhuuu! This seems pretty simple
         <div class="mytab">
+          <span v-if="modeShow">
+
+          </span>
+          <span v-else>
+            <div class="form-horizontal">
+            <div class="caption">
+              <span></span>&nbsp;&nbsp;&nbsp;
+              <span v-if="!isAddingFile"
+                  v-tooltip.right="'Add Attachment'">
+                <a  href="#" type="button" class="text-success"
+                  @click="toggleIsAddingFile()">
+                  <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+                </a>
+              </span>
+            </div>
+            <div v-if="isAddingFile" class="panel panel-default">
+              <div class="form-group row panel-body">
+                <div class="">
+                  <div class="col-md-4 col-sm-5">
+                    <float-label>
+                      <input id="ntn" v-model="new_file_description" type="text" required
+                        class="editInfo" size="60" maxlength="255" placeholder="Description"/>
+                    </float-label>
+                  </div>
+                  <div class="col-md-offset-1 col-sm-offset-1 col-md-4 col-sm-5" style="margin-top:10px;">
+                    <input id="ntd" type="file" required  @change="processFile($event)"/>
+                  </div>
+                  <div class="pull-right" style="padding: 0px;">
+                    <span v-tooltip.top="'Save'"class="">
+                        <a href="#" type="button" class="text-primary"
+                          @click="saveNewFile()">
+                          <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                        </a>
+                    </span>
+                    <span v-tooltip.top="'Cancel'">
+                        <a href="#" type="button" class="text-danger"
+                          @click="toggleIsAddingFile()">
+                          <i class="fa fa-ban fa-lg fa-fw"></i>
+                        </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <table  class="table table-responsive table-striped table-condensed">
+              <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
+                <!-- <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
+                  <td>
+                    {{ admin.name }}
+                  </td>
+                  <td v-if="modeEdit">
+                    <span v-tooltip.right="'Remove'" class="">
+                        <a href="#" type="button" class="text-danger"
+                              @click="removeAdmin(admin)">
+                          <i class="fa fa-trash-o fa-fw"></i>
+                        </a>
+                    </span>
+                  </td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+          </span>
         </div>
       </tab-content>
 
@@ -257,6 +319,10 @@ export default {
   },
   data () {
     return {
+      isAddingFile: false,
+      new_file: {},
+      new_file_name: '',
+      new_file_description: '',
       //use event.description instead of editorContent
       editorContent: '',
       editorOption: {
@@ -278,7 +344,8 @@ export default {
         cost:'',
         type:'',
         signup_limit:'',
-        status:''
+        status:'',
+        attachments: []
       }
     }
   },
@@ -314,6 +381,17 @@ export default {
       // this.editorContent = html
       console.log(text)
       this.event.description_text = text;
+    },
+    toggleIsAddingFile () {
+      this.isAddingFile = !this.isAddingFile
+      this.new_file = {};
+      this.new_file_name = '';
+      this.new_file_description = '';
+    },
+    processFile () {
+      this.new_file = event.target.files[0];
+      this.new_file_name = this.new_file.name;
+      // console.log(this.new_file_name)
     },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)

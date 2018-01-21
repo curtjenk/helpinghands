@@ -16,8 +16,10 @@ class CreateEventFilesTable extends Migration
         Schema::create('event_files', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('event_id')->unsigned();
-            $table->string('original_filename')->nullable();
-            $table->string('filename');
+            $table->string('description');
+            $table->string('original_filename');
+            $table->string('original_filetype');
+            $table->string('storage_filename');
 
             $table->foreign('event_id')
                   ->references('id')->on('events')

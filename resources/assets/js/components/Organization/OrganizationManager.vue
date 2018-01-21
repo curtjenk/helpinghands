@@ -162,22 +162,22 @@
           </div>
         </div>
         <table  class="table table-responsive table-striped table-condensed">
-        <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
-          <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
-            <td>
-              {{ admin.name }}
-            </td>
-            <td v-if="modeEdit">
-              <span v-tooltip.right="'Remove'" class="">
-                  <a href="#" type="button" class="text-danger"
-                        @click="removeAdmin(admin)">
-                    <i class="fa fa-trash-o fa-fw"></i>
-                  </a>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
+            <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
+              <td>
+                {{ admin.name }}
+              </td>
+              <td v-if="modeEdit">
+                <span v-tooltip.right="'Remove'" class="">
+                    <a href="#" type="button" class="text-danger"
+                          @click="removeAdmin(admin)">
+                      <i class="fa fa-trash-o fa-fw"></i>
+                    </a>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <hr/>

@@ -1,11 +1,13 @@
 <template>
   <div>
     <modal name="descriptionhtml" height="auto" :scrollable="true">
-      <div slot="top-right">
-        <button @click="$modal.hide('descriptionhtml')" class="">
-           ❌ hey
+      <div class="pull-right" >
+        <button style="border: none; padding:0; background: none;" class=""
+          @click="$modal.hide('descriptionhtml')" >
+           ❌
         </button>
       </div>
+      <div><b>Subject:</b>&nbsp;{{ modaldata.subject }}</div>
       <hr />
       <span v-html="modaldata.descriptionhtml"></span>
     </modal>
@@ -27,37 +29,37 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-        <template slot="actions2" scope="props">
-          <div class="">
-            <span data-toggle="tooltip" title="Details" data-placement="left" class="">
-                <a href="#" type="button" class=""
-                  @click="showEvent(props.rowData, props.rowIndex)">
-                  <i class="fa fa-edit fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <span data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="button" class=""
-                    data-toggle="modal" data-target="#eventnotify"
-                    :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
-                    <i class="fa fa-envelope-o fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class=""
-                 @click="getSignupsPay(props.rowData, props.rowIndex)"
-                  :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
-                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
-             </a>
-            </span>
-            <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class=""
-                 data-toggle="modal" data-target="#deleteevent"
-                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
-                 <i class="fa fa-trash fa-lg fa-fw"></i>
-             </a>
-            </span>
-          </div>
-        </template>
+      <template slot="actions2" scope="props">
+        <div class="">
+          <span data-toggle="tooltip" title="Details" data-placement="left" class="">
+              <a href="#" type="button" class=""
+                @click="showEvent(props.rowData, props.rowIndex)">
+                <i class="fa fa-edit fa-lg fa-fw"></i>
+              </a>
+          </span>
+          <span data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
+              <a v-show="isAdmin" href="#" type="button" class=""
+                  data-toggle="modal" data-target="#eventnotify"
+                  :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
+                  <i class="fa fa-envelope-o fa-lg fa-fw"></i>
+              </a>
+          </span>
+          <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
+           <a v-show="isAdmin" href="#" type="button" class=""
+               @click="getSignupsPay(props.rowData, props.rowIndex)"
+                :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
+               <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
+           </a>
+          </span>
+          <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
+           <a v-show="isAdmin" href="#" type="button" class=""
+               data-toggle="modal" data-target="#deleteevent"
+               :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
+               <i class="fa fa-trash fa-lg fa-fw"></i>
+           </a>
+          </span>
+        </div>
+      </template>
     </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -83,6 +85,12 @@ import VueEvents from 'vue-events'
 import CustomActions from './EventsCustomActions'
 import DetailRow from './EventsDetailRow'
 import FilterBar from './../FilterBar'
+// quill require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
+
 
 Vue.use(VueEvents)
 Vue.component('event-custom-actions', CustomActions)
@@ -106,7 +114,8 @@ export default {
   data () {
     return {
       modaldata: {
-        descriptionhtml:''
+        subject: '',
+        descriptionhtml: ''
       },
       fields: [
         // {
@@ -125,6 +134,7 @@ export default {
           sortField: 'subject',
           dataClass: 'text-center',
           titleClass: 'text-center',
+          dataClass: 'text-primary',
           callback: 'ellipsis|30'
         },
         {
@@ -189,19 +199,6 @@ export default {
           dataClass: 'text-center',
           callback: 'formatDate|MM-DD-YYYY'
         },
-        // {
-        //   name: 'salary',
-        //   sortField: 'salary',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:event-custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // },
         {
           name: '__slot:actions2',   // <----
           title: 'Actions',
@@ -347,8 +344,9 @@ export default {
           this.$refs.vuetable.toggleDetailRow(data.id)
         }
       }
-      if (field.name=='description_text') {
+      if (field.name=='description_text' || field.name=='subject') {
         this.modaldata.descriptionhtml = data.description;
+        this.modaldata.subject = data.subject;
         this.$modal.show('descriptionhtml');
       }
     },

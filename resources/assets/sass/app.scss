@@ -14,6 +14,10 @@
 @import 'node_modules/jquery-ui-bundle/jquery-ui.min';
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
 
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.snow.css';
+@import '~quill/dist/quill.bubble.css';
+
 html, body {
     background-color: #fff;
     color: #636b6f;
