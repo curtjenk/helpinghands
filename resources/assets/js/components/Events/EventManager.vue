@@ -19,19 +19,22 @@
     >
 
       <tab-content title="Organization/Team">
-        <div class="text-center">
-          <p class="">
+        <div class="mytab">
+          <p class="text-center">
             <strong>Use the dropdowns to select the Organization and Team as applicable</strong>
           </p>
-          <filter-memberships
+          <filter-memberships class="text-center"
               :userid="user0.id"
               :filterByTeam="true"
               @orgTeamSelected="setOrgTeam"
           ></filter-memberships>
         </div>
       </tab-content>
+
+
       <tab-content title="Details">
-        <div class="form-horizontal">
+        <div class="mytab">
+          <div class="form-horizontal">
           <div class="row">
             <div class="col-md-5 col-sm-5">
               <span v-if="modeShow">
@@ -181,20 +184,30 @@
             </div>
           </div>
         </div>
+        </div>
       </tab-content>
+
+
       <tab-content title="Description">
-        <quill-editor v-model="event.description"
-              ref="myQuillEditor"
-              :options="editorOption"
-              @change="onEditorChange($event)"
-              @blur="onEditorBlur($event)"
-              @focus="onEditorFocus($event)"
-              @ready="onEditorReady($event)">
-        </quill-editor>
+        <div class="mytab">
+          <quill-editor v-model="event.description"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @change="onEditorChange($event)"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @ready="onEditorReady($event)">
+          </quill-editor>
+        </div>
       </tab-content>
+
+
       <tab-content title="Attachments">
          Yuhuuu! This seems pretty simple
+        <div class="mytab">
+        </div>
       </tab-content>
+
     </form-wizard>
   </div>
 </template>
@@ -273,6 +286,7 @@ export default {
     this.setMode(this.mode0);
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
+      // this.equalheight('.mytab'); //call mixin to set equalheight tabs
     })
   },
   updated: function() {
@@ -354,5 +368,8 @@ export default {
 <style lang="css" scoped>
 .instruction {
   font-size: 16px;
+}
+.mytab {
+  min-height: 200px;
 }
 </style>

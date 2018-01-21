@@ -42,7 +42,6 @@ export const commonMixins = {
     setStatusSaving: function() {
       this.currentStatus = consts.STATUS_SAVING;
     },
-
     formatPhoneNumber: function(input, formatMask)
     {
         // Strip non-numeric characters
@@ -52,6 +51,43 @@ export const commonMixins = {
         return formatMask.replace(/X/g, function() {
             return digits.charAt(count++);
         });
+    },
+    equalheight: function(container){
+      /* Thanks to CSS Tricks for pointing out this bit of jQuery
+      https://css-tricks.com/equal-height-blocks-in-rows/
+      It's been modified into a function called at page load and then each time
+      the page is resized. One large modification was to remove the set height
+      before each new calculation. */
+      let self = this;
+      let currentTallest = 0
+      let currentRowStart = 0
+      let rowDivs = []
+      let elem
+      let topPosition = 0
+
+      $(container).each(function() {
+        elem = $(this);
+        // console.log(elem);
+        elem.height('auto');
+        topPosition = elem.position().top;
+        // console.log(rowDivs);
+        if (currentRowStart != topPosition) {
+          for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+            rowDivs[currentDiv].height(currentTallest);
+          }
+          rowDivs.length = 0; // empty the array
+          currentRowStart = topPosition;
+          currentTallest = elem.height();
+          rowDivs.push(elem);
+        } else {
+          rowDivs.push(elem);
+          currentTallest = (currentTallest < elem.height()) ? (elem.height()) : (currentTallest);
+        }
+        console.log(currentTallest)
+        for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+         rowDivs[currentDiv].height(currentTallest);
+        }
+      });
     }
   },
   computed: {
