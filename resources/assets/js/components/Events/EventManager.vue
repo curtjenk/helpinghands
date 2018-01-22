@@ -362,7 +362,8 @@ export default {
         signup_limit:'',
         status:'',
         attachments: [
-          {file: {},
+          {id:'',
+           file: {},
            type: '',
            name: '',
            description: ''}
