@@ -201,7 +201,6 @@
         </div>
       </tab-content>
 
-
       <tab-content title="Attachments">
         <div class="mytab">
           <span v-if="modeShow">
@@ -249,20 +248,36 @@
               </div>
             </div>
             <table  class="table table-responsive table-striped table-condensed">
-              <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
-                <!-- <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="file in event.attachments">
                   <td>
-                    {{ admin.name }}
+                    {{ file.name }}
                   </td>
-                  <td v-if="modeEdit">
-                    <span v-tooltip.right="'Remove'" class="">
+                  <td>
+                    {{ file.description }}
+                  </td>
+                  <td>
+                    <span v-tooltip.left="'View'" class="">
+                        <a href="#" type="button" class="text-primary"
+                              @click="viewFile(file)">
+                          <i class="fa fa-eye fa-fw"></i>
+                        </a>
+                    </span>
+                    <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
                         <a href="#" type="button" class="text-danger"
-                              @click="removeAdmin(admin)">
+                              @click="removeFile(file)">
                           <i class="fa fa-trash-o fa-fw"></i>
                         </a>
                     </span>
                   </td>
-                </tr> -->
+                </tr>
               </tbody>
             </table>
           </div>
@@ -321,6 +336,7 @@ export default {
     return {
       isAddingFile: false,
       new_file: {},
+      new_file_type: '',
       new_file_name: '',
       new_file_description: '',
       //use event.description instead of editorContent
@@ -345,12 +361,22 @@ export default {
         type:'',
         signup_limit:'',
         status:'',
-        attachments: []
+        attachments: [
+          {file: {},
+           type: '',
+           name: '',
+           description: ''}
+        ]
       }
     }
   },
   mounted: function () {
     this.setMode(this.mode0);
+    if (this.modeShow) {
+
+    } else {
+      this.event.attachments = [];
+    }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
       // this.equalheight('.mytab'); //call mixin to set equalheight tabs
@@ -379,19 +405,39 @@ export default {
     onEditorChange({ quill, html, text }) {
       // console.log('editor change!', quill, html, text)
       // this.editorContent = html
-      console.log(text)
+      // console.log(text)
       this.event.description_text = text;
     },
     toggleIsAddingFile () {
       this.isAddingFile = !this.isAddingFile
       this.new_file = {};
+      this.new_file_type = '';
       this.new_file_name = '';
       this.new_file_description = '';
     },
-    processFile () {
-      this.new_file = event.target.files[0];
-      this.new_file_name = this.new_file.name;
+    processFile: function() {
+      let reader = new FileReader();
+      let vm = this;
+      reader.onload = (e) => {
+        vm.new_file = e.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+      this.new_file_name = event.target.files[0].name;
+      this.new_file_type = event.target.files[0].type;
       // console.log(this.new_file_name)
+    },
+    saveNewFile: function() { //add file to list of attachments
+      this.isAddingFile = false;
+      this.event.attachments.push({file:this.new_file,
+        type:this.new_file_type,
+        name:this.new_file_name,
+        description:this.new_file_description});
+    },
+    removeFile: function(file) {
+      this.event.attachments =
+        this.event.attachments.filter(e=> {
+          return !(e.name == file.name && e.description == file.description)
+        });
     },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)
@@ -404,15 +450,22 @@ export default {
     wizardOnComplete: function() {
       // alert('Yay. Done!')
       this.errors = [];
+      let formData = new FormData();
+      formData.append('event',JSON.stringify(this.event));
+      formData.append('auth_user_id',this.user0.id)
+      formData.append('organization_id',this.orgid)
+      formData.append('team_id',this.teamid)
       axios({
         method: 'post',
         url: '/api/event',
-        data: {
-          auth_user_id: this.user0.id,
-          organization_id: this.orgid,
-          team_id: this.teamid,
-          event: this.event
-        }
+        headers: {'Content-type': 'multipart/form-data'},
+        data: formData
+        // data: {
+        //   auth_user_id: this.user0.id,
+        //   organization_id: this.orgid,
+        //   team_id: this.teamid,
+        //   event: this.event
+        // }
       })
       .then(  (response) => {
         window.location.href = "/event";

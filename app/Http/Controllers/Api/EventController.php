@@ -224,6 +224,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug(print_r($request->event,true));
         $user = Auth::user();
         $this->authorize('create-event');
 

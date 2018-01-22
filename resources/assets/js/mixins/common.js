@@ -13,7 +13,7 @@ export const commonMixins = {
   },
   methods: {
     setMode: function(modeString) {
-      this.currentMode = consts.MODES[modeString]
+      this.currentMode = consts.MODES[modeString.toLowerCase()]
     },
     setModeCreate: function() {
       this.currentMode = consts.MODE_CREATE
