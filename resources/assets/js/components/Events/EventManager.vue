@@ -233,7 +233,7 @@
                   <div class="pull-right" style="padding: 0px;">
                     <span v-tooltip.top="'Save'"class="">
                         <a href="#" type="button" class="text-primary"
-                          @click="saveNewFile()">
+                          @click="addFileToList()">
                           <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                         </a>
                     </span>
@@ -256,7 +256,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="file in event.attachments">
+                <tr v-for="file in attachments">
                   <td>
                     {{ file.name }}
                   </td>
@@ -360,15 +360,15 @@ export default {
         cost:'',
         type:'',
         signup_limit:'',
-        status:'',
-        attachments: [
-          {id:'',
-           file: {},
-           type: '',
-           name: '',
-           description: ''}
-        ]
-      }
+        status:''
+      },
+      attachments: [
+        {id:'',
+         file: {},
+         type: '',
+         name: '',
+         description: ''}
+      ]
     }
   },
   mounted: function () {
@@ -376,7 +376,7 @@ export default {
     if (this.modeShow) {
 
     } else {
-      this.event.attachments = [];
+      this.attachments = [];
     }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
@@ -417,26 +417,41 @@ export default {
       this.new_file_description = '';
     },
     processFile: function() {
-      let reader = new FileReader();
-      let vm = this;
-      reader.onload = (e) => {
-        vm.new_file = e.target.result;
-      };
-      reader.readAsDataURL(event.target.files[0]);
+      // let reader = new FileReader();
+      // let vm = this;
+      // reader.onload = (e) => {
+      //   vm.new_file = e.target.result;
+      // };
+      // reader.readAsDataURL(event.target.files[0]);
+      this.new_file = event.target.files[0];
       this.new_file_name = event.target.files[0].name;
       this.new_file_type = event.target.files[0].type;
       // console.log(this.new_file_name)
     },
-    saveNewFile: function() { //add file to list of attachments
+    addFileToList: function() { //add file to list of attachments
       this.isAddingFile = false;
-      this.event.attachments.push({file:this.new_file,
+      this.attachments.push({
+        id:0,
+        file:this.new_file,
+        type:this.new_file_type,
+        name:this.new_file_name,
+        description:this.new_file_description});
+      this.attachments.push({
+        id:0,
+        file:this.new_file,
+        type:this.new_file_type,
+        name:this.new_file_name,
+        description:this.new_file_description});
+      this.attachments.push({
+        id:0,
+        file:this.new_file,
         type:this.new_file_type,
         name:this.new_file_name,
         description:this.new_file_description});
     },
     removeFile: function(file) {
-      this.event.attachments =
-        this.event.attachments.filter(e=> {
+      this.attachments =
+        this.attachments.filter(e=> {
           return !(e.name == file.name && e.description == file.description)
         });
     },
@@ -449,44 +464,69 @@ export default {
 
     },
     wizardOnComplete: function() {
-      // alert('Yay. Done!')
+
       this.errors = [];
-      let formData = new FormData();
-      formData.append('event',JSON.stringify(this.event));
-      formData.append('auth_user_id',this.user0.id)
-      formData.append('organization_id',this.orgid)
-      formData.append('team_id',this.teamid)
-      axios({
-        method: 'post',
-        url: '/api/event',
-        headers: {'Content-type': 'multipart/form-data'},
-        data: formData
-        // data: {
-        //   auth_user_id: this.user0.id,
-        //   organization_id: this.orgid,
-        //   team_id: this.teamid,
-        //   event: this.event
-        // }
+
+      // for(let x=0;x<this.attachments.length;x++){
+      //   formData.append('attachment',this.attachments[x].file, this.attachments[x].name)
+      // }
+      let message = '<i>Confirm saving this event</i>';
+      this.$dialog.confirm(message, {})
+      .then( (dialog)=> {
+        console.log('calling uploadFiles')
+        this.uploadFiles();
+        dialog.close();
+        // axios({
+        //   method: 'post',
+        //   url: '/api/event',
+        //   data: {auth_user_id: this.user0.id, organization_id: this.orgid,
+        //          team_id: this.teamid, event: this.event
+        //   }
+        // })
+        // .then(  (response) => {
+        //   dialog.close();
+        //   window.location.href = "/event";
+        // }).catch((error) => {
+        //   this.setStatusFailed();
+        //   if (error.response.status == 422) {
+        //     let messages = error.response.data.errors;
+        //     let self = this;
+        //     $.each(messages, function(k,v){
+        //       for(let i=0;i<v.length;i++){
+        //         self.errors.push(v[i]);
+        //       }
+        //     });
+        //   }
+        //   dialog.close();
+        //   var self = this;
+        //   setTimeout(function(){
+        //       self.setStatusInitial();
+        //   }, MESSAGE_DURATION + 1000);
+        // })
       })
-      .then(  (response) => {
-        window.location.href = "/event";
-      }).catch((error) => {
-        this.setStatusFailed();
-        if (error.response.status == 422) {
-          let messages = error.response.data.errors;
-          // console.log(messages)
-          let self = this;
-          $.each(messages, function(k,v){
-            for(let i=0;i<v.length;i++){
-              //console.log(v[i])
-              self.errors.push(v[i]);
-            }
+      .catch( ()=> {
+          //console.log('Clicked on cancel')
+      });
+    },
+    uploadFiles: function () {
+
+      let promiseArray = this.attachments.map( f => {
+        console.log("post file");
+        // return 'Hey';
+        let formData = new FormData();
+        formData.append('attachment', f.file, f.name);
+        formData.append('description', f.description);
+        return axios({
+            method: 'post',
+            url: '/api/event',
+            data: formData
           });
-        }
-        var self = this;
-        setTimeout(function(){
-            self.setStatusInitial();
-        }, MESSAGE_DURATION + 1000);
+
+      });
+      // console.log(promiseArray);
+      axios.all(promiseArray)
+      .then(function(res) {
+        console.log(res);
       });
     },
     setOrgTeam: function(orgid, teamid) {

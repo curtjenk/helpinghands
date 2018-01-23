@@ -20,6 +20,7 @@ class CreateEventFilesTable extends Migration
             $table->string('original_filename');
             $table->string('original_filetype');
             $table->string('storage_filename');
+            $table->integer('size');
 
             $table->foreign('event_id')
                   ->references('id')->on('events')

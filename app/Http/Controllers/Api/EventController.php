@@ -224,52 +224,55 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug(print_r($request->event,true));
+        Log::debug(print_r($request->all(),true));
+
         $user = Auth::user();
         $this->authorize('create-event');
-
-        $this->validate($request, [
-            'event.subject' => 'required|max:255',
-            'event.description' => 'required|string',
-            'event.date_start' => 'required',
-            'event.date_end' => 'required',
-            'organization_id' => 'required|exists:organizations,id',
-            'event.type.id' => 'required|exists:event_types,id',
-            'event.status.id' => 'required|exists:statuses,id',
-            'event.limit'=> 'required|numeric',
-            'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        ]);
+        // $event = json_decode($request->event);
+        // $this->validate($request, [
+        //     'event.subject' => 'required|max:255',
+        //     'event.description' => 'required|string',
+        //     'event.date_start' => 'required',
+        //     'event.date_end' => 'required',
+        //     'organization_id' => 'required|exists:organizations,id',
+        //     'event.type.id' => 'required|exists:event_types,id',
+        //     'event.status.id' => 'required|exists:statuses,id',
+        //     // 'event.limit'=> 'required|numeric',
+        //     // 'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+        // ]);
 
         // // dump($request->all());
-        $newEvent = App\Event::create([
-            'subject'=>$request->input('event.subject'),
-            'description'=>$request->input('event.description'),
-            'description_text'=>$request->input('event.description_text'),
-            'date_start'=>$request->input('event.date_start'),
-            'date_end'=>$request->input('event.date_end'),
-            'user_id'=>$user->id,
-            'status_id'=>$request->input('event.status.id'),
-            'event_type_id'=>$request->input('event.type.id'),
-            'organization_id'=>$request->input('organization_id'),
-            'signup_limit'=>$request->input('event.limit'),
-            'cost'=>$request->input('event.cost'),
-        ]);
-        // //Store to 'pubilic'
-        // //created sym link using php artisan storage:link
-        // //so files are accessible from web
+        // $newEvent = App\Event::create([
+        //     'subject'=>$request->input('event.subject'),
+        //     'description'=>$request->input('event.description'),
+        //     'description_text'=>$request->input('event.description_text'),
+        //     'date_start'=>$request->input('event.date_start'),
+        //     'date_end'=>$request->input('event.date_end'),
+        //     'user_id'=>$user->id,
+        //     'status_id'=>$request->input('event.status.id'),
+        //     'event_type_id'=>$request->input('event.type.id'),
+        //     'organization_id'=>$request->input('organization_id'),
+        //     'signup_limit'=>$request->input('event.limit'),
+        //     'cost'=>$request->input('event.cost'),
+        // ]);
+
+        //Log::debug(print_r($uploads,true));
+        //Store to 'pubilic'
+        //created sym link using php artisan storage:link
+        //so files are accessible from web
         // $dir = 'event_files/'.$newEvent->id;
-        // $uploads = $request->file('event_file');
-        // if (isset($uploads)) {
-        //     // Log::debug("about to upload");
-        //     foreach($uploads as $upload) {
-        //         $original = $upload->getClientOriginalName();
-        //         $filename = $upload->store($dir, 'public');
-        //         // Log::debug(Storage::disk('public')->url($filename));
-        //         App\EventFiles::create(['event_id'=>$newEvent->id,
-        //             'filename'=>$filename,
-        //             'original_filename'=>$original]);
-        //     }
-        // }
+        $dir = 'event_files/'.rand(0,10);
+        $upload = $request->file('attachment');
+        if (isset($upload)) {
+            Log::debug("about to upload");
+
+                $filename = $upload->store($dir, 'public');
+                // Log::debug(Storage::disk('public')->url($filename));
+                // App\EventFiles::create(['event_id'=>$newEvent->id,
+                //     'filename'=>$filename,
+                //     'original_filename'=>$original]);
+
+        }
         //
         // return redirect("event/$newEvent->id");
         // return view('event.show', [
