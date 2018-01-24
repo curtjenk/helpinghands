@@ -284,7 +284,10 @@ export default {
       return value==null ? '' : value.toUpperCase()
     },
     ellipsis (value, max = 1) {
-      return value.ellipsis(max)
+      if (value) {
+        return value.ellipsis(max)
+      }
+      return value;
     },
     signupLimit (value) {
         if(!value || value==0){

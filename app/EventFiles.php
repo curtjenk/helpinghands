@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventFiles extends Model
 {
-    protected $fillable = ['event_id', 'filename', 'original_filename'];
+    protected $fillable = ['event_id', 'original_filename', 'mimetype',
+        'path', 'size', 'description'];
 
     /**
       * Indicates if the model should be timestamped.

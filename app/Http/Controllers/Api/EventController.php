@@ -224,60 +224,39 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug(print_r($request->all(),true));
-
+        // Log::debug(print_r($request->all(),true));
         $user = Auth::user();
         $this->authorize('create-event');
         // $event = json_decode($request->event);
-        // $this->validate($request, [
-        //     'event.subject' => 'required|max:255',
-        //     'event.description' => 'required|string',
-        //     'event.date_start' => 'required',
-        //     'event.date_end' => 'required',
-        //     'organization_id' => 'required|exists:organizations,id',
-        //     'event.type.id' => 'required|exists:event_types,id',
-        //     'event.status.id' => 'required|exists:statuses,id',
-        //     // 'event.limit'=> 'required|numeric',
-        //     // 'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        // ]);
+        $this->validate($request, [
+            'event.subject' => 'required|max:255',
+            // 'event.description' => 'required|string',
+            'event.date_start' => 'required',
+            'event.date_end' => 'required',
+            'organization_id' => 'required|exists:organizations,id',
+            'event.type.id' => 'required|exists:event_types,id',
+            'event.status.id' => 'required|exists:statuses,id',
+            // 'event.limit'=> 'required|numeric',
+            // 'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+        ]);
 
         // // dump($request->all());
-        // $newEvent = App\Event::create([
-        //     'subject'=>$request->input('event.subject'),
-        //     'description'=>$request->input('event.description'),
-        //     'description_text'=>$request->input('event.description_text'),
-        //     'date_start'=>$request->input('event.date_start'),
-        //     'date_end'=>$request->input('event.date_end'),
-        //     'user_id'=>$user->id,
-        //     'status_id'=>$request->input('event.status.id'),
-        //     'event_type_id'=>$request->input('event.type.id'),
-        //     'organization_id'=>$request->input('organization_id'),
-        //     'signup_limit'=>$request->input('event.limit'),
-        //     'cost'=>$request->input('event.cost'),
-        // ]);
+        $newEvent = App\Event::create([
+            'subject'=>$request->input('event.subject'),
+            'description'=>$request->input('event.description'),
+            'description_text'=>$request->input('event.description_text'),
+            'date_start'=>$request->input('event.date_start'),
+            'date_end'=>$request->input('event.date_end'),
+            'user_id'=>$user->id,
+            'status_id'=>$request->input('event.status.id'),
+            'event_type_id'=>$request->input('event.type.id'),
+            'organization_id'=>$request->input('organization_id'),
+            'team_id'=>$request->input('team_id'),
+            'signup_limit'=>$request->input('event.limit'),
+            'cost'=>$request->input('event.cost'),
+        ]);
 
-        //Log::debug(print_r($uploads,true));
-        //Store to 'pubilic'
-        //created sym link using php artisan storage:link
-        //so files are accessible from web
-        // $dir = 'event_files/'.$newEvent->id;
-        $dir = 'event_files/'.rand(0,10);
-        $upload = $request->file('attachment');
-        if (isset($upload)) {
-            Log::debug("about to upload");
-
-                $filename = $upload->store($dir, 'public');
-                // Log::debug(Storage::disk('public')->url($filename));
-                // App\EventFiles::create(['event_id'=>$newEvent->id,
-                //     'filename'=>$filename,
-                //     'original_filename'=>$original]);
-
-        }
-        //
-        // return redirect("event/$newEvent->id");
-        // return view('event.show', [
-        //     'event'=>$newEvent,
-        // ]);
+        return response($newEvent->id);
     }
 
     /**
@@ -330,7 +309,7 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::debug(print_r($request->all(),true));
+        // Log::debug(print_r($request->all(),true));
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
@@ -339,7 +318,7 @@ class EventController extends Controller
             'description' => 'string',
             'date_start' => 'date',
             'date_end' => 'date',
-            // 'organization_id' => 'required|exists:organizations,id',
+            'organization_id' => 'required|exists:organizations,id',
             'event_type_id'=> 'required|exists:event_types,id',
             'status_id' => 'required|exists:statuses,id',
             'signup_limit'=> 'required|numeric',
@@ -351,45 +330,46 @@ class EventController extends Controller
         $event->date_start = $request->input('date_start');
         $event->date_end = $request->input('date_end');
         $event->updated_user_id = $user->id;
-        $event->organization_id = 1;
+        $event->organization_id = $request->organization_id;
+        $event->team_id = $request->team_id;
         $event->status_id = $request->input('status_id');
         $event->event_type_id = $request->input('event_type_id');
         $event->signup_limit = $request->input('signup_limit');
         $event->cost = $request->input('cost');
         $event->save();
 
-        $dir = 'event_files/'.$event->id;
-
-        $uploads = $request->file('event_file');
-        if (isset($uploads)) {
-            //cleanup storage and db rows from previous
-            Storage::disk('public')->deleteDirectory($dir);
-            $event->files()->delete();
-            //now save the uploaded
-            foreach($uploads as $upload) {
-                $original = $upload->getClientOriginalName();
-                $filename = $upload->store($dir, 'public');
-                App\EventFiles::create(['event_id'=>$event->id,
-                    'filename'=>$filename,
-                    'original_filename'=>$original]);
-            }
-        }
-        $todelete = $request->input('delete_file');
-        if(is_array($todelete))
-        {
-            foreach($todelete as $id) {
-                $eventFile = App\EventFiles::findOrFail($id);
-                Storage::disk('public')->delete($eventFile->filename);
-                $eventFile->delete();
-            }
-            //delete directory if empty
-            $diskfiles = Storage::disk('public')->files($dir);
-            // Log::debug(print_r($diskfiles, true));
-            if (count($diskfiles)==0) {
-                // Log::debug("delete directory");
-                Storage::disk('public')->deleteDirectory($dir);
-            }
-        }
+        // $dir = 'event_files/'.$event->id;
+        //
+        // $uploads = $request->file('event_file');
+        // if (isset($uploads)) {
+        //     //cleanup storage and db rows from previous
+        //     Storage::disk('public')->deleteDirectory($dir);
+        //     $event->files()->delete();
+        //     //now save the uploaded
+        //     foreach($uploads as $upload) {
+        //         $original = $upload->getClientOriginalName();
+        //         $filename = $upload->store($dir, 'public');
+        //         App\EventFiles::create(['event_id'=>$event->id,
+        //             'filename'=>$filename,
+        //             'original_filename'=>$original]);
+        //     }
+        // }
+        // $todelete = $request->input('delete_file');
+        // if(is_array($todelete))
+        // {
+        //     foreach($todelete as $id) {
+        //         $eventFile = App\EventFiles::findOrFail($id);
+        //         Storage::disk('public')->delete($eventFile->filename);
+        //         $eventFile->delete();
+        //     }
+        //     //delete directory if empty
+        //     $diskfiles = Storage::disk('public')->files($dir);
+        //     // Log::debug(print_r($diskfiles, true));
+        //     if (count($diskfiles)==0) {
+        //         // Log::debug("delete directory");
+        //         Storage::disk('public')->deleteDirectory($dir);
+        //     }
+        // }
         return redirect("event/$event->id");
         // return view('event.show', [
         //     'event'=>$event,

@@ -48,6 +48,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::resource('event', 'EventController',
                 ['only'=>['store', 'update']]
             );
+            Route::resource('document', 'DocumentController',
+                ['only'=>['store', 'delete']]
+            );
 
             Route::post('organization/admin','Organization\UserController@store_admin');
             Route::delete('organization/admin','Organization\UserController@destroy_admin');

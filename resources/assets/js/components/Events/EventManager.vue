@@ -18,7 +18,7 @@
       finishButtonText="Save Event"
     >
 
-      <tab-content title="Organization/Team">
+      <!-- <tab-content title="Organization/Team">
         <div class="mytab">
           <p class="text-center">
             <strong>Use the dropdowns to select the Organization and Team as applicable</strong>
@@ -29,35 +29,50 @@
               @orgTeamSelected="setOrgTeam"
           ></filter-memberships>
         </div>
-      </tab-content>
+      </tab-content> -->
 
 
       <tab-content title="Details">
         <div class="mytab">
           <div class="form-horizontal">
-          <div class="row">
-            <div class="col-md-5 col-sm-5">
-              <span v-if="modeShow">
-                <div class="form-group">
-                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                  <div class="col-md-9">
-                      <p id="subject" type="text" class="form-control-static">{{ event.subject }}></p>
+            <div class="row text-center" style="margin-bottom:10px;">
+              <!-- <div class="col-md-5 col-sm-5"> -->
+                <span v-if="modeShow">
+                </span>
+                <span v-else>
+                  <div class="form-group text-center">
+                    <filter-memberships
+                        :userid="user0.id"
+                        :filterByTeam="true"
+                        @orgTeamSelected="setOrgTeam"
+                    ></filter-memberships>
                   </div>
-                </div>
-              </span>
-              <span v-else>
-                <div class="form-group">
-                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                  <div class="col-md-9 col-sm-9">
-                      <input required name="subject" v-model="event.subject" type="text" class="" size="50" autofocus>
+                </span>
+              <!-- </div> -->
+            </div>
+            <div class="row">
+              <div class="col-md-5 col-sm-5">
+                <span v-if="modeShow">
+                  <div class="form-group">
+                    <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                    <div class="col-md-9">
+                        <p id="subject" type="text" class="form-control-static">{{ event.subject }}></p>
+                    </div>
                   </div>
-                </div>
-              </span>
+                </span>
+                <span v-else>
+                  <div class="form-group">
+                    <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input required name="subject" v-model="event.subject" type="text" class="" size="50" autofocus>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="col-md-7 col-sm-7">
+              </div>
             </div>
-            <div class="col-md-7 col-sm-7">
-            </div>
-          </div>
-          <div class="row">
+            <div class="row">
             <div class="col-md-5 col-sm-5">
               <span v-if="modeShow">
                 <div class="form-group">
@@ -183,7 +198,7 @@
               </span>
             </div>
           </div>
-        </div>
+          </div>
         </div>
       </tab-content>
 
@@ -350,6 +365,7 @@ export default {
       teamid: '',
       selEventType: {},
       event: {
+        id:'',
         subject:'',
         description: '',
         description_text: '',
@@ -436,18 +452,6 @@ export default {
         type:this.new_file_type,
         name:this.new_file_name,
         description:this.new_file_description});
-      this.attachments.push({
-        id:0,
-        file:this.new_file,
-        type:this.new_file_type,
-        name:this.new_file_name,
-        description:this.new_file_description});
-      this.attachments.push({
-        id:0,
-        file:this.new_file,
-        type:this.new_file_type,
-        name:this.new_file_name,
-        description:this.new_file_description});
     },
     removeFile: function(file) {
       this.attachments =
@@ -461,73 +465,102 @@ export default {
       this.event.time_start.mm = timePicker.data.mm
       this.event.time_start.a = timePicker.data.a
       this.event.time_end = this.event.time_start
-
     },
     wizardOnComplete: function() {
-
       this.errors = [];
-
-      // for(let x=0;x<this.attachments.length;x++){
-      //   formData.append('attachment',this.attachments[x].file, this.attachments[x].name)
-      // }
       let message = '<i>Confirm saving this event</i>';
       this.$dialog.confirm(message, {})
       .then( (dialog)=> {
-        console.log('calling uploadFiles')
-        this.uploadFiles();
+        // console.log('calling uploadFiles')
+        message = '<i>Saving event.  Please wait</i>';
+        this.sendData();
         dialog.close();
-        // axios({
-        //   method: 'post',
-        //   url: '/api/event',
-        //   data: {auth_user_id: this.user0.id, organization_id: this.orgid,
-        //          team_id: this.teamid, event: this.event
-        //   }
-        // })
-        // .then(  (response) => {
-        //   dialog.close();
-        //   window.location.href = "/event";
-        // }).catch((error) => {
-        //   this.setStatusFailed();
-        //   if (error.response.status == 422) {
-        //     let messages = error.response.data.errors;
-        //     let self = this;
-        //     $.each(messages, function(k,v){
-        //       for(let i=0;i<v.length;i++){
-        //         self.errors.push(v[i]);
-        //       }
-        //     });
-        //   }
-        //   dialog.close();
-        //   var self = this;
-        //   setTimeout(function(){
-        //       self.setStatusInitial();
-        //   }, MESSAGE_DURATION + 1000);
-        // })
+        // window.location.href = "/event";
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
       });
     },
-    uploadFiles: function () {
-
-      let promiseArray = this.attachments.map( f => {
-        console.log("post file");
-        // return 'Hey';
-        let formData = new FormData();
-        formData.append('attachment', f.file, f.name);
-        formData.append('description', f.description);
-        return axios({
-            method: 'post',
-            url: '/api/event',
-            data: formData
+    sendData: function() {
+      let method = 'post';
+      let url='/api/event';
+      if (this.modeShow) {
+        return; //shouldn't be here at all
+      } else if (this.modeEdit) {
+        method = 'put';
+        url += '/' + this.event.id;
+      }
+      axios({
+        method: method,
+        url: url,
+        data: {auth_user_id: this.user0.id, organization_id: this.orgid,
+               team_id: this.teamid, event: this.event
+        }
+      })
+      .then(  (response) => {
+        // console.log(response.data)
+        this.event.id = response.data;
+        this.attachments.forEach( a => {
+          if (a.id == 0) {
+            this.uploadFile(a);
+          }
+        });
+      }).catch((error) => {
+        this.event.id = 0;  //also indicates an error occurred
+        this.setStatusFailed();
+        if (error.response.status == 422) {
+          let messages = error.response.data.errors;
+          let self = this;
+          $.each(messages, function(k,v){
+            for(let i=0;i<v.length;i++){
+              self.errors.push(v[i]);
+            }
           });
+        } else {
+          this.errors.push(error.response.data)
+          console.log(error.response.data);
+        }
+        var self = this;
+        setTimeout(function(){
+            self.setStatusInitial();
+        }, MESSAGE_DURATION + 1000);
+      });
+    },
+    uploadFile: function (attachment) {
+      let formData = new FormData();
+      formData.append('auth_user_id', this.user0.id)
+      formData.append('organization_id', this.orgid)
+      formData.append('team_id', this.teamid)
+      formData.append('event_id', this.event.id)
+      formData.append('attachment', attachment.file, attachment.name);
+      formData.append('description', attachment.description);
+      axios({
+          method: 'post',
+          url: '/api/document',
+          data: formData
+        })
+        .then(  (response) => {
+          //
+        }).catch((error) => {
+          this.setStatusFailed();
+          if (error.response.status == 422) {
+            let messages = error.response.data.errors;
+            let self = this;
+            $.each(messages, function(k,v){
+              for(let i=0;i<v.length;i++){
+                self.errors.push(v[i]);
+              }
+            });
+          } else {
+            this.errors.push(error.response.data)
+            console.log(error.response)
+          }
+          var self = this;
+          setTimeout(function(){
+              self.setStatusInitial();
+          }, MESSAGE_DURATION + 1000);
+        });
 
-      });
-      // console.log(promiseArray);
-      axios.all(promiseArray)
-      .then(function(res) {
-        console.log(res);
-      });
     },
     setOrgTeam: function(orgid, teamid) {
       this.orgid = orgid
