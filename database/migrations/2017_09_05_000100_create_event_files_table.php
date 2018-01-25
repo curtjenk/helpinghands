@@ -17,7 +17,7 @@ class CreateEventFilesTable extends Migration
             $table->increments('id');
             $table->integer('event_id')->unsigned();
             $table->integer('organization_id')->unsigned();
-            $table->integer('team_id')->unsigned();
+            $table->integer('team_id')->unsigned()->nullable();
             $table->string('description')->nullable();
             $table->string('original_filename');
             $table->string('mimetype');

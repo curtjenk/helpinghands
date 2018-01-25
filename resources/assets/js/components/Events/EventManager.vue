@@ -17,18 +17,6 @@
       subtitle=""
       finishButtonText="Save Event"
     >
-      <!-- <tab-content title="Organization/Team">
-        <div class="mytab">
-          <p class="text-center">
-            <strong>Use the dropdowns to select the Organization and Team as applicable</strong>
-          </p>
-          <filter-memberships class="text-center"
-              :userid="user0.id"
-              :filterByTeam="true"
-              @orgTeamSelected="setOrgTeam"
-          ></filter-memberships>
-        </div>
-      </tab-content> -->
       <tab-content title="Details">
         <div class="mytab">
           <div class="form-horizontal">
@@ -217,82 +205,82 @@
       <tab-content title="Attachments">
         <div class="mytab">
           <div class="form-horizontal">
-          <span v-if="modeShow">
-            <!--  -->
-          </span>
-          <span v-else>
-            <div class="caption">
-              <span>Attachments</span>&nbsp;&nbsp;&nbsp;
-              <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
-                <a  href="#" type="button" class="text-success"
-                  @click="toggleIsAddingFile()">
-                  <i class="fa fa-plus fa-lg fa-fw text-success"></i>
-                </a>
-              </span>
-            </div>
-            <div v-if="isAddingFile" class="panel panel-default">
-              <div class="form-group row panel-body">
-                <div class="">
-                  <div class="col-md-4 col-sm-4" style="margin-top:10px;">
-                    <input id="ntd" type="file" required  @change="processFile($event)"/>
-                  </div>
-                  <div class="col-md-4 col-sm-5">
-                    <float-label>
-                      <input id="ntn" v-model="new_file_description" type="text" required
-                        class="editInfo" size="60" maxlength="255" placeholder="Description"/>
-                    </float-label>
-                  </div>
-                  <div class="" style="padding: 0px;">
-                    <span v-tooltip.top="'Save'"class="">
-                        <a href="#" type="button" class="text-primary"
-                          @click="addFileToList()">
-                          <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                        </a>
-                    </span>
-                    <span v-tooltip.top="'Cancel'">
-                        <a href="#" type="button" class="text-danger"
-                          @click="toggleIsAddingFile()">
-                          <i class="fa fa-ban fa-lg fa-fw"></i>
-                        </a>
-                    </span>
+            <span v-if="modeShow">
+              <!--  -->
+            </span>
+            <span v-else>
+              <div class="caption">
+                <span>Attachments</span>&nbsp;&nbsp;&nbsp;
+                <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
+                  <a  href="#" type="button" class="text-success"
+                    @click="toggleIsAddingFile()">
+                    <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+                  </a>
+                </span>
+              </div>
+              <div v-if="isAddingFile" class="panel panel-default">
+                <div class="form-group row panel-body">
+                  <div class="">
+                    <div class="col-md-4 col-sm-4" style="margin-top:10px;">
+                      <input id="ntd" ref="fileInput" type="file" required  @change="processFile($event)"/>
+                    </div>
+                    <div class="col-md-4 col-sm-5">
+                      <float-label>
+                        <input id="ntn" v-model="new_file_description" type="text" required
+                          class="editInfo" size="60" maxlength="255" placeholder="Description"/>
+                      </float-label>
+                    </div>
+                    <div class="" style="padding: 0px;">
+                      <span v-tooltip.top="'Add'"class="">
+                          <a href="#" type="button" class="text-primary"
+                            @click="addFileToList()">
+                            <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                          </a>
+                      </span>
+                      <span v-tooltip.top="'Close'">
+                          <a href="#" type="button" class="text-danger"
+                            @click="toggleIsAddingFile()">
+                            <i class="fa fa-ban fa-lg fa-fw"></i>
+                          </a>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </span>
-          <table class="table table-responsive table-striped table-condensed">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="file in attachments">
-                <td>
-                  {{ file.name }}
-                </td>
-                <td>
-                  {{ file.description }}
-                </td>
-                <td>
-                  <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
-                    <a href="#" type="button" class="text-primary"
-                          @click="viewFile(file)">
-                      <i class="fa fa-eye fa-fw"></i>
-                    </a>
-                  </span>
-                  <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
-                    <a href="#" type="button" class="text-danger"
-                          @click="removeFile(file)">
-                      <i class="fa fa-trash-o fa-fw"></i>
-                    </a>
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            </span>
+            <table class="table table-responsive table-striped table-condensed">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="file in attachments">
+                  <td>
+                    {{ file.name }}
+                  </td>
+                  <td>
+                    {{ file.description }}
+                  </td>
+                  <td>
+                    <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
+                      <a href="#" type="button" class="text-primary"
+                            @click="viewFile(file)">
+                        <i class="fa fa-eye fa-fw"></i>
+                      </a>
+                    </span>
+                    <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
+                      <a href="#" type="button" class="text-danger"
+                            @click="removeFile(file)">
+                        <i class="fa fa-trash-o fa-fw"></i>
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </tab-content>
@@ -424,7 +412,7 @@ export default {
     },
     toggleIsAddingFile () {
       this.isAddingFile = !this.isAddingFile
-      this.new_file = {};
+      this.new_file = null;
       this.new_file_type = '';
       this.new_file_name = '';
       this.new_file_description = '';
@@ -442,13 +430,18 @@ export default {
       // console.log(this.new_file_name)
     },
     addFileToList: function() { //add file to list of attachments
-      this.isAddingFile = false;
+      // this.isAddingFile = false;
       this.attachments.push({
         id:0,
         file:this.new_file,
         type:this.new_file_type,
         name:this.new_file_name,
         description:this.new_file_description});
+      //Reset input type="file".
+      const input = this.$refs.fileInput
+      input.type = 'text'
+      input.type = 'file'
+      this.new_file = null;
     },
     removeFile: function(file) {
       this.attachments =
@@ -468,11 +461,9 @@ export default {
       let message = '<i>Confirm saving this event</i>';
       this.$dialog.confirm(message, {})
       .then( (dialog)=> {
-        // console.log('calling uploadFiles')
-        message = '<i>Saving event.  Please wait</i>';
         this.sendData();
         dialog.close();
-        // window.location.href = "/event";
+        this.setModeShow()
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
@@ -500,10 +491,9 @@ export default {
       })
       .then(  (response) => {
         // console.log(response.data)
-        this.event.id = response.data;
+        this.event.id = response.data.id;
         let promises = this.attachments.map( (a,ndx) => {
           if (a.id == 0) {  //newly added file
-
             return this.uploadFile(a, ndx);
           }
         });
@@ -606,6 +596,6 @@ export default {
   font-size: 16px;
 }
 .mytab {
-  min-height: 200px;
+  min-height: 230px;
 }
 </style>

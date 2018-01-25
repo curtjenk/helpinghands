@@ -256,7 +256,7 @@ class EventController extends Controller
             'cost'=>$request->input('event.cost'),
         ]);
 
-        return response($newEvent->id);
+        return response(['id'=>$newEvent->id]);
     }
 
     /**

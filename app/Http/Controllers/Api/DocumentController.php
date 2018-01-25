@@ -71,6 +71,7 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         Log::debug(print_r($request->all(),true));
+        Log::debug($request->organization_id);
 
         $user = Auth::user();
         $this->authorize('create-event');
@@ -114,7 +115,8 @@ class DocumentController extends Controller
     {
         $user = Auth::user();
         $doc = App\EventFiles::findOrFail($id);
-        // $this->authorize('show', $doc);
+        $organization = App\Organization::findOrFail($doc->organization_id);
+        $this->authorize('show', $organization);
         $pathToFile =  Storage::disk('public')
             ->getDriver()->getAdapter()
             ->applyPathPrefix($doc->path);
