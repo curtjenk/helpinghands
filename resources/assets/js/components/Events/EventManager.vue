@@ -17,7 +17,6 @@
       subtitle=""
       finishButtonText="Save Event"
     >
-
       <!-- <tab-content title="Organization/Team">
         <div class="mytab">
           <p class="text-center">
@@ -30,17 +29,15 @@
           ></filter-memberships>
         </div>
       </tab-content> -->
-
-
       <tab-content title="Details">
         <div class="mytab">
           <div class="form-horizontal">
-            <div class="row text-center" style="margin-bottom:10px;">
-              <!-- <div class="col-md-5 col-sm-5"> -->
+            <div class="row" style="margin-bottom:10px;">
+              <div class="col-md-5 col-sm-5">
                 <span v-if="modeShow">
                 </span>
                 <span v-else>
-                  <div class="form-group text-center">
+                  <div class="text-center">
                     <filter-memberships
                         :userid="user0.id"
                         :filterByTeam="true"
@@ -48,7 +45,9 @@
                     ></filter-memberships>
                   </div>
                 </span>
-              <!-- </div> -->
+              </div>
+              <div class="col-md-7 col-sm-7">
+              </div>
             </div>
             <div class="row">
               <div class="col-md-5 col-sm-5">
@@ -202,7 +201,6 @@
         </div>
       </tab-content>
 
-
       <tab-content title="Description">
         <div class="mytab">
           <quill-editor v-model="event.description"
@@ -218,15 +216,14 @@
 
       <tab-content title="Attachments">
         <div class="mytab">
+          <div class="form-horizontal">
           <span v-if="modeShow">
-
+            <!--  -->
           </span>
           <span v-else>
-            <div class="form-horizontal">
             <div class="caption">
-              <span></span>&nbsp;&nbsp;&nbsp;
-              <span v-if="!isAddingFile"
-                  v-tooltip.right="'Add Attachment'">
+              <span>Attachments</span>&nbsp;&nbsp;&nbsp;
+              <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
                 <a  href="#" type="button" class="text-success"
                   @click="toggleIsAddingFile()">
                   <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -236,16 +233,16 @@
             <div v-if="isAddingFile" class="panel panel-default">
               <div class="form-group row panel-body">
                 <div class="">
+                  <div class="col-md-4 col-sm-4" style="margin-top:10px;">
+                    <input id="ntd" type="file" required  @change="processFile($event)"/>
+                  </div>
                   <div class="col-md-4 col-sm-5">
                     <float-label>
                       <input id="ntn" v-model="new_file_description" type="text" required
                         class="editInfo" size="60" maxlength="255" placeholder="Description"/>
                     </float-label>
                   </div>
-                  <div class="col-md-offset-1 col-sm-offset-1 col-md-4 col-sm-5" style="margin-top:10px;">
-                    <input id="ntd" type="file" required  @change="processFile($event)"/>
-                  </div>
-                  <div class="pull-right" style="padding: 0px;">
+                  <div class="" style="padding: 0px;">
                     <span v-tooltip.top="'Save'"class="">
                         <a href="#" type="button" class="text-primary"
                           @click="addFileToList()">
@@ -262,41 +259,41 @@
                 </div>
               </div>
             </div>
-            <table  class="table table-responsive table-striped table-condensed">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="file in attachments">
-                  <td>
-                    {{ file.name }}
-                  </td>
-                  <td>
-                    {{ file.description }}
-                  </td>
-                  <td>
-                    <span v-tooltip.left="'View'" class="">
-                        <a href="#" type="button" class="text-primary"
-                              @click="viewFile(file)">
-                          <i class="fa fa-eye fa-fw"></i>
-                        </a>
-                    </span>
-                    <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
-                        <a href="#" type="button" class="text-danger"
-                              @click="removeFile(file)">
-                          <i class="fa fa-trash-o fa-fw"></i>
-                        </a>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
           </span>
+          <table class="table table-responsive table-striped table-condensed">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="file in attachments">
+                <td>
+                  {{ file.name }}
+                </td>
+                <td>
+                  {{ file.description }}
+                </td>
+                <td>
+                  <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
+                    <a href="#" type="button" class="text-primary"
+                          @click="viewFile(file)">
+                      <i class="fa fa-eye fa-fw"></i>
+                    </a>
+                  </span>
+                  <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
+                    <a href="#" type="button" class="text-danger"
+                          @click="removeFile(file)">
+                      <i class="fa fa-trash-o fa-fw"></i>
+                    </a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
         </div>
       </tab-content>
 
@@ -490,21 +487,40 @@ export default {
         method = 'put';
         url += '/' + this.event.id;
       }
+      let data = {
+        auth_user_id: this.user0.id,
+        organization_id: this.orgid,
+        event: this.event
+      }
+      if (this.teamid != undefined) {
+        data.team_id = this.teamid;
+      }
       axios({
-        method: method,
-        url: url,
-        data: {auth_user_id: this.user0.id, organization_id: this.orgid,
-               team_id: this.teamid, event: this.event
-        }
+        method: method, url: url, data: data
       })
       .then(  (response) => {
         // console.log(response.data)
         this.event.id = response.data;
-        this.attachments.forEach( a => {
-          if (a.id == 0) {
-            this.uploadFile(a);
+        let promises = this.attachments.map( (a,ndx) => {
+          if (a.id == 0) {  //newly added file
+
+            return this.uploadFile(a, ndx);
           }
         });
+
+        axios.all(promises)
+        .then( (response) => {
+          // console.log('all good', response)
+          response.forEach( r => {
+            let id = r.data.id;
+            let ndx = parseInt(r.data.echo);
+            this.attachments[ndx].id = id;
+            this.attachments[ndx].file = {}
+          });
+        }).catch( (e) => {
+          throw e;
+        });
+
       }).catch((error) => {
         this.event.id = 0;  //also indicates an error occurred
         this.setStatusFailed();
@@ -526,41 +542,56 @@ export default {
         }, MESSAGE_DURATION + 1000);
       });
     },
-    uploadFile: function (attachment) {
+    viewFile: function (attachment) {
+      window.open('/api/document/'+attachment.id, '_blank')
+      return;
+    },
+    uploadFile: function (attachment, index) {
       let formData = new FormData();
       formData.append('auth_user_id', this.user0.id)
       formData.append('organization_id', this.orgid)
-      formData.append('team_id', this.teamid)
-      formData.append('event_id', this.event.id)
+      if (this.teamid != undefined) { //optional field
+        formData.append('team_id', this.teamid)
+      }
+      formData.append('event_id', this.event.id);
       formData.append('attachment', attachment.file, attachment.name);
       formData.append('description', attachment.description);
-      axios({
+      formData.append('echo',index);
+      return axios({
           method: 'post',
           url: '/api/document',
           data: formData
-        })
-        .then(  (response) => {
-          //
-        }).catch((error) => {
-          this.setStatusFailed();
-          if (error.response.status == 422) {
-            let messages = error.response.data.errors;
-            let self = this;
-            $.each(messages, function(k,v){
-              for(let i=0;i<v.length;i++){
-                self.errors.push(v[i]);
-              }
-            });
-          } else {
-            this.errors.push(error.response.data)
-            console.log(error.response)
-          }
-          var self = this;
-          setTimeout(function(){
-              self.setStatusInitial();
-          }, MESSAGE_DURATION + 1000);
-        });
-
+      })
+      // .then(  (response) => {
+      //   attachment.id = response.data;
+      //   attachment.file = {}
+      // }).catch((error) => {
+      //   this.setStatusFailed();
+      //   if (error.response) {
+      //     if (error.response.status == 422) {
+      //       let messages = error.response.data.errors;
+      //       let self = this;
+      //       $.each(messages, function(k,v){
+      //         for(let i=0;i<v.length;i++){
+      //           self.errors.push(v[i]);
+      //         }
+      //       });
+      //     } else {
+      //       this.errors.push(error.response.data)
+      //       console.log(error.response)
+      //     }
+      //   } else if (error.request) {
+      //     // The request was made but no response was received
+      //     console.log(error.request);
+      //   } else {
+      //     // Something happened in setting up the request that triggered an Error
+      //     console.log('Error', error.message);
+      //   }
+      //   var self = this;
+      //   setTimeout(function(){
+      //       self.setStatusInitial();
+      //   }, MESSAGE_DURATION + 1000);
+      // });
     },
     setOrgTeam: function(orgid, teamid) {
       this.orgid = orgid
