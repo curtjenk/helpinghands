@@ -10,7 +10,27 @@
         </div>
       </div>
     </div>
-    <form-wizard class="row"
+    <div class="row">
+      <span v-show="modeShow" v-tooltip.right="'Edit Event'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="setModeEdit()">
+          <i class="fa fa-pencil-square-o fa-3x fa-fw text-success"></i>
+        </a>
+      </span>
+      <span v-show="modeCreate" v-tooltip.right="'Cancel Create'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="goToLocation('/event')">
+          <i class="fa fa-hand-o-left fa-3x fa-fw text-danger"></i>
+        </a>
+      </span>
+      <span v-show="modeEdit" v-tooltip.right="'Cancel Edit'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="setModeShow()">
+          <i class="fa fa-eye fa-3x fa-fw text-success"></i>
+        </a>
+      </span>
+    </div>
+    <form-wizard class="row" ref="form_wizard"
       @on-complete="wizardOnComplete"
       color="#e67e22"
       title=""
@@ -43,7 +63,7 @@
                   <div class="form-group">
                     <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
                     <div class="col-md-9">
-                        <p id="subject" type="text" class="form-control-static">{{ event.subject }}></p>
+                        <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
                     </div>
                   </div>
                 </span>
@@ -65,34 +85,39 @@
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="datestart" class="form-control-static">{{ event.date_start }}></p>
+                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'MMM DD YYYY ') }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="dateend" class="form-control-static">{{ event.date_end }}></p>
+                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'MMM DD YYYY ')}}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
                   <div class="col-md-7">
-                      <p id="eventtype" class="form-control-static">{{ event.type.name }}></p>
+                      <p id="eventtype" class="form-control-static">{{ event.type.name }}</p>
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
+                  <div class="col-md-7">
+                      <p id="cost" class="form-control-static">{{ event.cost }}</p>
+                  </div>
+                </div>
               </span>
               <span v-else>
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <datepicker name="datestart" v-model="event.date_start"></datepicker>
+                      <datepicker name="datestart" v-model="event.date_start" format="MMM dd yyyy"></datepicker>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <datepicker name="dateend" v-model="event.date_end"></datepicker>
+                      <datepicker name="dateend" v-model="event.date_end" format="MMM dd yyyy"></datepicker>
                   </div>
                 </div>
                 <div class="form-group">
@@ -109,7 +134,10 @@
                 <div class="form-group">
                   <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
                   <div class="col-md-7">
-                    <input name="cost" v-model="event.cost" type="text" class="" size="5">
+                    <masked-input name="cost" type="text" size="10" width="10"
+                        v-model="event.cost"
+                        :mask="numberMask"  >
+                    </masked-input>
                   </div>
                 </div>
               </span>
@@ -119,35 +147,36 @@
                 <div class="form-group">
                   <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
                   <div class="col-md-9">
-                      <p id="timestart" type="text" class="form-control-static">{{ event.time_start }}></p>
+                      <p id="timestart" type="text" class="form-control-static">{{ formatTimePicker(event.time_start) }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
                   <div class="col-md-9">
-                      <p id="timeend" type="text" class="form-control-static">{{ event.time_end }}></p>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
-                  <div class="col-md-7">
-                    <p id="limit" class="form-control-static">{{ event.limit }}></p>
+                      <p id="timeend" type="text" class="form-control-static">{{ formatTimePicker(event.time_end) }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-7">
-                    <p id="status" class="form-control-static">{{ event.status.name }}></p>
+                    <p id="status" class="form-control-static">{{ event.status.name }}</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
+                  <div class="col-md-7">
+                    <p id="limit" class="form-control-static">{{ event.limit }}</p>
                   </div>
                 </div>
               </span>
               <span v-else>
                 <div class="form-group">
                   <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                  <!-- :time-value.sync="event.time_start" -->
                   <div class="col-md-9">
                       <vue-timepicker name="timestart"
                         v-model="event.time_start"
-                        :time-value.sync="event.time_start"
+
                         format="hh:mm a"
                         :minute-interval="15"
                         @change="setInitialEndTime"
@@ -156,19 +185,14 @@
                 </div>
                 <div class="form-group">
                   <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
+                  <!--   :time-value.sync="event.time_end" -->
                   <div class="col-md-9">
                       <vue-timepicker name="timeend"
                         v-model="event.time_end"
-                        :time-value.sync="event.time_end"
+
                         format="hh:mm a"
                         :minute-interval="15"
                       />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
-                  <div class="col-md-9">
-                    <input name="limit" v-model="event.limit" type="text" class="" size="3">
                   </div>
                 </div>
                 <div class="form-group">
@@ -180,6 +204,12 @@
                         {{ stat.name }}
                      </option>
                     </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
+                  <div class="col-md-9">
+                    <input name="limit" v-model="event.limit" type="text"  class="" size="3">
                   </div>
                 </div>
               </span>
@@ -293,6 +323,8 @@
 
 import {commonMixins} from '../../mixins/common';
 import {MESSAGE_DURATION} from '../../mixins/constants';
+import MaskedInput from 'vue-text-mask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';  //addon for vue-text-mask
 // import FormError from '../FormError';
 import {FormWizard, TabContent} from 'vue-form-wizard';
 import 'vue-form-wizard/dist/vue-form-wizard.min.css';
@@ -308,7 +340,7 @@ export default {
   mixins: [commonMixins],
   components: {
     // FormError,
-    FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor
+    FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor, MaskedInput
   },
   props: {
     mode0: {
@@ -334,6 +366,12 @@ export default {
   },
   data () {
     return {
+      numberMask: createNumberMask({
+       allowDecimal: true,
+       integerLimit: 4,
+       prefix: ' $',
+       suffix: ''
+      }),
       isAddingFile: false,
       new_file: {},
       new_file_type: '',
@@ -360,7 +398,7 @@ export default {
         time_end: {hh: "08", mm: "00", a: "am"},
         cost:'',
         type:'',
-        signup_limit:'',
+        limit:'',
         status:''
       },
       attachments: [
@@ -395,6 +433,9 @@ export default {
   watch: {
   },
   methods: {
+    formatTimePicker(timePickerString) {
+      return timePickerString.hh + ':' + timePickerString.mm + ' ' + timePickerString.a
+    },
     onEditorBlur(quill) {
       // console.log('editor blur!', quill)
     },
@@ -431,6 +472,7 @@ export default {
     },
     addFileToList: function() { //add file to list of attachments
       // this.isAddingFile = false;
+      if (!this.new_file) { return; }
       this.attachments.push({
         id:0,
         file:this.new_file,
@@ -463,7 +505,7 @@ export default {
       .then( (dialog)=> {
         this.sendData();
         dialog.close();
-        this.setModeShow()
+
       })
       .catch( ()=> {
           //console.log('Clicked on cancel')
@@ -497,19 +539,27 @@ export default {
             return this.uploadFile(a, ndx);
           }
         });
+        if (promises.length==0) {
+          this.setModeShow()
+          this.$refs.form_wizard.changeTab(2,0)
+        } else {
+          axios.all(promises)
+          .then( (response) => {
+            // console.log('all good', response)
+            response.forEach( r => {
+              let id = r.data.id;
+              let ndx = parseInt(r.data.echo);
+              this.attachments[ndx].id = id;
+              this.attachments[ndx].file = {}
+            });
 
-        axios.all(promises)
-        .then( (response) => {
-          // console.log('all good', response)
-          response.forEach( r => {
-            let id = r.data.id;
-            let ndx = parseInt(r.data.echo);
-            this.attachments[ndx].id = id;
-            this.attachments[ndx].file = {}
+            this.setModeShow()
+            this.$refs.form_wizard.changeTab(3,1)
+
+          }).catch( (e) => {
+            throw e;
           });
-        }).catch( (e) => {
-          throw e;
-        });
+        }
 
       }).catch((error) => {
         this.event.id = 0;  //also indicates an error occurred

@@ -5,10 +5,6 @@
     <section class="page-header">
         <div class="container">
             <div class="pull-left header">
-                @if($mode=='Edit') Edit
-                @elseif ($mode='Create') Create
-                @else View
-                @endif
                 Event
             </div>
             <div class="pull-left">

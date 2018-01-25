@@ -236,8 +236,8 @@ class EventController extends Controller
             'organization_id' => 'required|exists:organizations,id',
             'event.type.id' => 'required|exists:event_types,id',
             'event.status.id' => 'required|exists:statuses,id',
-            // 'event.limit'=> 'required|numeric',
-            // 'event.cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+            'event.limit'=> 'numeric',
+            'event.cost'=> 'regex:/^\d*(\.\d{1,2})?$/'
         ]);
 
         // // dump($request->all());
@@ -281,24 +281,20 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('update', $event);
-        // $orgs = App\Organization::select('organizations.*')
-        //     ->when($user->is_orgLevel(), function($q) use($user) {
-        //         return $q->where('organizations.id', $user->organization_id);
-        //     })
-            // ->get();
-        $orgs = [];
-        return view('event.create_edit', [
-            'event'=>$event,
-            'orgs'=>$orgs,
-            'statuses'=>App\Status::all(),
-            'event_types'=>App\EventType::all()
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('update', $event);
+    //
+    //     $orgs = [];
+    //     return view('event.create_edit', [
+    //         'event'=>$event,
+    //         'orgs'=>$orgs,
+    //         'statuses'=>App\Status::all(),
+    //         'event_types'=>App\EventType::all()
+    //     ]);
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -313,67 +309,34 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $this->authorize('update', $event);
+        // $event = json_decode($request->event);
         $this->validate($request, [
-            'subject' => 'required|max:255',
-            'description' => 'string',
-            'date_start' => 'date',
-            'date_end' => 'date',
+            'event.subject' => 'required|max:255',
+            // 'event.description' => 'required|string',
+            'event.date_start' => 'required',
+            'event.date_end' => 'required',
             'organization_id' => 'required|exists:organizations,id',
-            'event_type_id'=> 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric',
-            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+            'event.type.id' => 'required|exists:event_types,id',
+            'event.status.id' => 'required|exists:statuses,id',
+            'event.limit'=> 'numeric',
+            'event.cost'=> 'regex:/^\d*(\.\d{1,2})?$/'
         ]);
 
-        $event->subject = $request->input('subject');
-        $event->description = $request->input('description');
-        $event->date_start = $request->input('date_start');
-        $event->date_end = $request->input('date_end');
+        $event->subject = $request->input('event.subject');
+        $event->description = $request->input('event.description');
+        $event->description_text = $request->input('event.description_text');
+        $event->date_start = $request->input('event.date_start');
+        $event->date_end = $request->input('event.date_end');
         $event->updated_user_id = $user->id;
         $event->organization_id = $request->organization_id;
         $event->team_id = $request->team_id;
-        $event->status_id = $request->input('status_id');
-        $event->event_type_id = $request->input('event_type_id');
-        $event->signup_limit = $request->input('signup_limit');
-        $event->cost = $request->input('cost');
+        $event->status_id = $request->input('event.status_id');
+        $event->event_type_id = $request->input('event.type_id');
+        $event->signup_limit = $request->input('event.limit', 0);
+        $event->cost = $request->input('event.cost', 0);
         $event->save();
 
-        // $dir = 'event_files/'.$event->id;
-        //
-        // $uploads = $request->file('event_file');
-        // if (isset($uploads)) {
-        //     //cleanup storage and db rows from previous
-        //     Storage::disk('public')->deleteDirectory($dir);
-        //     $event->files()->delete();
-        //     //now save the uploaded
-        //     foreach($uploads as $upload) {
-        //         $original = $upload->getClientOriginalName();
-        //         $filename = $upload->store($dir, 'public');
-        //         App\EventFiles::create(['event_id'=>$event->id,
-        //             'filename'=>$filename,
-        //             'original_filename'=>$original]);
-        //     }
-        // }
-        // $todelete = $request->input('delete_file');
-        // if(is_array($todelete))
-        // {
-        //     foreach($todelete as $id) {
-        //         $eventFile = App\EventFiles::findOrFail($id);
-        //         Storage::disk('public')->delete($eventFile->filename);
-        //         $eventFile->delete();
-        //     }
-        //     //delete directory if empty
-        //     $diskfiles = Storage::disk('public')->files($dir);
-        //     // Log::debug(print_r($diskfiles, true));
-        //     if (count($diskfiles)==0) {
-        //         // Log::debug("delete directory");
-        //         Storage::disk('public')->deleteDirectory($dir);
-        //     }
-        // }
-        return redirect("event/$event->id");
-        // return view('event.show', [
-        //     'event'=>$event,
-        // ]);
+        return;
     }
 
     /**

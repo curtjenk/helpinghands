@@ -3,7 +3,7 @@
  * @namespace
  */
 import * as consts from './constants';
-
+import moment from 'moment';
 export const commonMixins = {
   data() {
     return {
@@ -42,6 +42,9 @@ export const commonMixins = {
     setStatusSaving: function() {
       this.currentStatus = consts.STATUS_SAVING;
     },
+    goToLocation(url) {
+      window.location.href = url;
+    },
     formatPhoneNumber: function(input, formatMask)
     {
         // Strip non-numeric characters
@@ -51,6 +54,9 @@ export const commonMixins = {
         return formatMask.replace(/X/g, function() {
             return digits.charAt(count++);
         });
+    },
+    formatDate: function(input, formatMask) {
+      return moment(input).format(formatMask);
     },
     equalheight: function(container){
       /* Thanks to CSS Tricks for pointing out this bit of jQuery
