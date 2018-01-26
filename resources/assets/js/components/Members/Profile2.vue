@@ -65,15 +65,19 @@
                   <div class="form-group">
                       <label for="phone1" class="col-md-3 col-sm-4 control-label">Phone 1</label>
                       <div class="col-md-5 col-sm-6">
-                        <input id="phone1" v-model="user.homephone" type="tel" v-mask="'(###) ###-####'"
-                          placeholder="" class="editInfo" name="phone1">
+                        <masked-input id="phone1" name="phone1" type="tel" class="editInfo"
+                            v-model="user.homephone"
+                            :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                        </masked-input>
                       </div>
                   </div>
                   <div class="form-group">
                       <label for="phone2" class="col-md-3 col-sm-4 control-label">Phone 2</label>
                       <div class="col-md-5 col-sm-6">
-                        <input id="phone2" v-model="user.mobilephone" type="text" v-mask="'(###) ###-####'"
-                          placeholder="" class="editInfo" name="phone2">
+                        <masked-input id="phone2" name="phone2" type="tel" class="editInfo"
+                            v-model="user.mobilephone"
+                            :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                        </masked-input>
                       </div>
                     </div>
                 </div>
@@ -265,7 +269,7 @@
 </template>
 
 <script>
-import {TheMask} from 'vue-the-mask';
+import MaskedInput from 'vue-text-mask';
 import VuePassword from 'vue-password';
 import VeeValidate from 'vee-validate';
 import { Validator } from 'vee-validate';
@@ -280,7 +284,7 @@ const MESSAGE_DURATION = 2500;
 const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
 export default {
   components: {
-    TheMask, VuePassword
+    MaskedInput, VuePassword
   },
   props: {
     user0: {

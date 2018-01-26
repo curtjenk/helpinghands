@@ -29,7 +29,7 @@ class CreateEventsTable extends Migration
             $table->date('evite_sent')->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->integer('event_type_id')->unsigned()->nullable();
-            $table->integer('signup_limit')->unsigned()->nullable();
+            $table->string('signup_limit')->unsigned()->nullable();
             $table->integer('updated_user_id')->unsigned()->nullable();
             $table->timestamps();
 

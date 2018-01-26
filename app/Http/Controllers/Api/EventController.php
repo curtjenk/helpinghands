@@ -236,8 +236,8 @@ class EventController extends Controller
             'organization_id' => 'required|exists:organizations,id',
             'event.type.id' => 'required|exists:event_types,id',
             'event.status.id' => 'required|exists:statuses,id',
-            'event.limit'=> 'numeric',
-            'event.cost'=> 'regex:/^\d*(\.\d{1,2})?$/'
+            // 'event.limit'=> 'string',
+            // 'event.cost'=> 'string'
         ]);
 
         // // dump($request->all());
@@ -318,8 +318,8 @@ class EventController extends Controller
             'organization_id' => 'required|exists:organizations,id',
             'event.type.id' => 'required|exists:event_types,id',
             'event.status.id' => 'required|exists:statuses,id',
-            'event.limit'=> 'numeric',
-            'event.cost'=> 'regex:/^\d*(\.\d{1,2})?$/'
+            // 'event.limit'=> 'string',
+            // 'event.cost'=> 'string'
         ]);
 
         $event->subject = $request->input('event.subject');

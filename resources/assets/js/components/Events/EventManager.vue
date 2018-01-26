@@ -40,15 +40,23 @@
       <tab-content title="Details">
         <div class="mytab">
           <div class="form-horizontal">
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row">
               <div class="col-md-5 col-sm-5">
                 <span v-if="modeShow">
+                  <div class="form-group">
+                    <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
+                    <div class="col-md-9">
+                        <p id="orgteam" type="text" class="form-control-static">{{ organization.name }} {{ team.name }}</p>
+                    </div>
+                  </div>
                 </span>
                 <span v-else>
-                  <div class="text-center">
+                  <div class="text-center" style="margin-bottom:10px;">
                     <filter-memberships
                         :userid="user0.id"
                         :filterByTeam="true"
+                        :selectedOrg0="organization"
+                        :selectedTeam0="team"
                         @orgTeamSelected="setOrgTeam"
                     ></filter-memberships>
                   </div>
@@ -101,11 +109,12 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
+                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-7">
-                      <p id="cost" class="form-control-static">{{ event.cost }}</p>
+                    <p id="status" class="form-control-static">{{ event.status.name }}</p>
                   </div>
                 </div>
+
               </span>
               <span v-else>
                 <div class="form-group">
@@ -132,12 +141,14 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
-                  <div class="col-md-7">
-                    <masked-input name="cost" type="text" size="10" width="10"
-                        v-model="event.cost"
-                        :mask="numberMask"  >
-                    </masked-input>
+                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
+                  <div class="col-md-9">
+                    <select v-model="event.status" name="status">
+                      <option disabled value="">Select one</option>
+                      <option v-for="stat in statuses0" v-bind:value="stat" >
+                        {{ stat.name }}
+                     </option>
+                    </select>
                   </div>
                 </div>
               </span>
@@ -157,9 +168,9 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
+                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
                   <div class="col-md-7">
-                    <p id="status" class="form-control-static">{{ event.status.name }}</p>
+                      <p id="cost" class="form-control-static">{{ event.cost }}</p>
                   </div>
                 </div>
                 <div class="form-group">
@@ -195,21 +206,23 @@
                       />
                   </div>
                 </div>
+
                 <div class="form-group">
-                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
-                  <div class="col-md-9">
-                    <select v-model="event.status" name="status">
-                      <option disabled value="">Select one</option>
-                      <option v-for="stat in statuses0" v-bind:value="stat" >
-                        {{ stat.name }}
-                     </option>
-                    </select>
+                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
+                  <div class="col-md-7">
+                    <masked-input name="cost" type="text" size="10" width="10"
+                        v-model="event.cost"
+                        :mask="numberMask">
+                    </masked-input>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-9">
-                    <input name="limit" v-model="event.limit" type="text"  class="" size="3">
+                    <masked-input name="limit" type="text" size="3" width="3"
+                        v-model="event.limit"
+                        :mask="[/[0-9]/,/[0-9]/,/[0-9]/]">
+                    </masked-input>
                   </div>
                 </div>
               </span>
@@ -385,7 +398,9 @@ export default {
       ready: false,
       errors: [],
       orgid: '',
+      organization: null,
       teamid: '',
+      team: null,
       selEventType: {},
       event: {
         id:'',
@@ -633,9 +648,11 @@ export default {
       //   }, MESSAGE_DURATION + 1000);
       // });
     },
-    setOrgTeam: function(orgid, teamid) {
+    setOrgTeam: function(orgid, teamid, organization, team) {
       this.orgid = orgid
       this.teamid = teamid
+      this.organization = organization
+      this.team = team
     }
   } //End of methods
 } //End of export
@@ -647,5 +664,8 @@ export default {
 }
 .mytab {
   min-height: 230px;
+}
+select {
+  margin-top: 5px;
 }
 </style>

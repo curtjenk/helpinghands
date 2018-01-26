@@ -65,8 +65,10 @@
           <div class="form-group">
               <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
               <div class="col-md-6 col-sm-6">
-                <input id="phone" v-model="org_phone" type="tel" v-mask="'(###) ###-####'"
-                  name="phone" class="editInfo">
+                <masked-input id="phone" name="phone" type="tel" class="editInfo"
+                    v-model="org_phone"
+                    :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                </masked-input>
               </div>
           </div>
           <div class="form-group" :class="{ 'has-error' : errors.address1 } ">
@@ -260,7 +262,7 @@
 </template>
 
 <script>
-import {TheMask} from 'vue-the-mask';
+import MaskedInput from 'vue-text-mask';
 import {commonMixins} from '../../mixins/common';
 import {MESSAGE_DURATION} from '../../mixins/constants';
 import FormError from '../FormError';
@@ -268,7 +270,7 @@ import FormError from '../FormError';
 export default {
   mixins: [commonMixins],
   components: {
-    TheMask, FormError
+    MaskedInput, FormError
   },
   props: {
     mode0: {

@@ -27,6 +27,14 @@ export default {
       type: Number,
       required: true
     },
+    selectedOrg0: {
+      type: Number,
+      required: false
+    },
+    selectedTeam0: {
+      type: Number,
+      required: false
+    },
     filterByTeam: {
       type: Boolean,
       required: false,
@@ -45,6 +53,14 @@ export default {
     .then(response => {
       // console.log(response.data)
       this.memberships = response.data;
+      this.$nextTick(function () {
+        if (this.selectedOrg0 != undefined) {
+          this.selectedOrg = this.selectedOrg0;
+          if (this.selectedTeam0 != undefined) {
+            this.selectedTeam = this.selectedTeam0
+          }
+        }
+      });
     })
     .catch(e => {
       console.log(e);
@@ -61,7 +77,7 @@ export default {
       // console.log(event);
       let orgid = this.selectedOrg.id ? this.selectedOrg.id : 0;
       let teamid = event.name == 'org' || orgid==0 ? 0 : this.selectedTeam.id;
-      this.$emit('orgTeamSelected', orgid, teamid);
+      this.$emit('orgTeamSelected', orgid, teamid, this.selectedOrg, this.selectedTeam);
     }
   } //End of methods
 } //End of export
