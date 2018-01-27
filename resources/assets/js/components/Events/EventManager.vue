@@ -11,19 +11,19 @@
       </div>
     </div>
     <div class="row">
-      <span v-show="modeShow" v-tooltip.right="'Edit Event'" class="pull-right">
+      <span v-show="modeShow" v-tooltip.top="'Edit Event'" class="pull-right">
         <a  href="#" type="button" class="text-success"
           @click="setModeEdit()">
           <i class="fa fa-pencil-square-o fa-3x fa-fw text-success"></i>
         </a>
       </span>
-      <span v-show="modeCreate" v-tooltip.right="'Cancel Create'" class="pull-right">
+      <span v-show="!modeEdit" v-tooltip.top="'Return'" class="pull-right">
         <a  href="#" type="button" class="text-success"
           @click="goToLocation('/event')">
           <i class="fa fa-hand-o-left fa-3x fa-fw text-danger"></i>
         </a>
       </span>
-      <span v-show="modeEdit" v-tooltip.right="'Cancel Edit'" class="pull-right">
+      <span v-show="modeEdit" v-tooltip.top="'Cancel Edit'" class="pull-right">
         <a  href="#" type="button" class="text-success"
           @click="setModeShow()">
           <i class="fa fa-eye fa-3x fa-fw text-success"></i>
@@ -55,8 +55,8 @@
                     <filter-memberships
                         :userid="user0.id"
                         :filterByTeam="true"
-                        :selectedOrg0="organization"
-                        :selectedTeam0="team"
+                        :organization="organization"
+                        :team="team"
                         @orgTeamSelected="setOrgTeam"
                     ></filter-memberships>
                   </div>
@@ -93,13 +93,13 @@
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'MMM DD YYYY ') }}</p>
+                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'MMM DD YYYY') }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'MMM DD YYYY ')}}</p>
+                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'MMM DD YYYY')}}</p>
                   </div>
                 </div>
                 <div class="form-group">
@@ -356,26 +356,13 @@ export default {
     FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor, MaskedInput
   },
   props: {
-    mode0: {
-      type: String,
-      required: true
-    },
-    user0: {
-      type: Object,
-      required: true
-    },
-    eventtypes0: {
-      type: Array,
-      required: true
-    },
-    statuses0: {
-      type: Array,
-      required: true
-    },
-    event0: {
-      type: Object,
-      required: false
-    }
+    mode0: {type: String, required: true},
+    user0: {type: Object, required: true},
+    eventtypes0: {type: Array, required: true},
+    statuses0: {type: Array, required: true},
+    event0: {type: Object, required: false},
+    organization0: {type: Object, required: false},
+    team0: {type: Object, required: false}
   },
   data () {
     return {
@@ -398,9 +385,9 @@ export default {
       ready: false,
       errors: [],
       orgid: '',
-      organization: null,
+      organization: {},
       teamid: '',
-      team: null,
+      team: {},
       selEventType: {},
       event: {
         id:'',
@@ -428,7 +415,32 @@ export default {
   mounted: function () {
     this.setMode(this.mode0);
     if (this.modeShow) {
-
+      //map event0 to event
+      if (this.event0 != undefined && this.event0 != null)
+      {
+        this.event.id = this.event0.id
+        this.event.subject = this.event0.subject
+        this.event.description = this.event0.description
+        this.event.description_text = this.event0.description_text
+        this.event.date_start = this.event0.date_start
+        this.event.date_end = this.event0.date_end
+        if (this.event0.time_start != null) {
+          this.event.time_start = this.event0.time_start
+        }
+        if (this.event0.time_end != null) {
+          this.event.time_end = this.event0.time_end
+        }
+        this.event.cost = this.event0.cost
+        this.event.limit = this.event0.signup_limit
+      }
+      if (this.organization0 != undefined && this.organization0 != null)
+      {
+        this.organization = this.organization0
+        if (this.team0 != undefined && this.team0 != null)
+        {
+          this.team = this.team0
+        }
+      }
     } else {
       this.attachments = [];
     }
@@ -569,7 +581,7 @@ export default {
             });
 
             this.setModeShow()
-            this.$refs.form_wizard.changeTab(3,1)
+            this.$refs.form_wizard.changeTab(2,0)
 
           }).catch( (e) => {
             throw e;

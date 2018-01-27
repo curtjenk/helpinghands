@@ -33,6 +33,13 @@ class Event extends Model
         return $this->belongsTo('App\Organization');
     }
     /**
+     * Get the Team for this Event.
+     */
+    public function team()
+    {
+        return $this->belongsTo('App\Team');
+    }
+    /**
      * Get the User that created this .
      */
     public function user()

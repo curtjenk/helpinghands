@@ -157,6 +157,7 @@ class EventController extends Controller
      */
     public function create()
     {
+        $this->authorize('create-event');
         $event_types = App\EventType::select('id','name')
             ->get()->toArray();
 
@@ -165,10 +166,51 @@ class EventController extends Controller
 
         return view('event.manage', [
             'event'=>json_encode(null),
+            'organization'=>json_encode(null),
+            'team'=>json_encode(null),
             'statuses'=>json_encode($statuses),
             'event_types'=>json_encode($event_types),
             'mode'=>'Create'
          ]);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $user = Auth::user();
+        $event = App\Event::findOrFail($id);
+        $organization = $event->organization->first();
+        if (isset($vent->team_id)) {
+            $team = $event->team->first();
+        } else {
+            $team = null;
+        }
+        $this->authorize('show', $event);
+        // return view('event.manage', [
+        //     'event'=>json_encode($event),
+        //     'statuses'=>json_encode(null),
+        //     'event_types'=>json_encode(null),
+        //     'mode'=>'Show'
+        //  ]);
+
+         $event_types = App\EventType::select('id','name')
+             ->get()->toArray();
+
+         $statuses = App\Status::select('id','name')
+             ->get()->toArray();
+
+         return view('event.manage', [
+             'event'=>json_encode($event),
+             'organization'=>json_encode($organization),
+             'team'=>json_encode($team),
+             'statuses'=>json_encode($statuses),
+             'event_types'=>json_encode($event_types),
+             'mode'=>'Show'
+          ]);
     }
 
     public function members(Request $request, $id)
@@ -188,107 +230,32 @@ class EventController extends Controller
 
         return response()->json($members);
     }
-    /**
-     * Download the requested file/attachment
-     * @param  Request $request [description]
-     * @param  [type]  $event_id      [description]
-     * @param  [type]  $file_id [description]
-     * @return [type]           [description]
-     */
-    public function download(Request $request, $event_id, $file_id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($event_id);
-        $this->authorize('show', $event);
-        $file = App\EventFiles::where('id', $file_id)
-            ->where('event_id', $event->id)
-            ->first();
-        if(!isset($file)){
-            Log::debug("File not found. id = ".$file_id." event=".$event_id);
-            return;
-        }
-        $pathToFile =  Storage::disk('public')
-            ->getDriver()->getAdapter()
-            ->applyPathPrefix($file->filename);
-        //dump($pathToFile);
-        return response()->download($pathToFile, $file->original_filename);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function store(Request $request)
+    // /**
+    //  * Download the requested file/attachment
+    //  * @param  Request $request [description]
+    //  * @param  [type]  $event_id      [description]
+    //  * @param  [type]  $file_id [description]
+    //  * @return [type]           [description]
+    //  */
+    // public function download(Request $request, $event_id, $file_id)
     // {
     //     $user = Auth::user();
-    //     // $this->authorize('create-event');
-    //     $this->validate($request, [
-    //         'subject' => 'required|max:255',
-    //         'description' => 'string',
-    //         'date_start' => 'date',
-    //         'date_end' => 'date',
-    //         // 'organization_id' => 'required|exists:organizations,id',
-    //         'event_type_id' => 'required|exists:event_types,id',
-    //         'status_id' => 'required|exists:statuses,id',
-    //         'signup_limit'=> 'required|numeric',
-    //         'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-    //     ]);
-    //     // dump($request->all());
-    //     $newEvent = App\Event::create([
-    //         'subject'=>$request->input('subject'),
-    //         'description'=>$request->input('description'),
-    //         'date_start'=>$request->input('date_start'),
-    //         'date_end'=>$request->input('date_end'),
-    //         'user_id'=>$user->id,
-    //         'status_id'=>$request->input('status_id'),
-    //         'event_type_id'=>$request->input('event_type_id'),
-    //         'organization_id'=>1,
-    //         'signup_limit'=>$request->input('signup_limit'),
-    //         'cost'=>$request->input('cost'),
-    //     ]);
-    //     //Store to 'pubilic'
-    //     //created sym link using php artisan storage:link
-    //     //so files are accessible from web
-    //     $dir = 'event_files/'.$newEvent->id;
-    //     $uploads = $request->file('event_file');
-    //     if (isset($uploads)) {
-    //         // Log::debug("about to upload");
-    //         foreach($uploads as $upload) {
-    //             $original = $upload->getClientOriginalName();
-    //             $filename = $upload->store($dir, 'public');
-    //             // Log::debug(Storage::disk('public')->url($filename));
-    //             App\EventFiles::create(['event_id'=>$newEvent->id,
-    //                 'filename'=>$filename,
-    //                 'original_filename'=>$original]);
-    //         }
+    //     $event = App\Event::findOrFail($event_id);
+    //     $this->authorize('show', $event);
+    //     $file = App\EventFiles::where('id', $file_id)
+    //         ->where('event_id', $event->id)
+    //         ->first();
+    //     if(!isset($file)){
+    //         Log::debug("File not found. id = ".$file_id." event=".$event_id);
+    //         return;
     //     }
-    //
-    //     return redirect("event/$newEvent->id");
-    //     // return view('event.show', [
-    //     //     'event'=>$newEvent,
-    //     // ]);
+    //     $pathToFile =  Storage::disk('public')
+    //         ->getDriver()->getAdapter()
+    //         ->applyPathPrefix($file->filename);
+    //     //dump($pathToFile);
+    //     return response()->download($pathToFile, $file->original_filename);
     // }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('show', $event);
-        return view('event.manage', [
-            'event'=>json_encode($event),
-            'statuses'=>json_encode(null),
-            'event_types'=>json_encode(null),
-            'mode'=>'Show'
-         ]);
-    }
 
     /**
      * Show the form for editing the specified resource.

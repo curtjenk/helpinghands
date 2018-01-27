@@ -75,8 +75,8 @@
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import accounting from 'accounting'
-import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
@@ -98,6 +98,7 @@ Vue.component('events-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
 export default {
+  mixins: [commonMixins],
   components: {
     Vuetable,
     VuetablePagination,
@@ -310,13 +311,14 @@ export default {
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
     },
-    formatDate (value, fmt = 'D MMM YYYY') {
-      return (value == null)
-        ? ''
-        : moment(value, 'YYYY-MM-DD').format(fmt)
-    },
+    // formatDate (value, fmt = 'D MMM YYYY') {
+    //   return (value == null)
+    //     ? ''
+    //     : moment(value, 'YYYY-MM-DD').format(fmt)
+    // },
     formatMoney (value) {
-        return '$'+value;
+        return value;
+        // return '$'+value;
     },
     onPaginationData (paginationData) {
       //this.$refs.paginationTop.setPaginationData(paginationData)      // <----

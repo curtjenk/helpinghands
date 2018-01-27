@@ -55,8 +55,8 @@ export const commonMixins = {
             return digits.charAt(count++);
         });
     },
-    formatDate: function(input, formatMask) {
-      return moment(input).format(formatMask);
+    formatDate: function(input, formatMask = 'MMM DD YYYY') {
+      return (input==null) ? '' : moment(input).format(formatMask);
     },
     equalheight: function(container){
       /* Thanks to CSS Tricks for pointing out this bit of jQuery

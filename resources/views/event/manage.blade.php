@@ -22,6 +22,8 @@
         <event-manager
         mode0="{{ $mode }}"
         :event0="{{ $event }}"
+        :organization0="{{ $organization }}"
+        :team0="{{ $team }}"
         :user0="{{ Auth::user() }}"
         :statuses0="{{ $statuses }}"
         :eventtypes0="{{ $event_types }}">

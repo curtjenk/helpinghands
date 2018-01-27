@@ -75,9 +75,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('event/{eid}/download/{fid}', 'EventController@download');
         Route::get('event/calendar', 'EventController@calendar');
         Route::post('event/notify/{id}', 'EventController@notify');
-
+        //For rendering the initial views only, no business logic
         Route::resource('event', 'EventController',
-            ['only'=>['index', 'create']]
+            ['only'=>['index', 'create', 'show']]
         );
         Route::resource('member', 'UserController',
             ['only'=>['edit']]

@@ -1,16 +1,22 @@
 <template>
   <div class="">
-    <select v-model="selectedOrg" @change="tellParent" id="" name="org">Organization
+    <select v-model="selectedOrg" @change="tellParent" name="org">Organization
       <option disabled value="">Select Organization</option>
-      <option value="0">--- Show All ---</option>
-      <option v-for="org in memberships" v-bind:value="org">
-        {{ org.name }}
-     </option>
+      <option value="">--- Show All ---</option>
+      <template v-for="org in memberships">
+        <option v-bind:value="org"
+                :selected="selectedOrg.id==org.id"
+        >
+          {{ org.name }}
+       </option>
+     </template>
     </select>
-    <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" id="" name="team">Team
+    <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" name="team">Team
       <option disabled value="">Select Team</option>
       <option value="0">--- Show All ---</option>
-      <option v-for="team in selectedOrg.teams" v-bind:value="team">
+      <option v-for="team in selectedOrg.teams"
+              v-bind:value="team"
+      >
         {{ team.name }}
      </option>
     </select>
@@ -27,12 +33,12 @@ export default {
       type: Number,
       required: true
     },
-    selectedOrg0: {
-      type: Number,
+    organization: {
+      type: Object,
       required: false
     },
-    selectedTeam0: {
-      type: Number,
+    team: {
+      type: Object,
       required: false
     },
     filterByTeam: {
@@ -49,28 +55,33 @@ export default {
     }
   },
   mounted: function () {
+  //  this.$nextTick(function () {
+      if (this.organization != undefined && this.organization != null) {
+        // console.log(this.organization)
+        this.selectedOrg = this.organization;
+        if (this.team != undefined && this.team != null) {
+          this.selectedTeam = this.team
+        }
+      }
+    // });
     axios('/api/member/'+this.userid+'/membership')
     .then(response => {
       // console.log(response.data)
       this.memberships = response.data;
-      this.$nextTick(function () {
-        if (this.selectedOrg0 != undefined) {
-          this.selectedOrg = this.selectedOrg0;
-          if (this.selectedTeam0 != undefined) {
-            this.selectedTeam = this.selectedTeam0
-          }
-        }
-      });
     })
     .catch(e => {
       console.log(e);
     });
   },
-  // computed: {
-  //
-  // },
+  computed: {
+    // computedOrg: function() {
+    //   return this.organization;
+    // }
+  },
   watch: {
-
+    // organization(newVal, oldVal) {
+    //   this.selectedOrg = newVal;
+    // }
   },
   methods: {
     tellParent (event) {

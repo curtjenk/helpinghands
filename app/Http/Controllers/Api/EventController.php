@@ -155,23 +155,23 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $this->authorize('create-event');
-        $user = Auth::user();
-
-        $orgs = App\Organization::select('organizations.*')
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organizations.id', $user->organization_id);
-            // })
-            ->get();
-
-        return view('event.create_edit',
-            ['orgs'=>$orgs,
-             'statuses'=>App\Status::all(),
-             'event_types'=>App\EventType::all(),
-         ]);
-    }
+    // public function create()
+    // {
+    //     $this->authorize('create-event');
+    //     $user = Auth::user();
+    //
+    //     $orgs = App\Organization::select('organizations.*')
+    //         // ->when($user->is_orgLevel(), function($q) use($user) {
+    //         //     return $q->where('organizations.id', $user->organization_id);
+    //         // })
+    //         ->get();
+    //
+    //     return view('event.create_edit',
+    //         ['orgs'=>$orgs,
+    //          'statuses'=>App\Status::all(),
+    //          'event_types'=>App\EventType::all(),
+    //      ]);
+    // }
 
     public function members(Request $request, $id)
     {
@@ -247,6 +247,8 @@ class EventController extends Controller
             'description_text'=>$request->input('event.description_text'),
             'date_start'=>$request->input('event.date_start'),
             'date_end'=>$request->input('event.date_end'),
+            'time_start'=>$request->input('event.time_start'),
+            'time_end'=>$request->input('event.time_end'),
             'user_id'=>$user->id,
             'status_id'=>$request->input('event.status.id'),
             'event_type_id'=>$request->input('event.type.id'),
@@ -327,6 +329,8 @@ class EventController extends Controller
         $event->description_text = $request->input('event.description_text');
         $event->date_start = $request->input('event.date_start');
         $event->date_end = $request->input('event.date_end');
+        $event->time_start = $request->input('event.time_start');
+        $event->time_end = $request->input('event.time_end');
         $event->updated_user_id = $user->id;
         $event->organization_id = $request->organization_id;
         $event->team_id = $request->team_id;
