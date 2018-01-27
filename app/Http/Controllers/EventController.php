@@ -203,6 +203,9 @@ class EventController extends Controller
          $statuses = App\Status::select('id','name')
              ->get()->toArray();
 
+         $event->time_start = json_decode($event->time_start);
+         $event->time_end = json_decode($event->time_end);
+         
          return view('event.manage', [
              'event'=>json_encode($event),
              'organization'=>json_encode($organization),

@@ -234,9 +234,9 @@ class EventController extends Controller
             'event.date_start' => 'required',
             'event.date_end' => 'required',
             'organization_id' => 'required|exists:organizations,id',
-            'event.type.id' => 'required|exists:event_types,id',
-            'event.status.id' => 'required|exists:statuses,id',
-            // 'event.limit'=> 'string',
+            'event.event_type_id' => 'required|exists:event_types,id',
+            'event.status_id' => 'required|exists:statuses,id',
+            // 'event.signup_limit'=> 'string',
             // 'event.cost'=> 'string'
         ]);
 
@@ -247,14 +247,14 @@ class EventController extends Controller
             'description_text'=>$request->input('event.description_text'),
             'date_start'=>$request->input('event.date_start'),
             'date_end'=>$request->input('event.date_end'),
-            'time_start'=>$request->input('event.time_start'),
-            'time_end'=>$request->input('event.time_end'),
+            'time_start'=>json_encode($request->input('event.time_start')),
+            'time_end'=>json_encode($request->input('event.time_end')),
             'user_id'=>$user->id,
-            'status_id'=>$request->input('event.status.id'),
-            'event_type_id'=>$request->input('event.type.id'),
+            'status_id'=>$request->input('event.status_id'),
+            'event_type_id'=>$request->input('event.event_type_id'),
             'organization_id'=>$request->input('organization_id'),
             'team_id'=>$request->input('team_id'),
-            'signup_limit'=>$request->input('event.limit'),
+            'signup_limit'=>$request->input('event.signup_limit'),
             'cost'=>$request->input('event.cost'),
         ]);
 
@@ -267,15 +267,15 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('show', $event);
-        return view('event.show', [
-            'event'=>$event,
-        ]);
-    }
+    // public function show($id)
+    // {
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('show', $event);
+    //     return view('event.show', [
+    //         'event'=>$event,
+    //     ]);
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -318,9 +318,9 @@ class EventController extends Controller
             'event.date_start' => 'required',
             'event.date_end' => 'required',
             'organization_id' => 'required|exists:organizations,id',
-            'event.type.id' => 'required|exists:event_types,id',
-            'event.status.id' => 'required|exists:statuses,id',
-            // 'event.limit'=> 'string',
+            'event.event_type_id' => 'required|exists:event_types,id',
+            'event.status_id' => 'required|exists:statuses,id',
+            // 'event.signup_limit'=> 'string',
             // 'event.cost'=> 'string'
         ]);
 
@@ -329,14 +329,14 @@ class EventController extends Controller
         $event->description_text = $request->input('event.description_text');
         $event->date_start = $request->input('event.date_start');
         $event->date_end = $request->input('event.date_end');
-        $event->time_start = $request->input('event.time_start');
-        $event->time_end = $request->input('event.time_end');
+        $event->time_start = json_encode($request->input('event.time_start'));
+        $event->time_end = json_encode($request->input('event.time_end'));
         $event->updated_user_id = $user->id;
         $event->organization_id = $request->organization_id;
         $event->team_id = $request->team_id;
         $event->status_id = $request->input('event.status_id');
-        $event->event_type_id = $request->input('event.type_id');
-        $event->signup_limit = $request->input('event.limit', 0);
+        $event->event_type_id = $request->input('event.event_type_id');
+        $event->signup_limit = $request->input('event.signup_limit', 0);
         $event->cost = $request->input('event.cost', 0);
         $event->save();
 

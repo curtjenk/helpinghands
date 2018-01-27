@@ -12,6 +12,12 @@ export const commonMixins = {
     }
   },
   methods: {
+    isObjectEmpty: function(obj) {
+      if (obj === undefined || obj === null) {
+        return true;
+      }
+      return Object.keys(obj).length === 0 && obj.constructor === Object
+    },
     setMode: function(modeString) {
       this.currentMode = consts.MODES[modeString.toLowerCase()]
     },

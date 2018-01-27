@@ -1,31 +1,21 @@
 <template>
   <div class="">
-    <select v-model="selectedOrg" @change="tellParent" name="org">Organization
-      <option disabled value="">Select Organization</option>
-      <option value="">--- Show All ---</option>
-      <template v-for="org in memberships">
-        <option v-bind:value="org"
-                :selected="selectedOrg.id==org.id"
-        >
-          {{ org.name }}
-       </option>
-     </template>
+    <select v-model="selectedOrg" @change="tellParent" name="org">
+      <option disabled value="" class="lead text-primary">Select Organization...</option>
+      <option v-for="org in memberships" v-bind:value="org">{{ org.name }}</option>
     </select>
-    <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" name="team">Team
-      <option disabled value="">Select Team</option>
-      <option value="0">--- Show All ---</option>
-      <option v-for="team in selectedOrg.teams"
-              v-bind:value="team"
-      >
-        {{ team.name }}
-     </option>
+    <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" name="team">
+      <option disabled value="" class="lead text-primary">Select Team...</option>
+      <option v-for="team in selectedOrg.teams" v-bind:value="team">{{ team.name }}</option>
     </select>
   </div>
 </template>
 
 <script>
-
+import {commonMixins} from '../../mixins/common';
 export default {
+  name:'FilterMemberships',
+  mixins: [commonMixins],
   components: {
   },
   props: {
@@ -34,11 +24,11 @@ export default {
       required: true
     },
     organization: {
-      type: Object,
+      // type: Object,
       required: false
     },
     team: {
-      type: Object,
+      // type: Object,
       required: false
     },
     filterByTeam: {
@@ -55,37 +45,33 @@ export default {
     }
   },
   mounted: function () {
-  //  this.$nextTick(function () {
-      if (this.organization != undefined && this.organization != null) {
-        // console.log(this.organization)
-        this.selectedOrg = this.organization;
-        if (this.team != undefined && this.team != null) {
-          this.selectedTeam = this.team
-        }
-      }
-    // });
     axios('/api/member/'+this.userid+'/membership')
     .then(response => {
-      // console.log(response.data)
       this.memberships = response.data;
+      if (!this.isObjectEmpty(this.organization)) {
+        console.log('here')
+        // this.selectedOrg = this.organization;
+        this.selectedOrg = this.memberships.find( (m)=> {
+          return m.id == this.organization.id;
+        });
+        if (!this.isObjectEmpty(this.team)) {
+          this.selectedTeam = this.selectedOrg.teams.find( (t)=> {
+            return t.id == this.team.id;
+          })
+        }
+      }
     })
     .catch(e => {
       console.log(e);
     });
   },
   computed: {
-    // computedOrg: function() {
-    //   return this.organization;
-    // }
   },
   watch: {
-    // organization(newVal, oldVal) {
-    //   this.selectedOrg = newVal;
-    // }
   },
   methods: {
     tellParent (event) {
-      // console.log(event);
+      console.log(event.name);
       let orgid = this.selectedOrg.id ? this.selectedOrg.id : 0;
       let teamid = event.name == 'org' || orgid==0 ? 0 : this.selectedTeam.id;
       this.$emit('orgTeamSelected', orgid, teamid, this.selectedOrg, this.selectedTeam);

@@ -35,7 +35,7 @@
       color="#e67e22"
       title=""
       subtitle=""
-      finishButtonText="Save Event"
+      :finishButtonText="modeShow ? 'Next' : 'Save Event'"
     >
       <tab-content title="Details">
         <div class="mytab">
@@ -105,13 +105,13 @@
                 <div class="form-group">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
                   <div class="col-md-7">
-                      <p id="eventtype" class="form-control-static">{{ event.type.name }}</p>
+                      <p id="eventtype" class="form-control-static">{{ eventTypeName }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-7">
-                    <p id="status" class="form-control-static">{{ event.status.name }}</p>
+                    <p id="status" class="form-control-static">{{ statusName }}</p>
                   </div>
                 </div>
 
@@ -132,9 +132,9 @@
                 <div class="form-group">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
                   <div class="col-md-7">
-                    <select v-model="event.type" name="type">
+                    <select v-model="event.event_type_id" name="type">
                       <option disabled value="">Select one</option>
-                      <option v-for="etype in eventtypes0" v-bind:value="etype">
+                      <option v-for="etype in eventtypes0" v-bind:value="etype.id">
                         {{ etype.name }}
                       </option>
                     </select>
@@ -143,9 +143,9 @@
                 <div class="form-group">
                   <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-9">
-                    <select v-model="event.status" name="status">
+                    <select v-model="event.status_id" name="status">
                       <option disabled value="">Select one</option>
-                      <option v-for="stat in statuses0" v-bind:value="stat" >
+                      <option v-for="stat in statuses0" v-bind:value="stat.id" >
                         {{ stat.name }}
                      </option>
                     </select>
@@ -176,7 +176,7 @@
                 <div class="form-group">
                   <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-7">
-                    <p id="limit" class="form-control-static">{{ event.limit }}</p>
+                    <p id="limit" class="form-control-static">{{ event.signup_limit }}</p>
                   </div>
                 </div>
               </span>
@@ -220,8 +220,8 @@
                   <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-9">
                     <masked-input name="limit" type="text" size="3" width="3"
-                        v-model="event.limit"
-                        :mask="[/[0-9]/,/[0-9]/,/[0-9]/]">
+                        v-model="event.signup_limit"
+                        :mask="numberMaskLimit">
                     </masked-input>
                   </div>
                 </div>
@@ -366,12 +366,8 @@ export default {
   },
   data () {
     return {
-      numberMask: createNumberMask({
-       allowDecimal: true,
-       integerLimit: 4,
-       prefix: ' $',
-       suffix: ''
-      }),
+      numberMask: createNumberMask({allowDecimal: true, integerLimit: 4, prefix: ' $', suffix: ''}),
+      numberMaskLimit: createNumberMask({allowDecimal: false, integerLimit: 3, prefix: '', suffix: ''}),
       isAddingFile: false,
       new_file: {},
       new_file_type: '',
@@ -384,13 +380,15 @@ export default {
       },
       ready: false,
       errors: [],
-      orgid: '',
+      // orgid: '',
       organization: {},
-      teamid: '',
+      // teamid: '',
       team: {},
       selEventType: {},
       event: {
         id:'',
+        organization_id:'',
+        team_id:'',
         subject:'',
         description: '',
         description_text: '',
@@ -399,9 +397,9 @@ export default {
         time_start: {hh: "08", mm: "00", a: "am"},
         time_end: {hh: "08", mm: "00", a: "am"},
         cost:'',
-        type:'',
+        event_type_id:'',
         limit:'',
-        status:''
+        status_id:''
       },
       attachments: [
         {id:'',
@@ -414,9 +412,9 @@ export default {
   },
   mounted: function () {
     this.setMode(this.mode0);
-    if (this.modeShow) {
+    if (this.modeShow || this.modeEdit) {
       //map event0 to event
-      if (this.event0 != undefined && this.event0 != null)
+      if (!this.isObjectEmpty(this.event0))
       {
         this.event.id = this.event0.id
         this.event.subject = this.event0.subject
@@ -430,17 +428,23 @@ export default {
         if (this.event0.time_end != null) {
           this.event.time_end = this.event0.time_end
         }
+        this.event.event_type_id = this.event0.event_type_id
+        this.event.status_id = this.event0.status_id
         this.event.cost = this.event0.cost
-        this.event.limit = this.event0.signup_limit
+        this.event.signup_limit = this.event0.signup_limit
+        this.event.organization_id = this.event0.organization_id
+        this.event.team_id = this.event0.team_id
       }
-      if (this.organization0 != undefined && this.organization0 != null)
+      if (!this.isObjectEmpty(this.organization0))
       {
         this.organization = this.organization0
-        if (this.team0 != undefined && this.team0 != null)
+        if (!this.isObjectEmpty(this.team0))
         {
           this.team = this.team0
         }
       }
+      //TODO Retrieve the attachments!!!!
+      //TODO
     } else {
       this.attachments = [];
     }
@@ -455,7 +459,28 @@ export default {
   computed: {
     editor() {
        return this.$refs.myQuillEditor.quill
+    },
+    eventTypeName() {
+      let r = this.eventtypes0.find( x=> {
+          return x.id === this.event.event_type_id
+      })
+      if (r){
+        return r.name;
+      } else {
+        return '';
+      }
+    },
+    statusName() {
+      let r = this.statuses0.find( x=> {
+          return x.id === this.event.status_id
+      })
+      if (r){
+        return r.name;
+      } else {
+        return '';
+      }
     }
+
   },
   watch: {
   },
@@ -526,6 +551,7 @@ export default {
       this.event.time_end = this.event.time_start
     },
     wizardOnComplete: function() {
+      if (this.modeShow) {return}
       this.errors = [];
       let message = '<i>Confirm saving this event</i>';
       this.$dialog.confirm(message, {})
@@ -549,11 +575,11 @@ export default {
       }
       let data = {
         auth_user_id: this.user0.id,
-        organization_id: this.orgid,
+        organization_id: this.event.organization_id,
         event: this.event
       }
-      if (this.teamid != undefined) {
-        data.team_id = this.teamid;
+      if (this.event.team_id != undefined && this.event.team_id != null) {
+        data.team_id = this.event.team_id;
       }
       axios({
         method: method, url: url, data: data
@@ -562,11 +588,13 @@ export default {
         // console.log(response.data)
         this.event.id = response.data.id;
         let promises = this.attachments.map( (a,ndx) => {
-          if (a.id == 0) {  //newly added file
+          console.log('attachment id=', a.id)
+          if (a.id === 0) {  //newly added file
             return this.uploadFile(a, ndx);
           }
         });
-        if (promises.length==0) {
+        console.log('promises', promises);
+        if (promises === undefined || promises.length===0) {
           this.setModeShow()
           this.$refs.form_wizard.changeTab(2,0)
         } else {
@@ -616,9 +644,9 @@ export default {
     uploadFile: function (attachment, index) {
       let formData = new FormData();
       formData.append('auth_user_id', this.user0.id)
-      formData.append('organization_id', this.orgid)
-      if (this.teamid != undefined) { //optional field
-        formData.append('team_id', this.teamid)
+      formData.append('organization_id', this.event.organization_id)
+      if (this.event.team_id != undefined && this.event.team_id != null) { //optional field
+        formData.append('team_id', this.event.team_id)
       }
       formData.append('event_id', this.event.id);
       formData.append('attachment', attachment.file, attachment.name);
@@ -629,40 +657,14 @@ export default {
           url: '/api/document',
           data: formData
       })
-      // .then(  (response) => {
-      //   attachment.id = response.data;
-      //   attachment.file = {}
-      // }).catch((error) => {
-      //   this.setStatusFailed();
-      //   if (error.response) {
-      //     if (error.response.status == 422) {
-      //       let messages = error.response.data.errors;
-      //       let self = this;
-      //       $.each(messages, function(k,v){
-      //         for(let i=0;i<v.length;i++){
-      //           self.errors.push(v[i]);
-      //         }
-      //       });
-      //     } else {
-      //       this.errors.push(error.response.data)
-      //       console.log(error.response)
-      //     }
-      //   } else if (error.request) {
-      //     // The request was made but no response was received
-      //     console.log(error.request);
-      //   } else {
-      //     // Something happened in setting up the request that triggered an Error
-      //     console.log('Error', error.message);
-      //   }
-      //   var self = this;
-      //   setTimeout(function(){
-      //       self.setStatusInitial();
-      //   }, MESSAGE_DURATION + 1000);
-      // });
     },
     setOrgTeam: function(orgid, teamid, organization, team) {
-      this.orgid = orgid
-      this.teamid = teamid
+      // console.log('setOrgTeam orgid', orgid)
+      // console.log('setOrgTeam teamid', teamid)
+      // console.log('setOrgTeam organization', organization)
+      // console.log('setOrgTeam team', team)
+      this.event.organization_id = orgid
+      this.event.team_id = teamid
       this.organization = organization
       this.team = team
     }
