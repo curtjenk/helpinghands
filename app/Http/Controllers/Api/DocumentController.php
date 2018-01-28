@@ -206,13 +206,29 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function destroy($id)
-    // {
-    //     // $event = App\Event::findOrFail($id);
-    //     // $this->authorize('destroy', $event);
-    //     //
-    //     // $event->delete();
-    //     // return redirect('/event');
-    // }
+    public function destroy($id)
+    {
+        $doc = App\EventFile::findOrFail($id);
+        $organization = App\Organization::findOrFail($doc->organization_id);
+        $this->authorize('show', $organization);
+        $this->authorize('destroy', $organization);
+        $dir = 'event_files/'.$doc->organization_id;
+        if (isset($doc->team_id)) {
+            $dir .= '/'.$doc->team_id;
+        }
+        DB::transaction(function () use ($doc, $dir){
+            $doc->delete();
+            Storage::disk('public')->delete($doc->path);
+            //delete directory if empty
+            $diskfiles = Storage::disk('public')->files($dir);
+            // Log::debug(print_r($diskfiles, true));
+            if (count($diskfiles)==0) {
+                // Log::debug("delete directory");
+                Storage::disk('public')->deleteDirectory($dir);
+            }
+        });
+
+
+    }
 
 }

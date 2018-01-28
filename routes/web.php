@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
                 ['only'=>['store', 'update']]
             );
             Route::resource('document', 'DocumentController',
-                ['only'=>['show', 'store', 'delete']]
+                ['only'=>['show', 'store', 'destroy']]
             );
 
             Route::post('organization/admin','Organization\UserController@store_admin');

@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-offset-2 col-sm-offset-2 text-center">
         <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-            <p><strong>Sorry, unable to {{ mode0 }} event</strong></p>
+            <p><strong>error_message</strong></p>
             <div v-for="msg in errors">
                 {{ msg }}
             </div>
@@ -120,7 +120,10 @@
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <datepicker name="datestart" v-model="event.date_start" format="MMM dd yyyy"></datepicker>
+                      <datepicker name="datestart"
+                        v-model="event.date_start"
+                        :open-date="event.date_start"
+                        :selected="event.date_end" format="MMM dd yyyy"></datepicker>
                   </div>
                 </div>
                 <div class="form-group">
@@ -380,6 +383,7 @@ export default {
         // some quill options
       },
       ready: false,
+      error_message: '',
       errors: [],
       // orgid: '',
       organization: {},
@@ -413,6 +417,7 @@ export default {
   },
   mounted: function () {
     this.setMode(this.mode0);
+    this.attachments = [];
     if (this.modeShow || this.modeEdit) {
       if (this.attachments0 != null && this.attachments0.length > 0) {
         this.attachments = this.attachments0
@@ -446,10 +451,6 @@ export default {
           this.team = this.team0
         }
       }
-      //TODO Retrieve the attachments!!!!
-      //TODO
-    } else {
-      this.attachments = [];
     }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
@@ -541,11 +542,31 @@ export default {
       this.new_file = null;
     },
     removeFile: function(file) {
-      this.attachments =
-        this.attachments.filter(e=> {
-          return !(e.original_filename == file.original_filename && e.description == file.description)
-        });
         //TODO Delete from server
+      let message = '<i>Delete Attachment?</i>';
+      this.$dialog.confirm(message, {
+
+      }).then( (dialog)=> {
+        axios({
+          method: 'delete',
+          url: '/api/document/'+file.id
+        }).then(  (response) => {
+          dialog.close();
+          this.attachments = this.attachments.filter(e=> {
+              return !(e.original_filename == file.original_filename && e.description == file.description)
+            });
+        }).catch( (error) => {
+          this.error_message = "Error trying to delete attachment"
+          dialog.close();
+          console.log(error);
+          var self = this;
+          setTimeout(function(){
+              self.setStatusInitial();
+          }, MESSAGE_DURATION + 1000);
+        });
+      }).catch( ()=> {
+          //console.log('Clicked on cancel')
+      });
     },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)
