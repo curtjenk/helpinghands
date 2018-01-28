@@ -302,7 +302,7 @@
               <tbody>
                 <tr v-for="file in attachments">
                   <td>
-                    {{ file.name }}
+                    {{ file.original_filename }}
                   </td>
                   <td>
                     {{ file.description }}
@@ -361,6 +361,7 @@ export default {
     eventtypes0: {type: Array, required: true},
     statuses0: {type: Array, required: true},
     event0: {type: Object, required: false},
+    attachments0: {type: Array, required: false},
     organization0: {type: Object, required: false},
     team0: {type: Object, required: false}
   },
@@ -405,7 +406,7 @@ export default {
         {id:'',
          file: {},
          type: '',
-         name: '',
+         original_filename: '',
          description: ''}
       ]
     }
@@ -413,7 +414,9 @@ export default {
   mounted: function () {
     this.setMode(this.mode0);
     if (this.modeShow || this.modeEdit) {
-      //map event0 to event
+      if (this.attachments0 != null && this.attachments0.length > 0) {
+        this.attachments = this.attachments0
+      }
       if (!this.isObjectEmpty(this.event0))
       {
         this.event.id = this.event0.id
@@ -529,7 +532,7 @@ export default {
         id:0,
         file:this.new_file,
         type:this.new_file_type,
-        name:this.new_file_name,
+        original_filename:this.new_file_name,
         description:this.new_file_description});
       //Reset input type="file".
       const input = this.$refs.fileInput
@@ -540,8 +543,9 @@ export default {
     removeFile: function(file) {
       this.attachments =
         this.attachments.filter(e=> {
-          return !(e.name == file.name && e.description == file.description)
+          return !(e.original_filename == file.original_filename && e.description == file.description)
         });
+        //TODO Delete from server
     },
     setInitialEndTime: function(timePicker) {
       // console.log(timePicker)
@@ -585,14 +589,14 @@ export default {
         method: method, url: url, data: data
       })
       .then(  (response) => {
-        // console.log(response.data)
         this.event.id = response.data.id;
-        let promises = this.attachments.map( (a,ndx) => {
-          console.log('attachment id=', a.id)
+        let promises = [];
+        for (let x=0; x<this.attachments.length; x++) {
+          let a = this.attachments[x];
           if (a.id === 0) {  //newly added file
-            return this.uploadFile(a, ndx);
+            promises.push(this.uploadFile(a, x));
           }
-        });
+        };
         console.log('promises', promises);
         if (promises === undefined || promises.length===0) {
           this.setModeShow()
@@ -600,14 +604,13 @@ export default {
         } else {
           axios.all(promises)
           .then( (response) => {
-            // console.log('all good', response)
+            console.log('all good', response)
             response.forEach( r => {
               let id = r.data.id;
               let ndx = parseInt(r.data.echo);
               this.attachments[ndx].id = id;
               this.attachments[ndx].file = {}
             });
-
             this.setModeShow()
             this.$refs.form_wizard.changeTab(2,0)
 
@@ -616,7 +619,8 @@ export default {
           });
         }
 
-      }).catch((error) => {
+      }).catch( (error) => {
+        console.log(error);
         this.event.id = 0;  //also indicates an error occurred
         this.setStatusFailed();
         if (error.response.status == 422) {
@@ -649,7 +653,7 @@ export default {
         formData.append('team_id', this.event.team_id)
       }
       formData.append('event_id', this.event.id);
-      formData.append('attachment', attachment.file, attachment.name);
+      formData.append('attachment', attachment.file, attachment.original_filename);
       formData.append('description', attachment.description);
       formData.append('echo',index);
       return axios({

@@ -170,6 +170,7 @@ class EventController extends Controller
             'team'=>json_encode(null),
             'statuses'=>json_encode($statuses),
             'event_types'=>json_encode($event_types),
+            'attachments'=>json_encode(null),
             'mode'=>'Create'
          ]);
     }
@@ -205,13 +206,23 @@ class EventController extends Controller
 
          $event->time_start = json_decode($event->time_start);
          $event->time_end = json_decode($event->time_end);
-         
+
+         $attachments = App\EventFile::select('id', 'original_filename', 'description')
+            ->where('event_id',$event->id)
+            ->when(isset($event->organization_id), function($q) use($event) {
+                $q->where('organization_id',$event->organization_id)
+                ->when(isset($event->team_id), function($t) use($event){
+                    $t->where('team_id',$event->team_id);
+                });
+            })->get();
+
          return view('event.manage', [
              'event'=>json_encode($event),
              'organization'=>json_encode($organization),
              'team'=>json_encode($team),
              'statuses'=>json_encode($statuses),
              'event_types'=>json_encode($event_types),
+             'attachments'=>json_encode($attachments),
              'mode'=>'Show'
           ]);
     }

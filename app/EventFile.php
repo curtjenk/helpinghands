@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EventFiles extends Model
+class EventFile extends Model
 {
     protected $fillable = ['event_id', 'organization_id', 'team_id',
         'original_filename', 'mimetype', 'path', 'size', 'description'];

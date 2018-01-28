@@ -48,7 +48,7 @@ class DocumentController extends Controller
     //     $user = Auth::user();
     //     $event = App\Event::findOrFail($event_id);
     //     $this->authorize('show', $event);
-    //     $file = App\EventFiles::where('id', $file_id)
+    //     $file = App\EventFile::where('id', $file_id)
     //         ->where('event_id', $event->id)
     //         ->first();
     //     if(!isset($file)){
@@ -91,7 +91,7 @@ class DocumentController extends Controller
         $upload = $request->attachment;
         $path = $upload->store($dir, 'public');
         // Log::debug(Storage::disk('public')->url($path));
-        $newDoc = App\EventFiles::create([
+        $newDoc = App\EventFile::create([
             'event_id'=>$request->event_id,
             'organization_id'=>$request->organization_id,
             'team_id'=>$request->team_id,
@@ -114,7 +114,7 @@ class DocumentController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $doc = App\EventFiles::findOrFail($id);
+        $doc = App\EventFile::findOrFail($id);
         $organization = App\Organization::findOrFail($doc->organization_id);
         $this->authorize('show', $organization);
         $pathToFile =  Storage::disk('public')
@@ -173,7 +173,7 @@ class DocumentController extends Controller
     //         foreach($uploads as $upload) {
     //             $original = $upload->getClientOriginalName();
     //             $filename = $upload->store($dir, 'public');
-    //             App\EventFiles::create(['event_id'=>$event->id,
+    //             App\EventFile::create(['event_id'=>$event->id,
     //                 'filename'=>$filename,
     //                 'original_filename'=>$original]);
     //         }

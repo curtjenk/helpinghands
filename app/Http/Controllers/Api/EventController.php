@@ -340,7 +340,7 @@ class EventController extends Controller
         $event->cost = $request->input('event.cost', 0);
         $event->save();
 
-        return;
+        return response(['id'=>$event->id]);
     }
 
     /**
