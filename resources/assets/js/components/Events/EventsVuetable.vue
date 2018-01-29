@@ -119,17 +119,6 @@ export default {
         descriptionhtml: ''
       },
       fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
         {
           name: 'subject',
           sortField: 'subject',
@@ -190,7 +179,7 @@ export default {
           sortField: 'date_start',
           titleClass: 'text-center',
           dataClass: 'text-center',
-          callback: 'formatDate|MM-DD-YYYY'
+          callback: 'formatDate|YYYY-MM-DD'
         },
         {
           name: 'date_end',
@@ -198,7 +187,7 @@ export default {
           sortField: 'date_end',
           titleClass: 'text-center',
           dataClass: 'text-center',
-          callback: 'formatDate|MM-DD-YYYY'
+          callback: 'formatDate|YYYY-MM-DD'
         },
         {
           name: '__slot:actions2',   // <----
@@ -311,11 +300,6 @@ export default {
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
     },
-    // formatDate (value, fmt = 'D MMM YYYY') {
-    //   return (value == null)
-    //     ? ''
-    //     : moment(value, 'YYYY-MM-DD').format(fmt)
-    // },
     formatMoney (value) {
         return value;
         // return '$'+value;

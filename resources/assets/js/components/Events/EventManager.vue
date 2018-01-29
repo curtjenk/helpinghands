@@ -46,7 +46,7 @@
                   <div class="form-group">
                     <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
                     <div class="col-md-9">
-                        <p id="orgteam" type="text" class="form-control-static">{{ organization.name }} {{ team.name }}</p>
+                        <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
                     </div>
                   </div>
                 </span>
@@ -62,11 +62,7 @@
                   </div>
                 </span>
               </div>
-              <div class="col-md-7 col-sm-7">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-5 col-sm-5">
+              <div class="col-md-6 col-sm-6">
                 <span v-if="modeShow">
                   <div class="form-group">
                     <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
@@ -84,8 +80,6 @@
                   </div>
                 </span>
               </div>
-              <div class="col-md-7 col-sm-7">
-              </div>
             </div>
             <div class="row">
             <div class="col-md-5 col-sm-5">
@@ -93,13 +87,13 @@
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'MMM DD YYYY') }}</p>
+                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'MMM DD YYYY')}}</p>
+                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'YYYY-MM-DD')}}</p>
                   </div>
                 </div>
                 <div class="form-group">
@@ -118,18 +112,19 @@
               </span>
               <span v-else>
                 <div class="form-group">
-                  <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
+                  <label for="pdatestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <datepicker name="datestart"
-                        v-model="event.date_start"
-                        :open-date="event.date_start"
-                        :selected="event.date_end" format="MMM dd yyyy"></datepicker>
+                      <datepicker name="pdatestart"
+                        :value="formatDate(event.date_start)"
+                        @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd"></datepicker>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
+                  <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
-                      <datepicker name="dateend" v-model="event.date_end" format="MMM dd yyyy"></datepicker>
+                      <datepicker name="pdateend"
+                      :value="formatDate(event.date_end)"
+                      @selected=" d => {event.date_end = d;} "format="yyyy-MM-dd"></datepicker>
                   </div>
                 </div>
                 <div class="form-group">
@@ -355,7 +350,6 @@ import { quillEditor } from 'vue-quill-editor'
 export default {
   mixins: [commonMixins],
   components: {
-    // FormError,
     FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor, MaskedInput
   },
   props: {
@@ -489,6 +483,13 @@ export default {
   watch: {
   },
   methods: {
+    formatOrgTeam() {
+      let r = this.organization.name
+      if (this.team.name) {
+          r += ' / ' + this.team.name
+      }
+      return r
+    },
     formatTimePicker(timePickerString) {
       return timePickerString.hh + ':' + timePickerString.mm + ' ' + timePickerString.a
     },
@@ -618,7 +619,7 @@ export default {
             promises.push(this.uploadFile(a, x));
           }
         };
-        console.log('promises', promises);
+        // console.log('promises', promises);
         if (promises === undefined || promises.length===0) {
           this.setModeShow()
           this.$refs.form_wizard.changeTab(2,0)
