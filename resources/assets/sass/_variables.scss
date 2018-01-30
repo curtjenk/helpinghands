@@ -1,6 +1,7 @@
 
 // Body
-$body-bg: #f5f8fa;
+// $body-bg: #f5f8fa;
+$body-bg: #D6E9FE;
 
 // Borders
 $laravel-border-color: darken($body-bg, 10%);
@@ -25,7 +26,7 @@ $line-height-base: 1.6;
 $text-color: #222b2f;
 
 // Navbar
-$navbar-default-bg: #fff;
+// $navbar-default-bg: #fff;
 
 // Buttons
 $btn-default-color: $text-color;
@@ -36,6 +37,8 @@ $input-border-focus: lighten($brand-primary, 25%);
 $input-color-placeholder: lighten($text-color, 30%);
 
 $blue: #3D8AE9;
+$blue-2:  #eaeef4;
+$blue-1: #5995DA;
 $silver: #bdc3c7;
 $input: #802424;
 

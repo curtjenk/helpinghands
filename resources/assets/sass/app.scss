@@ -6,6 +6,7 @@
 
 // Variables
 @import "variables";
+
 @import "layout";
 
 // Bootstrap and others
@@ -13,13 +14,15 @@
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
 @import 'node_modules/jquery-ui-bundle/jquery-ui.min';
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
+//override Bootstrap nav
+@import "bootstrap3Nav";
 
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 @import '~quill/dist/quill.bubble.css';
 
 html, body {
-    background-color: #fff;
+    background-color: $blue-2;
     color: #636b6f;
     // font-family: 'Raleway', sans-serif;
     font-family: $font-family-sans-serif;

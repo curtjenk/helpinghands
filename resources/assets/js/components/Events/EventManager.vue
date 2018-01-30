@@ -32,7 +32,7 @@
     </div>
     <form-wizard class="row" ref="form_wizard"
       @on-complete="wizardOnComplete"
-      color="#e67e22"
+      color="#a43535"
       title=""
       subtitle=""
       :finishButtonText="modeShow ? 'Next' : 'Save Event'"
