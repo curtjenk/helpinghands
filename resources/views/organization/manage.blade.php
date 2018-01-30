@@ -16,7 +16,7 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid">
+    <div class="container">
         <organization-manager
             mode0="{{ $mode }}"
             :user0="{{ Auth::user() }}"

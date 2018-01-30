@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="row">
-      <span v-show="modeShow" v-tooltip.top="'Edit Event'" class="pull-right">
+      <span v-show="modeShow && canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
         <a  href="#" type="button" class="text-success"
           @click="setModeEdit()">
           <i class="fa fa-pencil-square-o fa-3x fa-fw text-success"></i>
@@ -353,6 +353,7 @@ export default {
     FormWizard, TabContent, Datepicker, VueTimepicker, quillEditor, MaskedInput
   },
   props: {
+    authorizations: {type: Object, required: true},
     mode0: {type: String, required: true},
     user0: {type: Object, required: true},
     eventtypes0: {type: Array, required: true},
@@ -455,6 +456,15 @@ export default {
     // console.log('dom updated')
   },
   computed: {
+    canCreateEvent() {
+      return this.authorizations.can_create_event;
+    },
+    canShowEvent() {
+      return this.authorizations.can_show_event;
+    },
+    canEditEvent() {
+      return this.authorizations.can_update_event;
+    },
     editor() {
        return this.$refs.myQuillEditor.quill
     },

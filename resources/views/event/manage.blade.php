@@ -18,8 +18,9 @@
         //    $org = App\Organization::find(Request::session()->get('orgid'));
         // }
     @endphp
-    <div class="container-fluid">
+    <div class="container">
         <event-manager
+        :authorizations="{{ $authorizations }}"
         mode0="{{ $mode }}"
         :event0="{{ $event }}"
         :attachments0="{{ $attachments }}"

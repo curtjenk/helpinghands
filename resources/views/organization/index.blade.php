@@ -12,7 +12,7 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid">
+    <div class="container">
         <organizationslist
           :is-admin="{{  1 }}"
           :userid="{{ Auth::user()->id }}"

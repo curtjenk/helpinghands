@@ -164,6 +164,10 @@ class EventController extends Controller
         $statuses = App\Status::select('id','name')
             ->get()->toArray();
 
+        $authorizations = ["can_update_event"=>true,
+                          "can_show_event"=>true,
+                          "can_create_event"=>true];
+
         return view('event.manage', [
             'event'=>json_encode(null),
             'organization'=>json_encode(null),
@@ -171,6 +175,7 @@ class EventController extends Controller
             'statuses'=>json_encode($statuses),
             'event_types'=>json_encode($event_types),
             'attachments'=>json_encode(null),
+            'authorizations'=>json_encode($authorizations),
             'mode'=>'Create'
          ]);
     }
@@ -187,16 +192,18 @@ class EventController extends Controller
         $organization = $event->organization->first();
         if (isset($vent->team_id)) {
             $team = $event->team->first();
+            $canUpdateEvent = $user->has_team_permission($team->id, 'Update event');
+            $canCreateEvent = $user->has_team_permission($team->id, 'Create event');
         } else {
             $team = null;
+            $canUpdateEvent = $user->has_org_permission($organization->id, 'Update event');
+            $canCreateEvent = $user->has_org_permission($organization->id, 'Create event');
         }
         $this->authorize('show', $event);
-        // return view('event.manage', [
-        //     'event'=>json_encode($event),
-        //     'statuses'=>json_encode(null),
-        //     'event_types'=>json_encode(null),
-        //     'mode'=>'Show'
-        //  ]);
+
+        $authorizations = ["can_update_event"=>$canUpdateEvent,
+                          "can_show_event"=>true,
+                          "can_create_event"=>$canCreateEvent];
 
          $event_types = App\EventType::select('id','name')
              ->get()->toArray();
@@ -223,6 +230,7 @@ class EventController extends Controller
              'statuses'=>json_encode($statuses),
              'event_types'=>json_encode($event_types),
              'attachments'=>json_encode($attachments),
+             'authorizations'=>json_encode($authorizations),
              'mode'=>'Show'
           ]);
     }

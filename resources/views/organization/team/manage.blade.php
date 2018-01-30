@@ -10,7 +10,7 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid">
+    <div class="container">
         <team-manager
             mode0="{{ $mode }}"
             :user0="{{ Auth::user() }}"

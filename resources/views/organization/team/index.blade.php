@@ -7,7 +7,7 @@
             <div class="pull-left header">Teams</div>
         </div>
     </section>
-    <div class="container-fluid">
+    <div class="container">
         <teamslist
           :is-admin="{{  1 }}"
           :userid="{{ Auth::user()->id }}"
