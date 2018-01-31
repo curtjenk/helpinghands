@@ -120,6 +120,24 @@ export default {
       },
       fields: [
         {
+          title: 'Organization',
+          name: 'organization_name',
+          sortField: 'organizations.name',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+          dataClass: 'text-primary',
+          callback: 'ellipsis|30'
+        },
+        {
+          title: 'Team',
+          name: 'team_name',
+          sortField: 'teams.name',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+          dataClass: 'text-primary',
+          callback: 'ellipsis|30'
+        },
+        {
           name: 'subject',
           sortField: 'subject',
           dataClass: 'text-center',
@@ -132,7 +150,7 @@ export default {
           name: 'description_text',
           titleClass: 'text-center',
           dataClass: 'text-primary',
-          callback: 'ellipsis|50'
+          callback: 'ellipsis|30'
         },
         {
           name: 'type',
@@ -151,14 +169,14 @@ export default {
           dataClass: 'text-center',
           callback: 'formatMoney'
         },
-        {
-          name: 'signup_limit',
-          title: 'Signup Limit',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          sortField: 'signup_limit',
-          callback: 'signupLimit'
-        },
+        // {
+        //   name: 'signup_limit',
+        //   title: 'Signup Limit',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   sortField: 'signup_limit',
+        //   callback: 'signupLimit'
+        // },
         {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
@@ -166,13 +184,13 @@ export default {
           dataClass: 'text-primary',
           titleClass: 'text-center '
         },
-        {
-          title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
-          name: 'no_responses',
-          sortField: 'no_responses',
-          dataClass: 'text-primary',
-          titleClass: 'text-center'
-        },
+        // {
+        //   title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
+        //   name: 'no_responses',
+        //   sortField: 'no_responses',
+        //   dataClass: 'text-primary',
+        //   titleClass: 'text-center'
+        // },
         {
           name: 'date_start',
           title: 'Begin',
@@ -341,7 +359,7 @@ export default {
     },
   },
   events: {
-    'filter-set' (filterText) {
+    'filter-set' (filterText, orgid, teamid) {
       this.moreParams = {
         filter: filterText,
         orgid: orgid,

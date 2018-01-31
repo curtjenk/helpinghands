@@ -117,14 +117,19 @@ class EventController extends Controller
 
         //TODO: return only the events the user can see
         //TODO: ie. where he/she is a member of the events organizations/teams
-        $query = App\Event::
-            select('events.*', 'statuses.name as status', 'event_types.name as type',
+        $query = $user->memberships()
+            ->select('events.*', 'organizations.id as organization_id',
+                'organizations.name as organization_name',
+                'teams.id as team_id', 'teams.name as team_name',
+                'statuses.name as status', 'event_types.name as type',
                 DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
                 DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
             )
+            ->join('events', 'events.organization_id', '=', 'organizations.id')
             ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
             ->join('statuses', 'statuses.id', '=', 'events.status_id')
             ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
+            ->leftjoin('teams', 'teams.id', '=', 'events.team_id')
             // ->where('organization_id', $organization_id)
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
@@ -132,10 +137,18 @@ class EventController extends Controller
                     ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
                 });
             })
+            ->when($inputs->orgid, function($org) use($inputs) {
+                $org->where('events.organization_id',$inputs->orgid)
+                    ->when($inputs->teamid, function($team) use($inputs) {
+                        $team->where('events.team_id', $inputs->teamid);
+                    });
+            })
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             })
             ->groupby('events.id')
+            ->groupby('organizations.id')
+            ->groupby('teams.id')
             ->groupby('statuses.id')
             ->groupby('event_types.id');
 

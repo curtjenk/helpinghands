@@ -92,7 +92,7 @@ class UserController extends Controller
     {
         $user = App\User::findOrFail($id);
         $this->authorize("show", $user);
-        return response()->json($user->memberships());
+        return response()->json($user->memberships()->get());
     }
     /**
      * Display a listing of the resource.

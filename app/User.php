@@ -38,14 +38,20 @@ class User extends Authenticatable
     {
         // Log::debug("SuperUser ".$this->superuser());
         if ($this->superuser()) {
-            return App\Organization::with(['teams'])->get();
+            return App\Organization::with(['teams']);
         } else {
-            return App\User::with(['organizations' => function($q) {
-                    $q->where('organizations.name','!=','Ministry Engage');
-                }, 'organizations.teams'])
-                ->where('id',$this->id)
-                ->first()
-                ->organizations;
+            return App\Organization::with(['teams'])
+                ->select('organizations.*')
+                ->where('organizations.name','!=','Ministry Engage')
+                ->join('organization_user', 'organization_user.organization_id', '=', 'organizations.id')
+                ->join('users', 'users.id', '=', 'organization_user.user_id')
+                ->where('users.id', $this->id);
+            // return App\User::with(['organizations' => function($q) {
+            //         $q->where('organizations.name','!=','Ministry Engage');
+            //     }, 'organizations.teams'])
+            //     ->where('id',$this->id)
+            //     ->first()
+            //     ->organizations;
         }
 
     }

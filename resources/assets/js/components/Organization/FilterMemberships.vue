@@ -2,10 +2,12 @@
   <div class="">
     <select v-model="selectedOrg" @change="tellParent" name="org">
       <option disabled value="" class="lead text-primary">Select Organization...</option>
+      <option value="0">--- All Organizations---</option>
       <option v-for="org in memberships" v-bind:value="org">{{ org.name }}</option>
     </select>
     <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" name="team">
       <option disabled value="" class="lead text-primary">Select Team...</option>
+      <option v-show="selectedOrg.teams" value="0">--- All Teams ---</option>
       <option v-for="team in selectedOrg.teams" v-bind:value="team">{{ team.name }}</option>
     </select>
   </div>
