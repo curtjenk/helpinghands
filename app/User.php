@@ -33,7 +33,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', 'pivot'
     ];
-
+    public function getCanAttribute($type, $id, $perm){
+        return true;
+    }
     public function memberships()
     {
         // Log::debug("SuperUser ".$this->superuser());

@@ -152,15 +152,31 @@ class EventController extends Controller
             ->groupby('statuses.id')
             ->groupby('event_types.id');
 
-        //check that it wasn't a vue-tables-2 request
-        // if ($request->input('paginate') == '0') {
-        //     // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
-        //     $query = $query->where('statuses.name', 'Open')
-        //         ->orderby('events.date_start', 'desc');
-        //     return response()->json($query->get());
-        // } else {
-            return $query->paginate($inputs->limit);
-        // }
+
+        //foreach();
+        //$authorizations = ["can_update_event"=>$canUpdateEvent,
+                          // "can_show_event"=>true,
+                          // "can_create_event"=>$canCreateEvent];
+        $query = $query->paginate($inputs->limit);
+        foreach ($query->items() as &$item)
+        {
+            if (isset($item->team_id)) {
+                Log::debug("team ".$item->team_id);
+                $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
+                $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
+                $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event');
+            } else {
+                $canUpdateEvent = $user->has_org_permission($item->organization_id, 'Update event');
+                $canShowEvent   = $user->has_org_permission($item->organization_id, 'Show event');
+                $canCreateEvent = $user->has_org_permission($item->organization_id, 'Create event');
+            }
+            $item->can_update_event = $canUpdateEvent;
+            $item->can_create_event = $canCreateEvent;
+            $item->can_show_event = $canShowEvent;
+        }
+
+        return $query;
+
     }
 
     /**

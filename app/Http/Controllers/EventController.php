@@ -190,7 +190,7 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
         $organization = $event->organization->first();
-        if (isset($vent->team_id)) {
+        if (isset($event->team_id)) {
             $team = $event->team->first();
             $canUpdateEvent = $user->has_team_permission($team->id, 'Update event');
             $canCreateEvent = $user->has_team_permission($team->id, 'Create event');

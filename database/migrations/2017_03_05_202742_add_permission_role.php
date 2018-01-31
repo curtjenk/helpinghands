@@ -80,12 +80,14 @@ class AddPermissionRole extends Migration
                             ])
                         ->pluck('id'));
 
+        //Lead applies only to teams
         $lead = App\Role::where('name','Lead')->first();
         $lead->permissions()
               ->sync(App\Permission::whereIn('name',
                             [
                             'Update team',
 
+                            'Show event',
                             'Create event',
                             'Delete event',
                             'Update event',
