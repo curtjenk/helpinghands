@@ -98,17 +98,17 @@
               </div>
           </div>
           <div class="form-group">
-            <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
-            <div class="col-md-2 col-sm-2">
+            <label for="state" class="col-md-3 col-sm-3 control-label">State</label>
+            <div class="col-md-3 col-sm-3">
               <input id="state" v-model="org_state" type="text"
-                    name="state" class="" maxlength="255">
+                    name="state" class="editInfo" maxlength="255">
             </div>
           </div>
           <div class="form-group" :class="{ 'has-error' : errors.zipcode } ">
-            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-            <div class="col-md-6 col-sm-6">
+            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip</label>
+            <div class="col-md-2 col-sm-2">
                 <input id="zip" v-model="org_zip" type="text"
-                    name="zip" class="" maxlength="10" size="10">
+                    name="zip" class="editInfo" maxlength="10" size="5">
               <form-error v-if="errors.zipcode" :errors="errors">
                   <div v-for="msg in errors.zipcode">
                       {{ msg }}

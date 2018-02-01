@@ -11,24 +11,42 @@
       </div>
     </div>
     <div class="row">
-      <span v-show="modeShow && canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="setModeEdit()">
-          <i class="fa fa-pencil-square-o fa-3x fa-fw text-success"></i>
-        </a>
-      </span>
-      <span v-show="!modeEdit" v-tooltip.top="'Return'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="goToLocation('/event')">
-          <i class="fa fa-hand-o-left fa-3x fa-fw text-danger"></i>
-        </a>
-      </span>
-      <span v-show="modeEdit" v-tooltip.top="'Cancel Edit'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="setModeShow()">
-          <i class="fa fa-eye fa-3x fa-fw text-success"></i>
-        </a>
-      </span>
+      <template v-if="modeShow">
+        <span v-tooltip.top="'List Events'" class="pull-right">
+          <a  href="#" type="button" class="text-info"
+            @click="goToLocation('/event')">
+            <i class="fa fa-list-ul fa-3x fa-fw text-info"></i>
+          </a>
+        </span>
+        <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
+          <a  href="#" type="button" class="text-warning"
+            @click="setModeEdit()">
+            <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
+          </a>
+        </span>
+        <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
+          <a  href="#" type="button" class="text-success"
+            @click="setModeCreate(); initialize();">
+            <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
+          </a>
+        </span>
+      </template>
+      <template v-if="modeEdit">
+        <span v-tooltip.top="'Cancel Edit'" class="pull-right">
+          <a  href="#" type="button" class="text-success"
+            @click="setModeShow()">
+            <i class="fa fa-eye fa-3x fa-fw text-success"></i>
+          </a>
+        </span>
+      </template>
+      <template v-if="modeCreate">
+        <span v-tooltip.top="'Cancel Create'" class="pull-right">
+          <a  href="#" type="button" class="text-success"
+            @click="goToLocation('/event')">
+            <i class="fa fa-list-ul fa-3x fa-fw text-danger"></i>
+          </a>
+        </span>
+      </template>
     </div>
     <form-wizard class="row" ref="form_wizard"
       @on-complete="wizardOnComplete"
@@ -446,6 +464,8 @@ export default {
           this.team = this.team0
         }
       }
+    } else {
+      this.initialize();
     }
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
@@ -493,6 +513,24 @@ export default {
   watch: {
   },
   methods: {
+    initialize() {
+      console.log('initialize')
+      this.attachments = []
+      this.event.id = 0
+      this.event.subject = ''
+      this.event.description = ''
+      this.event.description_text = ''
+      this.event.date_start = new Date();
+      this.event.date_end = new Date();
+      // this.event.time_start = this.event0.time_start
+      // this.event.time_end = this.event0.time_end
+      this.event.event_type_id = 1
+      this.event.status_id = 1
+      this.event.cost = ''
+      this.event.signup_limit = ''
+      // this.event.organization_id = this.event0.organization_id
+      // this.event.team_id = this.event0.team_id
+    },
     formatOrgTeam() {
       let r = this.organization.name
       if (this.team.name) {
@@ -629,8 +667,8 @@ export default {
             promises.push(this.uploadFile(a, x));
           }
         };
-        // console.log('promises', promises);
-        if (promises === undefined || promises.length===0) {
+        console.log('promises', promises);
+        if (promises === undefined || promises === null) {
           this.setModeShow()
           this.$refs.form_wizard.changeTab(2,0)
         } else {
