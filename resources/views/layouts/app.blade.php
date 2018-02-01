@@ -45,7 +45,7 @@
                     <ul class="nav navbar-nav">
                         <li style="height: 1px; margin-left:100px;">
                         </li>
-                    @if (Auth::user())
+                    @if (Auth::user() && !Auth::user()->visitor())
                         <li>
                             <a href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
                         </li>

@@ -409,6 +409,7 @@ export default {
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
+            window.location.reload();
         }, MESSAGE_DURATION);
       }).catch((error) => {
         // console.log(error)

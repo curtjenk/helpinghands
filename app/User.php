@@ -89,10 +89,13 @@ class User extends Authenticatable
             ->where('roles.name', 'Site')
             ->count() > 0;
     }
+
     public function visitor()
     {
         return DB::table('organization_user')
+            ->join('roles', 'roles.id', '=', 'organization_user.role_id')
             ->where('organization_user.user_id', $this->id)
+            ->where('roles.name','!=', 'Visitor')
             ->count() == 0;
     }
     /**
