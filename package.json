@@ -46,7 +46,7 @@
     "vue-template-compiler": "^2.5.13",
     "vue-text-mask": "^6.0.0",
     "vue2-timepicker": "^0.1.4",
-    "vuejs-datepicker": "^0.9.24",
+    "vuejs-datepicker": "^0.9.25",
     "vuejs-dialog": "^0.4.7",
     "vuetable-2": "^1.7.2"
   }

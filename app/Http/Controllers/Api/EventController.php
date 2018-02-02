@@ -155,8 +155,8 @@ class EventController extends Controller
 
         //foreach();
         //$authorizations = ["can_update_event"=>$canUpdateEvent,
-                          // "can_show_event"=>true,
-                          // "can_create_event"=>$canCreateEvent];
+        //                   "can_show_event"=>true,
+        //                   "can_create_event"=>$canCreateEvent];
         $query = $query->paginate($inputs->limit);
         foreach ($query->items() as &$item)
         {

@@ -189,7 +189,7 @@ class EventController extends Controller
     {
         $user = Auth::user();
         $event = App\Event::findOrFail($id);
-        $organization = $event->organization->first();
+        $organization = $event->organization;
         if (isset($event->team_id)) {
             $team = $event->team->first();
             $canUpdateEvent = $user->has_team_permission($team->id, 'Update event');
@@ -285,24 +285,24 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('update', $event);
-        // $orgs = App\Organization::select('organizations.*')
-        //     ->when($user->is_orgLevel(), function($q) use($user) {
-        //         return $q->where('organizations.id', $user->organization_id);
-        //     })
-            // ->get();
-        $orgs = [];
-        return view('event.create_edit', [
-            'event'=>$event,
-            'orgs'=>$orgs,
-            'statuses'=>App\Status::all(),
-            'event_types'=>App\EventType::all()
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('update', $event);
+    //     // $orgs = App\Organization::select('organizations.*')
+    //     //     ->when($user->is_orgLevel(), function($q) use($user) {
+    //     //         return $q->where('organizations.id', $user->organization_id);
+    //     //     })
+    //         // ->get();
+    //     $orgs = [];
+    //     return view('event.create_edit', [
+    //         'event'=>$event,
+    //         'orgs'=>$orgs,
+    //         'statuses'=>App\Status::all(),
+    //         'event_types'=>App\EventType::all()
+    //     ]);
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -311,73 +311,73 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        Log::debug(print_r($request->all(),true));
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('update', $event);
-        $this->validate($request, [
-            'subject' => 'required|max:255',
-            'description' => 'string',
-            'date_start' => 'date',
-            'date_end' => 'date',
-            // 'organization_id' => 'required|exists:organizations,id',
-            'event_type_id'=> 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric',
-            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        ]);
-
-        $event->subject = $request->input('subject');
-        $event->description = $request->input('description');
-        $event->date_start = $request->input('date_start');
-        $event->date_end = $request->input('date_end');
-        $event->updated_user_id = $user->id;
-        $event->organization_id = 1;
-        $event->status_id = $request->input('status_id');
-        $event->event_type_id = $request->input('event_type_id');
-        $event->signup_limit = $request->input('signup_limit');
-        $event->cost = $request->input('cost');
-        $event->save();
-
-        $dir = 'event_files/'.$event->id;
-
-        $uploads = $request->file('event_file');
-        if (isset($uploads)) {
-            //cleanup storage and db rows from previous
-            Storage::disk('public')->deleteDirectory($dir);
-            $event->files()->delete();
-            //now save the uploaded
-            foreach($uploads as $upload) {
-                $original = $upload->getClientOriginalName();
-                $filename = $upload->store($dir, 'public');
-                App\EventFiles::create(['event_id'=>$event->id,
-                    'filename'=>$filename,
-                    'original_filename'=>$original]);
-            }
-        }
-        $todelete = $request->input('delete_file');
-        if(is_array($todelete))
-        {
-            foreach($todelete as $id) {
-                $eventFile = App\EventFiles::findOrFail($id);
-                Storage::disk('public')->delete($eventFile->filename);
-                $eventFile->delete();
-            }
-            //delete directory if empty
-            $diskfiles = Storage::disk('public')->files($dir);
-            // Log::debug(print_r($diskfiles, true));
-            if (count($diskfiles)==0) {
-                // Log::debug("delete directory");
-                Storage::disk('public')->deleteDirectory($dir);
-            }
-        }
-        return redirect("event/$event->id");
-        // return view('event.show', [
-        //     'event'=>$event,
-        // ]);
-    }
+    // public function update(Request $request, $id)
+    // {
+    //     Log::debug(print_r($request->all(),true));
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('update', $event);
+    //     $this->validate($request, [
+    //         'subject' => 'required|max:255',
+    //         'description' => 'string',
+    //         'date_start' => 'date',
+    //         'date_end' => 'date',
+    //         // 'organization_id' => 'required|exists:organizations,id',
+    //         'event_type_id'=> 'required|exists:event_types,id',
+    //         'status_id' => 'required|exists:statuses,id',
+    //         'signup_limit'=> 'required|numeric',
+    //         'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+    //     ]);
+    //
+    //     $event->subject = $request->input('subject');
+    //     $event->description = $request->input('description');
+    //     $event->date_start = $request->input('date_start');
+    //     $event->date_end = $request->input('date_end');
+    //     $event->updated_user_id = $user->id;
+    //     $event->organization_id = 1;
+    //     $event->status_id = $request->input('status_id');
+    //     $event->event_type_id = $request->input('event_type_id');
+    //     $event->signup_limit = $request->input('signup_limit');
+    //     $event->cost = $request->input('cost');
+    //     $event->save();
+    //
+    //     $dir = 'event_files/'.$event->id;
+    //
+    //     $uploads = $request->file('event_file');
+    //     if (isset($uploads)) {
+    //         //cleanup storage and db rows from previous
+    //         Storage::disk('public')->deleteDirectory($dir);
+    //         $event->files()->delete();
+    //         //now save the uploaded
+    //         foreach($uploads as $upload) {
+    //             $original = $upload->getClientOriginalName();
+    //             $filename = $upload->store($dir, 'public');
+    //             App\EventFiles::create(['event_id'=>$event->id,
+    //                 'filename'=>$filename,
+    //                 'original_filename'=>$original]);
+    //         }
+    //     }
+    //     $todelete = $request->input('delete_file');
+    //     if(is_array($todelete))
+    //     {
+    //         foreach($todelete as $id) {
+    //             $eventFile = App\EventFiles::findOrFail($id);
+    //             Storage::disk('public')->delete($eventFile->filename);
+    //             $eventFile->delete();
+    //         }
+    //         //delete directory if empty
+    //         $diskfiles = Storage::disk('public')->files($dir);
+    //         // Log::debug(print_r($diskfiles, true));
+    //         if (count($diskfiles)==0) {
+    //             // Log::debug("delete directory");
+    //             Storage::disk('public')->deleteDirectory($dir);
+    //         }
+    //     }
+    //     return redirect("event/$event->id");
+    //     // return view('event.show', [
+    //     //     'event'=>$event,
+    //     // ]);
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -385,13 +385,13 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $event = App\Event::findOrFail($id);
-        $this->authorize('destroy', $event);
-
-        $event->delete();
-        return redirect('/event');
-    }
+    // public function destroy($id)
+    // {
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('destroy', $event);
+    //
+    //     $event->delete();
+    //     return redirect('/event');
+    // }
 
 }

@@ -20,13 +20,13 @@
         </span>
         <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
           <a  href="#" type="button" class="text-warning"
-            @click="setModeEdit()">
+            @click="setModeEdit(); editor.enable();">
             <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
           </a>
         </span>
         <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
           <a  href="#" type="button" class="text-success"
-            @click="setModeCreate(); initialize();">
+            @click="setModeCreate(); editor.enable(); initialize();">
             <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
           </a>
         </span>
@@ -34,7 +34,7 @@
       <template v-if="modeEdit">
         <span v-tooltip.top="'Cancel Edit'" class="pull-right">
           <a  href="#" type="button" class="text-success"
-            @click="setModeShow()">
+            @click="setModeShow(); editor.disable();">
             <i class="fa fa-eye fa-3x fa-fw text-success"></i>
           </a>
         </span>
@@ -258,6 +258,7 @@
                 @focus="onEditorFocus($event)"
                 @ready="onEditorReady($event)">
           </quill-editor>
+
         </div>
       </tab-content>
 
@@ -390,17 +391,17 @@ export default {
       new_file_type: '',
       new_file_name: '',
       new_file_description: '',
-      //use event.description instead of editorContent
-      editorContent: '',
       editorOption: {
-        // some quill options
+        placeholder: '',
+        readOnly: false
+        // modules: {
+        //   toolbar: ['bold', 'italic', 'underline', 'strike']
+        // }
       },
       ready: false,
       error_message: '',
       errors: [],
-      // orgid: '',
       organization: {},
-      // teamid: '',
       team: {},
       selEventType: {},
       event: {
@@ -431,6 +432,12 @@ export default {
   mounted: function () {
     this.setMode(this.mode0);
     this.attachments = [];
+    if (this.modeCreate) {
+      this.initialize();
+    }
+    if (this.modeShow) {
+      this.editor.disable();
+    }
     if (this.modeShow || this.modeEdit) {
       if (this.attachments0 != null && this.attachments0.length > 0) {
         this.attachments = this.attachments0
@@ -444,17 +451,17 @@ export default {
         this.event.date_start = this.event0.date_start
         this.event.date_end = this.event0.date_end
         if (this.event0.time_start != null) {
-          this.event.time_start = this.event0.time_start
+          this.event.time_start  = this.event0.time_start
         }
         if (this.event0.time_end != null) {
-          this.event.time_end = this.event0.time_end
+          this.event.time_end    = this.event0.time_end
         }
-        this.event.event_type_id = this.event0.event_type_id
-        this.event.status_id = this.event0.status_id
-        this.event.cost = this.event0.cost
-        this.event.signup_limit = this.event0.signup_limit
+        this.event.event_type_id   = this.event0.event_type_id
+        this.event.status_id       = this.event0.status_id
+        this.event.cost            = this.event0.cost
+        this.event.signup_limit    = this.event0.signup_limit
         this.event.organization_id = this.event0.organization_id
-        this.event.team_id = this.event0.team_id
+        this.event.team_id         = this.event0.team_id
       }
       if (!this.isObjectEmpty(this.organization0))
       {
@@ -464,12 +471,9 @@ export default {
           this.team = this.team0
         }
       }
-    } else {
-      this.initialize();
     }
-    this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
+    this.$nextTick(function () {
       this.ready = true;
-      // this.equalheight('.mytab'); //call mixin to set equalheight tabs
     })
   },
   updated: function() {
@@ -591,7 +595,6 @@ export default {
       this.new_file = null;
     },
     removeFile: function(file) {
-        //TODO Delete from server
       let message = '<i>Delete Attachment?</i>';
       this.$dialog.confirm(message, {
 
