@@ -5,152 +5,148 @@
 
 
 // Variables
-@import "variables";
-
+//
+@import "colors";
+// @import "bootstrap4Nav";
 @import "layout";
 
 // Bootstrap and others
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import 'node_modules/font-awesome/scss/font-awesome.scss';
-@import 'node_modules/jquery-ui-bundle/jquery-ui.min';
+// @import 'node_modules/jquery-ui-bundle/jquery-ui.min';
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
-//override Bootstrap nav
-@import "bootstrap3Nav";
+@import 'node_modules/font-awesome/scss/font-awesome.scss';
+@import "node_modules/bootstrap/scss/bootstrap";
+//override Bootstrap 3 nav
+// @import "bootstrap3Nav";
 
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 @import '~quill/dist/quill.bubble.css';
 
-html, body {
-    background-color: $blue-2;
-    color: #636b6f;
-    // font-family: 'Raleway', sans-serif;
-    font-family: $font-family-sans-serif;
-    font-weight: 100;
-    height: 100vh;
-    margin: 0;
-}
+// html, body {
+//     // background-color: $blue-2;
+//     color: #636b6f;
+//     // font-family: $font-family-sans-serif;
+//     font-weight: 100;
+//     height: 100vh;
+//     margin: 0;
+// }
+//
+// .full-height {
+//     height: 100vh;
+// }
+// // override bootstrap from-group
+// .form-group {
+//     margin-bottom: 5px !important;
+// }
+// .flex-center {
+//     align-items: center;
+//     display: flex;
+//     justify-content: center;
+// }
+// .boxcol {
+//     border: 1px solid;
+//     width: calc(100% - 84px);
+// }
+// .position-ref {
+//     position: relative;
+// }
+//
+// .top-right {
+//     position: absolute;
+//     right: 10px;
+//     top: 18px;
+// }
+//
+// .content {
+//     text-align: center;
+// }
+// .control-text-left {
+//     text-align: left;
+//     margin-bottom: 0;
+//     padding-top: 7px;
+// }
+// .control-text-right {
+//     text-align: right;
+//     margin-bottom: 0;
+//     padding-top: 7px;
+// }
+// .title {
+//     font-size: 84px;
+// }
 
-.full-height {
-    height: 100vh;
-}
-// override bootstrap from-group
-.form-group {
-    margin-bottom: 5px !important;
-}
-.flex-center {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
-.boxcol {
-    border: 1px solid;
-    width: calc(100% - 84px);
-}
-.position-ref {
-    position: relative;
-}
+//
+// .links > a {
+//     color: #636b6f;
+//     padding: 0 25px;
+//     font-size: 12px;
+//     font-weight: 600;
+//     letter-spacing: .1rem;
+//     text-decoration: none;
+//     text-transform: uppercase;
+// }
+//
+// .m-b-md {
+//     margin-bottom: 30px;
+// }
 
-.top-right {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-}
-
-.content {
-    text-align: center;
-}
-.control-text-left {
-    text-align: left;
-    margin-bottom: 0;
-    padding-top: 7px;
-}
-.control-text-right {
-    text-align: right;
-    margin-bottom: 0;
-    padding-top: 7px;
-}
-.title {
-    font-size: 84px;
-}
-.subtitle {
-    font-size: 50px;
-}
-
-.links > a {
-    color: #636b6f;
-    padding: 0 25px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-.m-b-md {
-    margin-bottom: 30px;
-}
-.m-b-sm {
-    margin-bottom: 20px;
-}
-//Tighten up bootstrap
-/* reduce column padding from 15 to 5px */
-[class^='col-'], [class*=' col-']{
-  padding: 0px 5px 0px 5px;
-}
-select {
-    border-width: 0px 0px 1px 0px;
-    background-color: inherit;
-}
-
-input[type=checkbox].red-cb:not(old) {
-  width     : 2em;
-  margin    : 0;
-  padding   : 0;
-  font-size : 1em;
-  opacity   : 0;
-}
-input[type=checkbox].red-cb:not(old) + label {
-  display      : inline-block;
-  margin-left  : -2em;
-  line-height  : 1.5em;
-}
-input[type=checkbox].red-cb:not(old) + label > span {
-  display          : inline-block;
-  width            : 0.875em;
-  height           : 0.875em;
-  margin           : 0.25em 0.5em 0.25em 0.25em;
-  border           : 0.0625em solid rgb(192,192,192);
-  border-radius    : 0.25em;
-  background       : rgb(224,224,224);
-  background-image :    -moz-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :     -ms-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :      -o-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image : -webkit-linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  background-image :         linear-gradient(rgb(240,240,240),rgb(224,224,224));
-  vertical-align   : bottom;
-}
-input[type=checkbox].red-cb:not(old):checked + label > span {
-  background-image :    -moz-linear-gradient(rgb(255,224,224),rgb(240,240,240));
-  background-image :     -ms-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image :      -o-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image : -webkit-linear-gradient(rgb(224,224,224),rgb(240,240,240));
-  background-image :         linear-gradient(rgb(224,224,224),rgb(240,240,240));
-}
-input[type=checkbox].red-cb:not(old):checked + label > span:before{
-  // content     : '✓';
-  // content     : '\2716'; //puts an 'x' in the check box!
-  content : '\2718';
-  display     : block;
-  width       : 1em;
-  color       : rgb(255,0,0);
-  font-size   : 0.875em;
-  line-height : 1em;
-  text-align  : center;
-  text-shadow : 0 0 0.0714em rgb(115,153,77);
-  font-weight : bold;
-}
-.vue-tooltip.tooltip-small {
-    font-size: 0.750em;
-    font-weight: bold;
-}
+// //Tighten up bootstrap
+// /* reduce column padding from 15 to 5px */
+// [class^='col-'], [class*=' col-']{
+//   padding: 0px 5px 0px 5px;
+// }
+// select {
+//     border-width: 0px 0px 1px 0px;
+//     background-color: inherit;
+// }
+//
+// input[type=checkbox].red-cb:not(old) {
+//   width     : 2em;
+//   margin    : 0;
+//   padding   : 0;
+//   font-size : 1em;
+//   opacity   : 0;
+// }
+// input[type=checkbox].red-cb:not(old) + label {
+//   display      : inline-block;
+//   margin-left  : -2em;
+//   line-height  : 1.5em;
+// }
+// input[type=checkbox].red-cb:not(old) + label > span {
+//   display          : inline-block;
+//   width            : 0.875em;
+//   height           : 0.875em;
+//   margin           : 0.25em 0.5em 0.25em 0.25em;
+//   border           : 0.0625em solid rgb(192,192,192);
+//   border-radius    : 0.25em;
+//   background       : rgb(224,224,224);
+//   background-image :    -moz-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+//   background-image :     -ms-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+//   background-image :      -o-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+//   background-image : -webkit-linear-gradient(rgb(240,240,240),rgb(224,224,224));
+//   background-image :         linear-gradient(rgb(240,240,240),rgb(224,224,224));
+//   vertical-align   : bottom;
+// }
+// input[type=checkbox].red-cb:not(old):checked + label > span {
+//   background-image :    -moz-linear-gradient(rgb(255,224,224),rgb(240,240,240));
+//   background-image :     -ms-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+//   background-image :      -o-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+//   background-image : -webkit-linear-gradient(rgb(224,224,224),rgb(240,240,240));
+//   background-image :         linear-gradient(rgb(224,224,224),rgb(240,240,240));
+// }
+// input[type=checkbox].red-cb:not(old):checked + label > span:before{
+//   // content     : '✓';
+//   // content     : '\2716'; //puts an 'x' in the check box!
+//   content : '\2718';
+//   display     : block;
+//   width       : 1em;
+//   color       : rgb(255,0,0);
+//   font-size   : 0.875em;
+//   line-height : 1em;
+//   text-align  : center;
+//   text-shadow : 0 0 0.0714em rgb(115,153,77);
+//   font-weight : bold;
+// }
+// .vue-tooltip.tooltip-small {
+//     font-size: 0.750em;
+//     font-weight: bold;
+// }

@@ -1,30 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content" style="margin-top: 70px">
-        {{-- <div class="text-center">
-            <div class="col-offset-4"></div>
-            <div class="boxcol col-md-4">Connect</div>
-            <div class="boxcol col-md-4">Grow</div>
-
-            <div class="col-offset-4"></div>
-            <div class="boxcol col-md-4 ">Serve</div>
-            <div class="boxcol col-md-4">Go</div>
-        </div> --}}
+    <div class="container" style="margin-top: 70px">
         <br><br />
         <div class="row">
-            <div class="subtitle m-b-sm">
+            <div class="subtitle mx-auto">
                 Helping Your Ministry Engage
             </div>
-            <div class="links">
+        </div>
+        <div class="row">
+            <div class="mx-auto">
                 <a href="http://cornerstonesbc.net">
-                <h5>
-                    Supported by <u>Cornerstone Baptist Church</u>
-                </h5>
+                    <h5>
+                        Supported by <u>Cornerstone Baptist Church</u>
+                    </h5>
+                </a>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="mx-auto">
                 <h6>
                     Lithia Springs, GA
                 </h6>
-                </a>
             </div>
         </div>
     </div>

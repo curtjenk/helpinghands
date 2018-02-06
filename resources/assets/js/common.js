@@ -27,7 +27,7 @@ common.session_check = function() {
       $('#errorModal div.modal-body').html(
           'Your session expired and it will close in 3 seconds.');
       setTimeout(function() {
-        window.location.replace('/login');
+        window.location.replace('/');
       }, 3000);
     } else if (status == 403) {
       $('#errorModal div.modal-body').html(

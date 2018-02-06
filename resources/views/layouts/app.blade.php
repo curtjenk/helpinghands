@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=no">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -22,16 +22,14 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-expand-md fixed-top bg-dark">
             <div class="container">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="collapse" data-target="#app-navbar-collapse">
+                    <button type="button" class="navbar-toggler collapsed float-left" data-toggle="collapse" data-target="#app-navbar-collapse">
                         <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <!-- Branding Image -->
@@ -42,52 +40,45 @@
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        <li style="height: 1px; margin-left:100px;">
-                        </li>
+                    <ul class="navbar-nav mr-auto">
+                        {{-- <li style="height: 1px; margin-left:100px;">
+                        </li> --}}
                     @if (Auth::user() && !Auth::user()->visitor())
-                        <li>
+                        <li class="nav-item">
                             <a href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             <a href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
                         </li>
-                        <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a></li>
-                        <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
-                        {{-- <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Events <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  List Events</a></li>
-                                <li><a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a></li>
-                            @can ('create-event')
-                                <li><a href="{{ url('/event/create') }}"><i class="fa fa-cog fa-plus"></i>  Create Event</a></li>
-                            @endcan
-                            </ul>
-                        </li> --}}
-                    {{-- @endcan --}}
-                        @endif
+                        <li class="nav-item">
+                            <a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a>
+                        </li>
+                    @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
                             {{-- <li><a href="{{ route('register') }}">Register</a></li> --}}
                         @else
-                            <li class="dropdown">
+                            <li class="dropdown nav-item">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ url('/member/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ url('/member/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
                                     @can ('administer')
-                                    <li><a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
                                     @endcan
-                                    <li>
+                                    <li class="dropdown-item">
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
