@@ -43,7 +43,7 @@ Vue.component('eventslist', require('./components/Events/EventsVuetable.vue'));
 Vue.component('event-manager', require('./components/Events/EventManager.vue'));
 Vue.component('dashboardcharts', require('./components/Charts/Dashboard.vue'));
 Vue.component('filter-memberships', require('./components/Organization/FilterMemberships.vue'));
-Vue.component('memberslist', require('./components/Members/MembersVuetable.vue'));
+Vue.component('members-list', require('./components/Members/MembersVuetable.vue'));
 Vue.component('memberprofile', require('./components/Members/Profile2.vue'));
 Vue.component('organizationslist', require('./components/Organization/OrganizationsVuetable.vue'));
 Vue.component('organization-manager', require('./components/Organization/OrganizationManager.vue'));

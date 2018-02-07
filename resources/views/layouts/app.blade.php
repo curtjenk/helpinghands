@@ -22,82 +22,75 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md fixed-top bg-dark">
-            <div class="container">
-                <div class="navbar-header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <!-- Branding Image -->
+            <a class="navbar-brand" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel') }}
+            </a>
+            <!-- Collapsed Hamburger -->
+            <button type="button" class="navbar-toggler collapsed float-left" data-toggle="collapse" data-target="#app-navbar-collapse">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggler collapsed float-left" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+            <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                <ul class="navbar-nav mx-auto">
+                @if (Auth::user() && !Auth::user()->visitor())
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a>
+                    </li>
+                @endif
+                </ul>
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                </div>
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav mr-auto">
+                    <!-- Authentication Links -->
+                    @if (Auth::guest())
+                        <li><a href="{{ route('login') }}">Login</a></li>
+                        {{-- <li><a href="{{ route('register') }}">Register</a></li> --}}
+                    @else
+                        <li class="nav-item dropdown">
+                            <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        {{-- <li style="height: 1px; margin-left:100px;">
-                        </li> --}}
-                    @if (Auth::user() && !Auth::user()->visitor())
-                        <li class="nav-item">
-                            <a href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="dropdown-item">
+                                    <a href="{{ url('/member/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
+                                @can ('administer')
+                                <li class="dropdown-item">
+                                    <a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
+                                @endcan
+                                <li class="dropdown-item">
+                                    <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     @endif
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            {{-- <li><a href="{{ route('register') }}">Register</a></li> --}}
-                        @else
-                            <li class="dropdown nav-item">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li class="dropdown-item">
-                                        <a href="{{ url('/member/'.Auth::user()->id.'/edit') }}"><i class="fa fa-cog fa-fw"></i> Profile</a></li>
-                                    @can ('administer')
-                                    <li class="dropdown-item">
-                                        <a href="{{ url('/administrator') }}"><i class="fa fa-th-large fa-fw"></i> Administrator</a></li>
-                                    @endcan
-                                    <li class="dropdown-item">
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
+                </ul>
             </div>
-        </nav>
 
-        @yield('content')
+        </nav>
+        <div class="mt-5">
+            @yield('content')
+        </div>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">

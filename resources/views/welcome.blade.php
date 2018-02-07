@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container" style="margin-top: 70px">
+    <div class="container-fluid">
         <br><br />
         <div class="row">
             <div class="subtitle mx-auto">
@@ -15,7 +15,6 @@
                         Supported by <u>Cornerstone Baptist Church</u>
                     </h5>
                 </a>
-
             </div>
         </div>
         <div class="row">

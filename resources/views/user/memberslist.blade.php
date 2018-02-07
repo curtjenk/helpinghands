@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<main>
-    <section class="page-header">
+
+    {{-- <section class="page-header">
         <div class="container">
             <div class="pull-left header">Members</div>
         </div>
-    </section>
+    </section> --}}
     <div class="container-fluid">
-        <memberslist
+        <members-list
          {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
          :is-admin="true"
          :userid="{{ Auth::user()->id }}"
-         ></memberslist>
+         ></members-list>
     </div>
-</main>
+
 
 <div class="modal fade" id="proxySignup" tabindex="-1" user="dialog" aria-labelledby="Proxy Signup/Decline">
   <div class="modal-dialog modal-md" user="document">

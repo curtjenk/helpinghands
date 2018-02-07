@@ -4,8 +4,7 @@
 @import url(https://fonts.googleapis.com/css?family=Lato);
 
 
-// Variables
-//
+
 @import "colors";
 // @import "bootstrap4Nav";
 @import "layout";
@@ -15,8 +14,8 @@
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
 @import "node_modules/bootstrap/scss/bootstrap";
-//override Bootstrap 3 nav
-// @import "bootstrap3Nav";
+// Variables
+@import "variables";
 
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';

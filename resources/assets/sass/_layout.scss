@@ -1,14 +1,12 @@
 
-main {
-    padding-top: 20em;
-}
 // ----------- Bootstrap mods
-.navbar-header a,
-.navbar-collapse a {
-    color: $white;
-    &:hover,  &:focus {
-      color: $white; }
-}
+
+// .navbar-header a,
+// .navbar-collapse a {
+//     color: $white;
+//     &:hover,  &:focus {
+//       color: $white; }
+// }
 //Tighten up bootstrap
 /* reduce column padding from 15 to 5px */
 // [class^='col-'], [class*=' col-']{
@@ -31,11 +29,11 @@ main {
 //   margin-left: 5em;
 //   margin-top: 12em;
 // }
-// .page-header {
-//   margin-top: 40em !important;
-//   margin-bottom: 5em !important;
-//   padding: 0 !important;
-// }
+.page-header {
+  margin-top: 5em !important;
+  // margin-bottom: 5em !important;
+  padding: 0 !important;
+}
 
 // input {
 //   outline: 0;

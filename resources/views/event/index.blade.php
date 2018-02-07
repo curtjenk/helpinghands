@@ -2,17 +2,17 @@
 
 @section('content')
 <main>
-    <section class="page-header">
-        <div class="container">
-            <div class="pull-left header"> Events</div>
-            <div class="pull-right">
-                @can ('create-event')
-                    <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
-                @endcan
-            </div>
+
+    <div class="container-fluid">
+        <div class="pull-left header"> Events</div>
+        <div class="pull-right">
+            @can ('create-event')
+                <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
+            @endcan
         </div>
-    </section>
-    <div class="container">
+    </div>
+
+    <div class="container-fluid">
         <eventslist
           :is-admin="{{  1 }}"
           :userid="{{ Auth::user()->id }}"
