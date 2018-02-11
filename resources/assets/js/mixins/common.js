@@ -124,6 +124,24 @@ export const commonMixins = {
     },
     modeCreate() {
         return this.currentMode == consts.MODE_CREATE;
+    },
+    canAdminister() {
+      return this.roles ? this.roles.includes('Site')||
+                          this.roles.includes('Admin')||
+                          this.roles.includes('Lead')
+                        : false;
+    },
+    canListEvents() {
+      return this.permissions ? this.permissions.includes('List events') : false;
+    },
+    canListMembers() {
+      return this.permissions ? this.permissions.includes('List users') : false;
+    },
+    isSuperUser() {
+      return this.roles ? this.roles.includes('Site') : false;
+    },
+    isVisitor() {
+      return this.roles ? this.roles.includes('Visitor') : false;
     }
   }
 };
