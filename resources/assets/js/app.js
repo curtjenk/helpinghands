@@ -42,6 +42,8 @@ Vue.use(Tooltip, {
 
 // Vue.component('example', require('./components/Example.vue'));
 Vue.component('nav-top', require('./components/Nav/Top.vue'));
+Vue.component('nav-top-2', require('./components/Nav/TopLine2.vue'));
+Vue.component('nav-footer', require('./components/Nav/Footer.vue'));
 Vue.component('eventslist', require('./components/Events/EventsVuetable.vue'));
 Vue.component('event-manager', require('./components/Events/EventManager.vue'));
 Vue.component('dashboardcharts', require('./components/Charts/Dashboard.vue'));

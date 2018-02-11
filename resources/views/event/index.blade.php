@@ -3,15 +3,17 @@
 @section('content')
 <main>
 
+    {{-- <nav-top-2></nav-top-2> --}}
+<!--
     <div class="container-fluid">
-        <div class="pull-left header"> Events</div>
-        <div class="pull-right">
+        <div class="mr page-header"> Events</div>
+        <div class="ml-auto">
             @can ('create-event')
                 <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
             @endcan
         </div>
     </div>
-
+-->
     <div class="container-fluid">
         <eventslist
           :is-admin="{{  1 }}"

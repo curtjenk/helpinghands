@@ -33,6 +33,8 @@
         <div class="mt-5">
             @yield('content')
         </div>
+        
+        <nav-footer></nav-footer>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">

@@ -72,18 +72,18 @@ common.convert_descendants_to_local_time = function(obj) {
   * Initialization of events.
   */
  $(function() {
-  if (window.location.pathname != '/login') {
+   console.log('wlp '+window.location.pathname);
+  if (window.location.pathname != '/login' && window.location.pathname != '/') {
     common.session_timeout_helper();
   } else {
-    // If I'm on the login screen, refresh frequently to avoid
-    // "session timeout" due to token expiration
-    setTimeout(() => {
-      location.reload();
-    }, 14*60000);
-  }
-     // $('#selected_org_id').on('change', function(event) {
-     //   common.change_organization(event);
-     // });
+    if (window.location.pathname == '/login') {
+      // If I'm on the login screen, refresh frequently to avoid
+      // "session timeout" due to token expiration
+      setTimeout(() => {
+        location.reload();
+      }, 14*60000);
+    }
+  }    
  });
  /**
   * truncate a string and add ellipsis ... html compatible
