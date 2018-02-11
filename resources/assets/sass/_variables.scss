@@ -1,19 +1,24 @@
-$spacers: (
+//override Bootstrap $spacers map
+$spacer: 1rem;
+$spacers: ();
+$spacers: map-merge((
   0: 0,
   1: ($spacer * .25),
   2: ($spacer * .5),
   3: $spacer,
   4: ($spacer * 1.5),
   5: ($spacer * 3),
-  6: ($spacer * 4),
-  7: ($spacer * 5),
-  8: ($spacer * 5.5),
-  9: ($spacer * 6),
-  10: ($spacer * 6.5)
-);
+  6: ($spacer * 3.5),
+  7: ($spacer * 4),
+  8: ($spacer * 4.5),
+  9: ($spacer * 5),
+  10: ($spacer * 5.5)
+  11: ($spacer * 6)
+  12: ($spacer * 6.5)
+), $spacers);
 // Body
-// $body-bg: #f5f8fa;
-$body-bg: #D6E9FE;
+$body-bg: #f5f8fa;
+// $body-bg: #D6E9FE;
 
 // Borders
 $laravel-border-color: darken($body-bg, 10%);

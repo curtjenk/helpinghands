@@ -30,10 +30,10 @@
         </nav-top>
 
 
-        <div class="mt-5">
+        <div class="">
             @yield('content')
         </div>
-        
+
         <nav-footer></nav-footer>
     </div>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar fixed="top" toggleable="md" type="dark" class="navtop mb-5">
+    <b-navbar fixed="top" toggleable="md" type="dark" class="navtop">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         <!-- Branding Image -->
       <b-navbar-brand href="/">
@@ -30,22 +30,20 @@
             </template>
           </b-navbar-nav>
 
-        <!-- </div> -->
-        <div v-show="nav2Show" class="flex-row">
-          <!-- <span class="col">
-            {{ nav2Title }}
-          </span> -->
-          <b-navbar-nav>
-          <!-- <span>{{ nav2Title }} </span> -->
-            <template  v-for="item in items">
-              <b-nav-item href="#">{{ item }}</b-nav-item>
-            </template>
-
-          </b-navbar-nav>
-        </div>
+        <!-- <div v-show="nav2Show" class="flex-row" style="width:100%;">
+          <b-navbar>
+            <b-navbar-nav class="pt-0 pb-0">
+              <b-navbar-brand>{{ nav2Title }}</b-navbar-brand>
+              <template v-for="item in nva2Items">
+                <b-nav-item href="#">{{ item }}</b-nav-item>
+              </template>
+            </b-navbar-nav>
+          </b-navbar>
+        </div> -->
       </b-collapse>
+
     </b-navbar>
-  
+
   </div>
 </template>
 
@@ -55,16 +53,19 @@ export default {
   mixins: [commonMixins],
   data () {
     return {
-      items: ['Link A', 'Link B', 'Link C']
+      // items: ['Link A', 'Link B', 'Link C']
     }
   },
   props: {
-    nav2Title: {
-      type: String, default: 'Events'
-    },
-    nav2Show: {
-      type: Boolean, default: true
-    },
+    // nav2Title: {
+    //   type: String, default: ''
+    // },
+    // nav2Show: {
+    //   type: Boolean, default: false
+    // },
+    // nav2Items: {
+    //   type Array, default: []
+    // }
     user: {
       type: Object, default: null
     },
@@ -77,7 +78,6 @@ export default {
 
   },
   mounted() {
-    console.log("mounted")
     // console.log('Component mounted.')
   },
   methods: {

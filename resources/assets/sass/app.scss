@@ -8,14 +8,14 @@
 @import "colors";
 // @import "bootstrap4Nav";
 @import "layout";
-
+@import "variables";
 // Bootstrap and others
 // @import 'node_modules/jquery-ui-bundle/jquery-ui.min';
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
 @import "node_modules/bootstrap/scss/bootstrap";
 // Variables
-@import "variables";
+
 
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';

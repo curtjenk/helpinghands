@@ -30,7 +30,6 @@ export default {
   props: {
   },
   mounted() {
-    console.log("footer mounted")
     // console.log('Component mounted.')
   },
   methods: {
