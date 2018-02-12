@@ -2,18 +2,21 @@
 
 @section('content')
 
-    {{-- <section class="page-header">
-        <div class="container">
-            <div class="pull-left header">Members</div>
-        </div>
-    </section> --}}
-    <div class="container-fluid">
-        <members-list
-         {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
-         :is-admin="true"
-         :userid="{{ Auth::user()->id }}"
-         ></members-list>
-    </div>
+{{--See app\Providers\UserRolesPermissionsProvider.php--}}
+{{-- view composer used to shared data across all views --}}
+<nav-top-2
+    title="Members"
+    :user="{{ json_encode($userRolesPermissions['user']) }}"
+    :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+    :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+    {{-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" --}}
+></nav-top-2>
+<members-list
+ {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
+ :is-admin="true"
+ :userid="{{ Auth::user()->id }}"
+></members-list>
+
 
 
 <div class="modal fade" id="proxySignup" tabindex="-1" user="dialog" aria-labelledby="Proxy Signup/Decline">

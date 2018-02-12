@@ -12,7 +12,7 @@
       <span v-html="modaldata.descriptionhtml"></span>
     </modal>
     <filter-bar filterPlaceholder=" subject, description"
-      :userid="userid"
+      :userid="user.id"
       :filterByMemberships="true"
     ></filter-bar>
 
@@ -105,12 +105,15 @@ export default {
     VuetablePaginationInfo,
   },
   props: {
-    userid: {
-      type: Number,
-      required: true
+    user: {
+      type: Object, default: null
     },
-    isAdmin: {
-    }
+    roles: {
+      type: Array, default: ()=>[]
+    },
+    permissions: {
+      type: Array, default: ()=>[]
+    },
   },
   data () {
     return {

@@ -34,7 +34,7 @@
             @yield('content' )
         </div>
 
-        <nav-footer></nav-footer>
+        {{-- <nav-footer></nav-footer> --}}
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">

@@ -46,23 +46,14 @@ export default {
     }
   },
   props: {
-    // nav2Title: {
-    //   type: String, default: ''
-    // },
-    // nav2Show: {
-    //   type: Boolean, default: false
-    // },
-    // nav2Items: {
-    //   type Array, default: []
-    // }
     user: {
       type: Object, default: null
     },
     roles: {
-      type: Array, default: []
+      type: Array, default: ()=>[]
     },
     permissions: {
-      type: Array, default: []
+      type: Array, default: ()=>[]
     },
 
   },
