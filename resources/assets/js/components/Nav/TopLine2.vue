@@ -6,7 +6,9 @@
         <b-navbar-nav class="mx-auto">
           <b-navbar-brand class="mr-4">{{ title }}</b-navbar-brand>
           <template v-for="link in links">
-            <b-nav-item href="#">{{ link.name }}</b-nav-item>
+            <b-nav-item v-if="hasPermission(link.perm)"
+              :href="link.href"><i v-if="link.icon" :class="'fa '+link.icon "></i> {{ link.name }}
+            </b-nav-item>
           </template>
         </b-navbar-nav>
       </b-collapse>
@@ -26,11 +28,20 @@ export default {
   },
   props: {
     title: {
-      type: String, default: 'Events'
+      type: String, default: ''
     },
     links: {
       type: Array, default: ()=>[ {name:'Link A'}, {name:'Link B'}, {name:'Link C'}]
-    }
+    },
+    user: {
+      type: Object, default: null
+    },
+    roles: {
+      type: Array, default: ()=>[]
+    },
+    permissions: {
+      type: Array, default: ()=>[]
+    },
   },
   mounted() {
     // console.log('Component mounted.')

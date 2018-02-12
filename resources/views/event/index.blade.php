@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+{{--See app\Providers\UserRolesPermissionsProvider.php--}}
+{{-- view composer used to shared data across all views --}}
     <nav-top-2
         title="Events"
+        :user="{{ json_encode($userRolesPermissions['user']) }}"
+        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+        :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]"
     >
     </nav-top-2>
     {{-- <div class="container-fluid"> --}}

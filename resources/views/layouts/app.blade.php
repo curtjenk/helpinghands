@@ -19,19 +19,19 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+
 </head>
 <body>
     <div id="app">
         <nav-top
-            :user="{{ Auth::check() ? Auth::user() : 'null' }}"
-            :roles="{{ Auth::check() ? Auth::user()->roles()->get()->pluck('name') : '[]' }}"
-            :permissions="{{ Auth::check() ? Auth::user()->permissions()->get()->pluck('name') : '[]' }}"
+            :user="{{ json_encode($userRolesPermissions['user']) }}"
+            :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+            :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
         >
         </nav-top>
 
-
         <div class="">
-            @yield('content')
+            @yield('content' )
         </div>
 
         <nav-footer></nav-footer>

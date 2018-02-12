@@ -12,6 +12,9 @@ export const commonMixins = {
     }
   },
   methods: {
+    hasPermission (perm) {
+      return this.permissions.includes(perm)
+    },
     isObjectEmpty: function(obj) {
       if (obj === undefined || obj === null) {
         return true;
@@ -65,43 +68,6 @@ export const commonMixins = {
       // console.log( moment(input).format(formatMask));
       return (input==null) ? '' : moment(input).format(formatMask);
     },
-    equalheight: function(container){
-      /* Thanks to CSS Tricks for pointing out this bit of jQuery
-      https://css-tricks.com/equal-height-blocks-in-rows/
-      It's been modified into a function called at page load and then each time
-      the page is resized. One large modification was to remove the set height
-      before each new calculation. */
-      let self = this;
-      let currentTallest = 0
-      let currentRowStart = 0
-      let rowDivs = []
-      let elem
-      let topPosition = 0
-
-      $(container).each(function() {
-        elem = $(this);
-        // console.log(elem);
-        elem.height('auto');
-        topPosition = elem.position().top;
-        // console.log(rowDivs);
-        if (currentRowStart != topPosition) {
-          for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
-            rowDivs[currentDiv].height(currentTallest);
-          }
-          rowDivs.length = 0; // empty the array
-          currentRowStart = topPosition;
-          currentTallest = elem.height();
-          rowDivs.push(elem);
-        } else {
-          rowDivs.push(elem);
-          currentTallest = (currentTallest < elem.height()) ? (elem.height()) : (currentTallest);
-        }
-        console.log(currentTallest)
-        for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
-         rowDivs[currentDiv].height(currentTallest);
-        }
-      });
-    }
   },
   computed: {
     statusInitial() {
@@ -136,6 +102,9 @@ export const commonMixins = {
     },
     canListMembers() {
       return this.permissions ? this.permissions.includes('List users') : false;
+    },
+    canCreateEvent() {
+      return this.permissions ? this.permissions.includes('Create Event') : false;
     },
     isSuperUser() {
       return this.roles ? this.roles.includes('Site') : false;

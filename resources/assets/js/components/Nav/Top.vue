@@ -29,17 +29,6 @@
               </b-nav-item-dropdown>
             </template>
           </b-navbar-nav>
-
-        <!-- <div v-show="nav2Show" class="flex-row" style="width:100%;">
-          <b-navbar>
-            <b-navbar-nav class="pt-0 pb-0">
-              <b-navbar-brand>{{ nav2Title }}</b-navbar-brand>
-              <template v-for="item in nva2Items">
-                <b-nav-item href="#">{{ item }}</b-nav-item>
-              </template>
-            </b-navbar-nav>
-          </b-navbar>
-        </div> -->
       </b-collapse>
 
     </b-navbar>
