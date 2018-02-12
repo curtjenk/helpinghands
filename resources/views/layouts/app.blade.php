@@ -22,6 +22,7 @@
 </head>
 <body>
     <div id="app">
+<<<<<<< HEAD
         <nav class="navbar navbar-expand-lg  bg-dark fixed-top">
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -32,25 +33,17 @@
                 <span class="sr-only">Toggle Navigation</span>
                 <span class="navbar-toggler-icon"></span>
             </button>
+=======
+        <nav-top
+            :user="{{ Auth::check() ? Auth::user() : 'null' }}"
+            :roles="{{ Auth::check() ? Auth::user()->roles()->get()->pluck('name') : '[]' }}"
+            :permissions="{{ Auth::check() ? Auth::user()->permissions()->get()->pluck('name') : '[]' }}"
+        >
+        </nav-top>
+>>>>>>> 9579919d70163306d01961c9a1ad686fc484def3
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <ul class="navbar-nav mx-auto">
-                @if (Auth::user() && !Auth::user()->visitor())
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/dashboard') }}"><i class="fa fa-cog fa-tachometer"></i> Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/member') }}"><i class="fa fa-cog fa-users"></i> Members</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/event') }}"><i class="fa fa-cog fa-list"></i>  Events</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/event/calendar') }}"><i class="fa fa-cog fa-calendar"></i> Calendar</a>
-                    </li>
-                @endif
-                </ul>
 
+<<<<<<< HEAD
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <!-- Authentication Links -->
@@ -89,8 +82,13 @@
 
         </nav>
         <div class="mt-5">
+=======
+        <div class="">
+>>>>>>> 9579919d70163306d01961c9a1ad686fc484def3
             @yield('content')
         </div>
+
+        <nav-footer></nav-footer>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="errorModal">

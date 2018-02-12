@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid">
+    {{-- <div class="container-fluid"> --}}
         <br><br />
         <div class="row">
-            <div class="subtitle mx-auto">
+            <div class="subtitle mx-auto mt-8">
                 Helping Your Ministry Engage
             </div>
         </div>
@@ -24,5 +24,5 @@
                 </h6>
             </div>
         </div>
-    </div>
+    {{-- </div> --}}
 @endsection

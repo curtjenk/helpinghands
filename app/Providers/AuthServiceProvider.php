@@ -39,18 +39,27 @@ class AuthServiceProvider extends ServiceProvider
             // Log::debug($okRole);
             return $okRole;
         });
+
         Gate::define('create-event', function ($user) {
             return $user->has_permission('Create event');
+        });
+        Gate::define('list-events', function ($user) {
+            return $user->has_permission('List events');
         });
 
         Gate::define('create-organization', function ($user) {
             return $user->has_permission('Create organization');
+        });
+        Gate::define('list-organizations', function ($user) {
+            return $user->has_permission('List organizations');
         });
         Gate::define('manage-organization', function ($user) {
             return $user->has_org_permission(null, 'Create organization')
                 || $user->has_org_permission(null, 'Update organization')
                 || $user->has_org_permission(null, 'Delete organization');
         });
+
+
         Gate::define('create-team', function ($user) {
             return $user->has_permission('Create team');
         });
@@ -59,9 +68,6 @@ class AuthServiceProvider extends ServiceProvider
                 || $user->has_team_permission(null, 'Update team')
                 || $user->has_team_permission(null, 'Delete team');
         });
-        Gate::define('list-organizations', function ($user) {
-            return $user->has_permission('List organizations');
-        });
 
         Gate::define('create-user', function ($user) {
             return $user->has_permission('Create user');
@@ -69,6 +75,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('list-users', function ($user) {
             return $user->has_permission('List users');
         });
+
         Gate::define('send-evites', function ($user) {
             return true;
             return !$user->is_superuser() &&

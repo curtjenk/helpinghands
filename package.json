@@ -21,6 +21,7 @@
     "accounting": "^0.4.1",
     "babel-preset-env": "^1.5.2",
     "bootstrap": "^4.0.0",
+    "bootstrap-vue": "^2.0.0-rc.1",
     "chart.js": "^2.6.0",
     "chart.piecelabel.js": "^0.6.0",
     "font-awesome": "^4.7.0",
