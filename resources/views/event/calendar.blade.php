@@ -2,24 +2,14 @@
 
 @section('content')
 <main>
-    <section class="page-header">
-        <div class="container">
-            <div class="pull-left header">Events Calendar</div>
-            <div class="pull-left">
-            @if(isset($event))
-                @include('layouts.org_selector', ['specific'=>$event->organization->id])
-            @else
-                @include('layouts.org_selector')
-            @endif
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-default" href="{{ url('/event') }}"><i class="fa fa-list"></i> Events</a>
-                @can ('create-event')
-                <a class="btn btn-default" href="{{ url('/event/create') }}"><i class="fa fa-plus"></i> Create</a>
-                @endcan
-            </div>
-        </div>
-    </section>
+    <nav-top-2
+        title="Events Calendar"
+        :user="{{ json_encode($userRolesPermissions['user']) }}"
+        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+        :links="[{perm:'List events', href:'/event', name:'Events', icon:'fa-list'},
+                 {perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]"
+    ></nav-top-2>
     <input type="hidden" name="eventdates" value="{{ $events }}">
     <div class="container">
         <div class="col-md-2">

@@ -1,5 +1,6 @@
 import { Pie } from 'vue-chartjs'
 export default Pie.extend({
+  name:"pie-chart",
   mounted () {
     // Overwriting base render method with actual data.
   },
@@ -16,7 +17,7 @@ export default Pie.extend({
           type: Array,
           required: false
       },
-      hoverBGColors: {
+      hoverBgColors: {
           type: Array,
           required: false
       },

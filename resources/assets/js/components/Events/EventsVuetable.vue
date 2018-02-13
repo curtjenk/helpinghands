@@ -220,8 +220,8 @@ export default {
       css: {
         table: {
           tableClass: 'table table-bordered table-striped table-hover table-condensed',
-          ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down',
+          ascendingIcon: 'fa fa-chevron-up',
+          descendingIcon: 'fa fa-chevron-down',
           thumbsup: 'fa fa-thumbs-o-up'
         },
         pagination: {
@@ -231,11 +231,11 @@ export default {
           pageClass: 'page',
           linkClass: 'link',
           icons: {
-            first: 'glyphicon glyphicon-step-backward',
-            prev: 'glyphicon glyphicon-chevron-left',
-            next: 'glyphicon glyphicon-chevron-right',
-            last: 'glyphicon glyphicon-step-forward',
-          },
+            first: 'fa fa-step-backward',
+            prev: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            last: 'fa fa-step-forward'
+          }
         },
       },
       sortOrder: [
@@ -311,7 +311,6 @@ export default {
         return (value == null)
           ? '<i class="fa fa-frown-o" style="color: red;"></i>'
           : '<i class="fa fa-check-square" style="color: green;"></i>'
-
     },
     // genderLabel (value) {
     //   return value === 'M'

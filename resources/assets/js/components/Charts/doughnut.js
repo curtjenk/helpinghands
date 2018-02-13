@@ -1,5 +1,6 @@
 import { Doughnut } from 'vue-chartjs'
 export default Doughnut.extend({
+  name: "doughnut-chart",
   mounted () {
     // Overwriting base render method with actual data.
   },
@@ -16,7 +17,7 @@ export default Doughnut.extend({
           type: Array,
           required: false
       },
-      hoverBGColors: {
+      hoverBgColors: {
           type: Array,
           required: false
       },

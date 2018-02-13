@@ -1,58 +1,40 @@
 <template>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-body text-center">
-                  <h1>How are we doing?</h1>
+  <div class="container-fluid">
+  <div class="row mt-5">
+      <div class="mx-auto">
+          <div class="card">
+              <div class="card-body text-center">
+                   <h1>How are we doing?</h1>
                   <div class="form-group">
-                      <filter-memberships
-                          :userid="userid"
-                          @orgTeamSelected="get_data"
-                      ></filter-memberships>
+                      <filter-memberships :userid="userid" @orgteamselected="get_data"></filter-memberships>
                   </div>
-                </div>
-            </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="card-group">
+    <div class="card">
+        <div class="card-header text-center">Overall Participation Rate</div>
+        <div class="card-body">
+            <pie-chart id="p1" :data="partdata" :labels="partlabels" :bg-colors="partBGColors"
+            :hover-bg-colors="partHoverBGColors" :options="partoptions"></pie-chart>
         </div>
-      </div>
-      <div class="col-md-6 panel panel-default">
-          <div class="panel-heading text-center">
-              Overall Participation Rate
-          </div>
-          <div class="panel-body">
-              <pie-chart id="p1" :data="partdata"
-                  :labels="partlabels"
-                  :bgColors="partBGColors"
-                  :hoverBGColors="partHoverBGColors"
-                  :options="partoptions">
-              </pie-chart>
-          </div>
-      </div>
-      <div class="col-md-6 panel panel-default">
-          <div class="panel-heading text-center">
-               Year-To-Date Count Per Event Type
-          </div>
-          <div class="panel-body">
-              <doughnut-chart id="d1" :data="doughnutdata1"
-                  :labels="doughnutlabels1"
-                  :bgColors="doughnutBGColors1"
-                  :hoverBGColors="doughnutHoverBGColors1"
-                  :options="doughnutoptions1">
-              </doughnut-chart>
-          </div>
-      </div>
-      <div class="col-md-6 panel panel-default">
-          <div class="panel-heading text-center">
-              Year-To-Date Events Per Month
-          </div>
-          <div class="panel-body">
-              <bar-chart id="b1" :datasets="bardata1"
-                  :labels="barlabels1"
-                  :options="baroptions1">
-              </bar-chart>
-          </div>
-      </div>
     </div>
+    <div class="card">
+        <div class="card-header text-center">Year-To-Date Count Per Event Type</div>
+        <div class="card-body">
+            <doughnut-chart id="d1" :data="doughnutdata1" :labels="doughnutlabels1"
+            :bg-colors="doughnutBGColors1" :hover-bg-colors="doughnutHoverBGColors1" :options="doughnutoptions1"></doughnut-chart>
+        </div>
+    </div>
+    <div class=" card">
+        <div class="card-header text-center">Year-To-Date Events Per Month</div>
+        <div class="card-body">
+            <bar-chart id="b1" :datasets="bardata1" :labels="barlabels1" :options="baroptions1"></bar-chart>
+        </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

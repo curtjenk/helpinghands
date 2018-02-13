@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="page-header">
-        <div class="container header">
-            <div class=""></div>
-        </div>
-    </section>
-    <div class="">
-        <dashboardcharts
-             :userid="{{ Auth::user()->id }}"
-        ></dashboardcharts>
-    </div>
+    <nav-top-2
+        title="Dashboard"
+        :user="{{ json_encode($userRolesPermissions['user']) }}"
+        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+        {{-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" --}}
+    ></nav-top-2>
+    <dashboardcharts
+     :userid="{{ Auth::user()->id }}"
+    ></dashboardcharts>
 @endsection
