@@ -50,6 +50,7 @@
     </div>
     <form-wizard class="row" ref="form_wizard"
       @on-complete="wizardOnComplete"
+      shape="square"
       color="#a43535"
       title=""
       subtitle=""
@@ -749,7 +750,7 @@ export default {
 } //End of export
 </script>
 
-<style lang="css" scoped>
+<style lang="css" >
 .instruction {
   font-size: 16px;
 }

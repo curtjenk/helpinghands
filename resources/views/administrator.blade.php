@@ -1,58 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-<main>
-    <section class="page-header">
-        <div class="container header">
-            <div class="">Administrator Menu</div>
-        </div>
-    </section>
+    <nav-top-2
+        title="Administrator Menu"
+        :user="{{ json_encode($userRolesPermissions['user']) }}"
+        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
+        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+        {{-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" --}}
+    ></nav-top-2>
     <div class="container">
-        <div class="text-center">
-            {{-- <div class="row">
-            @can ('list-users')
-                <div class="col-md-6 col-md-offset-3">
-                    <a href="{{ url('/user') }}" name="manage_users" style="text-decoration: none;">
-                        <div class="thumbnail">
-                            <i class="fa fa-users fa-5x adminIcons"></i>
-                            <p class="">Manage Users</p>
-                        </div>
-                    </a>
-                </div>
-            @endcan
-            </div> --}}
-            <div class="row">
-            @can ('manage-organization')
-                <div class="col-md-6 col-md-offset-3">
-                    <a href="{{ url('/organization') }}" name="manage_orgs" style="text-decoration: none;">
-                        {{-- <div> --}}
-                        <div class="thumbnail">
-                            <i class="fa fa-sitemap fa-5x adminIcons"></i>
-                            <p class="">Manage Organizations</p>
-                        </div>
-                    </a>
-                </div>
-            @endcan
-            </div>
-            <div class="row">
-            @can ('manage-team')
-                <div class="col-md-6 col-md-offset-3">
-                    <a href="{{ url('/team') }}" name="manage_orgs" style="text-decoration: none;">
-                        {{-- <div> --}}
-                        <div class="thumbnail">
-                            <div class="">
-                                <i class="fa fa-sitemap fa-5x adminIcons"></i>
-                            </div>
-                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
-                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
-                            <i class="fa fa-sitemap fa-2x adminIcons"></i>
-                            <p class="">Manage teams</p>
-                        </div>
-                    </a>
-                </div>
-            @endcan
+        @can ('manage-organization')
+        <div class="row">
+            <div class="mx-auto text-center">
+                <a href="{{ url('/organization') }}" name="manage_orgs" style="text-decoration: none;">
+                    <i class="fa fa-sitemap fa-5x adminIcons"></i>
+                    <p class="">Manage Organizations</p>
+                </a>
             </div>
         </div>
+        @endcan
+        @can ('manage-team')
+        <div class="row">
+            <div class="mx-auto text-center">
+                <a href="{{ url('/team') }}" name="manage_orgs" style="text-decoration: none;">
+                    <div class="">
+                        <i class="fa fa-sitemap fa-5x adminIcons"></i>
+                    </div>
+                    <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                    <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                    <i class="fa fa-sitemap fa-2x adminIcons"></i>
+                    <p class="">Manage teams</p>
+                </a>
+            </div>
+        </div>
+        @endcan
     </div>
-</main>
+
 @endsection
