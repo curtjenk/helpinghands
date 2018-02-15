@@ -115,18 +115,19 @@
                   </div>
                 </div>
               </span>
-              <span v-else>
+              <span v-else style="width: 100%;">
                 <b-input-group prepend="Start Date">
-                  <div  style="min-height: 100%;">
-
-
-                  <datepicker name="pdatestart"
-                    :value="formatDate(event.date_start)"
-                    @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
-                  </datepicker>
-                  </div>
+                  <!-- <div  style="min-height: 100%;"> -->
+                    <datepicker name="pdatestart"
+                      :bootstrap-styling="true"
+                      :value="formatDate(event.date_start)"
+                      @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
+                    </datepicker>
+                  <!-- </div> -->
                 </b-input-group>
-                <b-form-group
+                <!-- <b-col lg="3"> -->
+
+                <!-- <b-form-group
                   horizontal
                   label="Start Date"
                   label-for="pdatestart"
@@ -135,7 +136,7 @@
                     :value="formatDate(event.date_start)"
                     @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
                   </datepicker>
-                </b-form-group>
+                </b-form-group> -->
                 <div class="form-group">
                   <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">

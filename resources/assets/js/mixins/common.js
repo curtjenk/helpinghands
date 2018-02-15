@@ -64,7 +64,7 @@ export const commonMixins = {
             return digits.charAt(count++);
         });
     },
-    formatDate: function(input, formatMask = 'YYYY-MM-DD h:mm:ss a') {
+    formatDate: function(input, formatMask = 'MM/DD/YYYY h:mm:ss a') {
       // console.log( moment(input).format(formatMask));
       return (input==null) ? '' : moment(input).format(formatMask);
     },
