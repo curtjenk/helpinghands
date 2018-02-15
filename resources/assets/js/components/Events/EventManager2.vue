@@ -48,60 +48,47 @@
         </span>
       </template>
     </div>
-    <form-wizard class="row" ref="form_wizard"
-      @on-complete="wizardOnComplete"
-      shape="square"
-      color="#a43535"
-      title=""
-      subtitle=""
-      :finishButtonText="modeShow ? 'Next' : 'Save Event'"
-    >
-      <tab-content title="Details">
-        <div class="mytab">
-          <div class="form-horizontal">
-            <div class="row">
-              <div class="col-md-5 col-sm-5">
-                <span v-if="modeShow">
-                  <div class="form-group">
-                    <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
-                    <div class="col-md-9">
-                        <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
-                    </div>
-                  </div>
-                </span>
-                <span v-else>
-                  <div class="text-center" style="margin-bottom:10px;">
-                    <filter-memberships
-                        :userid="user0.id"
-                        :filterByTeam="true"
-                        :organization="organization"
-                        :team="team"
-                        @orgTeamSelected="setOrgTeam"
-                    ></filter-memberships>
-                  </div>
-                </span>
+    <b-card no-body>
+      <b-tabs pills card v-model="tabIndex">
+        <b-tab title="Basics">
+          <b-form-row>
+            <span v-if="modeShow">
+              <div class="form-group">
+                <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
+                <div class="col-md-9">
+                    <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
+                </div>
               </div>
-              <div class="col-md-6 col-sm-6">
-                <span v-if="modeShow">
-                  <div class="form-group">
-                    <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                    <div class="col-md-9">
-                        <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
-                    </div>
-                  </div>
-                </span>
-                <span v-else>
-                  <div class="form-group">
-                    <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                    <div class="col-md-9 col-sm-9">
-                        <input required name="subject" v-model="event.subject" type="text" class="" size="50" autofocus>
-                    </div>
-                  </div>
-                </span>
+            </span>
+            <span v-else>
+              <div class="text-center" style="margin-bottom:10px;">
+                <filter-memberships
+                    :userid="user0.id"
+                    :filterByTeam="true"
+                    :organization="organization"
+                    :team="team"
+                    @orgTeamSelected="setOrgTeam"
+                ></filter-memberships>
               </div>
-            </div>
-            <div class="row">
-            <div class="col-md-5 col-sm-5">
+            </span>
+          </b-form-row>
+          <b-row :no-gutters="true">
+            <span v-if="modeShow">
+              <div class="form-group">
+                <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                <div class="col-md-9">
+                    <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
+                </div>
+              </div>
+            </span>
+            <span v-else style="width: 100%;">
+              <b-input-group prepend="Subject">
+                  <b-form-input id="subject" v-model="event.subject" type="text" autofocus></b-form-input>
+              </b-input-group>
+            </span>
+          </b-row>
+          <b-row :no-gutters="true">
+            <b-col>
               <span v-if="modeShow">
                 <div class="form-group">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
@@ -127,17 +114,28 @@
                     <p id="status" class="form-control-static">{{ statusName }}</p>
                   </div>
                 </div>
-
               </span>
               <span v-else>
-                <div class="form-group">
-                  <label for="pdatestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
-                  <div class="col-md-7 col-sm-7">
-                      <datepicker name="pdatestart"
-                        :value="formatDate(event.date_start)"
-                        @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd"></datepicker>
+                <b-input-group prepend="Start Date">
+                  <div  style="min-height: 100%;">
+
+
+                  <datepicker name="pdatestart"
+                    :value="formatDate(event.date_start)"
+                    @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
+                  </datepicker>
                   </div>
-                </div>
+                </b-input-group>
+                <b-form-group
+                  horizontal
+                  label="Start Date"
+                  label-for="pdatestart"
+                >
+                  <datepicker name="pdatestart"
+                    :value="formatDate(event.date_start)"
+                    @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
+                  </datepicker>
+                </b-form-group>
                 <div class="form-group">
                   <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
@@ -169,15 +167,17 @@
                   </div>
                 </div>
               </span>
-            </div>
-            <div class="col-md-6 col-sm-6">
+            </b-col>
+            <b-col>
               <span v-if="modeShow">
-                <div class="form-group">
-                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                <b-form-group
+                  label="Start Time"
+                  label-for="timestart"
+                >
                   <div class="col-md-9">
                       <p id="timestart" type="text" class="form-control-static">{{ formatTimePicker(event.time_start) }}</p>
                   </div>
-                </div>
+                </b-form-group>
                 <div class="form-group">
                   <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
                   <div class="col-md-9">
@@ -198,26 +198,25 @@
                 </div>
               </span>
               <span v-else>
-                <div class="form-group">
-                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
-                  <!-- :time-value.sync="event.time_start" -->
-                  <div class="col-md-9">
+                <b-form-group
+                  label="Start Time"
+                  label-for="timestart"
+                >
+                  <!-- <div class="col-md-9"> -->
                       <vue-timepicker name="timestart"
                         v-model="event.time_start"
-
                         format="hh:mm a"
                         :minute-interval="15"
                         @change="setInitialEndTime"
                       />
-                  </div>
-                </div>
+                  <!-- </div> -->
+                </b-form-group>
                 <div class="form-group">
                   <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
                   <!--   :time-value.sync="event.time_end" -->
                   <div class="col-md-9">
                       <vue-timepicker name="timeend"
                         v-model="event.time_end"
-
                         format="hh:mm a"
                         :minute-interval="15"
                       />
@@ -243,14 +242,10 @@
                   </div>
                 </div>
               </span>
-            </div>
-          </div>
-          </div>
-        </div>
-      </tab-content>
-
-      <tab-content title="Description">
-        <div class="mytab">
+            </b-col>
+          </b-row>
+        </b-tab>
+        <b-tab title="Description">
           <quill-editor v-model="event.description"
                 ref="myQuillEditor"
                 :options="editorOption"
@@ -259,94 +254,101 @@
                 @focus="onEditorFocus($event)"
                 @ready="onEditorReady($event)">
           </quill-editor>
-
-        </div>
-      </tab-content>
-
-      <tab-content title="Attachments">
-        <div class="mytab">
-          <div class="form-horizontal">
-            <span v-if="modeShow">
-              <!--  -->
-            </span>
-            <span v-else>
-              <div class="caption">
-                <span>Attachments</span>&nbsp;&nbsp;&nbsp;
-                <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
-                  <a  href="#" type="button" class="text-success"
-                    @click="toggleIsAddingFile()">
-                    <i class="fa fa-plus fa-lg fa-fw text-success"></i>
-                  </a>
-                </span>
-              </div>
-              <div v-if="isAddingFile" class="panel panel-default">
-                <div class="form-group row panel-body">
-                  <div class="">
-                    <div class="col-md-4 col-sm-4" style="margin-top:10px;">
-                      <input id="ntd" ref="fileInput" type="file" required  @change="processFile($event)"/>
-                    </div>
-                    <div class="col-md-4 col-sm-5">
-                      <float-label>
-                        <input id="ntn" v-model="new_file_description" type="text" required
-                          class="editInfo" size="60" maxlength="255" placeholder="Description"/>
-                      </float-label>
-                    </div>
-                    <div class="" style="padding: 0px;">
-                      <span v-tooltip.top="'Add'"class="">
-                          <a href="#" type="button" class="text-primary"
-                            @click="addFileToList()">
-                            <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                          </a>
-                      </span>
-                      <span v-tooltip.top="'Close'">
-                          <a href="#" type="button" class="text-danger"
-                            @click="toggleIsAddingFile()">
-                            <i class="fa fa-ban fa-lg fa-fw"></i>
-                          </a>
-                      </span>
+        </b-tab>
+        <b-tab title="Attachments">
+          <div class="mytab">
+            <div class="form-horizontal">
+              <span v-if="modeShow">
+                <!--  -->
+              </span>
+              <span v-else>
+                <div class="caption">
+                  <span>Attachments</span>&nbsp;&nbsp;&nbsp;
+                  <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
+                    <a  href="#" type="button" class="text-success"
+                      @click="toggleIsAddingFile()">
+                      <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+                    </a>
+                  </span>
+                </div>
+                <div v-if="isAddingFile" class="panel panel-default">
+                  <div class="form-group row panel-body">
+                    <div class="">
+                      <div class="col-md-4 col-sm-4" style="margin-top:10px;">
+                        <input id="ntd" ref="fileInput" type="file" required  @change="processFile($event)"/>
+                      </div>
+                      <div class="col-md-4 col-sm-5">
+                        <float-label>
+                          <input id="ntn" v-model="new_file_description" type="text" required
+                            class="editInfo" size="60" maxlength="255" placeholder="Description"/>
+                        </float-label>
+                      </div>
+                      <div class="" style="padding: 0px;">
+                        <span v-tooltip.top="'Add'" class="">
+                            <a href="#" type="button" class="text-primary"
+                              @click="addFileToList()">
+                              <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                            </a>
+                        </span>
+                        <span v-tooltip.top="'Close'">
+                            <a href="#" type="button" class="text-danger"
+                              @click="toggleIsAddingFile()">
+                              <i class="fa fa-ban fa-lg fa-fw"></i>
+                            </a>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </span>
-            <table class="table table-responsive table-striped table-condensed">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="file in attachments">
-                  <td>
-                    {{ file.original_filename }}
-                  </td>
-                  <td>
-                    {{ file.description }}
-                  </td>
-                  <td>
-                    <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
-                      <a href="#" type="button" class="text-primary"
-                            @click="viewFile(file)">
-                        <i class="fa fa-eye fa-fw"></i>
-                      </a>
-                    </span>
-                    <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
-                      <a href="#" type="button" class="text-danger"
-                            @click="removeFile(file)">
-                        <i class="fa fa-trash-o fa-fw"></i>
-                      </a>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              </span>
+              <table class="table table-responsive table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="file in attachments">
+                    <td>
+                      {{ file.original_filename }}
+                    </td>
+                    <td>
+                      {{ file.description }}
+                    </td>
+                    <td>
+                      <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
+                        <a href="#" type="button" class="text-primary"
+                              @click="viewFile(file)">
+                          <i class="fa fa-eye fa-fw"></i>
+                        </a>
+                      </span>
+                      <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
+                        <a href="#" type="button" class="text-danger"
+                              @click="removeFile(file)">
+                          <i class="fa fa-trash-o fa-fw"></i>
+                        </a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </tab-content>
+        </b-tab>
+      </b-tabs>
+    </b-card>
+    <!-- Control buttons-->
+    <div class="text-center">
+      <b-button-group class="mt-2">
+        <b-btn @click="tabIndex--">Previous</b-btn>
+        <b-btn @click="tabIndex++">Next</b-btn>
+      </b-button-group>
+      <br>
+      <span class="text-muted">Current Tab: {{tabIndex}}</span>
+    </div>
 
-    </form-wizard>
   </div>
 </template>
 
@@ -389,6 +391,7 @@ export default {
   },
   data() {
     return {
+      tabIndex: 0,
       numberMask: createNumberMask({
         allowDecimal: true,
         integerLimit: 4,
@@ -791,6 +794,15 @@ export default {
 <style lang="css" >
 .instruction {
   font-size: 16px;
+}
+b-form-group {
+  margin-bottom: 0.5rem !important
+}
+b-input-group {
+  margin-bottom: 0.5rem !important
+}
+span {
+  width: 100%;
 }
 .mytab {
   min-height: 230px;

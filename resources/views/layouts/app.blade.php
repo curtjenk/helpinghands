@@ -30,7 +30,7 @@
         >
         </nav-top>
 
-        <div class="">
+        <div class="container-fluid">
             @yield('content' )
         </div>
 
