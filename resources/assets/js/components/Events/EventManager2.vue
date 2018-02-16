@@ -116,27 +116,35 @@
                 </div>
               </span>
               <span v-else style="width: 100%;">
-                <b-input-group prepend="Start Date">
-                  <!-- <div  style="min-height: 100%;"> -->
+                <b-form-group
+                  horizontal
+                  :label-cols="2"
+                  label="Start Date"
+                  label-for="pdatestart"
+                >
+                  <b-col sm="6">
                     <datepicker name="pdatestart"
                       :bootstrap-styling="true"
                       :value="formatDate(event.date_start)"
                       @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
                     </datepicker>
-                  <!-- </div> -->
-                </b-input-group>
-                <!-- <b-col lg="3"> -->
-
-                <!-- <b-form-group
+                  </b-col>
+                </b-form-group>
+                <b-form-group
                   horizontal
-                  label="Start Date"
-                  label-for="pdatestart"
+                  :label-cols="2"
+                  label="End Date"
+                  label-for="pdateend"
                 >
-                  <datepicker name="pdatestart"
-                    :value="formatDate(event.date_start)"
-                    @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
-                  </datepicker>
-                </b-form-group> -->
+                  <b-col sm="6">
+                    <datepicker name="pdateend"
+                      input-class=""
+                      :bootstrap-styling="true"
+                      :value="formatDate(event.date_start)"
+                      @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd">
+                    </datepicker>
+                  </b-col>
+                </b-form-group>
                 <div class="form-group">
                   <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
@@ -796,11 +804,15 @@ export default {
 .instruction {
   font-size: 16px;
 }
-b-form-group {
+.b-form-group {
   margin-bottom: 0.5rem !important
 }
-b-input-group {
+.b-input-group {
   margin-bottom: 0.5rem !important
+}
+.vdp-datepicker .form-control[readonly] {
+    background-color: white;
+    opacity: 1;
 }
 span {
   width: 100%;
