@@ -51,41 +51,50 @@
     <b-card no-body>
       <b-tabs pills card v-model="tabIndex">
         <b-tab title="Basics">
-          <b-form-row>
-            <span v-if="modeShow">
-              <div class="form-group">
-                <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
-                <div class="col-md-9">
-                    <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
+          <b-form-row :no-gutters="true">
+            <b-col>
+              <span v-if="modeShow">
+                <div class="form-group">
+                  <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
+                  <div class="col-md-9">
+                      <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
+                  </div>
                 </div>
-              </div>
-            </span>
-            <span v-else>
-              <div class="text-center" style="margin-bottom:10px;">
-                <filter-memberships
-                    :userid="user0.id"
-                    :filterByTeam="true"
-                    :organization="organization"
-                    :team="team"
-                    @orgTeamSelected="setOrgTeam"
-                ></filter-memberships>
-              </div>
-            </span>
+              </span>
+              <span v-else>
+                <div class="" style="margin-bottom:10px;">
+                  <filter-memberships
+                      :userid="user0.id"
+                      :filterByTeam="true"
+                      :organization="organization"
+                      :team="team"
+                      @orgTeamSelected="setOrgTeam"
+                  ></filter-memberships>
+                </div>
+              </span>
+            </b-col>
           </b-form-row>
           <b-row :no-gutters="true">
-            <span v-if="modeShow">
-              <div class="form-group">
-                <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                <div class="col-md-9">
-                    <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
+            <b-col>
+              <span v-if="modeShow">
+                <div class="form-group row">
+                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
+                  <div class="col-md-9">
+                      <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
+                  </div>
                 </div>
-              </div>
-            </span>
-            <span v-else style="width: 100%;">
-              <b-input-group prepend="Subject">
-                  <b-form-input id="subject" v-model="event.subject" type="text" autofocus></b-form-input>
-              </b-input-group>
-            </span>
+              </span>
+              <span v-else>
+                <div class="form-group row">
+                  <label for="subject" class="col-md-2 col-sm-2 control-label">Subject</label>
+                  <div class="col-md-9 col-sm-9" style="padding-left: 0px;">
+                      <input required name="subject" class="" v-model="event.subject" type="text" size="70" autofocus>
+                  </div>
+                </div>
+              </span>
+            </b-col>
+            <!-- <b-col>
+            </b-col> -->
           </b-row>
           <b-row :no-gutters="true">
             <b-col>
@@ -118,11 +127,11 @@
               <span v-else style="width: 100%;">
                 <b-form-group
                   horizontal
-                  :label-cols="2"
+                  :label-cols="3"
                   label="Start Date"
                   label-for="pdatestart"
                 >
-                  <b-col sm="6">
+                  <b-col sm="7">
                     <datepicker name="pdatestart"
                       :bootstrap-styling="true"
                       :value="formatDate(event.date_start)"
@@ -132,11 +141,11 @@
                 </b-form-group>
                 <b-form-group
                   horizontal
-                  :label-cols="2"
+                  :label-cols="3"
                   label="End Date"
                   label-for="pdateend"
                 >
-                  <b-col sm="6">
+                  <b-col sm="7">
                     <datepicker name="pdateend"
                       input-class=""
                       :bootstrap-styling="true"
@@ -145,14 +154,14 @@
                     </datepicker>
                   </b-col>
                 </b-form-group>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
                       <datepicker name="pdateend"
                       :value="formatDate(event.date_end)"
                       @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd"></datepicker>
                   </div>
-                </div>
+                </div> -->
                 <div class="form-group">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
                   <div class="col-md-7">
@@ -804,11 +813,9 @@ export default {
 .instruction {
   font-size: 16px;
 }
-.b-form-group {
-  margin-bottom: 0.5rem !important
-}
-.b-input-group {
-  margin-bottom: 0.5rem !important
+input {
+  padding-left: 0;
+  width: 100%;
 }
 .vdp-datepicker .form-control[readonly] {
     background-color: white;
