@@ -30,7 +30,7 @@
     "jquery-ui-bundle": "^1.11.4",
     "moment": "^2.17.1",
     "text-mask-addons": "^3.7.1",
-    "vee-validate": "^2.0.3",
+    "vee-validate": "^2.0.4",
     "vue": "^2.5.13",
     "vue-chartjs": "^2.6.5",
     "vue-directive-tooltip": "^1.4.2",

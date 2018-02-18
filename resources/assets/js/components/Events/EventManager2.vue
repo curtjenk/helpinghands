@@ -50,74 +50,70 @@
     </div>
     <b-card no-body>
       <b-tabs pills card v-model="tabIndex">
-        <b-tab title="Basics">
-          <b-form-row :no-gutters="true">
-            <b-col>
-              <span v-if="modeShow">
-                <div class="form-group">
-                  <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
-                  <div class="col-md-9">
-                      <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
-                  </div>
-                </div>
-              </span>
-              <span v-else>
-                <div class="" style="margin-bottom:10px;">
-                  <filter-memberships
-                      :userid="user0.id"
-                      :filterByTeam="true"
-                      :organization="organization"
-                      :team="team"
-                      @orgTeamSelected="setOrgTeam"
-                  ></filter-memberships>
-                </div>
-              </span>
-            </b-col>
-          </b-form-row>
+        <b-tab title="Let's Start">
           <b-row :no-gutters="true">
-            <b-col>
-              <span v-if="modeShow">
-                <div class="form-group row">
-                  <label for="subject" class="col-md-3 col-sm-3 control-label">Subject</label>
-                  <div class="col-md-9">
-                      <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
-                  </div>
+            <span v-if="modeShow">
+              <div class="form-group row mb-2">
+                <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
+                <div class="col-md-9">
+                    <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
                 </div>
-              </span>
-              <span v-else>
-                <div class="form-group row">
-                  <label for="subject" class="col-md-2 col-sm-2 control-label">Subject</label>
-                  <div class="col-md-9 col-sm-9" style="padding-left: 0px;">
-                      <input required name="subject" class="" v-model="event.subject" type="text" size="70" autofocus>
-                  </div>
-                </div>
-              </span>
-            </b-col>
-            <!-- <b-col>
-            </b-col> -->
+              </div>
+            </span>
+            <span v-else>
+              <div class="form-group row mb-2">
+                <filter-memberships
+                    :userid="user0.id"
+                    :filterByTeam="true"
+                    :organization="organization"
+                    :team="team"
+                    @orgTeamSelected="setOrgTeam"
+                ></filter-memberships>
+              </div>
+            </span>
           </b-row>
           <b-row :no-gutters="true">
+            <span v-if="modeShow">
+              <div class="form-group row">
+                <label for="subject" class="col-md-2 col-sm-2 control-label">Subject</label>
+                <div class="col-md-9">
+                    <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
+                </div>
+              </div>
+            </span>
+            <span v-else>
+              <div class="form-group row">
+                <label for="subject" class="">Subject</label>
+                <div class="ml-1">
+                    <input required name="subject" class="" v-model="event.subject" type="text" size="70" autofocus>
+                </div>
+              </div>
+            </span>
+          </b-row>
+        </b-tab>
+        <b-tab title="Date/Time">
+          <div class="row no-gutters">
             <b-col>
               <span v-if="modeShow">
-                <div class="form-group">
+                <div class="form-group row">
                   <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
                   <div class="col-md-7 col-sm-7">
                       <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</p>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                   <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
                   <div class="col-md-7 col-sm-7">
                       <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'YYYY-MM-DD')}}</p>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
                   <div class="col-md-7">
                       <p id="eventtype" class="form-control-static">{{ eventTypeName }}</p>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                   <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-7">
                     <p id="status" class="form-control-static">{{ statusName }}</p>
@@ -125,46 +121,29 @@
                 </div>
               </span>
               <span v-else style="width: 100%;">
-                <b-form-group
-                  horizontal
-                  :label-cols="3"
-                  label="Start Date"
-                  label-for="pdatestart"
-                >
-                  <b-col sm="7">
+                <div class="form-group row no-gutters">
+                  <label for="pdatestart" class="col-md-3 col-sm-3">Start Date</label>
+                  <div class="col-sm-5">
                     <datepicker name="pdatestart"
                       :bootstrap-styling="true"
                       :value="formatDate(event.date_start)"
                       @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
                     </datepicker>
-                  </b-col>
-                </b-form-group>
-                <b-form-group
-                  horizontal
-                  :label-cols="3"
-                  label="End Date"
-                  label-for="pdateend"
-                >
-                  <b-col sm="7">
+                  </div>
+                </div>
+                <div class="form-group row no-gutters">
+                  <label for="pdateend" class="col-md-3 col-sm-3">End Date</label>
+                  <div class="col-sm-5">
                     <datepicker name="pdateend"
-                      input-class=""
                       :bootstrap-styling="true"
                       :value="formatDate(event.date_start)"
                       @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd">
                     </datepicker>
-                  </b-col>
-                </b-form-group>
-                <!-- <div class="form-group">
-                  <label for="pdateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
-                  <div class="col-md-7 col-sm-7">
-                      <datepicker name="pdateend"
-                      :value="formatDate(event.date_end)"
-                      @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd"></datepicker>
                   </div>
-                </div> -->
-                <div class="form-group">
+                </div>
+                <div class="form-group row no-gutters">
                   <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
-                  <div class="col-md-7">
+                  <div class="col-sm-7">
                     <select v-model="event.event_type_id" name="type">
                       <option disabled value="">Select one</option>
                       <option v-for="etype in eventtypes0" v-bind:key="etype.id" v-bind:value="etype.id">
@@ -173,7 +152,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row no-gutters">
                   <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
                   <div class="col-md-9">
                     <select v-model="event.status_id" name="status">
@@ -188,27 +167,25 @@
             </b-col>
             <b-col>
               <span v-if="modeShow">
-                <b-form-group
-                  label="Start Time"
-                  label-for="timestart"
-                >
+                <div class="form-group row no-gutters">
+                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
                   <div class="col-md-9">
                       <p id="timestart" type="text" class="form-control-static">{{ formatTimePicker(event.time_start) }}</p>
                   </div>
-                </b-form-group>
-                <div class="form-group">
+                </div>
+                <div class="form-group row no-gutters">
                   <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
                   <div class="col-md-9">
                       <p id="timeend" type="text" class="form-control-static">{{ formatTimePicker(event.time_end) }}</p>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row no-gutters">
                   <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
                   <div class="col-md-7">
                       <p id="cost" class="form-control-static">{{ event.cost }}</p>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row no-gutters">
                   <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
                   <div class="col-md-7">
                     <p id="limit" class="form-control-static">{{ event.signup_limit }}</p>
@@ -216,22 +193,19 @@
                 </div>
               </span>
               <span v-else>
-                <b-form-group
-                  label="Start Time"
-                  label-for="timestart"
-                >
-                  <!-- <div class="col-md-9"> -->
+                <div class="form-group row no-gutters">
+                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                  <div class="col-md-9">
                       <vue-timepicker name="timestart"
                         v-model="event.time_start"
                         format="hh:mm a"
                         :minute-interval="15"
                         @change="setInitialEndTime"
                       />
-                  <!-- </div> -->
-                </b-form-group>
-                <div class="form-group">
-                  <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
-                  <!--   :time-value.sync="event.time_end" -->
+                  </div>
+                </div>
+                <div class="form-group row no-gutters">
+                  <label for="timeend" class="col-md-3 col-sm-3 control-label">End Time</label>
                   <div class="col-md-9">
                       <vue-timepicker name="timeend"
                         v-model="event.time_end"
@@ -240,19 +214,18 @@
                       />
                   </div>
                 </div>
-
-                <div class="form-group">
-                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
-                  <div class="col-md-7">
+                <div class="form-group row no-gutters">
+                  <label for="cost" class="col-md-3 col-sm-3 control-label">Cost</label>
+                  <div class="col-md-4">
                     <masked-input name="cost" type="text" size="10" width="10"
                         v-model="event.cost"
                         :mask="numberMask">
                     </masked-input>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
-                  <div class="col-md-9">
+                <div class="form-group row no-gutters">
+                  <label for="limit" class="col-md-3 col-sm-3 control-label">Limit</label>
+                  <div class="col-md-4">
                     <masked-input name="limit" type="text" size="3" width="3"
                         v-model="event.signup_limit"
                         :mask="numberMaskLimit">
@@ -261,7 +234,7 @@
                 </div>
               </span>
             </b-col>
-          </b-row>
+          </div>
         </b-tab>
         <b-tab title="Description">
           <quill-editor v-model="event.description"
@@ -274,13 +247,12 @@
           </quill-editor>
         </b-tab>
         <b-tab title="Attachments">
-          <div class="mytab">
-            <div class="form-horizontal">
+          <div class="">
               <span v-if="modeShow">
                 <!--  -->
               </span>
               <span v-else>
-                <div class="caption">
+                <div class="">
                   <span>Attachments</span>&nbsp;&nbsp;&nbsp;
                   <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
                     <a  href="#" type="button" class="text-success"
@@ -288,30 +260,32 @@
                       <i class="fa fa-plus fa-lg fa-fw text-success"></i>
                     </a>
                   </span>
+                  <span v-else v-tooltip.right="'Done Adding'">
+                    <a href="#" type="button" class="text-danger"
+                      @click="toggleIsAddingFile()">
+                      <i class="fa fa-minus fa-lg fa-fw"></i>
+                    </a>
+                  </span>
                 </div>
-                <div v-if="isAddingFile" class="panel panel-default">
-                  <div class="form-group row panel-body">
-                    <div class="">
-                      <div class="col-md-4 col-sm-4" style="margin-top:10px;">
+                <div v-if="isAddingFile" class="card mt-3">
+                  <div class="card-body">
+                    <div class="form-group row no-gutters ">
+                      <!-- <div class="col-md-4 col-sm-4"> -->
                         <input id="ntd" ref="fileInput" type="file" required  @change="processFile($event)"/>
-                      </div>
+                      <!-- </div> -->
+                    </div>
+                    <div class="form-group row no-gutters ">
                       <div class="col-md-4 col-sm-5">
                         <float-label>
                           <input id="ntn" v-model="new_file_description" type="text" required
                             class="editInfo" size="60" maxlength="255" placeholder="Description"/>
                         </float-label>
                       </div>
-                      <div class="" style="padding: 0px;">
+                      <div class="col-md-4">
                         <span v-tooltip.top="'Add'" class="">
                             <a href="#" type="button" class="text-primary"
                               @click="addFileToList()">
                               <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                            </a>
-                        </span>
-                        <span v-tooltip.top="'Close'">
-                            <a href="#" type="button" class="text-danger"
-                              @click="toggleIsAddingFile()">
-                              <i class="fa fa-ban fa-lg fa-fw"></i>
                             </a>
                         </span>
                       </div>
@@ -319,7 +293,7 @@
                   </div>
                 </div>
               </span>
-              <table class="table table-responsive table-striped table-condensed">
+              <table class="mt-3 table table-responsive table-striped table-condensed">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -352,7 +326,6 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
           </div>
         </b-tab>
       </b-tabs>
@@ -361,10 +334,13 @@
     <div class="text-center">
       <b-button-group class="mt-2">
         <b-btn @click="tabIndex--">Previous</b-btn>
-        <b-btn @click="tabIndex++">Next</b-btn>
+        <span class="ml-2">
+          <b-btn v-if="tabIndex < 3"  @click="tabIndex++">Next</b-btn>
+          <b-btn v-if="tabIndex == 3" @click="wizardOnComplete">Submit</b-btn>
+        </span>
       </b-button-group>
-      <br>
-      <span class="text-muted">Current Tab: {{tabIndex}}</span>
+      <!-- <br>
+      <span class="text-muted">Current Tab: {{tabIndex}}</span> -->
     </div>
 
   </div>
@@ -376,8 +352,8 @@ import { MESSAGE_DURATION } from "../../mixins/constants";
 import MaskedInput from "vue-text-mask";
 import createNumberMask from "text-mask-addons/dist/createNumberMask"; //addon for vue-text-mask
 // import FormError from '../FormError';
-import { FormWizard, TabContent } from "vue-form-wizard";
-import "vue-form-wizard/dist/vue-form-wizard.min.css";
+// import { FormWizard, TabContent } from "vue-form-wizard";
+// import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import Datepicker from "vuejs-datepicker";
 import VueTimepicker from "vue2-timepicker";
 // quill require styles
@@ -389,8 +365,8 @@ import { quillEditor } from "vue-quill-editor";
 export default {
   mixins: [commonMixins],
   components: {
-    FormWizard,
-    TabContent,
+    // FormWizard,
+    // TabContent,
     Datepicker,
     VueTimepicker,
     quillEditor,
@@ -429,10 +405,18 @@ export default {
       new_file_description: "",
       editorOption: {
         placeholder: "",
-        readOnly: false
-        // modules: {
-        //   toolbar: ['bold', 'italic', 'underline', 'strike']
-        // }
+        readOnly: false,
+        modules: {
+          toolbar: [
+            { header: [1, 2, 3, 4, false] },
+            { 'size': ['small', false, 'large', 'huge'] },
+            'bold', 'italic', 'underline', 'strike',
+            {'list': 'ordered'}, { 'list': 'bullet' },
+            { 'color': [] }, { 'background': [] },
+            { 'indent': '-1'}, { 'indent': '+1' },
+            { 'align': [] }
+          ]
+        }
       },
       ready: false,
       error_message: "",
@@ -812,6 +796,10 @@ export default {
 <style lang="css" >
 .instruction {
   font-size: 16px;
+}
+label {
+  padding: 0px;
+  margin: 0px;
 }
 input {
   padding-left: 0;
