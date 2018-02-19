@@ -1,16 +1,14 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-offset-2 col-sm-offset-2 text-center">
-        <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-            <p><strong>error_message</strong></p>
-            <div v-for="msg in errors">
-                {{ msg }}
-            </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
+  <!-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" -->
+    <nav-top-2
+        :title="navTitle"
+        :user="user"
+        :roles="roles"
+        :permissions="permissions"
+        :links="navLinks"
+    ></nav-top-2>
+    <!-- <div class="row mt-4">
       <template v-if="modeShow">
         <span v-tooltip.top="'List Events'" class="pull-right">
           <a  href="#" type="button" class="text-info"
@@ -47,9 +45,19 @@
           </a>
         </span>
       </template>
+    </div> -->
+    <div class="row">
+      <div class="col-md-offset-2 col-sm-offset-2 text-center">
+        <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+            <p><strong>error_message</strong></p>
+            <div v-for="msg in errors">
+                {{ msg }}
+            </div>
+        </div>
+      </div>
     </div>
     <b-card no-body>
-      <b-tabs pills card v-model="tabIndex">
+      <b-tabs pills card v-model="tabIndex" ref="mytabs">
         <b-tab title="Let's Start">
           <b-row :no-gutters="true">
             <span v-if="modeShow">
@@ -335,8 +343,8 @@
       <b-button-group class="mt-2">
         <b-btn @click="tabIndex--">Previous</b-btn>
         <span class="ml-2">
-          <b-btn v-if="tabIndex < 3"  @click="tabIndex++">Next</b-btn>
-          <b-btn v-if="tabIndex == 3" @click="wizardOnComplete">Submit</b-btn>
+          <b-btn v-if="tabIndex < (tabCount - 1)"  @click="tabIndex++">Next</b-btn>
+          <b-btn v-if="tabIndex == (tabCount - 1)" @click="wizardOnComplete">Submit</b-btn>
         </span>
       </b-button-group>
       <!-- <br>
@@ -381,11 +389,24 @@ export default {
     event0: { type: Object, required: false },
     attachments0: { type: Array, required: false },
     organization0: { type: Object, required: false },
-    team0: { type: Object, required: false }
+    team0: { type: Object, required: false },
+
+    user: {
+      type: Object, default: null
+    },
+    roles: {
+      type: Array, default: ()=>[]
+    },
+    permissions: {
+      type: Array, default: ()=>[]
+    },
   },
   data() {
     return {
+      navTitle: '',
+      navLinks: [],
       tabIndex: 0,
+      tabCount: 0,
       numberMask: createNumberMask({
         allowDecimal: true,
         integerLimit: 4,
@@ -452,13 +473,19 @@ export default {
     };
   },
   mounted: function() {
+    this.tabCount = this.$refs.mytabs.$children.length
     this.setMode(this.mode0);
     this.attachments = [];
     if (this.modeCreate) {
+      this.navTitle = "Create Event"
       this.initialize();
     }
     if (this.modeShow) {
+      this.navTitle = "View Event"
       this.editor.disable();
+    }
+    if (this.modeEdit) {
+      this.navTitle = "Edit Event"
     }
     if (this.modeShow || this.modeEdit) {
       if (this.attachments0 != null && this.attachments0.length > 0) {
@@ -532,10 +559,90 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    currentMode() {
+      this.mode_change();
+    }
+  },
   methods: {
+    show_alert() {
+      window.alert('hello');
+      console.log("show_alert was invoked")
+    },
+    mode_change_create() {
+      this.setModeCreate();
+      this.editor.enable()
+    },
+    mode_change_edit() {
+      this.setModeEdit();
+      this.editor.enable()
+    },
+    mode_change_show() {
+      this.setModeShow();
+      this.editor.disable()
+    },
+    mode_change() {
+      // <!-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" -->
+          if (this.modeShow) {
+            this.navLinks = [
+              {perm:'List events', href:'/event', click:null, name:'List', icon:'fa-list-ul fa-fw'},
+              {perm:'Edit event', href:'#', click:this.mode_change_edit, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
+              {perm:'Create event', href:'#', click:this.mode_change_create, name:'New', icon:'fa-plus-square-o fa-fw'}
+            ]
+          }
+          if (this.modeEdit) {
+            this.navLinks = [
+              {perm:'Show event', href:'#', click:this.mode_change_show, name:'Cancel', icon:'fa-eye fa-fw'}
+            ]
+          }
+          if (this.modeCreate) {
+            this.navLinks = [
+              {perm:'List events', href:'/event', click:null, name:'Cancel', icon:'fa-list-ul fa-fw'}
+            ]
+          }
+    /*
+
+    <template v-if="modeShow">
+      <span v-tooltip.top="'List Events'" class="pull-right">
+        <a  href="#" type="button" class="text-info"
+          @click="goToLocation('/event')">
+          <i class="fa fa-list-ul fa-3x fa-fw text-info"></i>
+        </a>
+      </span>
+      <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
+        <a  href="#" type="button" class="text-warning"
+          @click="setModeEdit(); editor.enable();">
+          <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
+        </a>
+      </span>
+      <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="setModeCreate(); editor.enable(); initialize();">
+          <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
+        </a>
+      </span>
+    </template>
+    <template v-if="modeEdit">
+      <span v-tooltip.top="'Cancel Edit'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="setModeShow(); editor.disable();">
+          <i class="fa fa-eye fa-3x fa-fw text-success"></i>
+        </a>
+      </span>
+    </template>
+    <template v-if="modeCreate">
+      <span v-tooltip.top="'Cancel Create'" class="pull-right">
+        <a  href="#" type="button" class="text-success"
+          @click="goToLocation('/event')">
+          <i class="fa fa-list-ul fa-3x fa-fw text-danger"></i>
+        </a>
+      </span>
+    </template>
+     */
+    },
     initialize() {
-      console.log("initialize");
+      // console.log("initialize");
+      this.mode_change();
       this.attachments = [];
       this.event.id = 0;
       this.event.subject = "";
@@ -543,14 +650,10 @@ export default {
       this.event.description_text = "";
       this.event.date_start = new Date();
       this.event.date_end = new Date();
-      // this.event.time_start = this.event0.time_start
-      // this.event.time_end = this.event0.time_end
       this.event.event_type_id = 1;
       this.event.status_id = 1;
       this.event.cost = "";
       this.event.signup_limit = "";
-      // this.event.organization_id = this.event0.organization_id
-      // this.event.team_id = this.event0.team_id
     },
     formatOrgTeam() {
       let r = this.organization.name;
@@ -597,6 +700,7 @@ export default {
       //   vm.new_file = e.target.result;
       // };
       // reader.readAsDataURL(event.target.files[0]);
+      console.log(event.target.files[0]);
       this.new_file = event.target.files[0];
       this.new_file_name = event.target.files[0].name;
       this.new_file_type = event.target.files[0].type;
@@ -711,7 +815,7 @@ export default {
           console.log("promises", promises);
           if (promises === undefined || promises === null) {
             this.setModeShow();
-            this.$refs.form_wizard.changeTab(2, 0);
+            // this.$refs.form_wizard.changeTab(2, 0);
           } else {
             axios
               .all(promises)
@@ -724,7 +828,7 @@ export default {
                   this.attachments[ndx].file = {};
                 });
                 this.setModeShow();
-                this.$refs.form_wizard.changeTab(2, 0);
+                // this.$refs.form_wizard.changeTab(2, 0);
               })
               .catch(e => {
                 throw e;

@@ -72,7 +72,7 @@ common.convert_descendants_to_local_time = function(obj) {
   * Initialization of events.
   */
  $(function() {
-   console.log('wlp '+window.location.pathname);
+   // console.log('wlp '+window.location.pathname);
   if (window.location.pathname != '/login' && window.location.pathname != '/') {
     common.session_timeout_helper();
   } else {
@@ -83,7 +83,7 @@ common.convert_descendants_to_local_time = function(obj) {
         location.reload();
       }, 14*60000);
     }
-  }    
+  }
  });
  /**
   * truncate a string and add ellipsis ... html compatible
