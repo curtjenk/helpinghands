@@ -62,26 +62,11 @@
           <b-row :no-gutters="true">
             <span v-if="modeShow">
               <div class="form-group row mb-2">
-                <label for="orgteam" class="col-md-3 col-sm-3 control-label">Organization</label>
+                <label for="orgteam" class="col-md-2 col-sm-2 control-label">Organization</label>
                 <div class="col-md-9">
                     <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
                 </div>
               </div>
-            </span>
-            <span v-else>
-              <div class="form-group row mb-2">
-                <filter-memberships
-                    :userid="user0.id"
-                    :filterByTeam="true"
-                    :organization="organization"
-                    :team="team"
-                    @orgTeamSelected="setOrgTeam"
-                ></filter-memberships>
-              </div>
-            </span>
-          </b-row>
-          <b-row :no-gutters="true">
-            <span v-if="modeShow">
               <div class="form-group row">
                 <label for="subject" class="col-md-2 col-sm-2 control-label">Subject</label>
                 <div class="col-md-9">
@@ -90,6 +75,15 @@
               </div>
             </span>
             <span v-else>
+              <div class="form-group row mb-3">
+                <filter-memberships
+                    :userid="user0.id"
+                    :filterByTeam="true"
+                    :organization="organization"
+                    :team="team"
+                    @orgTeamSelected="setOrgTeam"
+                ></filter-memberships>
+              </div>
               <div class="form-group row">
                 <label for="subject" class="">Subject</label>
                 <div class="ml-1">
@@ -98,6 +92,14 @@
               </div>
             </span>
           </b-row>
+          <!-- <b-row :no-gutters="true">
+            <span v-if="modeShow">
+
+            </span>
+            <span v-else>
+
+            </span>
+          </b-row> -->
         </b-tab>
         <b-tab title="Date/Time">
           <div class="row no-gutters">
@@ -344,7 +346,7 @@
         <b-btn @click="tabIndex--">Previous</b-btn>
         <span class="ml-2">
           <b-btn v-if="tabIndex < (tabCount - 1)"  @click="tabIndex++">Next</b-btn>
-          <b-btn v-if="tabIndex == (tabCount - 1)" @click="wizardOnComplete">Submit</b-btn>
+          <b-btn v-if="tabIndex == (tabCount - 1) && !modeShow" @click="wizardOnComplete">Submit</b-btn>
         </span>
       </b-button-group>
       <!-- <br>
@@ -570,15 +572,20 @@ export default {
       console.log("show_alert was invoked")
     },
     mode_change_create() {
+      this.tabIndex = 0;
       this.setModeCreate();
-      this.editor.enable()
+      this.navTitle = "Create Event"
+      this.editor.enable();
+      this.initialize();
     },
     mode_change_edit() {
       this.setModeEdit();
+      this.navTitle = "Edit Event"
       this.editor.enable()
     },
     mode_change_show() {
       this.setModeShow();
+      this.navTitle = "View Event"
       this.editor.disable()
     },
     mode_change() {
@@ -586,7 +593,7 @@ export default {
           if (this.modeShow) {
             this.navLinks = [
               {perm:'List events', href:'/event', click:null, name:'List', icon:'fa-list-ul fa-fw'},
-              {perm:'Edit event', href:'#', click:this.mode_change_edit, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
+              {perm:'Update event', href:'#', click:this.mode_change_edit, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
               {perm:'Create event', href:'#', click:this.mode_change_create, name:'New', icon:'fa-plus-square-o fa-fw'}
             ]
           }
@@ -897,7 +904,7 @@ export default {
 }; //End of export
 </script>
 
-<style lang="css" >
+<style lang="css" scoped>
 .instruction {
   font-size: 16px;
 }
