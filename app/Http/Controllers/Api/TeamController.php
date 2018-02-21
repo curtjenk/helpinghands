@@ -39,7 +39,7 @@ class TeamController extends Controller
             $q->where('organizations.id',$inputs->orgid);
         })
         ->when($inputs->filter, function($q) use($inputs){
-            Log::debug("Filter on ".$inputs->filter);
+            // Log::debug("Filter on ".$inputs->filter);
             return $q->where(function($q2) use($inputs) {
                 $q2->where('organizations.name', 'like', '%'.$inputs->filter.'%')
                 ->orWhere('teams.name', 'like', '%'.$inputs->filter.'%');

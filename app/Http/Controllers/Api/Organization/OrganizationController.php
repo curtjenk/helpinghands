@@ -31,7 +31,7 @@ class OrganizationController extends Controller
         $query=$query
         ->where('organizations.name','!=','Ministry Engage')
         ->when($inputs->filter, function($q) use($inputs){
-            Log::debug("Filter on ".$inputs->filter);
+            // Log::debug("Filter on ".$inputs->filter);
             return $q->where(function($q2) use($inputs) {
                 $q2->where('organizations.name', 'like', '%'.$inputs->filter.'%')
                 ->orWhere('organizations.address1', 'like', '%'.$inputs->filter.'%')

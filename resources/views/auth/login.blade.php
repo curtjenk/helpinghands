@@ -42,14 +42,10 @@
                 </div>
 
                 <div class="checkbox mb-3 text-center">
-                    {{-- <div class="text-center"> --}}
-                        {{-- <div class="checkbox"> --}}
-                            <label>
-                                <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <span>Remember Me</span>
-                            </label>
-                        {{-- </div> --}}
-                    {{-- </div> --}}
+                    <label>
+                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <span>Remember Me</span>
+                    </label>
                 </div>
 
                 <div class="form-group">

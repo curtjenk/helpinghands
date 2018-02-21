@@ -19,12 +19,16 @@
   :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
 ></events-list>
 
-<div class="modal fade" id="eventPay" tabindex="-1" user="dialog" aria-labelledby="Log Event Payment">
-  <div class="modal-dialog modal-md" user="document">
+<div class="modal fade" id="eventPay" tabindex="-1" role="dialog" aria-labelledby="Log Event Payment">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"></h4>
+          <div class="container-fluid">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">placeholder</h4>
+           </div>
       </div>
       <form method="POST" action="">
           {{ csrf_field() }}
@@ -45,10 +49,18 @@
 <div class="modal fade" id="deleteevent" tabindex="-1" user="dialog" aria-labelledby="Confirm delete event">
   <div class="modal-dialog modal-sm" user="document">
     <div class="modal-content">
-      <div class="modal-header">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Delete Event</h4>
+             </div>
+        </div>
+      {{-- <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">Delete Event</h4>
-      </div>
+      </div> --}}
       <div class="modal-body">
         Are you sure you want to delete this event?
       </div>
@@ -64,13 +76,17 @@
   </div>
 </div>
 
-<div class="modal fade" id="eventnotify" tabindex="-1" user="dialog" aria-labelledby="Send Notification event">
-  <div class="modal-dialog modal-sm" user="document">
+<div class="modal fade" id="eventnotify" tabindex="-1" role="dialog" aria-labelledby="Send Notification event">
+  <div class="modal-dialog" role="document" style="width: 41%;">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">placeholder</h4>
-        <div class="text-center">Enter brief message below</div>
+        <div class="container-fluid">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">placeholder</h4>
+            <div class="">Enter brief message below</div>
+         </div>
       </div>
       <form method="POST" action="">
         <div class="modal-body">

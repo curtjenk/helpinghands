@@ -31,7 +31,14 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
             Route::get('/dashboard', 'DashboardController@index');
+
             Route::get('/event', 'EventController@index');
+            Route::post('event/notify/{id}', 'EventController@notify');
+            Route::get('event/{id}/members', 'EventController@members');
+            Route::resource('event', 'EventController',
+                ['only'=>['store', 'update', 'destroy']]
+            );
+
             Route::get('/member', 'UserController@index');
             Route::put('/member/{id}', 'UserController@update');
             Route::get('member/{id}/membership', 'UserController@membership');
@@ -44,10 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
 
-            Route::get('event/{id}/members', 'EventController@members');
-            Route::resource('event', 'EventController',
-                ['only'=>['store', 'update']]
-            );
+
             Route::resource('document', 'DocumentController',
                 ['only'=>['show', 'store', 'destroy']]
             );
@@ -74,7 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('event/{id}/signup', 'EventController@signup');
         Route::get('event/{eid}/download/{fid}', 'EventController@download');
         Route::get('event/calendar', 'EventController@calendar');
-        Route::post('event/notify/{id}', 'EventController@notify');
+
         //For rendering the initial views only, no business logic
         Route::resource('event', 'EventController',
             ['only'=>['index', 'create', 'show']]

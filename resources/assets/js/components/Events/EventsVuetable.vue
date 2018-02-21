@@ -255,7 +255,7 @@ export default {
     getSignupsPay (data, index) {
     //   console.log(data);
       $("#payups").empty();
-      axios.get('/member/signups/'+data.id)
+      axios.get('/api/member/signups/'+data.id)
       .then(response => {
         for(var i=0; i< response.data.length; i++)
         {
@@ -276,7 +276,7 @@ export default {
 
         }
         $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
-        $('#eventPay form').attr('action', 'member/eventpay/'+data.id);
+        $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
         $("#eventPay").modal('show');
       })
       .catch(e => {

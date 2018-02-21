@@ -70,8 +70,8 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        Log::debug(print_r($request->all(),true));
-        Log::debug($request->organization_id);
+        // Log::debug(print_r($request->all(),true));
+        // Log::debug($request->organization_id);
 
         $user = Auth::user();
         $this->authorize('create-event');
@@ -120,7 +120,7 @@ class DocumentController extends Controller
         $pathToFile =  Storage::disk('public')
             ->getDriver()->getAdapter()
             ->applyPathPrefix($doc->path);
-        Log::debug($pathToFile);
+        // Log::debug($pathToFile);
         //
         return response()->file($pathToFile);
     }

@@ -95,7 +95,7 @@ class EventController extends Controller
         ]);
         $signups = $event->signups()->get();
         $message = $request->input('message');
-        // dump($signups);
+        Log::debug($signups);
         foreach ($signups as $u) {
             Mail::to($u)->queue(new EventNotification($event, $u, $message));
         }
@@ -161,7 +161,7 @@ class EventController extends Controller
         foreach ($query->items() as &$item)
         {
             if (isset($item->team_id)) {
-                Log::debug("team ".$item->team_id);
+                // Log::debug("team ".$item->team_id);
                 $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
                 $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
                 $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event');
