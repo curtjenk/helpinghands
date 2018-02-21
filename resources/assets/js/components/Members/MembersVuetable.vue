@@ -163,10 +163,11 @@ export default {
           window.location.href = '/member/'+data.id+'/edit';
     },
     getEvents (data, index) {
-      console.log(data);
+      // console.log(data);
       $("#proxySignup select").empty();
       axios.get('/api/event?paginate=0')
       .then(response => {
+        console.log(response.data)
         for(var i=0; i< response.data.length; i++)
         {
           if (response.data[i].status=='Open') {
@@ -176,7 +177,7 @@ export default {
           }
         }
         $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-        $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
+        $('#proxySignup form').attr('action', 'api/member/' + data.id + '/proxySignup');
         $("#proxySignup").modal('show');
       })
       .catch(e => {

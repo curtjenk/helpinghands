@@ -567,10 +567,6 @@ export default {
     }
   },
   methods: {
-    show_alert() {
-      window.alert('hello');
-      console.log("show_alert was invoked")
-    },
     mode_change_create() {
       this.tabIndex = 0;
       this.setModeCreate();
@@ -707,7 +703,7 @@ export default {
       //   vm.new_file = e.target.result;
       // };
       // reader.readAsDataURL(event.target.files[0]);
-      console.log(event.target.files[0]);
+      // console.log(event.target.files[0]);
       this.new_file = event.target.files[0];
       this.new_file_name = event.target.files[0].name;
       this.new_file_type = event.target.files[0].type;
@@ -788,6 +784,7 @@ export default {
         });
     },
     sendData: function() {
+      this.tabIndex = 0;
       let method = "post";
       let url = "/api/event";
       if (this.modeShow) {
@@ -819,22 +816,22 @@ export default {
               promises.push(this.uploadFile(a, x));
             }
           }
-          console.log("promises", promises);
+          // console.log("promises", promises);
           if (promises === undefined || promises === null) {
-            this.setModeShow();
+            this.mode_change_show();
             // this.$refs.form_wizard.changeTab(2, 0);
           } else {
             axios
               .all(promises)
               .then(response => {
-                console.log("all good", response);
+                // console.log("all good", response);
                 response.forEach(r => {
                   let id = r.data.id;
                   let ndx = parseInt(r.data.echo);
                   this.attachments[ndx].id = id;
                   this.attachments[ndx].file = {};
                 });
-                this.setModeShow();
+                this.mode_change_show();
                 // this.$refs.form_wizard.changeTab(2, 0);
               })
               .catch(e => {

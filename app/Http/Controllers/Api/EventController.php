@@ -95,7 +95,7 @@ class EventController extends Controller
         ]);
         $signups = $event->signups()->get();
         $message = $request->input('message');
-        Log::debug($signups);
+        // Log::debug(print_r($signups,true));
         foreach ($signups as $u) {
             Mail::to($u)->queue(new EventNotification($event, $u, $message));
         }
@@ -152,30 +152,31 @@ class EventController extends Controller
             ->groupby('statuses.id')
             ->groupby('event_types.id');
 
-
-        //foreach();
-        //$authorizations = ["can_update_event"=>$canUpdateEvent,
-        //                   "can_show_event"=>true,
-        //                   "can_create_event"=>$canCreateEvent];
-        $query = $query->paginate($inputs->limit);
-        foreach ($query->items() as &$item)
-        {
-            if (isset($item->team_id)) {
-                // Log::debug("team ".$item->team_id);
-                $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
-                $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
-                $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event');
-            } else {
-                $canUpdateEvent = $user->has_org_permission($item->organization_id, 'Update event');
-                $canShowEvent   = $user->has_org_permission($item->organization_id, 'Show event');
-                $canCreateEvent = $user->has_org_permission($item->organization_id, 'Create event');
+        if ($request->input('paginate') == '0') {
+            // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
+            $query = $query->where('statuses.name', 'Open')
+                ->orderby('events.date_start', 'desc');
+            return response()->json($query->get());
+        } else {
+            $query = $query->paginate($inputs->limit);
+            foreach ($query->items() as &$item)
+            {
+                if (isset($item->team_id)) {
+                    // Log::debug("team ".$item->team_id);
+                    $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
+                    $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
+                    $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event');
+                } else {
+                    $canUpdateEvent = $user->has_org_permission($item->organization_id, 'Update event');
+                    $canShowEvent   = $user->has_org_permission($item->organization_id, 'Show event');
+                    $canCreateEvent = $user->has_org_permission($item->organization_id, 'Create event');
+                }
+                $item->can_update_event = $canUpdateEvent;
+                $item->can_create_event = $canCreateEvent;
+                $item->can_show_event = $canShowEvent;
             }
-            $item->can_update_event = $canUpdateEvent;
-            $item->can_create_event = $canCreateEvent;
-            $item->can_show_event = $canShowEvent;
+            return $query;
         }
-
-        return $query;
 
     }
 
@@ -231,7 +232,7 @@ class EventController extends Controller
         $user = Auth::user();
         $event = App\Event::findOrFail($event_id);
         $this->authorize('show', $event);
-        $file = App\EventFiles::where('id', $file_id)
+        $file = App\EventFile::where('id', $file_id)
             ->where('event_id', $event->id)
             ->first();
         if(!isset($file)){

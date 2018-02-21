@@ -24,7 +24,7 @@ class Event extends Model
      */
     public function files()
     {
-        return $this->hasMany('App\EventFiles');
+        return $this->hasMany('App\EventFile');
     }
     /**
      * Get the Organization for this Event.
