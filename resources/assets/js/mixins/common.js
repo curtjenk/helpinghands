@@ -110,7 +110,7 @@ export const commonMixins = {
       return this.roles ? this.roles.includes('Site') : false;
     },
     isVisitor() {
-      return this.roles ? this.roles.includes('Visitor') : false;
+      return this.roles ? this.roles.includes('Visitor') && this.roles.length===1 : false;
     }
   }
 };
