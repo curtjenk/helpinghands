@@ -2,6 +2,12 @@ import { Bar } from 'vue-chartjs'
 export default Bar.extend({
   mounted () {
     // Overwriting base render method with actual data.
+    this.renderChart({
+      labels: this.labels,
+      datasets: this.datasets
+    },
+    this.options
+    )
   },
   props : {
       labels: {
@@ -19,6 +25,7 @@ export default Bar.extend({
   },
   watch: {
     datasets () {
+      this._chart.destroy()
       this.renderChart({
         labels: this.labels,
         datasets: this.datasets

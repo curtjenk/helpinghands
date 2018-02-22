@@ -3,6 +3,16 @@ export default Doughnut.extend({
   name: "doughnut-chart",
   mounted () {
     // Overwriting base render method with actual data.
+    this.renderChart({
+      labels: this.labels,
+      datasets: [{
+        data: this.data,
+        backgroundColor: this.bgColors
+      //   hoverBackgroundColor: this.hoverBGColors
+      }]
+    },
+    this.options
+    )
   },
   props : {
       labels: {
@@ -28,6 +38,7 @@ export default Doughnut.extend({
   },
   watch: {
     data () {
+      this._chart.destroy()
       this.renderChart({
         labels: this.labels,
         datasets: [{

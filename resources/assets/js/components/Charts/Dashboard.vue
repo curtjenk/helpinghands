@@ -30,7 +30,7 @@
     <div class=" card">
         <div class="card-header text-center">Year-To-Date Events Per Month</div>
         <div class="card-body">
-            <bar-chart id="b1" :datasets="bardata1" :labels="barlabels1" :options="baroptions1"></bar-chart>
+            <bar-chart id="b1" ref="barChart" :datasets="bardata1" :labels="barlabels1" :options="baroptions1"></bar-chart>
         </div>
     </div>
   </div>
@@ -214,68 +214,67 @@ export default {
         this.doughnutdata1.push(data.LearnTrainGrow);
       },
     bar1(data) {
-          this.barlabels1 = [];
-          this.bardata1 = [];
-          this.baroptions = {};
+      this.barlabels1 = [];
+      this.bardata1 = [];
+      this.baroptions = {};
 
-          this.baroptions1 = {
-            responsive: true,
-            maintainAspectRatio: true,
-            tooltips: {
-              mode: 'label',
-              callbacks: {
-                label: function(tooltipItem, data) {
-                  return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
-                }
-              }
-            },
-            scales: {
-              xAxes: [{ stacked: true }],
-              yAxes: [{ stacked: true }]
-            },
-            legend: {
-              position: 'bottom'
+      this.baroptions1 = {
+        responsive: true,
+        maintainAspectRatio: true,
+        tooltips: {
+          mode: 'label',
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
             }
-          };
-          let ltg = []
-          let service = []
-          let fellowship = []
-          for(var i=0; i<data.length; i++)
-          {
-            // console.log(data[i]);
-            this.barlabels1.push(data[i].interval);
-            service.push(data[i].types.Service);
-            fellowship.push(data[i].types.Fellowship);
-            ltg.push(data[i].types.LearnTrainGrow);
           }
-          this.bardata1 = [
-            {
-                label: 'Service',
-                data: service,
-                backgroundColor: "rgba(55, 160, 225, 0.7)",
-                hoverBackgroundColor: "rgba(55, 160, 225, 0.7)",
-                hoverBorderWidth: 2,
-                hoverBorderColor: 'lightgrey'
-            },
-            {
-              label: 'Fellowship',
-              data: fellowship,
-              backgroundColor: "rgba(225, 58, 55, 0.7)",
-              hoverBackgroundColor: "rgba(225, 58, 55, 0.7)",
-              hoverBorderWidth: 2,
-              hoverBorderColor: 'lightgrey'
-            },
-            {
-              label: 'LearnTrainGrow',
-              data: ltg,
-              backgroundColor: "rgba(0, 255, 0, 0.7)",
-              hoverBackgroundColor: "rgba(0, 255, 0, 0.7)",
-              hoverBorderWidth: 2,
-              hoverBorderColor: 'lightgrey'
-            }
-          ];
-
+        },
+        scales: {
+          xAxes: [{ stacked: true }],
+          yAxes: [{ stacked: true }]
+        },
+        legend: {
+          position: 'bottom'
+        }
+      };
+      let ltg = []
+      let service = []
+      let fellowship = []
+      for(var i=0; i<data.length; i++)
+      {
+        // console.log(data[i]);
+        this.barlabels1.push(data[i].interval);
+        service.push(data[i].types.Service);
+        fellowship.push(data[i].types.Fellowship);
+        ltg.push(data[i].types.LearnTrainGrow);
       }
+      this.bardata1 = [
+        {
+            label: 'Service',
+            data: service,
+            backgroundColor: "rgba(55, 160, 225, 0.7)",
+            hoverBackgroundColor: "rgba(55, 160, 225, 0.7)",
+            hoverBorderWidth: 2,
+            hoverBorderColor: 'lightgrey'
+        },
+        {
+          label: 'Fellowship',
+          data: fellowship,
+          backgroundColor: "rgba(225, 58, 55, 0.7)",
+          hoverBackgroundColor: "rgba(225, 58, 55, 0.7)",
+          hoverBorderWidth: 2,
+          hoverBorderColor: 'lightgrey'
+        },
+        {
+          label: 'LearnTrainGrow',
+          data: ltg,
+          backgroundColor: "rgba(0, 255, 0, 0.7)",
+          hoverBackgroundColor: "rgba(0, 255, 0, 0.7)",
+          hoverBorderWidth: 2,
+          hoverBorderColor: 'lightgrey'
+        }
+      ];
+    }
   } //end-methods
 
 }
