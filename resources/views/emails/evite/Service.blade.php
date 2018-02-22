@@ -3,11 +3,6 @@
 @section('content')
 <main>
     @include('layouts.email_header')
-    {{-- <section class="page-header">
-        <div class="container">
-            <div class="pull-left header">See below to respond</div>
-        </div>
-    </section> --}}
     <div class="container">
         <h3>Dear {{ $user->name}},</h3>
         <p>

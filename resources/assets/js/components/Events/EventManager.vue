@@ -76,7 +76,7 @@
                         :filterByTeam="true"
                         :organization="organization"
                         :team="team"
-                        @orgTeamSelected="setOrgTeam"
+                        @org-team-selected="setOrgTeam"
                     ></filter-memberships>
                   </div>
                 </span>

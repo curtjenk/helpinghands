@@ -81,7 +81,7 @@
                     :filterByTeam="true"
                     :organization="organization"
                     :team="team"
-                    @orgTeamSelected="setOrgTeam"
+                    @org-team-selected="setOrgTeam"
                 ></filter-memberships>
               </div>
               <div class="form-group row">

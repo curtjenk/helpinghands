@@ -6,7 +6,7 @@
               <div class="card-body text-center">
                    <h1>How are we doing?</h1>
                   <div class="form-group">
-                      <filter-memberships :userid="userid" @orgteamselected="get_data"></filter-memberships>
+                      <filter-memberships :userid="userid" @org-team-selected="get_data"></filter-memberships>
                   </div>
               </div>
           </div>
@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     get_data(selectedOrgId, selectedTeamId) {
-       console.log(selectedOrgId, selectedTeamId)
+      // console.log(selectedOrgId, selectedTeamId)
       let params = {
           orgid: selectedOrgId,
           teamid: selectedTeamId
@@ -118,7 +118,7 @@ export default {
                 "rgba(255, 255, 0, 0.7)"];
       this.partoptions = {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
@@ -158,16 +158,21 @@ export default {
             }
           }
       };
-      this.partdata = [data.yes, data.no, data.noreply];
+      this.partdata = [data.yes ? data.yes : 0,
+                       data.no ? data.no : 0,
+                       data.noreply ? data.noreply : 0];
     },
     doughnut1(data) {
         this.doughnutlabels1 = [];
+        this.doughnutBGColors1 = [];
+        this.doughnutdata1 = [];
+
         // this.doughnutoptions1 = {responsive: true,
         //   maintainAspectRatio: false,
         // };
         this.doughnutoptions1 = {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           legend: {
             position: 'bottom'
           },
@@ -210,9 +215,12 @@ export default {
       },
     bar1(data) {
           this.barlabels1 = [];
+          this.bardata1 = [];
+          this.baroptions = {};
+
           this.baroptions1 = {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             tooltips: {
               mode: 'label',
               callbacks: {

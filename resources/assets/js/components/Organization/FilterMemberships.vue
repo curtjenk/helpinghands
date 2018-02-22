@@ -76,7 +76,7 @@ export default {
       // console.log(event.name);
       let orgid = this.selectedOrg.id ? this.selectedOrg.id : 0;
       let teamid = event.name == 'org' || orgid==0 ? 0 : this.selectedTeam.id;
-      this.$emit('orgTeamSelected', orgid, teamid, this.selectedOrg, this.selectedTeam);
+      this.$emit('org-team-selected', orgid, teamid, this.selectedOrg, this.selectedTeam);
     }
   } //End of methods
 } //End of export

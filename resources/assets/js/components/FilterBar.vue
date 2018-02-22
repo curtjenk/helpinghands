@@ -11,7 +11,7 @@
           <filter-memberships
               :userid="userid"
               :filterByTeam="filterByTeam"
-              @orgTeamSelected="gotit"
+              @org-team-selected="gotit"
           ></filter-memberships>
         </div>
         <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
