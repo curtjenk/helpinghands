@@ -13,27 +13,27 @@
       </div>
     </div>
     <div class="col-lg-8 col-md-8">
-      <div class="nav nav-tabs btn-pref btn-group btn-group-justified" role="tablist" aria-label="...">
-          <div class="nav-item btn-group" role="group">
-              <button v-on:click="changetab(0)" type="tab" id="myinfo" class="btn btn-primary" href="#tab1" data-toggle="tab">
+      <div class="btn-pref btn-group btn-group-justified" role="group" aria-label="...">
+          <div class="btn-group" role="group">
+              <button v-on:click="changetab(0)" type="button" id="myinfo" class="btn btn-primary" href="#tab1" data-toggle="tab">
                   <span class="fa fa-star" aria-hidden="true"></span>
                   <div class="hidden-xs">Personal</div>
               </button>
           </div>
-          <div class="nav-item btn-group" role="group">
-              <button v-on:click="changetab(1)" type="tab" id="myprefs" class="btn btn-default" href="#tab2" data-toggle="tab">
+          <div class="btn-group" role="group">
+              <button v-on:click="changetab(1)" type="button" id="myprefs" class="btn btn-default" href="#tab2" data-toggle="tab">
                   <span class="fa fa-heart" aria-hidden="true"></span>
                   <div class="hidden-xs">Preferences</div>
               </button>
           </div>
-          <div class="nav-item btn-group" role="group">
-              <button v-on:click="changetab(2)" type="tab" id="organizations" class="btn btn-default" href="#tab3" data-toggle="tab">
+          <div class="btn-group" role="group">
+              <button v-on:click="changetab(2)" type="button" id="organizations" class="btn btn-default" href="#tab3" data-toggle="tab">
                 <span class="fa fa-sitemap" aria-hidden="true"></span>
                 <div class="hidden-xs">Membership</div>
               </button>
           </div>
-          <div class="nav-item btn-group" role="group">
-              <button v-on:click="changetab(3)" type="tab" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab">
+          <div class="btn-group" role="group">
+              <button v-on:click="changetab(3)" type="button" id="mypswd" class="btn btn-default" href="#tab4" data-toggle="tab">
                 <span class="fa fa-key" aria-hidden="true"></span>
                 <div class="hidden-xs">Credentials</div>
               </button>
@@ -42,7 +42,7 @@
 
       <div class="well">
         <div class="tab-content">
-          <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+          <div class="tab-pane fade in active" id="tab1">
             <!-- <div class="form-horizontal"> -->
               <div class="row">
                 <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your information was updated.</div>
@@ -58,13 +58,13 @@
                           <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
                       </div>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                       <label for="nickname" class="col-md-3 col-sm-4 control-label">Nick Name</label>
                       <div class="col-md-5 col-sm-6">
                         <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
                       </div>
-                    </div>
-                  <div class="form-group">
+                  </div> -->
+                  <!-- <div class="form-group">
                       <label for="phone1" class="col-md-3 col-sm-4 control-label">Phone 1</label>
                       <div class="col-md-5 col-sm-6">
                         <masked-input id="phone1" name="phone1" type="tel" class="editInfo"
@@ -72,8 +72,8 @@
                             :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
                         </masked-input>
                       </div>
-                  </div>
-                  <div class="form-group">
+                  </div> -->
+                  <!-- <div class="form-group">
                       <label for="phone2" class="col-md-3 col-sm-4 control-label">Phone 2</label>
                       <div class="col-md-5 col-sm-6">
                         <masked-input id="phone2" name="phone2" type="tel" class="editInfo"
@@ -81,7 +81,7 @@
                             :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
                         </masked-input>
                       </div>
-                    </div>
+                  </div> -->
                 </div>
                 <div class="col-md-4 col-sm-5">
                   <!-- <div class="form-group"> -->
@@ -118,7 +118,7 @@
             <!-- </div> -->
           </div>
           <!--End of tab1  -->
-          <div class="tab-pane fade" id="tab2" role="tabpanel">
+          <div class="tab-pane fade in" id="tab2">
             <!-- <div class="form-horizontal"> -->
               <div class="row">
                 <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your preferences were updated.</div>
@@ -128,6 +128,12 @@
               </div>
               <div class="row">
                 <div class="col-md-offset-2 col-sm-offset-2 col-md-4 col-sm-4">
+                  <!-- <toggle-button v-model="user.opt_receive_evite"
+                    :sync="true"
+                    :value="user.opt_receive_evite"
+                    :labels="{checked: 'I want Evites', unchecked: 'I don\'t want Evites' }"
+                    :width="150"
+                  ></toggle-button> -->
                   <toggle-button v-model="user.opt_show_email"
                     :sync="true"
                     :value="user.opt_show_email"
@@ -163,7 +169,7 @@
             <!-- </div> -->
           </div>
           <!--End of tab2  -->
-          <div class="tab-pane fade" id="tab3" role="tabpanel">
+          <div class="tab-pane fade in" id="tab3">
             <div class="row">
               <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your memberships were updated.</div>
               <div class="alert alert-danger" v-if="updateFailed" transition="expand">
@@ -191,7 +197,7 @@
               <div class="col-md-7 col-sm-7"></div>
             </div>
           </div>
-          <div class="tab-pane fade" id="tab4" role="tabpanel">
+          <div class="tab-pane fade in" id="tab4">
             <div class="form-horizontal">
               <div class="row">
                 <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your {{ credential }} was updated.</div>
@@ -505,13 +511,14 @@ export default {
 
     },
     changetab: function (ndx) {
-      var tabs = $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
-      for (var i=0; i<tabs.length; i++) {
-        if (i===ndx) {
-          $(tabs[i]).removeClass("btn-default").addClass("btn-primary");
-          break;
-        }
-      }
+      // var tabs = $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
+      // console.log(tabs)
+      // for (var i=0; i<tabs.length; i++) {
+      //   if (i===ndx) {
+      //     $(tabs[i]).removeClass("btn-default").addClass("btn-primary");
+      //     break;
+      //   }
+      // }
     }//End changetab
   } //End of methods
 } //End of export
