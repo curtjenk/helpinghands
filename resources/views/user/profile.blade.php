@@ -11,7 +11,7 @@
     <member-profile
         :user0="{{ $user }}"
         :orgteams0="{{ $orgteams }}"
-        avatar0="{{ asset($user->avatar_filename) }}"
+        avatar0="{{ $user->avatar_filename ? asset($user->avatar_filename) : null }}"
     >
     </member-profile>
 

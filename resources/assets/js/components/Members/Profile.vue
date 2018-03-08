@@ -37,68 +37,46 @@
                 Sorry, unable to update your information at this time.
             </div>
           </div>
-            <form role="form">
-              <div class="form-group row">
-                  <label for="name" class="col-lg-3 col-md-3 col-form-label form-control-label">Name</label>
-                  <div class="col-lg-8">
-                      <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="nickname" class="col-lg-3 col-md-3 col-form-label form-control-label">Nick Name</label>
-                  <div class="col-lg-8">
-                    <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
-                  </div>
+          <form role="form">
+            <div class="form-group row">
+                <label for="name" class="col-lg-3 col-md-3 col-form-label form-control-label">Name</label>
+                <div class="col-lg-8 col-md-8">
+                    <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
                 </div>
-              <div class="form-group row">
-                  <label for="phone1" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 1</label>
-                  <div class="col-lg-8">
-                    <masked-input id="phone1" name="phone1" type="tel" class="editInfo"
-                        v-model="user.homephone"
-                        :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
-                    </masked-input>
-                  </div>
+            </div>
+            <div class="form-group row">
+                <label for="nickname" class="col-lg-3 col-md-3 col-form-label form-control-label">Nick Name</label>
+                <div class="col-lg-8 col-md-8">
+                  <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
+                </div>
               </div>
-              <div class="form-group row">
-                <label for="phone2" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 2</label>
-                <div class="col-md-5 col-sm-6">
-                  <masked-input id="phone2" name="phone2" type="tel" class="editInfo"
-                        v-model="user.mobilephone"
-                        :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+            <div class="form-group row">
+                <label for="phone1" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 1</label>
+                <div class="col-lg-8 col-md-8">
+                  <masked-input id="phone1" name="phone1" type="tel" class="editInfo"
+                      v-model="user.homephone"
+                      :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
                   </masked-input>
                 </div>
-              </div>
-              <div class="row block text-center">
-                <div class="col-md-offset-1 col-md-2">
-                  <button type="submit" class="btn btn-primary" name="submit" @click="update">
-                    <i class="fa fa-btn fa-check"></i> Update Information
-                  </button>
-                </div>.
-                <div class="col-md-7"></div>
-              </div>
-            </form>
-          <!--
-            <div class="col-md-4 col-sm-5">
-              <form enctype="multipart/form-data" novalidate>
-                <div class="dropbox">
-                  <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"
-                      @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*"
-                      class="input-file"/>
-                  <p v-if="isInitial">
-                      Drag your picture here <br />  or click to browse
-                  </p>
-                  <p v-if="isSaving">
-                    Uploading {{ fileCount }} files...
-                  </p>
-                </div>
-              </form>
-              <div v-if="isFailed">
-                  <div>Upload Failed</div>
-                  <pre>{{ uploadError }}</pre>
+            </div>
+            <div class="form-group row">
+              <label for="phone2" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 2</label>
+              <div class="col-lg-8 col-md-8">
+                <masked-input id="phone2" name="phone2" type="tel" class="editInfo"
+                      v-model="user.mobilephone"
+                      :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                </masked-input>
               </div>
             </div>
-          -->
-
+            <div class="row block text-center">
+              <div class="col-md-offset-1 col-md-2">
+                <button type="submit" class="btn btn-primary" name="submit" @click.prevent="update">
+                  <i class="fa fa-btn fa-check"></i> Update Information
+                </button>
+              </div>.
+              <div class="col-md-7"></div>
+            </div>
+          </form>
         </div>
         <div class="tab-pane" id="preferences">
             <div class="alert alert-info alert-dismissable">
@@ -306,7 +284,7 @@ export default {
     }
   },
   mounted: function () {
-    this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
+    // this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.user = this.user0;
       this.avatar_url = this.avatar0;
       this.resetAvatar();
@@ -336,7 +314,7 @@ export default {
             checked: isChecked, editing: false, teams: teams});
       });
 
-    })
+    // })
   },
   computed: {
     isInitial() {
