@@ -1,97 +1,104 @@
 <template>
 <div class="container">
   <div class="row my-2 mt-8">
-    <div class="col-lg-9 order-lg-2 card">
+    <div class="col-lg-9 col-md-9 order-lg-2 order-md-2 card">
       <div class="card-body">
-      <ul class="nav nav-tabs nav-fill">
-          <li class="nav-item">
-              <button data-target="#personal" data-toggle="tab" class="nav-link active selected-tab">
-                <span class="fa fa-star" aria-hidden="true"></span>
-                <div class="hidden-xs">Personal</div>
-              </button>
-          </li>
-          <li class="nav-item">
-              <button data-target="#preferences" data-toggle="tab" class="nav-link btn">
-                <span class="fa fa-heart" aria-hidden="true"></span>
-                <div class="hidden-xs">Preferences</div>
-              </button>
-          </li>
-          <li class="nav-item">
-              <button data-target="#memberships" data-toggle="tab" class="nav-link btn btn-default">
-                <span class="fa fa-sitemap" aria-hidden="true"></span>
-                <div class="hidden-xs">Membership</div>
-              </button>
-          </li>
-          <li class="nav-item">
-              <button data-target="#credentials" data-toggle="tab" class="nav-link btn btn-default">
-                <span class="fa fa-key" aria-hidden="true"></span>
-                <div class="hidden-xs">Credentials</div>
-              </button>
-          </li>
-      </ul>
-      <div class="tab-content py-4">
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+                <button data-target="#personal" data-toggle="tab" class="nav-link active selected-tab">
+                  <span class="fa fa-star" aria-hidden="true"></span>
+                  <div class="hidden-xs">Personal</div>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button data-target="#preferences" data-toggle="tab" class="nav-link btn">
+                  <span class="fa fa-heart" aria-hidden="true"></span>
+                  <div class="hidden-xs">Preferences</div>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button data-target="#memberships" data-toggle="tab" class="nav-link btn btn-default">
+                  <span class="fa fa-sitemap" aria-hidden="true"></span>
+                  <div class="hidden-xs">Membership</div>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button data-target="#credentials" data-toggle="tab" class="nav-link btn btn-default">
+                  <span class="fa fa-key" aria-hidden="true"></span>
+                  <div class="hidden-xs">Credentials</div>
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content py-4">
         <div class="tab-pane active" id="personal">
-          <h5 class="mb-3">User Profile</h5>
           <div class="row">
-              <div class="col-md-6">
-                  <h6>About</h6>
-                  <p>
-                      Web Designer, UI/UX Engineer
-                  </p>
-                  <h6>Hobbies</h6>
-                  <p>
-                      Indie music, skiing and hiking. I love the great outdoors.
-                  </p>
-              </div>
-              <div class="col-md-6">
-                  <h6>Recent badges</h6>
-                  <a href="#" class="badge badge-dark badge-pill">html5</a>
-                  <a href="#" class="badge badge-dark badge-pill">react</a>
-                  <a href="#" class="badge badge-dark badge-pill">codeply</a>
-                  <a href="#" class="badge badge-dark badge-pill">angularjs</a>
-                  <a href="#" class="badge badge-dark badge-pill">css3</a>
-                  <a href="#" class="badge badge-dark badge-pill">jquery</a>
-                  <a href="#" class="badge badge-dark badge-pill">bootstrap</a>
-                  <a href="#" class="badge badge-dark badge-pill">responsive-design</a>
-                  <hr>
-                  <span class="badge badge-primary"><i class="fa fa-user"></i> 900 Followers</span>
-                  <span class="badge badge-success"><i class="fa fa-cog"></i> 43 Forks</span>
-                  <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span>
-              </div>
-              <div class="col-md-12">
-                  <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
-                  <table class="table table-sm table-hover table-striped">
-                      <tbody>
-                          <tr>
-                              <td>
-                                  <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
+            <div class="alert alert-success alert-dismissable" v-if="updateSuccess" transition="expand">Your information was updated.</div>
+            <div class="alert alert-danger alert-dismissable" v-if="updateFailed" transition="expand">
+                Sorry, unable to update your information at this time.
+            </div>
           </div>
-            <!--/row-->
+            <form role="form">
+              <div class="form-group row">
+                  <label for="name" class="col-lg-3 col-md-3 col-form-label form-control-label">Name</label>
+                  <div class="col-lg-8">
+                      <input id="name" v-model="user.name" type="text" class="editInfo" name="name" maxlength="255">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label for="nickname" class="col-lg-3 col-md-3 col-form-label form-control-label">Nick Name</label>
+                  <div class="col-lg-8">
+                    <input id="nickname" v-model="user.nickname" type="text" class="editInfo" name="nickname" maxlength="255">
+                  </div>
+                </div>
+              <div class="form-group row">
+                  <label for="phone1" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 1</label>
+                  <div class="col-lg-8">
+                    <masked-input id="phone1" name="phone1" type="tel" class="editInfo"
+                        v-model="user.homephone"
+                        :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                    </masked-input>
+                  </div>
+              </div>
+              <div class="form-group row">
+                <label for="phone2" class="col-lg-3 col-md-3 col-form-label form-control-label">Phone 2</label>
+                <div class="col-md-5 col-sm-6">
+                  <masked-input id="phone2" name="phone2" type="tel" class="editInfo"
+                        v-model="user.mobilephone"
+                        :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+                  </masked-input>
+                </div>
+              </div>
+              <div class="row block text-center">
+                <div class="col-md-offset-1 col-md-2">
+                  <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                    <i class="fa fa-btn fa-check"></i> Update Information
+                  </button>
+                </div>.
+                <div class="col-md-7"></div>
+              </div>
+            </form>
+          <!--
+            <div class="col-md-4 col-sm-5">
+              <form enctype="multipart/form-data" novalidate>
+                <div class="dropbox">
+                  <input id="newavatar" class="" :name="newavatar" :disabled="isSaving" type="file"
+                      @change="filesChange($event.target.name, $event.target.files); fileCount=$event.target.files.length" accept="image/*"
+                      class="input-file"/>
+                  <p v-if="isInitial">
+                      Drag your picture here <br />  or click to browse
+                  </p>
+                  <p v-if="isSaving">
+                    Uploading {{ fileCount }} files...
+                  </p>
+                </div>
+              </form>
+              <div v-if="isFailed">
+                  <div>Upload Failed</div>
+                  <pre>{{ uploadError }}</pre>
+              </div>
+            </div>
+          -->
+
         </div>
         <div class="tab-pane" id="preferences">
             <div class="alert alert-info alert-dismissable">
@@ -217,17 +224,22 @@
               </form>
           </div>
         <div class="tab-pane" id="credentials">
+
         </div>
       </div>
       </div>
     </div>
-    <div class="col-lg-3 order-lg-1 text-center">
-        <img src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
-        <h6 class="mt-2">Upload a different photo</h6>
-        <label class="custom-file">
-            <input type="file" id="file" class="custom-file-input">
-            <span class="custom-file-control btn btn-primary">Choose file</span>
-        </label>
+    <div class="col-lg-3 col-md-3 order-lg-1 order-md-1 text-center">
+      <img v-if="avatar_url" :src="avatar_url" class="mx-auto img-fluid img-circle d-block" alt="avatar">
+      <img v-else src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
+      <h6 class="mt-2">Upload a different photo</h6>
+      <label class="custom-file">
+        <b-form-file v-model="file" ref="fileinput" :name="newavatar"
+          @change="filesChange($event.target.name, $event.target.files)"
+          class="mt-2 custom-file-input" plain accept="image/*"
+        ></b-form-file>
+        <span class="custom-file-control btn btn-primary">Choose file</span>
+      </label>
     </div>
   </div>
 </div>
@@ -275,6 +287,7 @@ export default {
       updateStatus: null,
       user: {},
       avatar_url: '',
+      file: null,
       uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
@@ -293,10 +306,9 @@ export default {
     }
   },
   mounted: function () {
-    // this.avatar_url = this.avatar0;
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.user = this.user0;
-      // this.avatar_url = this.avatar0;
+      this.avatar_url = this.avatar0;
       this.resetAvatar();
       this.orgData = [];
       this.orgteams0.forEach( org0 => {
@@ -459,6 +471,8 @@ export default {
     },
     filesChange(fieldName, fileList) {
       // handle file changes
+      // TODO: Now only doing single file upload.
+      // This method can be simplified
       const formData = new FormData();
 
       if (!fileList.length) return;

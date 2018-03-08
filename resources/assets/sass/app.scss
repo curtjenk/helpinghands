@@ -91,9 +91,9 @@
 
 //Tighten up bootstrap
 /* reduce column padding from 15 to 5px */
-[class^='col-'], [class*=' col-']{
-  padding: 0px 5px 0px 5px;
-}
+// [class^='col-'], [class*=' col-']{
+//   padding: 0px 5px 0px 5px;
+// }
 select {
     border-width: 0px 0px 1px 0px;
     background-color: inherit;
