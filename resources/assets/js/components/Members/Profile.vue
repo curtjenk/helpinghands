@@ -32,9 +32,11 @@
         <div class="tab-content py-4">
         <div class="tab-pane active" id="personal">
           <div class="row">
-            <div class="alert alert-success alert-dismissable" v-if="updateSuccess" transition="expand">Your information was updated.</div>
-            <div class="alert alert-danger alert-dismissable" v-if="updateFailed" transition="expand">
-                Sorry, unable to update your information at this time.
+            <div class=" mx-auto">
+              <div class="alert alert-success alert-dismissable" v-if="updateSuccess" transition="expand">Your information was updated.</div>
+              <div class="alert alert-danger alert-dismissable" v-if="updateFailed" transition="expand">
+                  Sorry, unable to update your information at this time.
+              </div>
             </div>
           </div>
           <form role="form">
@@ -79,38 +81,61 @@
           </form>
         </div>
         <div class="tab-pane" id="preferences">
-            <div class="alert alert-info alert-dismissable">
-                <a class="panel-close close" data-dismiss="alert">×</a> This is an <strong>.alert</strong>. Use this to show important messages to the user.
+          <div class="row">
+            <div class=" mx-auto">
+              <div class="alert alert-success alert-dismissable" v-if="updateSuccess" transition="expand">Your preferences were updated.</div>
+              <div class="alert alert-danger alert-dismissable" v-if="updateFailed" transition="expand">
+                  Sorry, unable to update your preferences at this time.
+              </div>
             </div>
-            <table class="table table-hover table-striped">
-                <tbody>
-                    <tr>
-                        <td>
-                           <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+          </div>
+          <div class="row">
+            <div class="col">
+              <toggle-button v-model="user.opt_receive_evite"
+                :sync="true"
+                :value="user.opt_show_email"
+                :labels="{checked: 'Yes, send me invitations', unchecked: 'Please don\'t send invitations' }"
+                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                :height="togOpts.height"
+                :width="togOpts.width"
+              ></toggle-button>
+
+              <toggle-button v-model="user.opt_show_email"
+                :sync="true"
+                :value="user.opt_show_email"
+                :labels="{checked: 'Show my email address', unchecked: 'Hide my email address' }"
+                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                :height="togOpts.height"
+                :width="togOpts.width"
+              ></toggle-button>
+
+              <toggle-button v-model="user.opt_show_mobilephone"
+                :sync="true"
+                :value="user.opt_show_mobilephone"
+                :labels="{checked: 'Show my phone 1', unchecked: 'Hide my phone 1' }"
+                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                :height="togOpts.height"
+                :width="togOpts.width"
+              ></toggle-button>
+              <toggle-button v-model="user.opt_show_homephone"
+                :sync="true"
+                :value="user.opt_show_homephone"
+                :labels="{checked: 'Show my phone 2', unchecked: 'Hide my phone 2'}"
+                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                :height="togOpts.height"
+                :width="togOpts.width"
+              ></toggle-button>
+            </div>
+            <div class="col">
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="mx-auto">
+              <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                <i class="fa fa-btn fa-check"></i> Update Preferences
+              </button>
+            </div>
+          </div>
         </div>
         <div class="tab-pane" id="memberships">
               <form role="form">
@@ -256,6 +281,7 @@ export default {
   },
   data () {
     return {
+      togOpts: {},
       credential: '',
       credentialMessage: '',
       newEmail: '',
@@ -285,6 +311,11 @@ export default {
   },
   mounted: function () {
     // this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
+    this.togOpts = {
+      height:24,
+      width:240,
+      colors:{checked: '#00FF00', unchecked: '#FF0000'}
+    };
       this.user = this.user0;
       this.avatar_url = this.avatar0;
       this.resetAvatar();
@@ -473,5 +504,8 @@ export default {
 .nav-tabs .nav-link.active {
   color: ghostwhite;
   background-color: #3D8AE9;
+}
+.vue-js-switch {
+  font-size: 16px;
 }
 </style>

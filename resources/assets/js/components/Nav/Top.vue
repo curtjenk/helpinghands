@@ -23,7 +23,7 @@
                 <template slot="button-content">
                   <em class="ml-5">{{ user.name }}</em><span class="caret"></span>
                 </template>
-                <b-dropdown-item :href="'/member/'+user.id+'/edit'"><i class="fa fa-cog fa-fw"></i> Profile</b-dropdown-item>
+                <b-dropdown-item v-if="!isSuperUser" :href="'/member/'+user.id+'/edit'"><i class="fa fa-cog fa-fw"></i> Profile</b-dropdown-item>
                 <b-dropdown-item v-if="canAdminister" href="/administrator"><i class="fa fa-th-large fa-fw"></i> Administrator</b-dropdown-item>
                 <b-dropdown-item @click="logout"><i class="fa fa-sign-out fa-fw"></i>Logout</b-dropdown-item>
               </b-nav-item-dropdown>
