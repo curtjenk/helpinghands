@@ -12,7 +12,6 @@
     {{-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" --}}
 ></nav-top-2>
 <members-list
- {{-- :is-admin="{{ Auth::user()->is_admin() || Auth::user()->is_orgAdmin() ? 1 : 0 }}"   --}}
  :is-admin="true"
  :userid="{{ Auth::user()->id }}"
 ></members-list>

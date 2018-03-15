@@ -5,7 +5,7 @@
         <!-- Branding Image -->
       <b-navbar-brand href="/">
         Engage In Ministry
-        <img src="https://placekitten.com/g/30/30" alt="BV">
+        <!-- <img src="https://placekitten.com/g/30/30" alt="BV"> -->
       </b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse" class="flex-column">

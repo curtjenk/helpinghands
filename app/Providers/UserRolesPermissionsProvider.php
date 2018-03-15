@@ -18,9 +18,14 @@ class UserRolesPermissionsProvider extends ServiceProvider
         {
             // if(!$view->offsetExists('userRolesPermissions'))
             // {
-                $user=Auth::check() ? Auth::user() : null;
-                $roles=Auth::check() ? Auth::user()->roles()->get()->pluck('name') : [];
-                $permissions=Auth::check() ? Auth::user()->permissions()->get()->pluck('name') : [];
+                $user = Auth::check() ? Auth::user() : null;
+                if (!empty($user)) {
+                    $roles = $user->roles()->get()->pluck('name');
+                    $permissions = $user->permissions()->get()->pluck('name');
+                } else {
+                    $roles = [];
+                    $permissions = [];
+                }
 
                 $view->with('userRolesPermissions', [
                     'user'=>$user,
