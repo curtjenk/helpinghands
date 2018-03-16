@@ -70,6 +70,15 @@ export const commonMixins = {
     },
   },
   computed: {
+    user () {
+      return this.$store.state.user;
+    },
+    roles () {
+      return this.$store.state.roles;
+    },
+    permissions () {
+      return this.$store.state.permissions;
+    },
     statusInitial() {
       return this.currentStatus === consts.STATUS_INITIAL;
     },

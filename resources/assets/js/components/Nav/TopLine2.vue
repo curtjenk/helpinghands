@@ -48,20 +48,31 @@ export default {
     links: {
       type: Array, default: ()=>[ {name:'Link A'}, {name:'Link B'}, {name:'Link C'}]
     },
-    user: {
-      type: Object, default: null
-    },
-    roles: {
-      type: Array, default: ()=>[]
-    },
-    permissions: {
-      type: Array, default: ()=>[]
-    },
+    // user: {
+    //   type: Object, default: null
+    // },
+    // roles: {
+    //   type: Array, default: ()=>[]
+    // },
+    // permissions: {
+    //   type: Array, default: ()=>[]
+    // },
   },
   mounted() {
     // console.log('Component mounted.')
   },
   methods: {
+  },
+  computed: {
+    // user () {
+    //   return this.$store.state.user;
+    // },
+    // roles () {
+    //   return this.$store.state.roles;
+    // },
+    // permissions () {
+    //   return this.$store.state.permissions;
+    // }
   }
 }
 </script>

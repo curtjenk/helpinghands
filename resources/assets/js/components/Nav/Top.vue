@@ -46,19 +46,21 @@ export default {
     }
   },
   props: {
-    user: {
+    user0: {
       type: Object, default: null
     },
-    roles: {
+    roles0: {
       type: Array, default: ()=>[]
     },
-    permissions: {
+    permissions0: {
       type: Array, default: ()=>[]
     },
 
   },
   mounted() {
-    // console.log('Component mounted.')
+    this.$store.commit('SETUSER',this.user0)
+    this.$store.commit('SETROLES',this.roles0)
+    this.$store.commit('SETPERMISSIONS',this.permissions0)
   },
   methods: {
     logout(event) {

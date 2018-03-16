@@ -55,7 +55,10 @@ Vue.component('organization-manager', require('./components/Organization/Organiz
 Vue.component('teamslist', require('./components/Organization/Team/TeamsVuetable.vue'));
 Vue.component('team-manager', require('./components/Organization/Team/TeamManager.vue'));
 
-
+import { store } from './appVuexStore.js';
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    // provide the store using the "store" option.
+    // this will inject the store instance to all child components.
+    store,
 });

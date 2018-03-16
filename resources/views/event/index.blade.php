@@ -5,18 +5,18 @@
 {{-- view composer used to shared data across all views --}}
 <nav-top-2
     title="Events"
-    :user="{{ json_encode($userRolesPermissions['user']) }}"
+    {{-- :user="{{ json_encode($userRolesPermissions['user']) }}"
     :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-    :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+    :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
     :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]"
 ></nav-top-2>
 
 <events-list
-  :is-admin="{{  1 }}"
+  {{-- :is-admin="{{  1 }}"
   :userid="{{ Auth::user()->id }}"
   :user="{{ json_encode($userRolesPermissions['user']) }}"
   :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-  :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+  :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
 ></events-list>
 
 <div class="modal fade" id="eventPay" tabindex="-1" role="dialog" aria-labelledby="Log Event Payment">

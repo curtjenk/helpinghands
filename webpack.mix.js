@@ -16,7 +16,6 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
    .js('resources/assets/js/app.js', 'public/js')
     .extract(['vue',
       'axios',
-      'chart',
       'jquery',
       'vuetable-2',
       'vue-good-table', 'vue-quill-editor'

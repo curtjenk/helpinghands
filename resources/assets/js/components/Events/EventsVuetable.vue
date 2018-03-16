@@ -11,7 +11,7 @@
       <hr />
       <span v-html="modaldata.descriptionhtml"></span>
     </modal>
-    <filter-bar filterPlaceholder=" subject, description"
+    <filter-bar v-if="ready" filterPlaceholder=" subject, description"
       :userid="user.id"
       :filterByMemberships="true"
     ></filter-bar>
@@ -105,18 +105,19 @@ export default {
     VuetablePaginationInfo,
   },
   props: {
-    user: {
-      type: Object, default: null
-    },
-    roles: {
-      type: Array, default: ()=>[]
-    },
-    permissions: {
-      type: Array, default: ()=>[]
-    },
+    // user: {
+    //   type: Object, default: null
+    // },
+    // roles: {
+    //   type: Array, default: ()=>[]
+    // },
+    // permissions: {
+    //   type: Array, default: ()=>[]
+    // },
   },
   data () {
     return {
+      ready: false,
       modaldata: {
         subject: '',
         descriptionhtml: ''
@@ -243,6 +244,11 @@ export default {
       ],
       moreParams: {}
     }
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.ready = true;
+    });
   },
   methods: {
     showEvent (data, index) {
