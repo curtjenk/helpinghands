@@ -1,250 +1,242 @@
 <template>
-  <div class="">
-    <div class="row">
-      <b-col sm="8">
-        <template v-if="modeShow">
-            <b-row class="no-gutters">
-              <b-col sm="3">Name</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_name }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">Phone</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">Address 1</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_address1 }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">Address 2</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_address2 }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">City</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_city }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">State</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_state }}</b-col>
-            </b-row>
-            <b-row class="no-gutters mt-2">
-              <b-col sm="3">Zip Code</b-col>
-              <b-col sm="6" class="font-weight-bold">{{ org_zip }}</b-col>
-            </b-row>
-        </template>
-        <template v-else>
-            <div class="col-md-offset-2 col-md-8 text-center">
-              <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
-              <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                  <span>Sorry, unable to save your change(s)</span>
-              </div>
+<div class="container">
+  <div class="row">
+    <b-col sm="8">
+      <template v-if="modeShow">
+          <b-row class="no-gutters">
+            <b-col sm="3">Name</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_name }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Phone</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Address 1</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_address1 }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Address 2</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_address2 }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">City</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_city }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">State</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_state }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Zip Code</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_zip }}</b-col>
+          </b-row>
+      </template>
+      <template v-else>
+          <div class="col-md-offset-2 col-md-8 text-center">
+            <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
+            <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+                <span>Sorry, unable to save your change(s)</span>
             </div>
-            <b-row class="no-gutters">
-              <b-col sm="3">Name</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input  required id="name" v-model="org_name" type="text" name="name" autofocus>
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">Phone</b-col>
-              <b-col sm="6" md="6">
-                <masked-input id="phone" name="phone" type="tel" class="form-control"
-                    v-model="org_phone"
-                    :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
-                </masked-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">Address 1</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input id="address1" v-model="org_address1" type="text" name="address1" :state="addr1Error">
-                  <b-form-invalid-feedback>
-                    <div v-for="msg in errors.address1">
-                        {{ msg }}
-                    </div>
-                  </b-form-invalid-feedback>
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">Address 2</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input id="address2" v-model="org_address2" type="text" name="address2">
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">City</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input id="city" v-model="org_city" type="text" name="city">
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">State</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input id="state" v-model="org_state" type="text" name="state">
-                </b-form-input>
-              </b-col>
-            </b-row>
-            <b-row class="no-gutters">
-              <b-col sm="3">Zip</b-col>
-              <b-col sm="6" md="6">
-                <b-form-input id="zip" v-model="org_zip" type="text" name="zip" :state="zipError">
-                  <b-form-invalid-feedback>
-                    <div v-for="msg in errors.zipcode">
-                        {{ msg }}
-                    </div>
-                  </b-form-invalid-feedback>
-                </b-form-input>
-              </b-col>
-            </b-row>
-        </template>
-      </b-col>
-      <b-col sm="4">
-        <div class="caption">
-          <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="members && members.length>0 && !isAddingAdmin && modeEdit"
-              v-tooltip.right="'Add Administrator'">
-            <a  href="#" type="button" class="text-success"
+          </div>
+          <b-row class="no-gutters">
+            <b-col sm="3">Name</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input  required id="name" v-model="org_name" type="text" name="name" autofocus>
+              </b-form-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">Phone</b-col>
+            <b-col sm="6" md="6">
+              <masked-input id="phone" name="phone" type="tel" class="form-control"
+                  v-model="org_phone"
+                  :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
+              </masked-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">Address 1</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input id="address1" v-model="org_address1" type="text" name="address1" :state="addr1Error">
+                <b-form-invalid-feedback>
+                  <div v-for="msg in errors.address1">
+                      {{ msg }}
+                  </div>
+                </b-form-invalid-feedback>
+              </b-form-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">Address 2</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input id="address2" v-model="org_address2" type="text" name="address2">
+              </b-form-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">City</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input id="city" v-model="org_city" type="text" name="city">
+              </b-form-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">State</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input id="state" v-model="org_state" type="text" name="state">
+              </b-form-input>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters">
+            <b-col sm="3">Zip</b-col>
+            <b-col sm="6" md="6">
+              <b-form-input id="zip" v-model="org_zip" type="text" name="zip" :state="zipError">
+                <b-form-invalid-feedback>
+                  <div v-for="msg in errors.zipcode">
+                      {{ msg }}
+                  </div>
+                </b-form-invalid-feedback>
+              </b-form-input>
+            </b-col>
+          </b-row>
+      </template>
+    </b-col>
+    <b-col sm="4">
+      <div class="caption">
+        <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
+        <template v-if="!isAddingAdmin  && modeEdit">
+          <span v-if="members && members.length>0" v-tooltip.right="'Add Administrator'">
+            <a  href="#" class="text-success"
               @click="toggleIsAddingAdmin()">
-              <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+              <i class="fa fa-users fa-lg fa-fw text-success"></i>
             </a>
           </span>
-        </div>
-        <div v-if="isAddingAdmin" class="panel panel-default">
-          <div class="form-group row panel-body">
-              <div class="col-md-7 col-sm-7">
-                <select v-model="new_admin">
-                  <option disabled value="">Please select one</option>
-                  <option v-for="member in members" v-bind:value="member">
-                    {{ member.name }}
-                 </option>
-                </select>
-              </div>
-              <div class="col-md-4 col-sm-4">
-                <span v-tooltip.top="'Save'">
-                    <a href="#" type="button" class="text-primary"
-                      @click="saveNewAdmin()">
-                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                    </a>
-                </span>
-                <span v-tooltip.top="'Cancel'">
-                    <a href="#" type="button" class="text-danger"
-                      @click="toggleIsAddingAdmin()">
-                      <i class="fa fa-ban fa-lg fa-fw"></i>
-                    </a>
-                </span>
-              </div>
-          </div>
-        </div>
-        <table  class="table table-responsive table-striped table-condensed">
-          <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
-            <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
-              <td>
-                {{ admin.name }}
-              </td>
-              <td v-if="modeEdit">
-                <span v-tooltip.right="'Remove'" class="">
-                    <a href="#" type="button" class="text-danger"
-                          @click="removeAdmin(admin)">
-                      <i class="fa fa-trash-o fa-fw"></i>
-                    </a>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </b-col>
-    </div>
-    <b-row>
-      <div class="mx-auto mt-4">
-        <button v-if="modeCreate" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
-            <i class="fa fa-btn fa-check"></i> Save Organization
-        </button>
-        <button v-if="modeEdit" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
-            <i class="fa fa-btn fa-check"></i> Update Organization
-        </button>
-      </div>
-    </b-row>
-    <hr/>
-    <div class="row">
-      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <div class="caption">
-          <span>Team(s)</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="!isAddingTeam && modeEdit" v-tooltip.right="'Add Team'">
-              <a href="#" type="button" class="text-success"
-                @click="toggleIsAddingTeam()">
-                <i class="fa fa-plus fa-lg fa-fw text-success"></i>
-              </a>
+          <span v-else v-tooltip.right="'No Members To Make Administrators'">
+            <i class="fa fa-users fa-lg fa-fw text-danger"></i>
           </span>
-        </div>
-        <div v-if="isAddingTeam" class="panel panel-default">
-          <div class="form-group row panel-body">
-            <div class="">
-              <div class="col-md-4 col-sm-4">
-                <float-label>
-                  <input id="ntn" v-model="new_team_name" type="text" required
-                    class="editInfo" size="100" maxlength="255" placeholder="Name"/>
-                </float-label>
-              </div>
-              <div class="col-md-6 col-sm-6">
-                <float-label>
-                  <input id="ntd" v-model="new_team_description" type="text" required
-                    class="editInfo" maxlength="255" placeholder="Description"/>
-                </float-label>
-              </div>
-              <div class="col-md-1 col-sm-2" style="padding: 0px;">
-                <span v-tooltip.top="'Save'"class="">
-                    <a href="#" type="button" class="text-primary"
-                      @click="saveNewTeam()">
-                      <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                    </a>
-                </span>
-                <span v-tooltip.top="'Cancel'">
-                    <a href="#" type="button" class="text-danger"
-                      @click="toggleIsAddingTeam()">
-                      <i class="fa fa-ban fa-lg fa-fw"></i>
-                    </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <table class="table table-responsive table-striped table-condensed">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th v-if="modeEdit" >Action</th>
-            </tr>
-          </thead>
-          <tbody  is="transition-group" v-bind:name="ready ? 'list' : null">
-            <tr v-for="team in teams" v-bind:key="team.id" class="list-item">
-              <td>{{ team.name }}</td>
-              <td>{{ team.description }}</td>
-              <td v-if="modeEdit">
-                <span v-tooltip.left="'Edit'" >
-                    <a href="#" type="button" class=""
-                      @click="editTeam(team)">
-                      <i class="fa fa-pencil-square-o fa-fw"></i>
-                    </a>
-                </span>
-                <span v-tooltip.right="'Remove'" >
-                    <a href="#" type="button" class="text-danger"
-                      @click="removeTeam(team)">
-                      <i class="fa fa-trash-o fa-fw"></i>
-                    </a>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        </template>
       </div>
-
-    </div>
+      <div v-if="isAddingAdmin" class="panel panel-default">
+        <div class="form-group row panel-body">
+            <div class="col-md-7 col-sm-7">
+              <select v-model="new_admin">
+                <option disabled value="">Please select one</option>
+                <option v-for="member in members" v-bind:value="member">
+                  {{ member.name }}
+               </option>
+              </select>
+            </div>
+            <div class="col-md-4 col-sm-4">
+              <span v-tooltip.top="'Save'">
+                  <a href="#" class="text-primary"
+                    @click="saveNewAdmin()">
+                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                  </a>
+              </span>
+              <span v-tooltip.top="'Cancel'">
+                  <a href="#" class="text-danger"
+                    @click="toggleIsAddingAdmin()">
+                    <i class="fa fa-ban fa-lg fa-fw"></i>
+                  </a>
+              </span>
+            </div>
+        </div>
+      </div>
+      <table  class="table table-responsive table-striped table-condensed">
+        <tbody is="transition-group" v-bind:name="ready ? 'list' : null">
+          <tr v-for="admin in administrators" v-bind:key="admin.user_id" class="list-item">
+            <td>
+              {{ admin.name }}
+            </td>
+            <td v-if="modeEdit">
+              <span v-tooltip.right="'Remove'" class="">
+                  <a href="#" type="button" class="text-danger"
+                        @click="removeAdmin(admin)">
+                    <i class="fa fa-trash-o fa-fw"></i>
+                  </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-col>
   </div>
+  <b-row>
+    <div class="mx-auto mt-4">
+      <button v-if="modeCreate" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+          <i class="fa fa-btn fa-check"></i> Save Organization
+      </button>
+      <button v-if="modeEdit" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+          <i class="fa fa-btn fa-check"></i> Update Organization
+      </button>
+    </div>
+  </b-row>
+  <hr/>
+  <b-row>
+    <div class="caption">Team(s)&nbsp;&nbsp;&nbsp;
+      <span v-if="!isAddingTeam && modeEdit" v-tooltip.right="'Add Team'">
+          <a href="#" class="text-success" @click="toggleIsAddingTeam()">
+            <i class="fa fa-sitemap fa-lg fa-fw text-success"></i>
+          </a>
+      </span>
+    </div>
+    <template v-if="isAddingTeam">
+      <b-card no-body style="min-width: 100%;">
+        <b-card-body>
+          <b-row class="no-gutters">
+            <b-col sm="6" md="6">
+              <float-label>
+                <b-form-input id="ntn" required v-model="new_team_name" :state="teamNameError" type="text" placeholder="Name">
+                  <b-form-invalid-feedback>
+                    {{ errors.new_team_name }}
+                  </b-form-invalid-feedback>
+                </b-form-input>
+              </float-label>
+            </b-col>
+            <b-col class="ml-1">
+              <span v-tooltip.top="'Save'" class="align-middle">
+                  <a href="#" class="text-primary" @click="saveNewTeam()">
+                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+                  </a>
+              </span>
+              <span v-tooltip.top="'Cancel'" class="align-middle">
+                  <a href="#" class="text-danger" @click="toggleIsAddingTeam()">
+                    <i class="fa fa-ban fa-lg fa-fw"></i>
+                  </a>
+              </span>
+            </b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="12" md="12">
+              <float-label>
+                <b-form-input id="ntn" required v-model="new_team_description" :state="teamDescriptionError" type="text" placeholder="Description">
+                  <b-form-invalid-feedback>
+                    {{ errors.new_team_description }}
+                  </b-form-invalid-feedback>
+                </b-form-input>
+              </float-label>
+            </b-col>
+          </b-row>
+        </b-card-body>
+      </b-card>
+    </template>
+    <b-table striped small bordered hover :items="teams" :fields="team_table_fields">
+      <template v-if="modeEdit" slot="action" slot-scope="data">
+        <span v-tooltip.left="'Edit'" >
+            <a href="#" class="" @click.stop="editTeam(team)">
+              <i class="fa fa-pencil-square-o fa-fw"></i>
+            </a>
+        </span>
+        <span v-tooltip.right="'Remove'" >
+            <a href="#" class="text-danger" @click.stop="removeTeam(team)">
+              <i class="fa fa-trash-o fa-fw"></i>
+            </a>
+        </span>
+      </template>
+    </b-table>
+  </b-row>
+</div>
 </template>
 
 <script>
@@ -298,6 +290,11 @@ export default {
       org_zip: '',
       administrators: [],
       members: [],
+      team_table_fields: {
+        name: {thClass: [], sortable:true},
+        description: {thClass: []},
+        action: {thClass: []}
+      },
       teams: []
     }
   },
@@ -339,6 +336,12 @@ export default {
     // console.log('dom updated')
   },
   computed: {
+    teamNameError () {
+      return this.new_team_name.length > 3 ? true : false;
+    },
+    teamDescriptionError () {
+      return this.new_team_description.length > 3 ? true : false;
+    },
     addr1Error () {
       if (!this.isObjectEmpty(this.errors)) {
         return this.errors.address1 ? false : true;
@@ -460,9 +463,16 @@ export default {
     saveNewTeam: function() {
       this.new_team_name = this.new_team_name.trim();
       this.new_team_description = this.new_team_description.trim();
-      if (this.new_team_name == '' || this.new_team_description == '') {
-        return;
+      let error = false;
+      if (this.new_team_name == '') {
+        this.errors.new_team_name = "Team name is required"
+        error=true
       }
+      if (this.new_team_description == '') {
+        this.errors.new_team_descriptiont = "Description is required"
+        error=true
+      }
+      if (error) { return; }
       this.isAddingTeam = false;
       axios({
         method: 'post',

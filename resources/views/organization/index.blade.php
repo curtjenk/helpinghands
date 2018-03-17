@@ -1,24 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<main>
-    <section class="page-header">
-        <div class="container">
-            <div class="pull-left header">Organizations</div>
-            <div class="pull-right">
-                @can ('create-organization')
-                    <a class="btn btn-default" href="{{ url('/organization/create') }}"><i class="fa fa-plus"></i> Create</a>
-                @endcan
-            </div>
-        </div>
-    </section>
-    <div class="container">
-        <organizationslist
-          :is-admin="{{  1 }}"
-          :userid="{{ Auth::user()->id }}"
-        ></organizationslist>
-    </div>
-</main>
+
+<nav-top-2
+    title="Organization"
+    :links="[{perm:'Create organization', href:'/organization/create', name:'New', icon:'fa-plus'}]"
+></nav-top-2>
+<organizationslist
+  :is-admin="{{  1 }}"
+  :userid="{{ Auth::user()->id }}"
+></organizationslist>
 
 <div class="modal fade" id="deleteOrganization" tabindex="-1" user="dialog" aria-labelledby="Confirm delete organization">
   <div class="modal-dialog modal-sm" user="document">
