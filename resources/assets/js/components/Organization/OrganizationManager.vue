@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-7">
+  <div class="">
     <div class="row">
       <template v-if="modeShow">
         <b-col sm="8">

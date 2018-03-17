@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5 mb-3" style="margin-left: -15px; margin-right: -15px;">
-    <b-navbar  toggleable="sm" type="dark" class="navtop">
+    <b-navbar  toggleable="sm"  class="navtop2">
 
       <b-navbar-toggle target="nav2_collapse"></b-navbar-toggle>
 
