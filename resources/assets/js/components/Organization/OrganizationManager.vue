@@ -1,118 +1,108 @@
 <template>
   <div class="">
     <div class="row">
-      <template v-if="modeShow">
-        <b-col sm="8">
-          <b-row class="no-gutters">
-            <b-col sm="3">Name</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_name }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">Phone</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">Address 1</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_address1 }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">Address 2</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_address2 }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">City</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_city }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">State</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_state }}</b-col>
-          </b-row>
-          <b-row class="no-gutters mt-2">
-            <b-col sm="3">Zip Code</b-col>
-            <b-col sm="6" class="font-weight-bold">{{ org_zip }}</b-col>
-          </b-row>
-        </b-col>
-      </template>
-      <template v-else>
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="col-md-offset-2 col-md-8 text-center">
-            <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
-            <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                <span>Sorry, unable to save your change(s)</span>
-            </div>
-          </div>
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                  <input required id="name" v-model="org_name" type="text"
-                      name="name" autofocus class="editInfo" maxlength="255">
+      <b-col sm="8">
+        <template v-if="modeShow">
+            <b-row class="no-gutters">
+              <b-col sm="3">Name</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_name }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">Phone</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">Address 1</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_address1 }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">Address 2</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_address2 }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">City</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_city }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">State</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_state }}</b-col>
+            </b-row>
+            <b-row class="no-gutters mt-2">
+              <b-col sm="3">Zip Code</b-col>
+              <b-col sm="6" class="font-weight-bold">{{ org_zip }}</b-col>
+            </b-row>
+        </template>
+        <template v-else>
+            <div class="col-md-offset-2 col-md-8 text-center">
+              <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
+              <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+                  <span>Sorry, unable to save your change(s)</span>
               </div>
-          </div>
-          <div class="form-group">
-              <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
-              <div class="col-md-6 col-sm-6">
-                <masked-input id="phone" name="phone" type="tel" class="editInfo"
+            </div>
+            <b-row class="no-gutters">
+              <b-col sm="3">Name</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input  required id="name" v-model="org_name" type="text" name="name" autofocus>
+                </b-form-input>
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">Phone</b-col>
+              <b-col sm="6" md="6">
+                <masked-input id="phone" name="phone" type="tel" class="form-control"
                     v-model="org_phone"
                     :mask="['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]">
                 </masked-input>
-              </div>
-          </div>
-          <div class="form-group" :class="{ 'has-error' : errors.address1 } ">
-              <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
-              <div class="col-md-6 col-sm-6">
-                  <input id="address1" v-model="org_address1" type="text"
-                      name="address1" class="editInfo" maxlength="255">
-                  <form-error v-if="errors.address1" >
-                      <div v-for="msg in errors.address1">
-                          {{ msg }}
-                      </div>
-                  </form-error>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
-              <div class="col-md-6 col-sm-6">
-                  <input id="address2" v-model="org_address2" type="text"
-                      name="address2" class="editInfo" maxlength="255">
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
-              <div class="col-md-6 col-sm-6">
-                  <input id="city" v-model="org_city" type="text"
-                      name="city" class="editInfo" maxlength="255">
-              </div>
-          </div>
-          <div class="form-group">
-            <label for="state" class="col-md-3 col-sm-3 control-label">State</label>
-            <div class="col-md-3 col-sm-3">
-              <input id="state" v-model="org_state" type="text"
-                    name="state" class="editInfo" maxlength="255">
-            </div>
-          </div>
-          <div class="form-group" :class="{ 'has-error' : errors.zipcode } ">
-            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip</label>
-            <div class="col-md-2 col-sm-2">
-                <input id="zip" v-model="org_zip" type="text"
-                    name="zip" class="editInfo" maxlength="10" size="5">
-              <form-error v-if="errors.zipcode" :errors="errors">
-                  <div v-for="msg in errors.zipcode">
-                      {{ msg }}
-                  </div>
-              </form-error>
-            </div>
-          </div>
-          <div class="text-center">
-            <button v-if="modeCreate" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
-                <i class="fa fa-btn fa-check"></i> Save Organization
-            </button>
-            <button v-if="modeEdit" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
-                <i class="fa fa-btn fa-check"></i> Update Organization
-            </button>
-          </div>
-        </div>
-      </template>
-      <div class="form-horizontal col-md-4 col-sm-4">
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">Address 1</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input id="address1" v-model="org_address1" type="text" name="address1" :state="addr1Error">
+                  <b-form-invalid-feedback>
+                    <div v-for="msg in errors.address1">
+                        {{ msg }}
+                    </div>
+                  </b-form-invalid-feedback>
+                </b-form-input>
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">Address 2</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input id="address2" v-model="org_address2" type="text" name="address2">
+                </b-form-input>
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">City</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input id="city" v-model="org_city" type="text" name="city">
+                </b-form-input>
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">State</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input id="state" v-model="org_state" type="text" name="state">
+                </b-form-input>
+              </b-col>
+            </b-row>
+            <b-row class="no-gutters">
+              <b-col sm="3">Zip</b-col>
+              <b-col sm="6" md="6">
+                <b-form-input id="zip" v-model="org_zip" type="text" name="zip" :state="zipError">
+                  <b-form-invalid-feedback>
+                    <div v-for="msg in errors.zipcode">
+                        {{ msg }}
+                    </div>
+                  </b-form-invalid-feedback>
+                </b-form-input>
+              </b-col>
+            </b-row>
+        </template>
+      </b-col>
+      <b-col sm="4">
         <div class="caption">
           <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
           <span v-if="members && members.length>0 && !isAddingAdmin && modeEdit"
@@ -166,8 +156,18 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </b-col>
     </div>
+    <b-row>
+      <div class="mx-auto mt-4">
+        <button v-if="modeCreate" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+            <i class="fa fa-btn fa-check"></i> Save Organization
+        </button>
+        <button v-if="modeEdit" type="submit" class="btn btn-primary" name="submit" @click="saveOrganization">
+            <i class="fa fa-btn fa-check"></i> Update Organization
+        </button>
+      </div>
+    </b-row>
     <hr/>
     <div class="row">
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
@@ -302,9 +302,6 @@ export default {
     }
   },
   mounted: function () {
-    // console.log(MODES)
-    //console.log(this.mode0)
-    // console.log(MODES[this.mode0])
     this.setMode(this.mode0);
     if (this.orgteams0 != null) {
       this.org_id = this.orgteams0.id
@@ -342,7 +339,20 @@ export default {
     // console.log('dom updated')
   },
   computed: {
-
+    addr1Error () {
+      if (!this.isObjectEmpty(this.errors)) {
+        return this.errors.address1 ? false : true;
+      } else {
+        return null;
+      }
+    },
+    zipError () {
+      if (!this.isObjectEmpty(this.errors)) {
+        return this.errors.zipcode ? false : true;
+      } else {
+        return null;
+      }
+    },
   },
   watch: {
     // newPasswordConfirm () {
