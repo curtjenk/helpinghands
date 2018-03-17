@@ -21,10 +21,10 @@
         :user0="{{ Auth::user() }}"
         :statuses0="{{ $statuses }}"
         :eventtypes0="{{ $event_types }}"
-        
-        :user="{{ json_encode($userRolesPermissions['user']) }}"
+
+        {{-- :user="{{ json_encode($userRolesPermissions['user']) }}"
         :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}"
+        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
     >
     </event-manager>
 

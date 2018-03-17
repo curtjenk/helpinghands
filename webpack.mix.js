@@ -12,12 +12,16 @@ const { mix } = require('laravel-mix');
  */
 
 mix.sass('resources/assets/sass/app.scss', 'public/css')
- /* .sass('resources/assets/sass/gsdk.scss', 'public/css'); */
    .js('resources/assets/js/app.js', 'public/js')
-    .extract(['vue',
+    .extract([
+      'vue',
+      'vuex',
+      'vue-chartjs',
+      'moment',
       'axios',
       'jquery',
       'vuetable-2',
-      'vue-good-table', 'vue-quill-editor'
+      'vue-good-table',
+      'vue-quill-editor'
     ]);
 

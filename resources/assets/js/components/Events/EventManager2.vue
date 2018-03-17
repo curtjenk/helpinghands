@@ -3,9 +3,6 @@
   <!-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" -->
     <nav-top-2
         :title="navTitle"
-        :user="user"
-        :roles="roles"
-        :permissions="permissions"
         :links="navLinks"
     ></nav-top-2>
     <!-- <div class="row mt-4">
@@ -393,15 +390,15 @@ export default {
     organization0: { type: Object, required: false },
     team0: { type: Object, required: false },
 
-    user: {
-      type: Object, default: null
-    },
-    roles: {
-      type: Array, default: ()=>[]
-    },
-    permissions: {
-      type: Array, default: ()=>[]
-    },
+    // user: {
+    //   type: Object, default: null
+    // },
+    // roles: {
+    //   type: Array, default: ()=>[]
+    // },
+    // permissions: {
+    //   type: Array, default: ()=>[]
+    // },
   },
   data() {
     return {

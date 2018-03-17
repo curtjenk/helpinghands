@@ -56,13 +56,16 @@ export const commonMixins = {
     },
     formatPhoneNumber: function(input, formatMask)
     {
+      if (input == null) {
+        return ''
+      }
         // Strip non-numeric characters
-        var digits = input.replace(/\D/g, '');
-        // Replace each "X" with the next digit
-        var count = 0;
-        return formatMask.replace(/X/g, function() {
-            return digits.charAt(count++);
-        });
+      var digits = input.replace(/\D/g, '');
+      // Replace each "X" with the next digit
+      var count = 0;
+      return formatMask.replace(/X/g, function() {
+          return digits.charAt(count++);
+      });
     },
     formatDate: function(input, formatMask = 'MM/DD/YYYY h:mm:ss a') {
       // console.log( moment(input).format(formatMask));

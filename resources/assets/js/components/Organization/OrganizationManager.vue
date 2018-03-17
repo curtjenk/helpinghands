@@ -1,53 +1,39 @@
 <template>
-  <div class="">
+  <div class="mt-7">
     <div class="row">
-      <span v-if="modeShow">
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="name" class="form-control-static">{{ org_name }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="phone" class="col-md-3 col-sm-3 control-label">Phone</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="phone" class="form-control-static">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="address1" class="col-md-3 col-sm-3 control-label">Address 1</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="address1" class="form-control-static">{{ org_address1 }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="address2" class="col-md-3 col-sm-3 control-label">Address 2</label>
-              <div class="col-md-6 col-sm-6">
-                    <p id="address2" class="form-control-static">{{ org_address2 }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="city" class="col-md-3 col-sm-3 control-label">City</label>
-              <div class="col-md-6 col-sm-6">
-                  <p id="city" class="form-control-static">{{ org_city }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-            <label for="state" class="col-md-3 col-sm-3 control-label">State Code</label>
-            <div class="col-md-2 col-sm-2">
-              <p id="state" class="form-control-static">{{ org_state }}</p>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="zip" class="col-md-3 col-sm-3 control-label">Zip Code</label>
-            <div class="col-md-2 col-sm-2">
-              <p id="zip" class="form-control-static">{{ org_zip }}</p>
-            </div>
-          </div>
-        </div>
-      </span>
-      <span v-else>
+      <template v-if="modeShow">
+        <b-col sm="8">
+          <b-row class="no-gutters">
+            <b-col sm="3">Name</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_name }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Phone</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ formatPhoneNumber(org_phone,'(XXX) XXX-XXXX') }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Address 1</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_address1 }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Address 2</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_address2 }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">City</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_city }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">State</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_state }}</b-col>
+          </b-row>
+          <b-row class="no-gutters mt-2">
+            <b-col sm="3">Zip Code</b-col>
+            <b-col sm="6" class="font-weight-bold">{{ org_zip }}</b-col>
+          </b-row>
+        </b-col>
+      </template>
+      <template v-else>
         <div class="form-horizontal col-md-8 col-sm-8">
           <div class="col-md-offset-2 col-md-8 text-center">
             <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
@@ -125,7 +111,7 @@
             </button>
           </div>
         </div>
-      </span>
+      </template>
       <div class="form-horizontal col-md-4 col-sm-4">
         <div class="caption">
           <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
