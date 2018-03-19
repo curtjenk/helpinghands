@@ -207,7 +207,7 @@
               </span>
             </b-col>
           </b-row>
-          <b-row class="no-gutters mt-2">
+          <b-row class="no-gutters mt-3">
             <b-col sm="12" md="12">
               <float-label>
                 <b-form-input id="ntn" required v-model="new_team_description" :state="teamDescriptionError" type="text" placeholder="Description">
@@ -224,7 +224,7 @@
     <b-table striped small bordered hover :items="teams" :fields="team_table_fields">
       <template v-if="modeEdit" slot="action" slot-scope="data">
         <span v-tooltip.left="'Edit'" >
-            <a href="#" class="" @click.stop="editTeam(team)">
+            <a href="#" class="" @click.stop="editTeam(data.item)">
               <i class="fa fa-pencil-square-o fa-fw"></i>
             </a>
         </span>

@@ -1,23 +1,19 @@
 <template>
-  <div>
-    <div class="row">
-      <span v-if="modeShow">
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="name" class="form-control-static">{{ team_name }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="description" class="col-md-3 col-sm-3 control-label">Description</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="phone" class="form-control-static">{{ team_description }}</p>
-              </div>
-          </div>
-        </div>
-      </span>
-      <span v-else>
+<div class="container">
+  <div class="row">
+    <b-col sm="2"></b-col>
+    <b-col>
+      <template v-if="modeShow">
+        <b-row class="">
+          <b-col sm="3" md="3" >Name</b-col>
+          <b-col sm="6" md="6" class="font-weight-bold">{{ team_name }}</b-col>
+        </b-row>
+        <b-row class="mt-2">
+          <b-col sm="3" md="3" >Description</b-col>
+          <b-col sm="8" md="8" class="font-weight-bold">{{ team_description }}</b-col>
+        </b-row>
+      </template>
+      <template v-else>
         <div class="form-horizontal col-md-8 col-sm-8">
           <div class="col-md-offset-2 col-md-8 text-center">
             <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
@@ -45,90 +41,92 @@
             </button>
           </div>
         </div>
-      </span>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <div class="caption">
-          <span>Team Members</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit"
-              v-tooltip.right="'Add Team Member'">
-            <a  href="#" type="button" class="text-success"
-              @click="toggleIsAddingMember()">
-              <i class="fa fa-plus fa-lg fa-fw text-success"></i>
-            </a>
-          </span>
-        </div>
-        <div v-if="isAddingMember" class="panel panel-default">
-          <div class="form-group row panel-body">
-            <div class="col-md-8 col-sm-8">
-              <select v-model="new_member">
-                <option disabled value="">Please select one</option>
-                <option v-for="oom in other_org_members" v-bind:value="oom">
-                  {{ oom.name }} &nbsp;< {{oom.email}} >
-               </option>
-              </select>
-              &nbsp;&nbsp;
-              <span v-tooltip.top="'Save'">
-                  <a href="#" type="button" class="text-primary"
-                    @click="saveNewMember()">
-                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                  </a>
-              </span>
-              <span v-tooltip.top="'Cancel'">
-                  <a href="#" type="button" class="text-danger"
-                    @click="toggleIsAddingMember()">
-                    <i class="fa fa-ban fa-lg fa-fw"></i>
-                  </a>
-              </span>
-            </div>
-          </div>
-        </div>
+      </template>
+    </b-col>
+    <b-col sm="2"></b-col>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
+      <div class="caption">
+        <span>Team Members</span>&nbsp;&nbsp;&nbsp;
+        <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit"
+            v-tooltip.right="'Add Team Member'">
+          <a  href="#" type="button" class="text-success"
+            @click="toggleIsAddingMember()">
+            <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+          </a>
+        </span>
       </div>
-    </div>
-    <div class="row">
-      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <vue-good-table v-show="ready"
-            :columns="gColumns"
-            :rows="members"
-            :paginate="true"
-            :perPage="10"
-            :lineNumbers="false"
-            styleClass="table condensed table-striped">
-          <div slot="emptystate" class="text-center">
-            No members on this team
-          </div>
-          <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
-            <td>
-              <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
-                    <a href="#" type="button" class="text-primary"
-                      @click="updateLeader('delete', props.index)">
-                      <i class="fa fa-check-square-o fa-fw"></i>
-                    </a>
-              </span>
-              <span v-else v-tooltip.right="'Make Leader'">
-                <a href="#" type="button" class=""
-                  @click="updateLeader('post', props.index)">
-                  <i class="fa fa-square-o fa-fw"></i>
+      <div v-if="isAddingMember" class="panel panel-default">
+        <div class="form-group row panel-body">
+          <div class="col-md-8 col-sm-8">
+            <select v-model="new_member">
+              <option disabled value="">Please select one</option>
+              <option v-for="oom in other_org_members" v-bind:value="oom">
+                {{ oom.name }} &nbsp;< {{oom.email}} >
+             </option>
+            </select>
+            &nbsp;&nbsp;
+            <span v-tooltip.top="'Save'">
+                <a href="#" type="button" class="text-primary"
+                  @click="saveNewMember()">
+                  <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                 </a>
-              </span>
-            </td>
-          </template>
-          <!-- all the regular row items will be populated here-->
-          <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
-            <td>
-              <a href="#" type="button" class="text-danger"
-                @click="removeMember2(props.index)">
-                <i class="fa fa-trash-o fa-fw"></i>
-              </a>
-            </td>
-            <!-- <td><button @click="doSomething(props.index)">show</button></td> -->
-          </template>
-        </vue-good-table>
+            </span>
+            <span v-tooltip.top="'Cancel'">
+                <a href="#" type="button" class="text-danger"
+                  @click="toggleIsAddingMember()">
+                  <i class="fa fa-ban fa-lg fa-fw"></i>
+                </a>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
+      <vue-good-table v-show="ready"
+          :columns="gColumns"
+          :rows="members"
+          :paginate="true"
+          :perPage="10"
+          :lineNumbers="false"
+          styleClass="table condensed table-striped">
+        <div slot="emptystate" class="text-center">
+          No members on this team
+        </div>
+        <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
+          <td>
+            <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
+                  <a href="#" type="button" class="text-primary"
+                    @click="updateLeader('delete', props.index)">
+                    <i class="fa fa-check-square-o fa-fw"></i>
+                  </a>
+            </span>
+            <span v-else v-tooltip.right="'Make Leader'">
+              <a href="#" type="button" class=""
+                @click="updateLeader('post', props.index)">
+                <i class="fa fa-square-o fa-fw"></i>
+              </a>
+            </span>
+          </td>
+        </template>
+        <!-- all the regular row items will be populated here-->
+        <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
+          <td>
+            <a href="#" type="button" class="text-danger"
+              @click="removeMember2(props.index)">
+              <i class="fa fa-trash-o fa-fw"></i>
+            </a>
+          </td>
+          <!-- <td><button @click="doSomething(props.index)">show</button></td> -->
+        </template>
+      </vue-good-table>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

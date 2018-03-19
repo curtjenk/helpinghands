@@ -3,7 +3,7 @@
 @section('content')
 
 <nav-top-2
-    title="Organization"
+    title="Organizations"
     :links="[{perm:'Create organization', href:'/organization/create', name:'New', icon:'fa-plus'}]"
 ></nav-top-2>
 <organizationslist
