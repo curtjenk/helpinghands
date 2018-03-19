@@ -33,7 +33,7 @@
           </b-row>
       </template>
       <template v-else>
-          <div class="col-md-offset-2 col-md-8 text-center">
+          <div class="offset-md-2 col-md-8 text-center">
             <div class="alert alert-success" v-if="statusSuccess" transition="expand">Organization information was saved/updated.</div>
             <div class="alert alert-danger" v-if="statusFailed" transition="expand">
                 <span>Sorry, unable to save your change(s)</span>
@@ -195,16 +195,14 @@
               </float-label>
             </b-col>
             <b-col class="ml-1">
-              <span v-tooltip.top="'Save'" class="align-middle">
-                  <a href="#" class="text-primary" @click="saveNewTeam()">
-                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                  </a>
-              </span>
-              <span v-tooltip.top="'Cancel'" class="align-middle">
-                  <a href="#" class="text-danger" @click="toggleIsAddingTeam()">
-                    <i class="fa fa-ban fa-lg fa-fw"></i>
-                  </a>
-              </span>
+              <a id="saveNew" href="#" class="text-primary" @click="saveNewTeam()">
+                <i class="fa fa-floppy-o fa-lg fa-fw"></i>
+              </a>
+              <a id="cancelNew" href="#" class="text-danger" @click="toggleIsAddingTeam()">
+                <i class="fa fa-ban fa-lg fa-fw"></i>
+              </a>
+              <b-tooltip target="saveNew" title="Save" placement="top"></b-tooltip>
+              <b-tooltip target="cancelNew" title="Cancel" placement="top"></b-tooltip>
             </b-col>
           </b-row>
           <b-row class="no-gutters mt-3">
@@ -222,17 +220,15 @@
       </b-card>
     </template>
     <b-table striped small bordered hover :items="teams" :fields="team_table_fields">
-      <template v-if="modeEdit" slot="action" slot-scope="data">
-        <span v-tooltip.left="'Edit'" >
-            <a href="#" class="" @click.stop="editTeam(data.item)">
-              <i class="fa fa-pencil-square-o fa-fw"></i>
-            </a>
-        </span>
-        <span v-tooltip.right="'Remove'" >
-            <a href="#" class="text-danger" @click.stop="removeTeam(team)">
-              <i class="fa fa-trash-o fa-fw"></i>
-            </a>
-        </span>
+      <template v-if="modeEdit" slot="action" slot-scope="row">
+        <a :id="'edit_' + row.item.id" href="#" class="" @click.stop="editTeam(row.item)">
+          <i class="fa fa-pencil-square-o fa-fw"></i>
+        </a>
+        <a :id="'del_' + row.item.id" href="#" class="text-danger" @click.stop="removeTeam(row.item)">
+          <i class="fa fa-trash-o fa-fw"></i>
+        </a>
+        <b-tooltip :target="'edit_' + row.item.id" title="Edit" placement="left"></b-tooltip>
+        <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
       </template>
     </b-table>
   </b-row>

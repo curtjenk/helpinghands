@@ -5,44 +5,7 @@
         :title="navTitle"
         :links="navLinks"
     ></nav-top-2>
-    <!-- <div class="row mt-4">
-      <template v-if="modeShow">
-        <span v-tooltip.top="'List Events'" class="pull-right">
-          <a  href="#" type="button" class="text-info"
-            @click="goToLocation('/event')">
-            <i class="fa fa-list-ul fa-3x fa-fw text-info"></i>
-          </a>
-        </span>
-        <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
-          <a  href="#" type="button" class="text-warning"
-            @click="setModeEdit(); editor.enable();">
-            <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
-          </a>
-        </span>
-        <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
-          <a  href="#" type="button" class="text-success"
-            @click="setModeCreate(); editor.enable(); initialize();">
-            <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
-          </a>
-        </span>
-      </template>
-      <template v-if="modeEdit">
-        <span v-tooltip.top="'Cancel Edit'" class="pull-right">
-          <a  href="#" type="button" class="text-success"
-            @click="setModeShow(); editor.disable();">
-            <i class="fa fa-eye fa-3x fa-fw text-success"></i>
-          </a>
-        </span>
-      </template>
-      <template v-if="modeCreate">
-        <span v-tooltip.top="'Cancel Create'" class="pull-right">
-          <a  href="#" type="button" class="text-success"
-            @click="goToLocation('/event')">
-            <i class="fa fa-list-ul fa-3x fa-fw text-danger"></i>
-          </a>
-        </span>
-      </template>
-    </div> -->
+
     <div class="row">
       <div class="col-md-offset-2 col-sm-offset-2 text-center">
         <div class="alert alert-danger" v-if="statusFailed" transition="expand">

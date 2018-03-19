@@ -12,6 +12,7 @@
         :team0="{{ $team }}"
         :team_members0="{{ $members }}"
         :other_org_members0="{{ $other_org_members }}"
+
     ></team-manager>
-    
+
 @endsection

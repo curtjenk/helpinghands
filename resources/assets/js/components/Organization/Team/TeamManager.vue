@@ -1,130 +1,158 @@
 <template>
 <div class="container">
   <div class="row">
-    <b-col sm="2"></b-col>
-    <b-col>
+    <b-col sm="8">
       <template v-if="modeShow">
-        <b-row class="">
-          <b-col sm="3" md="3" >Name</b-col>
-          <b-col sm="6" md="6" class="font-weight-bold">{{ team_name }}</b-col>
+        <b-row class="no-gutters">
+          <b-col sm="3">Name</b-col>
+          <b-col sm="6" class="font-weight-bold">{{ team_name }}</b-col>
         </b-row>
-        <b-row class="mt-2">
-          <b-col sm="3" md="3" >Description</b-col>
-          <b-col sm="8" md="8" class="font-weight-bold">{{ team_description }}</b-col>
+        <b-row class="no-gutters">
+          <b-col sm="3">Description</b-col>
+          <b-col sm="6" class="font-weight-bold">{{ team_description }}</b-col>
         </b-row>
       </template>
       <template v-else>
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="col-md-offset-2 col-md-8 text-center">
-            <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
-            <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                <span>Sorry, unable to save your change(s)</span>
-            </div>
+        <div class="offset-md-2 col-md-8 text-center">
+          <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
+          <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+              <span>Sorry, unable to save your change(s)</span>
           </div>
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                  <input required id="name" v-model="team_name" type="text"
-                      name="name" autofocus class="editInfo" maxlength="255">
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="description" class="col-md-3 col-sm-3 control-label">Description</label>
-              <div class="col-md-6 col-sm-6">
-                <textarea id="description" v-model="team_description" name="description" rows="5" class="editTextArea">
-                </textarea>
-              </div>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary" name="submit" @click="saveTeam">
-                <i class="fa fa-btn fa-check"></i> Save Team
-            </button>
-          </div>
+        </div>
+        <b-row class="no-gutters">
+          <b-col sm="3">Name</b-col>
+          <b-col sm="6" md="6">
+            <b-form-input  required id="name" v-model="team_name" type="text" name="name" autofocus>
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="no-gutters">
+          <b-col sm="3">Description</b-col>
+          <b-col sm="7" md="7">
+            <b-form-input  required id="name" v-model="team_description" type="text" name="name" autofocus>
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <div class="text-center mt-3">
+          <b-button type="submit" variant="primary" name="submit" @click="saveTeam">
+              <i class="fa fa-btn fa-check"></i> Save Team
+          </b-button>
         </div>
       </template>
     </b-col>
-    <b-col sm="2"></b-col>
   </div>
   <hr/>
-  <div class="row">
-    <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-      <div class="caption">
-        <span>Team Members</span>&nbsp;&nbsp;&nbsp;
-        <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit"
-            v-tooltip.right="'Add Team Member'">
-          <a  href="#" type="button" class="text-success"
-            @click="toggleIsAddingMember()">
-            <i class="fa fa-plus fa-lg fa-fw text-success"></i>
-          </a>
-        </span>
-      </div>
-      <div v-if="isAddingMember" class="panel panel-default">
-        <div class="form-group row panel-body">
-          <div class="col-md-8 col-sm-8">
+  <b-row>
+    <div class="caption">Team Members &nbsp;&nbsp;&nbsp;
+      <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit">
+        <a id="addmember" href="#" class="text-success" @click="toggleIsAddingMember()">
+          <i class="fa fa-user fa-lg fa-fw text-success"></i>
+        </a>
+      </span>
+      <!-- b-tooltip must be place "lower" in the dom than the target element -->
+      <b-tooltip target="addmember" title="Add Team Member" placement="right"></b-tooltip>
+    </div>
+    <template v-if="isAddingMember">
+      <b-card no-body style="min-width: 100%;">
+        <b-card-body>
+          <b-row class="no-gutters">
             <select v-model="new_member">
               <option disabled value="">Please select one</option>
               <option v-for="oom in other_org_members" v-bind:value="oom">
                 {{ oom.name }} &nbsp;< {{oom.email}} >
              </option>
             </select>
-            &nbsp;&nbsp;
-            <span v-tooltip.top="'Save'">
-                <a href="#" type="button" class="text-primary"
-                  @click="saveNewMember()">
-                  <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <span v-tooltip.top="'Cancel'">
-                <a href="#" type="button" class="text-danger"
-                  @click="toggleIsAddingMember()">
-                  <i class="fa fa-ban fa-lg fa-fw"></i>
-                </a>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-      <vue-good-table v-show="ready"
-          :columns="gColumns"
-          :rows="members"
-          :paginate="true"
-          :perPage="10"
-          :lineNumbers="false"
-          styleClass="table condensed table-striped">
-        <div slot="emptystate" class="text-center">
-          No members on this team
-        </div>
-        <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
-          <td>
-            <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
-                  <a href="#" type="button" class="text-primary"
-                    @click="updateLeader('delete', props.index)">
-                    <i class="fa fa-check-square-o fa-fw"></i>
-                  </a>
-            </span>
-            <span v-else v-tooltip.right="'Make Leader'">
-              <a href="#" type="button" class=""
-                @click="updateLeader('post', props.index)">
-                <i class="fa fa-square-o fa-fw"></i>
-              </a>
-            </span>
-          </td>
-        </template>
-        <!-- all the regular row items will be populated here-->
-        <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
-          <td>
-            <a href="#" type="button" class="text-danger"
-              @click="removeMember2(props.index)">
-              <i class="fa fa-trash-o fa-fw"></i>
+            <a id="saveNew" href="#" class="text-primary" @click="saveNewMember()">
+              <i class="fa fa-floppy-o fa-lg fa-fw"></i>
             </a>
-          </td>
-          <!-- <td><button @click="doSomething(props.index)">show</button></td> -->
-        </template>
-      </vue-good-table>
-    </div>
+            <a id="cancelNew" href="#" class="text-danger" @click="toggleIsAddingMember()">
+              <i class="fa fa-ban fa-lg fa-fw"></i>
+            </a>
+            <b-tooltip target="saveNew" title="Save" placement="top"></b-tooltip>
+            <b-tooltip target="cancelNew" title="Cancel" placement="top"></b-tooltip>
+          </b-row>
+        </b-card-body>
+      </b-card>
+    </template>
+  </b-row>
+  <div class="row">
+    <b-table striped small bordered hover :items="members" :fields="members_table_fields">
+      <template slot="HEAD_name" slot-scope="head_row">
+        <div>
+          <em>THE NAME !!!</em>
+          <a href="#" @click.stop="showFilter=!showFilter">
+            <i v-show="!showFilter" class="fa fa-caret-down fa-fw"></i>
+            <i v-show="showFilter" class="fa fa-caret-up fa-fw"></i>
+          </a>
+          <template v-if="showFilter">
+            <b-input-group size="sm">
+              <b-form-input id="name_filter" type="text" name="name_filter" autofocus></b-form-input>
+              <b-input-group-append>
+                <b-btn href="#""><i class="fa fa-search fa-fw"></i></b-btn>
+              </b-input-group-append>
+            </b-input-group>
+          </template>
+        </div>
+      </template>
+      <template v-if="modeEdit" slot="leader" slot-scope="row">
+        <span v-if="row.item.role=='Lead'">
+          <a :id="'remlead_' + row.item.id" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
+            <i class="fa fa-check-square-o fa-fw"></i>
+          </a>
+          <b-tooltip :target="'remlead_' + row.item.id" title="Remove as Leader" placement="right"></b-tooltip>
+        </span>
+        <span v-else>
+          <a :id="'makelead_' + row.item.id" href="#" class="" @click.stop="updateLeader('post', row.index)">
+            <i class="fa fa-square-o fa-fw"></i>
+          </a>
+          <b-tooltip :target="'makelead_' + row.item.id" title="Make leader" placement="right"></b-tooltip>
+        </span>
+      </template>
+      <template v-if="modeEdit" slot="action" slot-scope="row">
+        <a :id="'del_' + row.item.id" href="#" class="text-danger" @click.stop="removeMember2(row.index)">
+          <i class="fa fa-trash-o fa-fw"></i>
+        </a>
+        <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
+      </template>
+    </b-table>
+    <!-- <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
+        <vue-good-table v-show="ready"
+            :columns="gColumns"
+            :rows="members"
+            :paginate="true"
+            :perPage="10"
+            :lineNumbers="false"
+            styleClass="table condensed table-striped">
+          <div slot="emptystate" class="text-center">
+            No members on this team
+          </div>
+          <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
+            <td>
+              <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
+                    <a href="#" type="button" class="text-primary"
+                      @click="updateLeader('delete', props.index)">
+                      <i class="fa fa-check-square-o fa-fw"></i>
+                    </a>
+              </span>
+              <span v-else v-tooltip.right="'Make Leader'">
+                <a href="#" type="button" class=""
+                  @click="updateLeader('post', props.index)">
+                  <i class="fa fa-square-o fa-fw"></i>
+                </a>
+              </span>
+            </td>
+          </template>
+
+          <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
+            <td>
+              <a href="#" type="button" class="text-danger"
+                @click="removeMember2(props.index)">
+                <i class="fa fa-trash-o fa-fw"></i>
+              </a>
+            </td>
+          </template>
+        </vue-good-table>
+    </div> -->
   </div>
 </div>
 </template>
@@ -171,27 +199,34 @@ export default {
   },
   data () {
     return {
-      gColumns: [
-        {label: 'Leader', hidden: true
-        },
-        {label: 'Name', field: 'name', filterable: true,
-          filter: function(data, filterString) {
-            // // return data.includes(filterString); //ES6
-            let lData = data.toLowerCase();
-            let lFilterString = filterString.toLowerCase();
-            return lData.indexOf(lFilterString) != -1; //Faster method
-          }
-        },
-        {label: 'Email', field: 'email', filterable: true,
-          filter: function(data, filterString) {
-            let lData = data.toLowerCase();
-            let lFilterString = filterString.toLowerCase();
-            return lData.indexOf(lFilterString) != -1; //Faster method
-          }
-        },
-        {label: 'Actions', hidden: true
-        }
-      ],
+      showFilter: false,
+      members_table_fields: {
+        leader: {},
+        name: {sortable:true},
+        email: {},
+        action: {}
+      },
+      // gColumns: [
+      //   {label: 'Leader', hidden: true
+      //   },
+      //   {label: 'Name', field: 'name', filterable: true,
+      //     filter: function(data, filterString) {
+      //       // // return data.includes(filterString); //ES6
+      //       let lData = data.toLowerCase();
+      //       let lFilterString = filterString.toLowerCase();
+      //       return lData.indexOf(lFilterString) != -1; //Faster method
+      //     }
+      //   },
+      //   {label: 'Email', field: 'email', filterable: true,
+      //     filter: function(data, filterString) {
+      //       let lData = data.toLowerCase();
+      //       let lFilterString = filterString.toLowerCase();
+      //       return lData.indexOf(lFilterString) != -1; //Faster method
+      //     }
+      //   },
+      //   {label: 'Actions', hidden: true
+      //   }
+      // ],
       ready: false,
       errors: {},
       isAddingMember: false,
@@ -210,8 +245,8 @@ export default {
     this.members = this.team_members0;
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
-    this.gColumns[0].hidden = this.modeShow;    //Leader column
-    this.gColumns[3].hidden = this.modeShow;    //Actions column
+    // this.gColumns[0].hidden = this.modeShow;    //Leader column
+    // this.gColumns[3].hidden = this.modeShow;    //Actions column
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
     })

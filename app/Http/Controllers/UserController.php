@@ -14,44 +14,44 @@ use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 
 class UserController extends Controller
 {
-    public function yes_responses($id)
-    {
-        $user = Auth::user();
-        $member = App\User::findOrFail($id);
-        $this->authorize('show', $member);
-        $responses = $member->responses()
-        ->select("events.subject", 'events.date_start', 'events.date_end')
-        ->join('events', 'events.id', '=', 'responses.event_id')
-        ->where('responses.helping', true)
-        ->orderby('events.date_end','asc')
-        ->get();
-
-        // $responses = App\User::
-        //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
-        //     ->leftjoin('events', 'events.id', '=', 'responses.event_id')
-        //     ->groupby('users.id')
-        //     ->groupby('responses.id')
-        //     ->groupby('events.id')
-        //     ->paginate(10);
-
-        return response()->json($responses);
-    }
+    // public function yes_responses($id)
+    // {
+    //     $user = Auth::user();
+    //     $member = App\User::findOrFail($id);
+    //     $this->authorize('show', $member);
+    //     $responses = $member->responses()
+    //     ->select("events.subject", 'events.date_start', 'events.date_end')
+    //     ->join('events', 'events.id', '=', 'responses.event_id')
+    //     ->where('responses.helping', true)
+    //     ->orderby('events.date_end','asc')
+    //     ->get();
+    //
+    //     // $responses = App\User::
+    //     //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
+    //     //     ->leftjoin('events', 'events.id', '=', 'responses.event_id')
+    //     //     ->groupby('users.id')
+    //     //     ->groupby('responses.id')
+    //     //     ->groupby('events.id')
+    //     //     ->paginate(10);
+    //
+    //     return response()->json($responses);
+    // }
     /**
      * Get list of members who signed-up for the event
      * @param  Request $request [description]
      * @return [type]           [description]
      */
-    public function signups(Request $request, $event_id)
-    {
-        $user = Auth::user();
-        $this->authorize('list-users');
-        $event = App\Event::findOrFail($event_id);
-        $this->authorize('show', $event);
-        if (!$request->ajax()) {
-            return abort(400);
-        }
-        return response()->json($event->signups()->get());
-    }
+    // public function signups(Request $request, $event_id)
+    // {
+    //     $user = Auth::user();
+    //     $this->authorize('list-users');
+    //     $event = App\Event::findOrFail($event_id);
+    //     $this->authorize('show', $event);
+    //     if (!$request->ajax()) {
+    //         return abort(400);
+    //     }
+    //     return response()->json($event->signups()->get());
+    // }
     /**
      *
      */
@@ -88,12 +88,14 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function membership(Request $request, $id)
-    {
-        $user = App\User::findOrFail($id);
-        $this->authorize("show", $user);
-        return response()->json($user->memberships()->get());
-    }
+    // public function membership(Request $request, $id)
+    // {
+    //     $user = App\User::findOrFail($id);
+    //     $this->authorize("show", $user);
+    //     $memberships = $user->memberships()
+    //                     ->where('name','!=','Ministry Engage')->get();
+    //     return response()->json($memberships);
+    // }
     /**
      * Display a listing of the resource.
      *
