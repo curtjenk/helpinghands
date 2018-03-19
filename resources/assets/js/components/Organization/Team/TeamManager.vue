@@ -1,93 +1,81 @@
 <template>
-  <div>
-    <div class="row">
-      <span v-if="modeShow">
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="name" class="form-control-static">{{ team_name }}</p>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="description" class="col-md-3 col-sm-3 control-label">Description</label>
-              <div class="col-md-6 col-sm-6">
-                <p id="phone" class="form-control-static">{{ team_description }}</p>
-              </div>
-          </div>
-        </div>
-      </span>
-      <span v-else>
-        <div class="form-horizontal col-md-8 col-sm-8">
-          <div class="col-md-offset-2 col-md-8 text-center">
-            <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
-            <div class="alert alert-danger" v-if="statusFailed" transition="expand">
-                <span>Sorry, unable to save your change(s)</span>
-            </div>
-          </div>
-          <div class="form-group">
-              <label for="name" class="col-md-3 col-sm-3 control-label">Name</label>
-              <div class="col-md-6 col-sm-6">
-                  <input required id="name" v-model="team_name" type="text"
-                      name="name" autofocus class="editInfo" maxlength="255">
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="description" class="col-md-3 col-sm-3 control-label">Description</label>
-              <div class="col-md-6 col-sm-6">
-                <textarea id="description" v-model="team_description" name="description" rows="5" class="editTextArea">
-                </textarea>
-              </div>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary" name="submit" @click="saveTeam">
-                <i class="fa fa-btn fa-check"></i> Save Team
-            </button>
+<div class="container">
+  <div class="row">
+    <b-col sm="8">
+      <template v-if="modeShow">
+        <b-row class="no-gutters">
+          <b-col sm="3">Name</b-col>
+          <b-col sm="6" class="font-weight-bold">{{ team_name }}</b-col>
+        </b-row>
+        <b-row class="no-gutters">
+          <b-col sm="3">Description</b-col>
+          <b-col sm="6" class="font-weight-bold">{{ team_description }}</b-col>
+        </b-row>
+      </template>
+      <template v-else>
+        <div class="offset-md-2 col-md-8 text-center">
+          <div class="alert alert-success" v-if="statusSuccess" transition="expand">Team information was saved/updated.</div>
+          <div class="alert alert-danger" v-if="statusFailed" transition="expand">
+              <span>Sorry, unable to save your change(s)</span>
           </div>
         </div>
+        <b-row class="no-gutters">
+          <b-col sm="3">Name</b-col>
+          <b-col sm="6" md="6">
+            <b-form-input  required id="name" v-model="team_name" type="text" name="name" autofocus>
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="no-gutters">
+          <b-col sm="3">Description</b-col>
+          <b-col sm="7" md="7">
+            <b-form-input  required id="name" v-model="team_description" type="text" name="name" autofocus>
+            </b-form-input>
+          </b-col>
+        </b-row>
+        <div class="text-center mt-3">
+          <b-button type="submit" variant="primary" name="submit" @click="saveTeam">
+              <i class="fa fa-btn fa-check"></i> Save Team
+          </b-button>
+        </div>
+      </template>
+    </b-col>
+  </div>
+  <hr/>
+  <b-row>
+    <div class="caption">Team Members &nbsp;&nbsp;&nbsp;
+      <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit">
+        <a id="addmember" href="#" class="text-success" @click="toggleIsAddingMember()">
+          <i class="fa fa-user fa-lg fa-fw text-success"></i>
+        </a>
       </span>
+      <!-- b-tooltip must be place "lower" in the dom than the target element -->
+      <b-tooltip target="addmember" title="Add Team Member" placement="right"></b-tooltip>
     </div>
-    <hr/>
-    <div class="row">
-      <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <div class="caption">
-          <span>Team Members</span>&nbsp;&nbsp;&nbsp;
-          <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit"
-              v-tooltip.right="'Add Team Member'">
-            <a  href="#" type="button" class="text-success"
-              @click="toggleIsAddingMember()">
-              <i class="fa fa-plus fa-lg fa-fw text-success"></i>
+    <template v-if="isAddingMember">
+      <b-card no-body style="min-width: 100%;">
+        <b-card-body>
+          <b-row class="no-gutters">
+            <select v-model="new_member">
+              <option disabled value="">Please select one</option>
+              <option v-for="oom in other_org_members" v-bind:value="oom">
+                {{ oom.name }} &nbsp;< {{oom.email}} >
+             </option>
+            </select>
+            <a id="saveNew" href="#" class="text-primary" @click="saveNewMember()">
+              <i class="fa fa-floppy-o fa-lg fa-fw"></i>
             </a>
-          </span>
-        </div>
-        <div v-if="isAddingMember" class="panel panel-default">
-          <div class="form-group row panel-body">
-            <div class="col-md-8 col-sm-8">
-              <select v-model="new_member">
-                <option disabled value="">Please select one</option>
-                <option v-for="oom in other_org_members" v-bind:value="oom">
-                  {{ oom.name }} &nbsp;< {{oom.email}} >
-               </option>
-              </select>
-              &nbsp;&nbsp;
-              <span v-tooltip.top="'Save'">
-                  <a href="#" type="button" class="text-primary"
-                    @click="saveNewMember()">
-                    <i class="fa fa-floppy-o fa-lg fa-fw"></i>
-                  </a>
-              </span>
-              <span v-tooltip.top="'Cancel'">
-                  <a href="#" type="button" class="text-danger"
-                    @click="toggleIsAddingMember()">
-                    <i class="fa fa-ban fa-lg fa-fw"></i>
-                  </a>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
+            <a id="cancelNew" href="#" class="text-danger" @click="toggleIsAddingMember()">
+              <i class="fa fa-ban fa-lg fa-fw"></i>
+            </a>
+            <b-tooltip target="saveNew" title="Save" placement="top"></b-tooltip>
+            <b-tooltip target="cancelNew" title="Cancel" placement="top"></b-tooltip>
+          </b-row>
+        </b-card-body>
+      </b-card>
+    </template>
+  </b-row>
+  <div class="row">
       <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
         <vue-good-table v-show="ready"
             :columns="gColumns"
@@ -127,8 +115,8 @@
           </template>
         </vue-good-table>
       </div>
-    </div>
   </div>
+</div>
 </template>
 
 <script>
