@@ -221,14 +221,14 @@
     </template>
     <b-table striped small bordered hover :items="teams" :fields="team_table_fields">
       <template v-if="modeEdit" slot="action" slot-scope="row">
-        <a :id="'tbledit_' + row.item.id" href="#" class="" @click.stop="editTeam(row.item)">
+        <a :id="'edit_' + row.item.id" href="#" class="" @click.stop="editTeam(row.item)">
           <i class="fa fa-pencil-square-o fa-fw"></i>
         </a>
-        <a :id="'tbldel_' + row.item.id" href="#" class="text-danger" @click.stop="removeTeam(row.item)">
+        <a :id="'del_' + row.item.id" href="#" class="text-danger" @click.stop="removeTeam(row.item)">
           <i class="fa fa-trash-o fa-fw"></i>
         </a>
-        <b-tooltip :target="'tbledit_' + row.item.id" title="Edit" placement="left"></b-tooltip>
-        <b-tooltip :target="'tbldel_' + row.item.id" title="Remove" placement="right"></b-tooltip>
+        <b-tooltip :target="'edit_' + row.item.id" title="Edit" placement="left"></b-tooltip>
+        <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
       </template>
     </b-table>
   </b-row>
