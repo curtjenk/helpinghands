@@ -77,7 +77,14 @@
   </b-row>
   <div class="row">
     <b-table striped small bordered hover :items="members" :fields="members_table_fields">
-      <template slot="HEAD_name" slot-scope="head_row">
+      <template slot="HEAD_name" slot-scope="data">
+        <column-filter
+          field="name"
+          label="Name"
+        >
+        </column-filter>
+      </template>
+      <!-- <template slot="HEAD_name" slot-scope="head_row">
         <div>
           <em>THE NAME !!!</em>
           <a href="#" @click.stop="showFilter=!showFilter">
@@ -93,7 +100,7 @@
             </b-input-group>
           </template>
         </div>
-      </template>
+      </template> -->
       <template v-if="modeEdit" slot="leader" slot-scope="row">
         <span v-if="row.item.role=='Lead'">
           <a :id="'remlead_' + row.item.id" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
@@ -115,44 +122,6 @@
         <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
       </template>
     </b-table>
-    <!-- <div class="form-horizontal col-md-offset-1 col-sm-offset-1 col-md-10 col-sm-10">
-        <vue-good-table v-show="ready"
-            :columns="gColumns"
-            :rows="members"
-            :paginate="true"
-            :perPage="10"
-            :lineNumbers="false"
-            styleClass="table condensed table-striped">
-          <div slot="emptystate" class="text-center">
-            No members on this team
-          </div>
-          <template slot="table-row-before" slot-scope="props" v-if="modeEdit">
-            <td>
-              <span v-if="props.row.role=='Lead'" v-tooltip.right="'Remove as Leader'">
-                    <a href="#" type="button" class="text-primary"
-                      @click="updateLeader('delete', props.index)">
-                      <i class="fa fa-check-square-o fa-fw"></i>
-                    </a>
-              </span>
-              <span v-else v-tooltip.right="'Make Leader'">
-                <a href="#" type="button" class=""
-                  @click="updateLeader('post', props.index)">
-                  <i class="fa fa-square-o fa-fw"></i>
-                </a>
-              </span>
-            </td>
-          </template>
-
-          <template slot="table-row-after" slot-scope="props" v-if="modeEdit">
-            <td>
-              <a href="#" type="button" class="text-danger"
-                @click="removeMember2(props.index)">
-                <i class="fa fa-trash-o fa-fw"></i>
-              </a>
-            </td>
-          </template>
-        </vue-good-table>
-    </div> -->
   </div>
 </div>
 </template>
@@ -161,16 +130,17 @@
 
 import {commonMixins} from '../../../mixins/common';
 import {MESSAGE_DURATION} from '../../../mixins/constants';
-import FormError from '../../FormError';
+// import FormError from '../../FormError';
 
-import VueGoodTable from 'vue-good-table';
-
-Vue.use(VueGoodTable);
+// import VueGoodTable from 'vue-good-table';
+//
+// Vue.use(VueGoodTable);
+import ColumnFilter from '../../../components/Tables/ColumnFilter.vue';
 
 export default {
   mixins: [commonMixins],
   components: {
-    FormError
+    ColumnFilter
   },
   props: {
     mode0: {
