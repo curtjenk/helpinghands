@@ -78,11 +78,12 @@
   <div class="row">
     <b-table striped small bordered hover :items="members" :fields="members_table_fields">
       <template slot="HEAD_name" slot-scope="data">
-        <column-filter
-          field="name"
-          label="Name"
-        >
-        </column-filter>
+        <column-filter field="name" label="Name" :callback="filter_column"
+        ></column-filter>
+      </template>
+      <template slot="HEAD_email" slot-scope="data">
+        <column-filter field="email" label="Email" :callback="filter_column"
+        ></column-filter>
       </template>
       <!-- <template slot="HEAD_name" slot-scope="head_row">
         <div>
@@ -176,27 +177,6 @@ export default {
         email: {},
         action: {}
       },
-      // gColumns: [
-      //   {label: 'Leader', hidden: true
-      //   },
-      //   {label: 'Name', field: 'name', filterable: true,
-      //     filter: function(data, filterString) {
-      //       // // return data.includes(filterString); //ES6
-      //       let lData = data.toLowerCase();
-      //       let lFilterString = filterString.toLowerCase();
-      //       return lData.indexOf(lFilterString) != -1; //Faster method
-      //     }
-      //   },
-      //   {label: 'Email', field: 'email', filterable: true,
-      //     filter: function(data, filterString) {
-      //       let lData = data.toLowerCase();
-      //       let lFilterString = filterString.toLowerCase();
-      //       return lData.indexOf(lFilterString) != -1; //Faster method
-      //     }
-      //   },
-      //   {label: 'Actions', hidden: true
-      //   }
-      // ],
       ready: false,
       errors: {},
       isAddingMember: false,
@@ -215,8 +195,6 @@ export default {
     this.members = this.team_members0;
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
-    // this.gColumns[0].hidden = this.modeShow;    //Leader column
-    // this.gColumns[3].hidden = this.modeShow;    //Actions column
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
     })
@@ -233,6 +211,9 @@ export default {
     // }
   },
   methods: {
+    filter_column(colname, value) {
+      console.log('parent', colname, value);
+    },
     remove_by_email(array, email) {
       return array.filter(e=> e.email != email);
     },

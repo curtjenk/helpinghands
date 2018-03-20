@@ -1,43 +1,30 @@
 <template>
   <!-- Based on Bootstrap vue table -->
+    <!-- :toggle-class="filter_check(column.name)" -->
 <div class="">
-  <span class="align-bottom">
-    <a class="btn btn-secondary btn-sm dropdown-toggle" href="#"
-          id="dropdownMenuButton" @click.stop="showFilter=!showFilter"
-          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      {{ label }}
-    </a>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <b-input-group size="sm">
-        <b-form-input id="name_filter" type="text" name="name_filter" autofocus></b-form-input>
-        <b-input-group-append>
-          <b-btn href="#""><i class="fa fa-search fa-fw"></i></b-btn>
-        </b-input-group-append>
-      </b-input-group>
-    </div>
-      <!-- <template v-if="showFilter">
-        <b-input-group size="sm">
-          <b-form-input id="name_filter" type="text" name="name_filter" autofocus></b-form-input>
-          <b-input-group-append>
-            <b-btn href="#""><i class="fa fa-search fa-fw"></i></b-btn>
-          </b-input-group-append>
-        </b-input-group>
-      </template> -->
+  <span class="align-bottom"> {{ label }}
+    <b-dropdown :id="label"
+      variant="link"
+      v-b-tooltip title="Filter"
+      toggle-class="p-0"
+    >
+      <b-dropdown-header @click.stop="" class="p-1">
+        <i class="fa fa-filter"></i> Filter
+      </b-dropdown-header>
+      <b-dropdown-item disabled class="p-1">
+        <input type="text" class="" placeholder=""
+          v-model="filterBy"
+          v-on:keyup.enter="filter_check_submit"
+        ></input>
+        <b-btn variant="primary" block
+          class="mt-1 px-2" size="sm"
+          @click="filter_check_submit"
+        >
+          Go
+        </b-btn>
+      </b-dropdown-item>
+    </b-dropdown>
   </span>
-  <!-- <span class="align-bottom">{{ label }}
-      <a href="#" @click.stop="showFilter=!showFilter">
-        <i v-show="!showFilter" class="fa fa-caret-down fa-fw"></i>
-        <i v-show="showFilter" class="fa fa-caret-up fa-fw"></i>
-      </a>
-      <template v-if="showFilter">
-        <b-input-group size="sm">
-          <b-form-input id="name_filter" type="text" name="name_filter" autofocus></b-form-input>
-          <b-input-group-append>
-            <b-btn href="#""><i class="fa fa-search fa-fw"></i></b-btn>
-          </b-input-group-append>
-        </b-input-group>
-      </template>
-  </span> -->
 </div>
 </template>
 
@@ -54,10 +41,14 @@ export default {
       type: String,
       required: true
     },
+    callback: {
+      required: true
+    }
   },
   data () {
     return {
       showFilter: false,
+      filterBy: ''
     }
   },
   mounted: function () {
@@ -75,7 +66,13 @@ export default {
     // }
   },
   methods: {
-
+    filter_check_submit () {
+      if (this.filterBy.trim().length > 1) {
+        this.callback(this.field, this.filterBy);
+      } else {
+        console.log('invalid filterBy')
+      }
+    }
   } //End of methods
 } //End of export
 </script>
