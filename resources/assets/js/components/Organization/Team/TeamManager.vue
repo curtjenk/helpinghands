@@ -76,7 +76,7 @@
     </template>
   </b-row>
   <div class="row">
-    <b-table striped small bordered hover :items="members" :fields="members_table_fields">
+    <b-table striped small bordered hover :items="table_items" :fields="members_table_fields">
       <template slot="HEAD_name" slot-scope="data">
         <column-filter field="name" label="Name" :callback="filter_column"
         ></column-filter>
@@ -184,6 +184,7 @@ export default {
       team_id: '',
       team_name: '',
       team_description: '',
+      table_items: [],
       members: [],
       other_org_members: []
     }
@@ -193,6 +194,7 @@ export default {
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
     this.members = this.team_members0;
+    this.table_items = this.team_members0;
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
@@ -213,6 +215,7 @@ export default {
   methods: {
     filter_column(colname, value) {
       console.log('parent', colname, value);
+      // this.table_items = this.members.filter(x => )
     },
     remove_by_email(array, email) {
       return array.filter(e=> e.email != email);
