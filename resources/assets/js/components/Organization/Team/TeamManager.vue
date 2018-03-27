@@ -78,8 +78,10 @@
   <div class="row">
     <b-table striped small bordered hover :items="table_items" :fields="members_table_fields">
       <template slot="HEAD_name" slot-scope="data">
-        <column-filter field="name" label="Name" :callback="filter_column"
-        ></column-filter>
+        <div ref="cf">
+          <column-filter field="name" label="Name" :callback="filter_column"
+          ></column-filter>
+        </div>
       </template>
       <template slot="HEAD_email" slot-scope="data">
         <column-filter field="email" label="Email" :callback="filter_column"
@@ -189,7 +191,7 @@ export default {
       other_org_members: []
     }
   },
-  mounted: function () {
+  mounted: function () {  
     this.team_id = this.team0.id;
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
