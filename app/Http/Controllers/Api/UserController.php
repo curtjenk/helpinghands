@@ -11,7 +11,7 @@ use DB;
 use Log;
 use Storage;
 use Hash;
-use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
+// use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 
 class UserController extends Controller
 {
@@ -249,6 +249,23 @@ class UserController extends Controller
         return view('user.show', [
             'user'=>$newuser,
         ]);
+    }
+    /*
+
+     */
+    public function authmember()
+    {
+        $user = Auth::check() ? Auth::user() : null;
+        if (!empty($user)) {
+            $roles = $user->roles()->get()->pluck('name');
+            $permissions = $user->permissions()->get()->pluck('name');
+        } else {
+            $roles = [];
+            $permissions = [];
+        }
+        return response()->json(['user'=>$user,
+                                'roles'=>$roles,
+                                'permissions'=>$permissions]);
     }
     /**
      * Display the specified resource.

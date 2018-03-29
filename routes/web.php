@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
                 ['only'=>['store', 'update', 'destroy']]
             );
 
+            Route::get('/authmember','UserController@authmember');
             Route::get('/member', 'UserController@index');
             Route::put('/member/{id}', 'UserController@update');
             Route::get('member/{id}/membership', 'UserController@membership');
