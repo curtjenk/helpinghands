@@ -22,13 +22,13 @@
         <template slot="actions" scope="props">
           <div class="">
             <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
-                <a href="#" type="button" class=""
+                <a href="#" type="link" class=""
                   @click="editTeam(props.rowData, props.rowIndex)">
                   <i class="fa fa-pencil"></i>
                 </a>
             </span>
             <span data-toggle="tooltip" title="View" data-placement="left" class="">
-                <a href="#" type="button" class=""
+                <a href="#" type="link" class=""
                   @click="showTeam(props.rowData, props.rowIndex)">
                   <i class="fa fa-eye"></i>
                 </a>
@@ -127,15 +127,15 @@ export default {
   },
   methods: {
     showTeam: function (data, index) {
-          window.location.href = '/team/'+data.id;
+      window.location.href = '/team/'+data.id;
     },
     editTeam: function (data, index) {
-      console.log(data)
-          window.location.href = '/team/'+data.id+'/edit'
+      // console.log(data)
+      window.location.href = '/team/'+data.id+'/edit'
     },
-    combine_address: function(value) {
-
-    },
+    // combine_address: function(value) {
+    //
+    // },
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData)
       this.$refs.paginationInfo.setPaginationData(paginationData)

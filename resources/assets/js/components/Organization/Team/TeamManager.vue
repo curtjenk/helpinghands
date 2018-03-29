@@ -1,15 +1,15 @@
 <template>
 <div class="container">
   <div class="row">
-    <b-col sm="8">
+    <b-col >
       <template v-if="modeShow">
         <b-row class="no-gutters">
-          <b-col sm="3">Name</b-col>
-          <b-col sm="6" class="font-weight-bold">{{ team_name }}</b-col>
+          <b-col sm="2">Name</b-col>
+          <b-col sm="6" md="6" class="font-weight-bold">{{ team_name }}</b-col>
         </b-row>
         <b-row class="no-gutters">
-          <b-col sm="3">Description</b-col>
-          <b-col sm="6" class="font-weight-bold">{{ team_description }}</b-col>
+          <b-col sm="2">Description</b-col>
+          <b-col sm="9" md="9" class="font-weight-bold">{{ team_description }}</b-col>
         </b-row>
       </template>
       <template v-else>
@@ -20,15 +20,15 @@
           </div>
         </div>
         <b-row class="no-gutters">
-          <b-col sm="3">Name</b-col>
-          <b-col sm="6" md="6">
+          <b-col sm="2">Name</b-col>
+          <b-col sm="6" md="6" lg="6">
             <b-form-input  required id="name" v-model="team_name" type="text" name="name" autofocus>
             </b-form-input>
           </b-col>
         </b-row>
         <b-row class="no-gutters">
-          <b-col sm="3">Description</b-col>
-          <b-col sm="7" md="7">
+          <b-col sm="2">Description</b-col>
+          <b-col sm="9" md="9" lg="9">
             <b-form-input  required id="name" v-model="team_description" type="text" name="name" autofocus>
             </b-form-input>
           </b-col>
@@ -48,9 +48,9 @@
         <a id="addmember" href="#" class="text-success" @click="toggleIsAddingMember()">
           <i class="fa fa-user fa-lg fa-fw text-success"></i>
         </a>
+        <!-- b-tooltip must be place "lower" in the dom than the target element -->
+        <b-tooltip target="addmember" title="Add Team Member" placement="right"></b-tooltip>
       </span>
-      <!-- b-tooltip must be place "lower" in the dom than the target element -->
-      <b-tooltip target="addmember" title="Add Team Member" placement="right"></b-tooltip>
     </div>
     <template v-if="isAddingMember">
       <b-card no-body style="min-width: 100%;">
@@ -75,9 +75,9 @@
       </b-card>
     </template>
   </b-row>
-  <div class="row">
+  <div class="row mt-1">
     <b-table striped small bordered hover :items="table_items" :fields="members_table_fields">
-      <template slot="HEAD_name" slot-scope="data">
+      <!-- <template slot="HEAD_name" slot-scope="data">
         <div ref="cf">
           <column-filter field="name" label="Name" :callback="filter_column"
           ></column-filter>
@@ -86,36 +86,29 @@
       <template slot="HEAD_email" slot-scope="data">
         <column-filter field="email" label="Email" :callback="filter_column"
         ></column-filter>
-      </template>
-      <!-- <template slot="HEAD_name" slot-scope="head_row">
-        <div>
-          <em>THE NAME !!!</em>
-          <a href="#" @click.stop="showFilter=!showFilter">
-            <i v-show="!showFilter" class="fa fa-caret-down fa-fw"></i>
-            <i v-show="showFilter" class="fa fa-caret-up fa-fw"></i>
-          </a>
-          <template v-if="showFilter">
-            <b-input-group size="sm">
-              <b-form-input id="name_filter" type="text" name="name_filter" autofocus></b-form-input>
-              <b-input-group-append>
-                <b-btn href="#""><i class="fa fa-search fa-fw"></i></b-btn>
-              </b-input-group-append>
-            </b-input-group>
-          </template>
-        </div>
       </template> -->
-      <template v-if="modeEdit" slot="leader" slot-scope="row">
-        <span v-if="row.item.role=='Lead'">
-          <a :id="'remlead_' + row.item.id" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
-            <i class="fa fa-check-square-o fa-fw"></i>
-          </a>
-          <b-tooltip :target="'remlead_' + row.item.id" title="Remove as Leader" placement="right"></b-tooltip>
+      <template  slot="leader" slot-scope="row">
+        <span v-if="modeEdit">
+          <span v-if="row.item.role=='Lead'">
+            <a :id="'remlead_' + row.item.id" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
+              <i class="fa fa-check-square-o fa-fw"></i>
+            </a>
+            <b-tooltip :target="'remlead_' + row.item.id" title="Remove as Leader" placement="right"></b-tooltip>
+          </span>
+          <span v-else>
+            <a :id="'makelead_' + row.item.id" href="#" class="" @click.stop="updateLeader('post', row.index)">
+              <i class="fa fa-square-o fa-fw"></i>
+            </a>
+            <b-tooltip :target="'makelead_' + row.item.id" title="Make leader" placement="right"></b-tooltip>
+          </span>
         </span>
         <span v-else>
-          <a :id="'makelead_' + row.item.id" href="#" class="" @click.stop="updateLeader('post', row.index)">
+          <span v-if="row.item.role=='Lead'">
+            <i class="fa fa-check-square-o fa-fw"></i>
+          </span>
+          <span v-else>
             <i class="fa fa-square-o fa-fw"></i>
-          </a>
-          <b-tooltip :target="'makelead_' + row.item.id" title="Make leader" placement="right"></b-tooltip>
+          </span>
         </span>
       </template>
       <template v-if="modeEdit" slot="action" slot-scope="row">
@@ -177,7 +170,7 @@ export default {
         leader: {},
         name: {sortable:true},
         email: {},
-        action: {}
+        action: {class: ''}
       },
       ready: false,
       errors: {},
@@ -191,7 +184,7 @@ export default {
       other_org_members: []
     }
   },
-  mounted: function () {  
+  mounted: function () {
     this.team_id = this.team0.id;
     this.team_name = this.team0.name;
     this.team_description = this.team0.description;
@@ -199,6 +192,10 @@ export default {
     this.table_items = this.team_members0;
     this.other_org_members = this.other_org_members0;
     this.setMode(this.mode0);
+    if (!this.modeEdit) {
+      this.members_table_fields.action.class = 'd-none'
+    }
+
     this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
       this.ready = true;
     })
@@ -215,10 +212,10 @@ export default {
     // }
   },
   methods: {
-    filter_column(colname, value) {
-      console.log('parent', colname, value);
-      // this.table_items = this.members.filter(x => )
-    },
+    // filter_column(colname, value) {
+    //   console.log('parent', colname, value);
+    //   // this.table_items = this.members.filter(x => )
+    // },
     remove_by_email(array, email) {
       return array.filter(e=> e.email != email);
     },
