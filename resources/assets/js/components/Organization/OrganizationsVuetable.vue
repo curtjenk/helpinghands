@@ -22,13 +22,13 @@
         <template slot="actions" scope="props">
           <div class="">
             <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
-                <a href="#" type="button" class=""
+                <a href="#" type="link" class=""
                   @click="editOrganization(props.rowData, props.rowIndex)">
                   <i class="fa fa-pencil"></i>
                 </a>
             </span>
             <span data-toggle="tooltip" title="View" data-placement="left" class="">
-                <a href="#" type="button" class=""
+                <a href="#" type="link" class=""
                   @click="showOrganization(props.rowData, props.rowIndex)">
                   <i class="fa fa-eye"></i>
                 </a>
