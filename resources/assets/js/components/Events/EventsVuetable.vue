@@ -32,13 +32,13 @@
       <template slot="actions2" scope="props">
         <div class="">
           <span data-toggle="tooltip" title="Details" data-placement="left" class="">
-              <a href="#" type="button" class=""
+              <a href="#" type="link" class=""
                 @click="showEvent(props.rowData, props.rowIndex)">
                 <i class="fa fa-eye fa-lg fa-fw"></i>
               </a>
           </span>
           <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
-            <a href="#" type="button" class=""
+            <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#eventnotify"
                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
                 <i class="fa fa-envelope-o fa-lg fa-fw"></i>

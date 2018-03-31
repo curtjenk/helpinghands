@@ -27,7 +27,7 @@
         <template slot="actions" scope="props">
           <div class="">
             <span data-toggle="tooltip" title="View profile" data-placement="left" class="">
-                <a href="#" type="button" class=""
+                <a href="#" type="link" class=""
                   @click="showMember(props.rowData, props.rowIndex)">
                   <i class="fa fa-address-card-o fa-lg fa-fw"></i>
                 </a>
@@ -35,7 +35,7 @@
             <!--     // data-toggle="modal" data-target="#proxySignup"
              :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id" -->
             <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="button" class=""
+                <a v-show="isAdmin" href="#" type="link" class=""
                     @click="getEvents(props.rowData, props.rowIndex)"
                      :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
                     <i class="fa fa-user-plus fa-lg fa-fw"></i>

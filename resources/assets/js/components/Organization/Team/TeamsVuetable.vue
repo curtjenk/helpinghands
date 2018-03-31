@@ -19,22 +19,22 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-        <template slot="actions" scope="props">
-          <div class="">
-            <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
-                <a href="#" type="link" class=""
-                  @click="editTeam(props.rowData, props.rowIndex)">
-                  <i class="fa fa-pencil"></i>
-                </a>
-            </span>
-            <span data-toggle="tooltip" title="View" data-placement="left" class="">
-                <a href="#" type="link" class=""
-                  @click="showTeam(props.rowData, props.rowIndex)">
-                  <i class="fa fa-eye"></i>
-                </a>
-            </span>
-          </div>
-        </template>
+      <template slot="actions" scope="props">
+        <div class="">
+          <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
+              <a href="#"  type="link"
+                @click="editTeam(props.rowData, props.rowIndex)">
+                <i class="fa fa-pencil"></i>
+              </a>
+          </span>
+          <span data-toggle="tooltip" title="View" data-placement="left" class="">
+              <a href="#" type="link"
+                @click="showTeam(props.rowData, props.rowIndex)">
+                <i class="fa fa-eye"></i>
+              </a>
+          </span>
+        </div>
+      </template>
     </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
