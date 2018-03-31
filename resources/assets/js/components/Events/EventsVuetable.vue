@@ -11,8 +11,7 @@
       <hr />
       <span v-html="modaldata.descriptionhtml"></span>
     </modal>
-    <filter-bar v-if="ready" filterPlaceholder=" subject, description"
-      :userid="user.id"
+    <filter-bar v-if="!isObjectEmpty(user)" filterPlaceholder=" subject, description"
       :filterByMemberships="true"
     ></filter-bar>
 

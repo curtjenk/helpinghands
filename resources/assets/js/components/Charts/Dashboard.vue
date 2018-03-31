@@ -5,8 +5,8 @@
           <div class="card">
               <div class="card-body text-center">
                    <h1>How are we doing?</h1>
-                  <div class="form-group">
-                      <filter-memberships :userid="userid" @org-team-selected="get_data"></filter-memberships>
+                  <div class="form-group" v-if="!isObjectEmpty(user)">
+                      <filter-memberships @org-team-selected="get_data"></filter-memberships>
                   </div>
               </div>
           </div>
@@ -38,13 +38,16 @@
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import BarChart from './bar'
 import DoughnutChart from './doughnut'
 import PieChart from './pie'
 Vue.component('bar-chart', BarChart)
 Vue.component('pie-chart', PieChart)
 Vue.component('doughnut-chart', DoughnutChart)
+
 export default {
+  mixins: [commonMixins],
   data () {
     return {
       bardata1: [],
@@ -65,10 +68,10 @@ export default {
     }
   },
   props: {
-    userid: {
-      type: Number,
-      required: false
-    }
+    // userid: {
+    //   type: Number,
+    //   required: false
+    // }
   },
   mounted () {
     this.get_data(null,null);

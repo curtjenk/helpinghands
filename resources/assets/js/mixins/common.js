@@ -74,13 +74,13 @@ export const commonMixins = {
   },
   computed: {
     user () {
-      return this.$store.state.user;
+      return this.$store.getters.user;
     },
     roles () {
-      return this.$store.state.roles;
+      return this.$store.getters.roles;
     },
     permissions () {
-      return this.$store.state.permissions;
+      return this.$store.getters.permissions;
     },
     statusInitial() {
       return this.currentStatus === consts.STATUS_INITIAL;

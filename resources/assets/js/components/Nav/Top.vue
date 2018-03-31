@@ -58,34 +58,34 @@ export default {
 
   },
   mounted() {
-    this.$store.commit('SETUSER',this.user0)
-    this.$store.commit('SETROLES',this.roles0)
-    this.$store.commit('SETPERMISSIONS',this.permissions0)
+    // this.$store.commit('SETUSER',this.user0)
+    // this.$store.commit('SETROLES',this.roles0)
+    // this.$store.commit('SETPERMISSIONS',this.permissions0)
    // console.log( "<"+window.location.pathname+">");
-    // let config = {
-    //   validateStatus: function (status) {
-    //     return (status >= 200 && status < 300) || status == 401
-    //   },
-    // }
-    // let user = null, roles = null, permissions = null
-    // axios.get('/api/authmember', config)
-    // .then(  (response) => {
-    //   console.log('good', response.status)
-    //   if (response.status != 401) {
-    //     let data = response.data
-    //     user = data.user
-    //     roles = data.roles
-    //     permissions = data.permissions
-    //   }
-    //   this.$store.commit('SETUSER',user)
-    //   this.$store.commit('SETROLES',roles)
-    //   this.$store.commit('SETPERMISSIONS',permissions)
-    // }).catch((error) => {
-    //   console.log('error', error)
-    //   this.$store.commit('SETUSER',null)
-    //   this.$store.commit('SETROLES',null)
-    //   this.$store.commit('SETPERMISSIONS',null)
-    // });
+    let config = {
+      validateStatus: function (status) {
+        return (status >= 200 && status < 300) || status == 401
+      },
+    }
+    let user = null, roles = null, permissions = null
+    axios.get('/api/authmember', config)
+    .then(  (response) => {
+      // console.log('good', response.status)
+      if (response.status != 401) {
+        let data = response.data
+        user = data.user
+        roles = data.roles
+        permissions = data.permissions
+      }
+      this.$store.commit('SETUSER',user)
+      this.$store.commit('SETROLES',roles)
+      this.$store.commit('SETPERMISSIONS',permissions)
+    }).catch((error) => {
+      console.log('error', error)
+      this.$store.commit('SETUSER',null)
+      this.$store.commit('SETROLES',null)
+      this.$store.commit('SETPERMISSIONS',null)
+    });
 
   },
   methods: {

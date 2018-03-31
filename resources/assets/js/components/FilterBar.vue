@@ -7,9 +7,8 @@
                     @keyup.enter="doFilter"
                     :placeholder="filterPlaceholder">
         </div>
-        <div class="form-group" v-if="filterByMemberships">
+        <div class="form-group" v-if="filterByMemberships && !isObjectEmpty(user)">
           <filter-memberships
-              :userid="userid"
               :filterByTeam="filterByTeam"
               @org-team-selected="gotit"
           ></filter-memberships>
@@ -21,52 +20,52 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      userid: {
-        type: Number,
-        required: true
-      },
-      filterByMemberships: {
-        type: Boolean,
-        required: false
-      },
-      filterByTeam: {
-        type: Boolean,
-        required: false,
-        default: true
-      },
-      filterPlaceholder: {
-        type: String
-      }
-    },
-    data () {
-      return {
-        filterOrgId: 0,
-        filterTeamId: 0,
-        filterText: ''
-        // filterPlaceholder: 'hello'
-      }
-    },
-    mounted: function () {
+import {commonMixins} from '../mixins/common';
 
+export default {
+  mixins: [commonMixins],
+  props: {
+    filterByMemberships: {
+      type: Boolean,
+      required: false
     },
-    methods: {
-      gotit (selectedOrgId, selectedTeamId) {
-         // console.log(selectedOrgId, selectedTeamId)
-         this.filterOrgId = selectedOrgId;
-         this.filterTeamId = selectedTeamId;
-      },
-      doFilter () {
-        this.$events.fire('filter-set',
-              this.filterText, this.filterOrgId, this.filterTeamId)
-      },
-      resetFilter () {
-        this.filterText = ''
-        this.$events.fire('filter-reset')
-      }
+    filterByTeam: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    filterPlaceholder: {
+      type: String
+    }
+  },
+  data () {
+    return {
+      ready: false,
+      filterOrgId: 0,
+      filterTeamId: 0,
+      filterText: ''
+      // filterPlaceholder: 'hello'
+    }
+  },
+  mounted: function () {
+
+  },
+  methods: {
+    gotit (selectedOrgId, selectedTeamId) {
+       // console.log(selectedOrgId, selectedTeamId)
+       this.filterOrgId = selectedOrgId;
+       this.filterTeamId = selectedTeamId;
+    },
+    doFilter () {
+      this.$events.fire('filter-set',
+            this.filterText, this.filterOrgId, this.filterTeamId)
+    },
+    resetFilter () {
+      this.filterText = ''
+      this.$events.fire('filter-reset')
     }
   }
+}
 </script>
 <style scoped>
 .filter-bar {

@@ -86,7 +86,7 @@ class UserController extends Controller
         $user = App\User::findOrFail($id);
         $this->authorize("show", $user);
         $memberships = $user->memberships()
-                        ->where('name','!=','Ministry Engage')->get();
+                        ->where('organizations.name','!=','Ministry Engage')->get();
         return response()->json($memberships);
     }
     /**

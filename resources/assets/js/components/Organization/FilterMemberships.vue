@@ -21,10 +21,10 @@ export default {
   components: {
   },
   props: {
-    userid: {
-      type: Number,
-      required: true
-    },
+    // userid: {
+    //   type: Number,
+    //   required: true
+    // },
     organization: {
       // type: Object,
       required: false
@@ -47,7 +47,8 @@ export default {
     }
   },
   mounted: function () {
-    axios('/api/member/'+this.userid+'/membership')
+
+    axios('/api/member/'+this.user.id+'/membership')
     .then(response => {
       this.memberships = response.data;
       if (!this.isObjectEmpty(this.organization)) {
@@ -66,6 +67,7 @@ export default {
     .catch(e => {
       console.log(e);
     });
+
   },
   computed: {
   },

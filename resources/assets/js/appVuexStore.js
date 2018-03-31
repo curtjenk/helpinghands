@@ -9,9 +9,9 @@ export const store = new Vuex.Store({
     permissions: []
   },
   getters: {
-    getUser: state => state.user,
-    getRoles: state => state.roles,
-    getPermissions: state => state.permissions
+    user: state => state.user,
+    roles: state => state.roles,
+    permissions: state => state.permissions
   },
   mutations: {
     SETUSER (state, newUser) {

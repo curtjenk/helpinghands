@@ -1,8 +1,8 @@
 <template>
 <div class="">
-  <div class="row my-2 mt-4">
-    <div class="col-lg-8 col-md-8 order-lg-2 order-md-2 card">
-      <div class="card-body">
+  <div class="row mt-2">
+    <div class="col-lg-9 col-md-9 col-sm-9 order-lg-2 order-md-2 order-sm-2 card">
+      <div class="card-body px-1">
         <ul class="nav nav-tabs nav-fill">
             <li class="nav-item">
                 <button data-target="#personal" data-toggle="tab" class="nav-link active selected-tab">
@@ -33,8 +33,8 @@
           <div class="tab-pane active" id="personal">
             <div class="row">
               <div class=" mx-auto">
-                <div class="alert alert-success alert-dismissable" v-if="updateSuccess" transition="expand">Your information was updated.</div>
-                <div class="alert alert-danger alert-dismissable" v-if="updateFailed" transition="expand">
+                <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your information was updated.</div>
+                <div class="alert alert-danger" v-if="updateFailed" transition="expand">
                     Sorry, unable to update your information at this time.
                 </div>
               </div>
@@ -90,47 +90,56 @@
               </div>
             </div>
             <div class="row">
-              <toggle-button v-model="user.opt_receive_evite"
-                :sync="true"
-                :value="user.opt_show_email"
-                :labels="{checked: 'Yes, send me invitations', unchecked: 'Please don\'t send invitations' }"
-                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
-                :height="togOpts.height"
-                :width="togOpts.width"
-              ></toggle-button>
+              <div  class="ml-3">
+                <toggle-button
+                  v-model="user.opt_receive_evite"
+                  :sync="true"
+                  :value="user.opt_show_email"
+                  :labels="{checked: 'Yes, send me invitations', unchecked: 'Please don\'t send invitations' }"
+                  :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                  :height="togOpts.height"
+                  :width="togOpts.width"
+                ></toggle-button>
+              </div>
             </div>
             <div class="row">
-              <toggle-button v-model="user.opt_show_email"
-                :sync="true"
-                :value="user.opt_show_email"
-                :labels="{checked: 'Show my email address', unchecked: 'Hide my email address' }"
-                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
-                :height="togOpts.height"
-                :width="togOpts.width"
-              ></toggle-button>
+              <div  class="ml-3">
+                <toggle-button v-model="user.opt_show_email"
+                  :sync="true"
+                  :value="user.opt_show_email"
+                  :labels="{checked: 'Show my email address', unchecked: 'Hide my email address' }"
+                  :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                  :height="togOpts.height"
+                  :width="togOpts.width"
+                ></toggle-button>
+              </div>
             </div>
             <div class="row">
-              <toggle-button v-model="user.opt_show_mobilephone"
-                :sync="true"
-                :value="user.opt_show_mobilephone"
-                :labels="{checked: 'Show my phone 1', unchecked: 'Hide my phone 1' }"
-                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
-                :height="togOpts.height"
-                :width="togOpts.width"
-              ></toggle-button>
+              <div  class="ml-3">
+                <toggle-button v-model="user.opt_show_mobilephone"
+                  :sync="true"
+                  :value="user.opt_show_mobilephone"
+                  :labels="{checked: 'Show my phone 1', unchecked: 'Hide my phone 1' }"
+                  :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                  :height="togOpts.height"
+                  :width="togOpts.width"
+                ></toggle-button>
+              </div>
             </div>
             <div class="row">
-              <toggle-button v-model="user.opt_show_homephone"
-                :sync="true"
-                :value="user.opt_show_homephone"
-                :labels="{checked: 'Show my phone 2', unchecked: 'Hide my phone 2'}"
-                :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
-                :height="togOpts.height"
-                :width="togOpts.width"
-              ></toggle-button>
+              <div  class="ml-3">
+                <toggle-button v-model="user.opt_show_homephone"
+                  :sync="true"
+                  :value="user.opt_show_homephone"
+                  :labels="{checked: 'Show my phone 2', unchecked: 'Hide my phone 2'}"
+                  :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
+                  :height="togOpts.height"
+                  :width="togOpts.width"
+                ></toggle-button>
+              </div>
             </div>
             <div class="row mt-3">
-              <div class="">
+              <div class="ml-3">
                 <button type="submit" class="btn btn-primary" name="submit" @click="update">
                   <i class="fa fa-btn fa-check"></i> Update Preferences
                 </button>
@@ -177,14 +186,76 @@
               </div>.
             </div>
           </div>
-
           <div class="tab-pane" id="credentials">
+            <div class="row">
+              <div class="alert alert-success" v-if="updateSuccess" transition="expand">Your {{ credential }} was updated.</div>
+              <div class="alert alert-danger" v-if="updateFailed" transition="expand">
+                  <span>Sorry, {{ credentialMessage }}.</span>
+              </div>
+            </div>
+            <div class="row">
+              <b-col md="6" sm="6">
+                <b-row class="" no-gutters>
+                  <b-col md="4" sm="4"><label>Current Email</label></b-col>
+                  <b-col md="7" sm="7">
+                    <input type="text" :value="user.email" disabled>
+                  </b-col>
+                </b-row>
+                <b-row class="" no-gutters>
+                  <b-col md="4" sm="4"><label>New Email</label></b-col>
+                  <b-col md="7" sm="7">
+                    <input v-validate="'email'" id="email" v-model="newEmail" type="email">
+                    <span v-show="vErrors.has('email')" class="alert alert-danger">{{ vErrors.first('email') }}</span>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-3" no-gutters>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary" name="submit" @click="updateEmail">
+                      <i class="fa fa-btn fa-check"></i> Change Email
+                    </button>
+                  </div>.
+                </b-row>
+              </b-col>
+              <b-col md="6" sm="6">
+                <b-row class="" no-gutters>
+                  <b-col md="4" sm="4" class="ml-1"><label>Old Password</label></b-col>
+                  <b-col md="7" sm="7">
+                    <input type="password" v-model="oldPassword" name="oldpassword">
+                  </b-col>
+                </b-row>
+                <b-row class="" no-gutters>
+                  <b-col md="4" sm="4" class="ml-1"><label>New Password</label></b-col>
+                  <b-col md="7" sm="7">
+                    <vue-password id="newpassword" v-model="newPassword" name="newpassword"
+                      classes=""
+                      :user-inputs="[user.email]"
+                      ></vue-password>
+                  </b-col>
+                </b-row>
+                <b-row class="" no-gutters>
+                  <b-col md="4" sm="4" class="ml-1"><label>Confirm Password</label></b-col>
+                  <b-col md="7" sm="7">
+                    <input v-validate="'confirmed:newpassword'" data-vv-as="password" name="newpasswordconfirm" v-model="newPasswordConfirm" type="password">
+                    <div v-show="vErrors.has('newpasswordconfirm')" class="alert alert-danger p-0" role="alert" style="font-size:x-small;">
+                      {{ vErrors.first('newpasswordconfirm') }}
+                    </div>
+                  </b-col>
+                </b-row>
+                <b-row class="mt-3" no-gutters>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary" name="submit" @click="updatePassword">
+                      <i class="fa fa-btn fa-check"></i> Change Password
+                    </button>
+                  </div>.
+                </b-row>
+              </b-col>
 
-        </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-3 col-md-3 order-lg-1 order-md-1 text-center">
+    <div class="col-lg-2 col-md-2 col-sm-2 order-lg-1 order-md-1 order-sm-1 text-center">
       <img v-if="avatar_url" :src="avatar_url" class="mx-auto img-fluid img-circle d-block" alt="avatar">
       <img v-else src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
       <h6 class="mt-2">Upload a different photo</h6>
@@ -394,14 +465,17 @@ export default {
         newPasswordConfirm: this.newPasswordConfirm,
         })
       .then(  (response) => {
-        console.log(response)
+        // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
+        this.oldPassword = ''
+        this.newPassword = ''
+        this.newPasswordConfirm = ''
         var self = this;
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
         }, MESSAGE_DURATION);
       }).catch((error) => {
-        console.log(error.response)
+        // console.log(error.response)
         if (error.response.data == 'verify') {
           this.credentialMessage = 'please verify your input';
         } else {
@@ -475,5 +549,13 @@ export default {
 .teambox {
   padding-left: 20px;
   background: white;
+}
+div.VuePassword {
+  /* min-width: 130%;
+  max-width: 130%; */
+  /* display: inline; */
+}
+input {
+  width: 100%
 }
 </style>

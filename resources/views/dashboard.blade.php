@@ -8,7 +8,7 @@
         :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
         {{-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" --}}
     ></nav-top-2>
-    <dashboardcharts
-     :userid="{{ Auth::user()->id }}"
-    ></dashboardcharts>
+    <dashboard
+     {{-- :userid="{{ Auth::user()->id }}" --}}
+    ></dashboard>
 @endsection
