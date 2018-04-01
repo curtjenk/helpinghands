@@ -3,29 +3,29 @@
   <div class="row mt-2">
     <div class="col-lg-9 col-md-9 col-sm-9 order-lg-2 order-md-2 order-sm-2 card">
       <div class="card-body px-1">
-        <ul class="nav nav-tabs nav-fill">
+        <ul class="nav nav-tabs nav-justified">
             <li class="nav-item">
                 <button data-target="#personal" data-toggle="tab" class="nav-link active selected-tab">
                   <span class="fa fa-star" aria-hidden="true"></span>
-                  <div class="hidden-xs">Personal</div>
+                  <div class="d-none d-sm-block">Personal</div>
                 </button>
             </li>
             <li class="nav-item">
                 <button data-target="#preferences" data-toggle="tab" class="nav-link btn">
                   <span class="fa fa-heart" aria-hidden="true"></span>
-                  <div class="hidden-xs">Preferences</div>
+                  <div class="d-none d-sm-block">Preferences</div>
                 </button>
             </li>
             <li class="nav-item">
                 <button data-target="#memberships" data-toggle="tab" class="nav-link btn btn-default">
                   <span class="fa fa-sitemap" aria-hidden="true"></span>
-                  <div class="hidden-xs">Membership</div>
+                  <div class="d-none d-sm-block">Membership</div>
                 </button>
             </li>
             <li class="nav-item">
                 <button data-target="#credentials" data-toggle="tab" class="nav-link btn btn-default">
                   <span class="fa fa-key" aria-hidden="true"></span>
-                  <div class="hidden-xs">Credentials</div>
+                  <div class="d-none d-sm-block">Credentials</div>
                 </button>
             </li>
         </ul>
@@ -155,29 +155,28 @@
                 </div>
               </div>
             </div>
-            <span v-for="org in this.orgData">
-              <div class="row">
+            <template v-for="org in this.orgData">
+              <div class="row mt-1">
                 <span v-if="org.teams.length" @click="org.editing = !org.editing">
                   <i class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
                 </span>
                 <span v-else>
                   <i class="fa fa-lg fa-circle-o">&nbsp;</i>
                 </span>
-                <div>
+                <span>
                   <input class="orgcheck" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
-                </div>
-                <div>
-                  <span href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
-                  <span v-if="org.editing">
-                    <template v-for="team in org.teams" >
-                      <div>
-                        <input class="teamcheck" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">{{ team.name}}
-                      </div>
-                    </template>
-                  </span>
-                </div>
+                </span>
+                <span class="ml-2" href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
               </div>
-            </span>
+              <template v-if="org.editing" v-for="team in org.teams">
+                <div class="row">
+                  <span>
+                    <input class="orgcheck ml-5" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">
+                  </span>
+                  <div class="ml-3">{{ team.name}}</div>
+                </div>
+              </template>
+            </template>
             <div class="row mt-3">
               <div class="">
                 <button type="submit" class="btn btn-primary" name="submit" @click="update">
@@ -208,13 +207,6 @@
                     <span v-show="vErrors.has('email')" class="alert alert-danger">{{ vErrors.first('email') }}</span>
                   </b-col>
                 </b-row>
-                <b-row class="mt-3" no-gutters>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary" name="submit" @click="updateEmail">
-                      <i class="fa fa-btn fa-check"></i> Change Email
-                    </button>
-                  </div>.
-                </b-row>
               </b-col>
               <b-col md="6" sm="6">
                 <b-row class="" no-gutters>
@@ -241,7 +233,20 @@
                     </div>
                   </b-col>
                 </b-row>
-                <b-row class="mt-3" no-gutters>
+              </b-col>
+            </div>
+            <div class="row mt-3">
+              <b-col md="6" sm="6">
+                <b-row no-gutters>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary" name="submit" @click="updateEmail">
+                      <i class="fa fa-btn fa-check"></i> Change Email
+                    </button>
+                  </div>.
+                </b-row>
+              </b-col>
+              <b-col md="6" sm="6">
+                <b-row no-gutters>
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary" name="submit" @click="updatePassword">
                       <i class="fa fa-btn fa-check"></i> Change Password
@@ -249,13 +254,12 @@
                   </div>.
                 </b-row>
               </b-col>
-
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 order-lg-1 order-md-1 order-sm-1 text-center">
+    <div class="col-lg-2 col-md-2 col-sm-3 order-lg-1 order-md-1 text-center">
       <img v-if="avatar_url" :src="avatar_url" class="mx-auto img-fluid img-circle d-block" alt="avatar">
       <img v-else src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
       <h6 class="mt-2">Upload a different photo</h6>
