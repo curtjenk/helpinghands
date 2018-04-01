@@ -21,18 +21,14 @@
         <b-tab title="Let's Start">
           <b-row :no-gutters="true">
             <span v-if="modeShow">
-              <div class="form-group row mb-2">
-                <label for="orgteam" class="col-md-2 col-sm-2 control-label">Organization</label>
-                <div class="col-md-9">
-                    <p id="orgteam" type="text" class="form-control-static">{{ formatOrgTeam() }}</p>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="subject" class="col-md-2 col-sm-2 control-label">Subject</label>
-                <div class="col-md-9">
-                    <p id="subject" type="text" class="form-control-static">{{ event.subject }}</p>
-                </div>
-              </div>
+              <b-row class="no-gutters">
+                <b-col sm="2">Organization</b-col>
+                <b-col sm="9" md="9" class=""><u>{{ formatOrgTeam()  }}</u></b-col>
+              </b-row>
+              <b-row class="no-gutters">
+                <b-col sm="2">Subject</b-col>
+                <b-col sm="9" md="9" class=""><u>{{ event.subject }}</u></b-col>
+              </b-row>
             </span>
             <span v-else>
               <div class="form-group row mb-3">
@@ -61,34 +57,26 @@
             </span>
           </b-row> -->
         </b-tab>
-        <b-tab title="Date/Time">
+        <b-tab title="Date/Time" no-gutters>
           <div class="row no-gutters">
             <b-col>
-              <span v-if="modeShow">
-                <div class="form-group row">
-                  <label for="datestart" class="col-md-3 col-sm-3 control-label">Start Date</label>
-                  <div class="col-md-7 col-sm-7">
-                      <p id="datestart" class="form-control-static">{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</p>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="dateend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Date</label>
-                  <div class="col-md-7 col-sm-7">
-                      <p id="dateend" class="form-control-static">{{formatDate(event.date_end, 'YYYY-MM-DD')}}</p>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
-                  <div class="col-md-7">
-                      <p id="eventtype" class="form-control-static">{{ eventTypeName }}</p>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
-                  <div class="col-md-7">
-                    <p id="status" class="form-control-static">{{ statusName }}</p>
-                  </div>
-                </div>
+              <span v-if="modeShow" style="width: 100%;">
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Start Date</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">End Date</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_end, 'YYYY-MM-DD') }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Type</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ eventTypeName }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Status</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ statusName }}</u></b-col>
+                </b-row>
               </span>
               <span v-else style="width: 100%;">
                 <div class="form-group row no-gutters">
