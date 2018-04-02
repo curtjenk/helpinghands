@@ -44,14 +44,14 @@
             </a>
           </span>
           <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-            <a href="#" type="button" class=""
+            <a href="#" type="link" class=""
                @click="getSignupsPay(props.rowData, props.rowIndex)"
                :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
               <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
             </a>
           </span>
           <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Delete" data-placement="right" class="">
-            <a href="#" type="button" class=""
+            <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#deleteevent"
                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
                 <i class="fa fa-trash fa-lg fa-fw"></i>

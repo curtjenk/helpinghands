@@ -7,23 +7,25 @@
       <b-collapse is-nav id="nav2_collapse">
         <b-navbar-nav class="mx-auto">
           <b-navbar-brand class="mr-4">{{ title }}</b-navbar-brand>
-          <template v-for="link in links">
-            <template v-if="link.click && typeof link.click == 'function'">
-              <b-nav-item v-if="hasPermission(link.perm)"
-                @click="link.click"
-              >
-                <i v-if="link.icon" :class="'fa '+link.icon "></i>
-                {{ link.name }}
-              </b-nav-item>
-            </template>
-            <template v-else>
-              <b-nav-item v-if="hasPermission(link.perm)"
-                :href="link.href"
-              >
-                <i v-if="link.icon" :class="'fa '+link.icon "></i>
+          <template v-for="(link, index) in links">
+            <span v-if="link.show">
+              <template v-if="link.click && typeof link.click == 'function'">
+                <b-nav-item v-if="hasPermission(link.perm)"
+                  @click="link.click(index,link.val)"
+                >
+                  <i v-if="link.icon" :class="'fa '+link.icon "></i>
                   {{ link.name }}
-              </b-nav-item>
-            </template>
+                </b-nav-item>
+              </template>
+              <template v-else>
+                <b-nav-item v-if="hasPermission(link.perm)"
+                  :href="link.href"
+                >
+                  <i v-if="link.icon" :class="'fa '+link.icon "></i>
+                    {{ link.name }}
+                </b-nav-item>
+              </template>
+            </span>
           </template>
         </b-navbar-nav>
       </b-collapse>

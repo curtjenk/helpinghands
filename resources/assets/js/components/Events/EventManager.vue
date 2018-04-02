@@ -125,30 +125,22 @@
             </b-col>
             <b-col>
               <span v-if="modeShow">
-                <div class="form-group row no-gutters">
-                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
-                  <div class="col-md-9">
-                      <p id="timestart" type="text" class="form-control-static">{{ formatTimePicker(event.time_start) }}</p>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="timeend" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;End Time</label>
-                  <div class="col-md-9">
-                      <p id="timeend" type="text" class="form-control-static">{{ formatTimePicker(event.time_end) }}</p>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="cost" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Cost</label>
-                  <div class="col-md-7">
-                      <p id="cost" class="form-control-static">{{ event.cost }}</p>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="limit" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Limit</label>
-                  <div class="col-md-7">
-                    <p id="limit" class="form-control-static">{{ event.signup_limit }}</p>
-                  </div>
-                </div>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Start Time</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_start) }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">End Time</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_end) }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Cost</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ event.cost }}</u></b-col>
+                </b-row>
+                <b-row no-gutters>
+                  <b-col sm="4" md="4">Limit</b-col>
+                  <b-col sm="8" md="8" class=""><u>{{ event.signup_limit }}</u></b-col>
+                </b-row>
               </span>
               <span v-else>
                 <div class="form-group row no-gutters">
@@ -515,6 +507,15 @@ export default {
     }
   },
   methods: {
+    signup (linkNdx, linkVal) {
+      console.log(linkNdx, linkVal, this.navLinks[linkNdx])
+      if (linkVal == 1) {
+          console.log('signup YES')
+          this.navLinks[linkNdx].show = false;
+      } else if (linkVal == 0) {
+        console.log('signup NO')
+      }
+    },
     mode_change_create() {
       this.tabIndex = 0;
       this.setModeCreate();
@@ -533,64 +534,28 @@ export default {
       this.editor.disable()
     },
     mode_change() {
-      // <!-- :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]" -->
-          if (this.modeShow) {
-            this.navLinks = [
-              {perm:'List events', href:'/event', click:null, name:'List', icon:'fa-list-ul fa-fw'},
-              {perm:'Update event', href:'#', click:this.mode_change_edit, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
-              {perm:'Create event', href:'#', click:this.mode_change_create, name:'New', icon:'fa-plus-square-o fa-fw'}
-            ]
-          }
-          if (this.modeEdit) {
-            this.navLinks = [
-              {perm:'Show event', href:'#', click:this.mode_change_show, name:'Cancel', icon:'fa-eye fa-fw'}
-            ]
-          }
-          if (this.modeCreate) {
-            this.navLinks = [
-              {perm:'List events', href:'/event', click:null, name:'Cancel', icon:'fa-list-ul fa-fw'}
-            ]
-          }
-    /*
+      if (this.modeShow) {
+        this.navLinks = [
+          {perm:'List events', href:'/event', show:true, click:null, val:null, name:'List', icon:'fa-list-ul fa-fw'},
+          {perm:'Update event', href:'#', show:true, click:this.mode_change_edit, val:null, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
+          {perm:'Create event', href:'#', show:true, click:this.mode_change_create, val:null, name:'New', icon:'fa-plus-square-o fa-fw'},
+          {perm:'Show event', href:'#', show:true, click:this.signup, val:1, name:'Signup', icon:'fa-thumbs-o-up fa-fw'},
+          {perm:'Show event', href:'#', show:false, click:this.signup, val:0, name:'Decline', icon:'fa-thumbs-o-down fa-fw'}
+        ]
+      }
+      if (this.modeEdit) {
+        this.navLinks = [
+          {perm:'Show event', href:'#', click:this.mode_change_show, name:'Cancel', icon:'fa-eye fa-fw'}
+        ]
+      }
+      if (this.modeCreate) {
+        this.navLinks = [
+          {perm:'List events', href:'/event', click:null, name:'Cancel', icon:'fa-list-ul fa-fw'}
+        ]
+      }
 
-    <template v-if="modeShow">
-      <span v-tooltip.top="'List Events'" class="pull-right">
-        <a  href="#" type="button" class="text-info"
-          @click="goToLocation('/event')">
-          <i class="fa fa-list-ul fa-3x fa-fw text-info"></i>
-        </a>
-      </span>
-      <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
-        <a  href="#" type="button" class="text-warning"
-          @click="setModeEdit(); editor.enable();">
-          <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
-        </a>
-      </span>
-      <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="setModeCreate(); editor.enable(); initialize();">
-          <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
-        </a>
-      </span>
-    </template>
-    <template v-if="modeEdit">
-      <span v-tooltip.top="'Cancel Edit'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="setModeShow(); editor.disable();">
-          <i class="fa fa-eye fa-3x fa-fw text-success"></i>
-        </a>
-      </span>
-    </template>
-    <template v-if="modeCreate">
-      <span v-tooltip.top="'Cancel Create'" class="pull-right">
-        <a  href="#" type="button" class="text-success"
-          @click="goToLocation('/event')">
-          <i class="fa fa-list-ul fa-3x fa-fw text-danger"></i>
-        </a>
-      </span>
-    </template>
-     */
     },
+
     initialize() {
       // console.log("initialize");
       this.mode_change();
