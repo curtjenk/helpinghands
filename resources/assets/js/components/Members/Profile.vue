@@ -156,24 +156,34 @@
               </div>
             </div>
             <template v-for="org in this.orgData">
-              <div class="row mt-1">
-                <span v-if="org.teams.length" @click="org.editing = !org.editing">
-                  <i class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
-                </span>
-                <span v-else>
-                  <i class="fa fa-lg fa-circle-o">&nbsp;</i>
-                </span>
-                <span>
-                  <input class="orgcheck" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
-                </span>
-                <span class="ml-2" href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
+              <div class="w-50 mt-1">
+                <b-row no-gutters>
+                  <b-col sm="1" md="1">
+                    <span v-if="org.teams.length" @click="org.editing = !org.editing">
+                      <i class="fa fa-lg" :class="org.editing ? 'fa-minus-circle' : 'fa-plus-circle'">&nbsp;</i>
+                    </span>
+                    <span v-else>
+                      <i class="fa fa-lg fa-circle-o">&nbsp;</i>
+                    </span>
+                  </b-col>
+                  <b-col sm="1" md="1">
+                    <input class="" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
+                  </b-col>
+                  <b-col sm="10" md="10">
+                    <span class="ml-2" href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
+                  </b-col>
+                </b-row>
               </div>
               <template v-if="org.editing" v-for="team in org.teams">
-                <div class="row">
-                  <span>
-                    <input class="orgcheck ml-5" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">
-                  </span>
-                  <div class="ml-3">{{ team.name}}</div>
+                <div class="w-60">
+                  <b-row no-gutters>
+                    <b-col sm="1" offset-sm="1" md="1" offset-md="1">
+                      <input class="" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">
+                    </b-col>
+                    <b-col sm="9" md="9">
+                      <span class="">{{ team.name}}</span>
+                    </b-col>
+                  </b-row>
                 </div>
               </template>
             </template>
