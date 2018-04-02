@@ -167,21 +167,21 @@
                     </span>
                   </b-col>
                   <b-col sm="1" md="1">
-                    <input class="" type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
+                    <input type="checkbox" :checked="org.checked" v-model="org.checked" @change="uncheckTeams(org)">
                   </b-col>
                   <b-col sm="10" md="10">
-                    <span class="ml-2" href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
+                    <span href="#" type="link" @click="org.editing = !org.editing">{{ org.name }}</span>
                   </b-col>
                 </b-row>
               </div>
               <template v-if="org.editing" v-for="team in org.teams">
-                <div class="w-60">
+                <div class="w-50">
                   <b-row no-gutters>
-                    <b-col sm="1" offset-sm="1" md="1" offset-md="1">
-                      <input class="" type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">
+                    <b-col sm="1" offset-sm="2" md="1" offset-md="2">
+                      <input type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">
                     </b-col>
                     <b-col sm="9" md="9">
-                      <span class="">{{ team.name}}</span>
+                      <span>{{ team.name}}</span>
                     </b-col>
                   </b-row>
                 </div>
