@@ -3,7 +3,7 @@
     <select v-model="selectedOrg" @change="tellParent" name="org">
       <option disabled value="" class="lead text-primary">Select Organization...</option>
       <option value="0">--- All Organizations---</option>
-      <option v-for="org in memberships" v-bind:value="org">{{ org.name }}</option>
+      <option v-for="org in memberships" v-bind:value="org">{{ org != null ? org.name : 'blah' }}</option>
     </select>
     <select v-if="filterByTeam" v-model="selectedTeam" @change="tellParent" name="team">
       <option disabled value="" class="lead text-primary">Select Team...</option>
@@ -43,27 +43,19 @@ export default {
     return {
       selectedOrg: '',
       selectedTeam: '',
-      memberships: ''
+      memberships: []
     }
   },
   mounted: function () {
     axios('/api/member/'+this.user.id+'/membership')
     .then(response => {
-      let temp = {};
       if (!this.isObjectEmpty(this.role) && this.role.length>0) {
-        // console.log('here')
-        temp = response.data.find( (m) => {
-            return m.role == this.role;
-          })
+        this.memberships = response.data.filter (m => m.role == this.role)
       } else {
-        temp = response.data;
+        this.memberships = response.data;
       }
-      this.memberships = temp;
-      console.log(this.memberships);
-      //filter to only the specified organization and team
+      //Find the specified organization and team
       if (!this.isObjectEmpty(this.organization)) {
-        // console.log('here2')
-        // this.selectedOrg = this.organization;
         this.selectedOrg = this.memberships.find( (m)=> {
           return m.id == this.organization.id;
         });
