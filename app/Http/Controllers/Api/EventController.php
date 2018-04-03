@@ -36,9 +36,10 @@ class EventController extends Controller
             ->where('helping', true)->get()->count();
 
         if($event->signup_limit > 0 && $num_signups == $event->signup_limit){
-            // Log::debug('limit reached '.$user->name.' '.$event->subject);
-            return redirect()->back()->withErrors([
-                'msg'=>'Sorry, this event is filled! Thanks for your interest.']);
+            Log::debug('limit reached '.$user->name.' '.$event->subject);
+            return;
+            // return redirect()->back()->withErrors([
+                // 'msg'=>'Sorry, this event is filled! Thanks for your interest.']);
         }
 
         //Log::debug("helping = $helping");
@@ -54,7 +55,7 @@ class EventController extends Controller
             $resp->helping = $helping;
             $resp->save();
         }
-        return redirect()->back();
+        return;
     }
     /*
 

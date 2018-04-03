@@ -73,10 +73,11 @@ Route::group(['middleware' => 'auth'], function () {
                 ['except'=>['destroy']]
             );
             Route::resource('team', 'TeamController');
+            Route::get('event/{id}/signup', 'EventController@signup');
         });
 
 
-        Route::get('event/{id}/signup', 'EventController@signup');
+
         Route::get('event/{eid}/download/{fid}', 'EventController@download');
         Route::get('event/calendar', 'EventController@calendar');
 

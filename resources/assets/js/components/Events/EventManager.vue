@@ -508,13 +508,21 @@ export default {
   },
   methods: {
     signup (linkNdx, linkVal) {
-      console.log(linkNdx, linkVal, this.navLinks[linkNdx])
       if (linkVal == 1) {
-          console.log('signup YES')
-          this.navLinks[linkNdx].show = false;
+        console.log('Signup')
       } else if (linkVal == 0) {
-        console.log('signup NO')
+        console.log('Decline')
+      } else {
+        return
       }
+      axios({
+        method: "get",
+        url: "/api/event/"+this.event.id+"/signup?h="+linkVal
+      }).then(response => {
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error.response)
+      });
     },
     mode_change_create() {
       this.tabIndex = 0;
@@ -536,11 +544,21 @@ export default {
     mode_change() {
       if (this.modeShow) {
         this.navLinks = [
-          {perm:'List events', href:'/event', show:true, click:null, val:null, name:'List', icon:'fa-list-ul fa-fw'},
-          {perm:'Update event', href:'#', show:true, click:this.mode_change_edit, val:null, name:'Edit', icon:'fa-pencil-square-o fa-fw'},
-          {perm:'Create event', href:'#', show:true, click:this.mode_change_create, val:null, name:'New', icon:'fa-plus-square-o fa-fw'},
-          {perm:'Show event', href:'#', show:true, click:this.signup, val:1, name:'Signup', icon:'fa-thumbs-o-up fa-fw'},
-          {perm:'Show event', href:'#', show:false, click:this.signup, val:0, name:'Decline', icon:'fa-thumbs-o-down fa-fw'}
+          {perm:'List events', href:'/event',
+            show:true, click:null, val:null,
+            name:'List', toggle:null, icon:'fa-list-ul fa-fw'},
+          {perm:'Update event', href:'#',
+            show:true, click:this.mode_change_edit, val:null,
+            name:'Edit', toggle:null, icon:'fa-pencil-square-o fa-fw'},
+          {perm:'Create event', href:'#',
+            show:true, click:this.mode_change_create, val:null,
+            name:'New', toggle:null, icon:'fa-plus-square-o fa-fw'},
+          {perm:'Show event', href:'#',
+            show:true, click:this.signup, val:1,
+            name:'Signup', toggle:'Decline', icon:'fa-thumbs-o-up fa-fw'},
+          {perm:'Show event', href:'#',
+            show:false, click:this.signup, val:0,
+            name:'Decline', toggle:'Signup', icon:'fa-thumbs-o-down fa-fw'}
         ]
       }
       if (this.modeEdit) {

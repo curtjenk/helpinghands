@@ -11,7 +11,8 @@
             <span v-if="link.show || isObjectEmpty(link.show)">
               <template v-if="link.click && typeof link.click == 'function'">
                 <b-nav-item v-if="hasPermission(link.perm)"
-                  @click="link.click(index,link.val)"
+                  @click="link.click(index,link.val); clicked(index)"
+
                 >
                   <i v-if="link.icon" :class="'fa '+link.icon "></i>
                   {{ link.name }}
@@ -64,6 +65,20 @@ export default {
     // console.log('Component mounted.')
   },
   methods: {
+    clicked(index) {
+      if (!this.isObjectEmpty(this.links[index].toggle)) {
+        this.toggleShow(index, this.links[index].toggle)
+      }
+    },
+    toggleShow (index, name) {
+      this.links[index].show = !this.links[index].show;
+      for(let x=0; x<this.links.length; x++) {
+        if (this.links[x].name==name) {
+          this.links[x].show = !this.links[x].show;
+          break;
+        }
+      }
+    }
   },
   computed: {
     // user () {

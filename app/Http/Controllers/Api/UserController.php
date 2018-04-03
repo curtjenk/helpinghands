@@ -86,8 +86,13 @@ class UserController extends Controller
         $user = App\User::findOrFail($id);
         $this->authorize("show", $user);
         $memberships = $user->memberships()
-                        ->where('organizations.name','!=','Ministry Engage')->get();
-        return response()->json($memberships);
+                        ->where('organizations.name','!=','Ministry Engage');
+                        
+        if ($user->superUser()) {
+            return response()->json($memberships->get(['*', DB::raw(" 'Admin' AS role")]));
+        } else {
+            return response()->json($memberships->get());
+        }
     }
     /**
      * Display a listing of the resource.

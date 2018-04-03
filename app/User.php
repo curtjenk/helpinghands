@@ -40,10 +40,7 @@ class User extends Authenticatable
     {
         // Log::debug("SuperUser ".$this->superuser());
         if ($this->superuser()) {
-            return App\Organization::with(['teams'])
-                ->select('organizations.*', 'roles.name as role')
-                ->join('organization_user', 'organization_user.organization_id', '=', 'organizations.id')
-                ->join('roles', 'roles.id', '=', 'organization_user.role_id');
+            return App\Organization::with(['teams']);
         } else {
             return App\Organization::with(['teams'])
                 ->select('organizations.*', 'roles.name as role')
