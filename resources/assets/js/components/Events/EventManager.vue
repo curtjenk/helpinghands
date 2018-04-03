@@ -31,9 +31,9 @@
               </b-row>
             </span>
             <span v-else>
-              <div class="form-group row mb-3">
+              <div class="form-group row mb-3" v-if="!isObjectEmpty(user)">
                 <filter-memberships
-                    :userid="user0.id"
+                    role="Admin"
                     :filterByTeam="true"
                     :organization="organization"
                     :team="team"

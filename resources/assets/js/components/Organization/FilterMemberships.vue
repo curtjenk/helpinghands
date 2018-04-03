@@ -21,10 +21,10 @@ export default {
   components: {
   },
   props: {
-    // userid: {
-    //   type: Number,
-    //   required: true
-    // },
+    role: {
+      type: String,
+      required: false
+    },
     organization: {
       // type: Object,
       required: false
@@ -47,12 +47,22 @@ export default {
     }
   },
   mounted: function () {
-
     axios('/api/member/'+this.user.id+'/membership')
     .then(response => {
-      this.memberships = response.data;
-      if (!this.isObjectEmpty(this.organization)) {
+      let temp = {};
+      if (!this.isObjectEmpty(this.role) && this.role.length>0) {
         // console.log('here')
+        temp = response.data.find( (m) => {
+            return m.role == this.role;
+          })
+      } else {
+        temp = response.data;
+      }
+      this.memberships = temp;
+      console.log(this.memberships);
+      //filter to only the specified organization and team
+      if (!this.isObjectEmpty(this.organization)) {
+        // console.log('here2')
         // this.selectedOrg = this.organization;
         this.selectedOrg = this.memberships.find( (m)=> {
           return m.id == this.organization.id;

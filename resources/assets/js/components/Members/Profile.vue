@@ -156,7 +156,7 @@
               </div>
             </div>
             <template v-for="org in this.orgData">
-              <div class="w-50 mt-1">
+              <div class="w-60 mt-1">
                 <b-row no-gutters>
                   <b-col sm="1" md="1">
                     <span v-if="org.teams.length" @click="org.editing = !org.editing">
@@ -175,7 +175,7 @@
                 </b-row>
               </div>
               <template v-if="org.editing" v-for="team in org.teams">
-                <div class="w-50">
+                <div class="w-60">
                   <b-row no-gutters>
                     <b-col sm="1" offset-sm="2" md="1" offset-md="2">
                       <input type="checkbox" :checked="team.checked" v-model="team.checked" :disabled="!org.checked">

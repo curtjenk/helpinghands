@@ -8,7 +8,7 @@
         <b-navbar-nav class="mx-auto">
           <b-navbar-brand class="mr-4">{{ title }}</b-navbar-brand>
           <template v-for="(link, index) in links">
-            <span v-if="link.show">
+            <span v-if="link.show || isObjectEmpty(link.show)">
               <template v-if="link.click && typeof link.click == 'function'">
                 <b-nav-item v-if="hasPermission(link.perm)"
                   @click="link.click(index,link.val)"
