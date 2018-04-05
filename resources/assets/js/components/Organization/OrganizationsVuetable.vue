@@ -21,7 +21,7 @@
     >
         <template slot="actions" scope="props">
           <div class="">
-            <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
+            <span v-if="props.rowData.can_update_organization" data-toggle="tooltip" title="Edit" data-placement="left" class="">
                 <a href="#" type="link" class=""
                   @click="editOrganization(props.rowData, props.rowIndex)">
                   <i class="fa fa-pencil"></i>

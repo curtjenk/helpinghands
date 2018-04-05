@@ -44,7 +44,14 @@ class OrganizationController extends Controller
         ->when($inputs->sort, function($q) use($inputs){
             return $q->orderby($inputs->sort, $inputs->direction);
         });
-        return $query->paginate($inputs->limit);
+        $query = $query->paginate($inputs->limit);
+        foreach ($query->items() as &$item)
+        {
+            $item->can_update_organization = $user->has_org_permission($item->id, 'Update organization');
+            $item->can_show_organization   = $user->has_org_permission($item->id, 'Show organization');
+            $item->can_delete_organization = $user->has_org_permission($item->id, 'Destroy organization');
+        }
+        return $query;
     }
 
     /**

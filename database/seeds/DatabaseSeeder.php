@@ -22,15 +22,15 @@ class DatabaseSeeder extends Seeder
             'city'=>'Lithia Springs',
             'state'=>'Georgia'
         ]);
-        $childOrgCornerstone = DB::table('organizations')->insertGetId([
+        $orgLegBldchildToCornerstone = DB::table('organizations')->insertGetId([
             'name'=> "Legacy Builders Men's Ministry",
             'parent_id'=>$orgCornerstone,
             'city'=>'Lithia Springs',
             'state'=>'Georgia'
         ]);
-        $team1 = DB::table('teams')->insertGetId([
+        $legacyBuildersTeam1 = DB::table('teams')->insertGetId([
             'name'=> "Fellowship",
-            'organization_id'=>$childOrgCornerstone,
+            'organization_id'=>$orgLegBldchildToCornerstone,
             'description'=>'Responsibile for fellowship activities'
         ]);
         $orgCascadeUMC = DB::table('organizations')->insertGetId([
@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
             'role_id'=>App\Role::where('name','Member')->pluck('id')->first()
         ]);
         DB::table('organization_user')->insert([
-            'organization_id'=>$childOrgCornerstone,
+            'organization_id'=>$orgLegBldchildToCornerstone,
             'user_id'=>$testUser2,
             'role_id'=>App\Role::where('name','Admin')->pluck('id')->first()
         ]);
@@ -96,12 +96,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
-            'organization_id'=>$childOrgCornerstone,
+            'organization_id'=>$orgLegBldchildToCornerstone,
             'user_id'=>$testUser3,
             'role_id'=>App\Role::where('name','Admin')->pluck('id')->first()
         ]);
         DB::table('team_user')->insert([
-            'team_id'=>$team1,
+            'team_id'=>$legacyBuildersTeam1,
             'user_id'=>$testUser3,
             'role_id'=>App\Role::where('name','Lead')->pluck('id')->first()
         ]);
