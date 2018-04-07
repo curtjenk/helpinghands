@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
             );
             Route::resource('team', 'TeamController');
             Route::get('event/{id}/signup', 'EventController@signup');
+            Route::get('evite/{eventid}', 'EviteController@send_evites');
         });
 
 
@@ -98,7 +99,7 @@ Route::group(['middleware' => 'auth'], function () {
             ['only'=>['index','show', 'edit']]
         );
 
-        Route::get('evite/{id}', 'EviteController@send_evites');
+
     });
 //
 // OLD Session stuff

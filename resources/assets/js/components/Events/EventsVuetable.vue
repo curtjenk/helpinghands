@@ -44,7 +44,8 @@
             </a>
           </span>
           <span v-if="props.rowData.can_create_event" v-b-popover.hover.top.html="evitePopoverMethod(props.rowData)" title="Send E-vites" class="">
-            <a href="#" type="link" class="" :id="'evite'+props.rowData.id">
+            <a href="#" type="link" class="" :id="'evite'+props.rowData.id"
+              @click="sendEvites(props.rowData, props.rowIndex)">
                 <i class="fa fa-paper-plane-o fa-fw"></i>
             </a>
           </span>
@@ -245,8 +246,22 @@ export default {
   },
   methods: {
     evitePopoverMethod (data) {
-      // console.log(data)
-      return `Last sent on ${data.description}`
+      if (data.evite_sent) {
+        let date_sent = this.formatDate(data.evite_sent)
+        return `Last sent ${date_sent}`
+      }
+      return 'No evites sent'
+    },
+    sendEvites (data, index) {
+      axios.get('/api/evite/'+data.id)
+        .then(response => {
+          console.log(response)
+          let date_sent = this.formatDate(response.data.evite_sent)
+          data.evite_sent = date_sent
+        })
+        .catch(error => {
+          console.log(error)
+        });
     },
     showEvent (data, index) {
         // console.log('slot)', data.subject, index)

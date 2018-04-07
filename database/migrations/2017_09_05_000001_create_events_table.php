@@ -26,7 +26,7 @@ class CreateEventsTable extends Migration
             $table->json('time_start')->nullable();
             $table->json('time_end')->nullable();
             $table->string('cost')->nullable();
-            $table->date('evite_sent')->nullable();
+            $table->datetime('evite_sent')->nullable();
             $table->integer('status_id')->unsigned()->nullable();
             $table->integer('event_type_id')->unsigned()->nullable();
             $table->string('signup_limit')->unsigned()->nullable();

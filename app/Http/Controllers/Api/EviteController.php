@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Common\Inputs;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Mail\Evite;
@@ -101,10 +103,10 @@ class EviteController extends Controller
         $event = App\Event::findOrFail($event_id);
         $this->authorize('send-evites');
         $helpers = App\User::where('users.opt_receive_evite', true)
-            ->where('users.role_id', '!=', 1)
+            ->where('users.active', true)
             ->join('organization_user', 'organization_user.user_id', '=', 'users.id')
             ->where('organization_user.organization_id', $event->organization_id)
-            ->when(isset($event->team_id), function($q) {
+            ->when(isset($event->team_id), function($q) use($event){
                 $q->join('team_user', 'team_user.user_id', '=', 'users.id' )
                   ->where('team_user.team_id', $event->team_id);
             })
