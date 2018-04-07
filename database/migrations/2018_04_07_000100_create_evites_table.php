@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResponsesTable extends Migration
+class CreateEviteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,25 @@ class CreateResponsesTable extends Migration
      */
     public function up()
     {
-        Schema::create('responses', function (Blueprint $table) {
+        Schema::create('evites', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('event_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->boolean('helping')->nullable();
-            $table->boolean('paid')->nullable()->default(0);
-            $table->string('token')->nullable();
+            $table->integer('organization_id')->unsigned();
+            $table->integer('team_id')->unsigned()->nullable();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->smallinteger('num_invitations')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('event_id')
                   ->references('id')->on('events')
+                  ->onDelete('cascade');
+
+            $table->foreign('organization_id')
+                  ->references('id')->on('organizations')
+                  ->onDelete('cascade');
+
+            $table->foreign('team_id')
+                  ->references('id')->on('teams')
                   ->onDelete('cascade');
 
             $table->foreign('user_id')
@@ -39,6 +47,6 @@ class CreateResponsesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('responses');
+        Schema::dropIfExists('evites');
     }
 }

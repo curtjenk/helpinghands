@@ -163,10 +163,11 @@ class EventController extends Controller
             foreach ($query->items() as &$item)
             {
                 if (isset($item->team_id)) {
-                    // Log::debug("team ".$item->team_id);
+                    Log::debug("team ".$item->team_id);
                     $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
                     $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
-                    $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event');
+                    $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event')
+                                    || $user->has_org_permission($item->organization_id, 'Create event');
                 } else {
                     $canUpdateEvent = $user->has_org_permission($item->organization_id, 'Update event');
                     $canShowEvent   = $user->has_org_permission($item->organization_id, 'Show event');

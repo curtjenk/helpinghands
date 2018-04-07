@@ -17,16 +17,6 @@ require('vue-chartjs');
 //Require chart.piecelabel.js AFTER vue-chartjs
 require('chart.piecelabel.js');
 
-
-// Confirm we're loading correctly.
-// jquery ui and bootstrap tooltip conflict if jquery ui comes AFTER bootstrap-sass
-// Prefer bootstrap tooltip
-$( document ).ready(function() {
-    // console.log($.fn.tooltip);
-    // console.log($.fn.tooltip.Constructor.VERSION);
-});
-
-
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
  * using reactive data binding and reusable components. Vue's API is clean

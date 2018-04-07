@@ -204,13 +204,13 @@
               <span v-else>
                 <div class="">
                   <span>Attachments</span>&nbsp;&nbsp;&nbsp;
-                  <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
+                  <span v-if="!isAddingFile" v-b-tooltip.hover.right="'Add Attachment'">
                     <a  href="#" type="button" class="text-success"
                       @click="toggleIsAddingFile()">
                       <i class="fa fa-plus fa-lg fa-fw text-success"></i>
                     </a>
                   </span>
-                  <span v-else v-tooltip.right="'Done Adding'">
+                  <span v-else v-b-tooltip.hover.right="'Done Adding'">
                     <a href="#" type="button" class="text-danger"
                       @click="toggleIsAddingFile()">
                       <i class="fa fa-minus fa-lg fa-fw"></i>
@@ -232,7 +232,7 @@
                         </float-label>
                       </div>
                       <div class="col-md-4">
-                        <span v-tooltip.top="'Add'" class="">
+                        <span v-b-tooltip.hover.top="'Add'" class="">
                             <a href="#" type="button" class="text-primary"
                               @click="addFileToList()">
                               <i class="fa fa-floppy-o fa-lg fa-fw"></i>
@@ -260,13 +260,13 @@
                       {{ file.description }}
                     </td>
                     <td>
-                      <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
+                      <span v-if="file.id != 0" v-b-tooltip.hover.left="'View'" class="">
                         <a href="#" type="button" class="text-primary"
                               @click="viewFile(file)">
                           <i class="fa fa-eye fa-fw"></i>
                         </a>
                       </span>
-                      <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
+                      <span v-b-tooltip.hover.right="'Remove'" v-if="!modeShow" class="">
                         <a href="#" type="button" class="text-danger"
                               @click="removeFile(file)">
                           <i class="fa fa-trash-o fa-fw"></i>
@@ -333,20 +333,10 @@ export default {
     organization0: { type: Object, required: false },
     team0: { type: Object, required: false },
     signedUp0: { type: Boolean, default: false },
-
-    // user: {
-    //   type: Object, default: null
-    // },
-    // roles: {
-    //   type: Array, default: ()=>[]
-    // },
-    // permissions: {
-    //   type: Array, default: ()=>[]
-    // },
   },
   data() {
     return {
-      signedup: false,
+      signedUp: false,
       navTitle: '',
       navLinks: [],
       tabIndex: 0,
@@ -557,10 +547,10 @@ export default {
             show:this.authorizations.can_create_event, click:this.mode_change_create, val:null,
             name:'New', toggle:null, icon:'fa-plus-square-o fa-fw'},
           {perm:'Show event', href:'#',
-            show: !this.signedUp0, click:this.signup, val:1,
+            show: !this.signedUp, click:this.signup, val:1,
             name:'Signup', toggle:'Decline', icon:'fa-thumbs-o-up fa-fw'},
           {perm:'Show event', href:'#',
-            show: this.signedUp0, click:this.signup, val:0,
+            show: this.signedUp, click:this.signup, val:0,
             name:'Decline', toggle:'Signup', icon:'fa-thumbs-o-down fa-fw', class:'text-primary'}
         ]
       }
@@ -580,6 +570,7 @@ export default {
     initialize() {
       // console.log("initialize");
       this.mode_change();
+      this.signedUp = false;
       this.attachments = [];
       this.event.id = 0;
       this.event.subject = "";
@@ -751,14 +742,14 @@ export default {
             }
           }
           // console.log("promises", promises);
-          if (promises === undefined || promises === null) {
+          if (promises.length === 0) {
             this.mode_change_show();
             // this.$refs.form_wizard.changeTab(2, 0);
           } else {
             axios
               .all(promises)
               .then(response => {
-                // console.log("all good", response);
+                console.log("all good", response);
                 response.forEach(r => {
                   let id = r.data.id;
                   let ndx = parseInt(r.data.echo);

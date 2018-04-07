@@ -9,108 +9,14 @@
 .navfooter {
     background-color: $blue;
 }
-// .navbar-header a,
-// .navbar-collapse a {
-//     color: $white;
-//     &:hover,  &:focus {
-//       color: $white; }
-// }
-//Tighten up bootstrap
-/* reduce column padding from 15 to 5px */
-// [class^='col-'], [class*=' col-']{
-//   padding: 0px 5px 0px 5px;
-// }
-//
+
 .subtitle {
     font-size: 3.25rem;
     margin-bottom: 20px;
 }
-// .header {
-//   font-size: 1.60em;
-//   margin-top: 5em;
-//   font-family: $font-family-sans-serif;
-// }
-// .header-2 {
-//   font-size: 1.00em;
-//   font-style: italic;
-//   font-family: $font-family-sans-serif;
-//   margin-left: 5em;
-//   margin-top: 12em;
-// }
+
 .page-header {
   margin-top: 5em !important;
   // margin-bottom: 5em !important;
   padding: 0 !important;
 }
-
-// input {
-//   outline: 0;
-//   border-width: 0 0 1px 0;
-//   border-color: $input;
-//   background: transparent;
-//   &:hover {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//   }
-//   &:active {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//   }
-//   &:focus {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//   }
-// }
-// textarea {
-//   resize: none;
-// }
-// .editTextArea {
-//   outline: 0;
-//   font-weight: bold;
-//   border: 1px solid $input;
-//   padding-top: 5px;
-//   width: 100%;
-//   &:hover {
-//     outline: 0;
-//     border: 1px solid $blue;
-//   }
-//   &:active {
-//     outline: 0;
-//     border: 1px solid $blue;
-//   }
-//   &:focus {
-//     outline: 0;
-//     border: 1px solid $blue;
-//   }
-// }
-//
-// .editInfo {
-//   outline: 0;
-//   font-weight: bold;
-//   border-width: 0 0 1px 0;
-//   border-color: $input;
-//   padding-top: 5px;
-//   width: 100%;
-//   background-color: white;
-//   &:hover {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//     width: 95%;
-//   }
-//   &:active {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//     width: 95%;
-//   }
-//   &:focus {
-//     outline: 0;
-//     border-width: 0 0 1px 0;
-//     border-color: $blue;
-//     width: 95%;
-//   }
-// }

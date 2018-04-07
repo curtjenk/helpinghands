@@ -30,15 +30,7 @@ Vue.use(VuejsDialog, {
 })
 import VueFloatLabel from 'vue-float-label'
 Vue.use(VueFloatLabel)
-import Tooltip from 'vue-directive-tooltip';
-import 'vue-directive-tooltip/css/index.css';
-Vue.use(Tooltip, {
-    delay: 200,
-    placement: 'right',
-    class: 'tooltip-small',
-    triggers: ['hover'],
-    offset: 2
-});
+
 
 // Vue.component('example', require('./components/Example.vue'));
 Vue.component('nav-top', require('./components/Nav/Top.vue'));

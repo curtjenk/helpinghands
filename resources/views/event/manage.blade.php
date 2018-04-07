@@ -4,10 +4,12 @@
 <main>
 
     @php
-         $eventid = json_decode($event)->id;
-         $signedUp = json_encode(Auth::user()->signedup($eventid,'yes'));
-        //  dump($signedUp);
-        // die();
+        if (isset($event) && $event != 'null') {
+            $eventid = json_decode($event)->id;
+            $signedUp = json_encode(Auth::user()->signedup($eventid,'yes'));
+        } else {
+            $signedUp = json_encode(null);
+        }
     @endphp
 
     <event-manager

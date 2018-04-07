@@ -106,13 +106,13 @@
       <div class="caption">
         <span>Administrator(s)</span>&nbsp;&nbsp;&nbsp;
         <template v-if="!isAddingAdmin  && modeEdit">
-          <span v-if="members && members.length>0" v-tooltip.right="'Add Administrator'">
+          <span v-if="members && members.length>0" v-b-tooltip.hover.right="'Add Administrator'">
             <a  href="#" class="text-success"
               @click="toggleIsAddingAdmin()">
               <i class="fa fa-users fa-lg fa-fw text-success"></i>
             </a>
           </span>
-          <span v-else v-tooltip.right="'No Members To Make Administrators'">
+          <span v-else v-b-tooltip.hover.right="'No Members To Make Administrators'">
             <i class="fa fa-users fa-lg fa-fw text-danger"></i>
           </span>
         </template>
@@ -128,13 +128,13 @@
               </select>
             </div>
             <div class="col-md-4 col-sm-4">
-              <span v-tooltip.top="'Save'">
+              <span v-b-tooltip.hover.top="'Save'">
                   <a href="#" class="text-primary"
                     @click="saveNewAdmin()">
                     <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                   </a>
               </span>
-              <span v-tooltip.top="'Cancel'">
+              <span v-b-tooltip.hover.top="'Cancel'">
                   <a href="#" class="text-danger"
                     @click="toggleIsAddingAdmin()">
                     <i class="fa fa-ban fa-lg fa-fw"></i>
@@ -150,7 +150,7 @@
               {{ admin.name }}
             </td>
             <td v-if="modeEdit">
-              <span v-tooltip.right="'Remove'" class="">
+              <span v-b-tooltip.hover.right="'Remove'" class="">
                   <a href="#" type="button" class="text-danger"
                         @click="removeAdmin(admin)">
                     <i class="fa fa-trash-o fa-fw"></i>
@@ -175,7 +175,7 @@
   <hr/>
   <b-row>
     <div class="caption">Team(s)&nbsp;&nbsp;&nbsp;
-      <span v-if="!isAddingTeam && modeEdit" v-tooltip.right="'Add Team'">
+      <span v-if="!isAddingTeam && modeEdit" v-b-tooltip.hover.right="'Add Team'">
           <a href="#" class="text-success" @click="toggleIsAddingTeam()">
             <i class="fa fa-sitemap fa-lg fa-fw text-success"></i>
           </a>

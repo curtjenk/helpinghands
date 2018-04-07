@@ -12,19 +12,19 @@
     </div>
     <div class="row">
       <template v-if="modeShow">
-        <span v-tooltip.top="'List Events'" class="pull-right">
+        <span v-b-tooltip.top="'List Events'" class="pull-right">
           <a  href="#" type="button" class="text-info"
             @click="goToLocation('/event')">
             <i class="fa fa-list-ul fa-3x fa-fw text-info"></i>
           </a>
         </span>
-        <span v-show="canEditEvent" v-tooltip.top="'Edit Event'" class="pull-right">
+        <span v-show="canEditEvent" v-b-tooltip.top="'Edit Event'" class="pull-right">
           <a  href="#" type="button" class="text-warning"
             @click="setModeEdit(); editor.enable();">
             <i class="fa fa-pencil-square-o fa-3x fa-fw text-warning"></i>
           </a>
         </span>
-        <span v-show="canCreateEvent" v-tooltip.top="'Create Event'" class="pull-right">
+        <span v-show="canCreateEvent" v-b-tooltip.top="'Create Event'" class="pull-right">
           <a  href="#" type="button" class="text-success"
             @click="setModeCreate(); editor.enable(); initialize();">
             <i class="fa fa-plus-square-o fa-3x fa-fw text-success"></i>
@@ -32,7 +32,7 @@
         </span>
       </template>
       <template v-if="modeEdit">
-        <span v-tooltip.top="'Cancel Edit'" class="pull-right">
+        <span v-b-tooltip.top="'Cancel Edit'" class="pull-right">
           <a  href="#" type="button" class="text-success"
             @click="setModeShow(); editor.disable();">
             <i class="fa fa-eye fa-3x fa-fw text-success"></i>
@@ -40,7 +40,7 @@
         </span>
       </template>
       <template v-if="modeCreate">
-        <span v-tooltip.top="'Cancel Create'" class="pull-right">
+        <span v-b-tooltip.top="'Cancel Create'" class="pull-right">
           <a  href="#" type="button" class="text-success"
             @click="goToLocation('/event')">
             <i class="fa fa-list-ul fa-3x fa-fw text-danger"></i>
@@ -272,7 +272,7 @@
             <span v-else>
               <div class="caption">
                 <span>Attachments</span>&nbsp;&nbsp;&nbsp;
-                <span v-if="!isAddingFile" v-tooltip.right="'Add Attachment'">
+                <span v-if="!isAddingFile" v-b-tooltip.right="'Add Attachment'">
                   <a  href="#" type="button" class="text-success"
                     @click="toggleIsAddingFile()">
                     <i class="fa fa-plus fa-lg fa-fw text-success"></i>
@@ -292,13 +292,13 @@
                       </float-label>
                     </div>
                     <div class="" style="padding: 0px;">
-                      <span v-tooltip.top="'Add'"class="">
+                      <span v-b-tooltip.top="'Add'"class="">
                           <a href="#" type="button" class="text-primary"
                             @click="addFileToList()">
                             <i class="fa fa-floppy-o fa-lg fa-fw"></i>
                           </a>
                       </span>
-                      <span v-tooltip.top="'Close'">
+                      <span v-b-tooltip.top="'Close'">
                           <a href="#" type="button" class="text-danger"
                             @click="toggleIsAddingFile()">
                             <i class="fa fa-ban fa-lg fa-fw"></i>
@@ -326,13 +326,13 @@
                     {{ file.description }}
                   </td>
                   <td>
-                    <span v-if="file.id != 0" v-tooltip.left="'View'" class="">
+                    <span v-if="file.id != 0" v-b-tooltip.left="'View'" class="">
                       <a href="#" type="button" class="text-primary"
                             @click="viewFile(file)">
                         <i class="fa fa-eye fa-fw"></i>
                       </a>
                     </span>
-                    <span v-tooltip.right="'Remove'" v-if="!modeShow" class="">
+                    <span v-b-tooltip.right="'Remove'" v-if="!modeShow" class="">
                       <a href="#" type="button" class="text-danger"
                             @click="removeFile(file)">
                         <i class="fa fa-trash-o fa-fw"></i>

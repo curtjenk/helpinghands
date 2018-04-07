@@ -30,31 +30,36 @@
     >
       <template slot="actions2" scope="props">
         <div class="">
-          <span data-toggle="tooltip" title="Details" data-placement="left" class="">
+          <span  v-b-tooltip.hover="'Details'" class="">
               <a href="#" type="link" class=""
                 @click="showEvent(props.rowData, props.rowIndex)">
-                <i class="fa fa-eye fa-lg fa-fw"></i>
+                <i class="fa fa-eye  fa-fw"></i>
               </a>
           </span>
-          <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
+          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Notify Sign-ups'" class="">
             <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#eventnotify"
                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
-                <i class="fa fa-envelope-o fa-lg fa-fw"></i>
+                <i class="fa fa-envelope-o fa-fw"></i>
             </a>
           </span>
-          <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
+          <span v-if="props.rowData.can_create_event" v-b-popover.hover.top.html="evitePopoverMethod(props.rowData)" title="Send E-vites" class="">
+            <a href="#" type="link" class="" :id="'evite'+props.rowData.id">
+                <i class="fa fa-paper-plane-o fa-fw"></i>
+            </a>
+          </span>
+          <span v-if="props.rowData.can_create_event"  v-b-tooltip.hover="'Pay for an event'" class="">
             <a href="#" type="link" class=""
                @click="getSignupsPay(props.rowData, props.rowIndex)"
                :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
-              <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
+              <i class="fa fa-shopping-cart fa-fw"></i>
             </a>
           </span>
-          <span v-if="props.rowData.can_create_event" data-toggle="tooltip" title="Delete" data-placement="right" class="">
+          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Delete'" class="">
             <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#deleteevent"
                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
-                <i class="fa fa-trash fa-lg fa-fw"></i>
+                <i class="fa fa-trash fa-fw"></i>
             </a>
           </span>
         </div>
@@ -104,15 +109,6 @@ export default {
     VuetablePaginationInfo,
   },
   props: {
-    // user: {
-    //   type: Object, default: null
-    // },
-    // roles: {
-    //   type: Array, default: ()=>[]
-    // },
-    // permissions: {
-    //   type: Array, default: ()=>[]
-    // },
   },
   data () {
     return {
@@ -156,21 +152,10 @@ export default {
           callback: 'ellipsis|30'
         },
         {
-          name: 'type',
-          titleClass: 'text-center',
-        },
-        {
           name: 'status',
           sortField: 'status',
           titleClass: 'text-center',
           dataClass: 'text-center',
-        },
-        {
-          name: 'cost',
-          sortField: 'cost',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatMoney'
         },
         // {
         //   name: 'signup_limit',
@@ -244,12 +229,25 @@ export default {
       moreParams: {}
     }
   },
+  computed: {
+    evitePopoverConfig () {
+      return {
+        html: true,
+        title: () => { return '<b>Send E-vites</b>' },
+        content: () => { return 'Last sent on <em> Feb 14, 2018 </em>' }
+      }
+    }
+  },
   mounted: function() {
     this.$nextTick(function() {
       this.ready = true;
     });
   },
   methods: {
+    evitePopoverMethod (data) {
+      // console.log(data)
+      return `Last sent on ${data.description}`
+    },
     showEvent (data, index) {
         // console.log('slot)', data.subject, index)
         window.location.href = '/event/'+data.id;

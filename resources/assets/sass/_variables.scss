@@ -16,6 +16,10 @@ $spacers: map-merge((
   11: ($spacer * 6),
   12: ($spacer * 6.5)
 ), $spacers);
+// override default font size from 1rem
+$font-size-base: 0.875rem;
+// overrid default line-height from 1.5
+$line-height-base: 1.25rem;
 // Body
 $body-bg: #f5f8fa;
 // $body-bg: #D6E9FE;

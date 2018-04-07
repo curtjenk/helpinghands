@@ -18,8 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'api'], function () {
-    Route::get('evite/s/{tid}/{uid}/{token}', 'EviteController@response_yes');
-    Route::get('evite/o/{tid}/{uid}/{token}', 'EviteController@response_no');
+    Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
+        Route::get('evite/s/{tid}/{uid}/{token}', 'EviteController@response_yes');
+        Route::get('evite/o/{tid}/{uid}/{token}', 'EviteController@response_no');
+    });
 });
 
 Route::middleware(['api','auth.basic'])->group(function () {
