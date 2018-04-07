@@ -4,11 +4,10 @@
 <main>
 
     @php
-        // dump($event_types);
-        // $org = Auth::user()->organization;
-        // if (Request::session()->has('orgid')) {
-        //    $org = App\Organization::find(Request::session()->get('orgid'));
-        // }
+         $eventid = json_decode($event)->id;
+         $signedUp = json_encode(Auth::user()->signedup($eventid,'yes'));
+        //  dump($signedUp);
+        // die();
     @endphp
 
     <event-manager
@@ -21,6 +20,7 @@
         :user0="{{ Auth::user() }}"
         :statuses0="{{ $statuses }}"
         :eventtypes0="{{ $event_types }}"
+        :signed-up0="{{ $signedUp }}"
 
         {{-- :user="{{ json_encode($userRolesPermissions['user']) }}"
         :roles="{{ json_encode($userRolesPermissions['roles']) }}"

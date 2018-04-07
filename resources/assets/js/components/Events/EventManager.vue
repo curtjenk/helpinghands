@@ -332,6 +332,7 @@ export default {
     attachments0: { type: Array, required: false },
     organization0: { type: Object, required: false },
     team0: { type: Object, required: false },
+    signedUp0: { type: Boolean, default: false },
 
     // user: {
     //   type: Object, default: null
@@ -345,6 +346,7 @@ export default {
   },
   data() {
     return {
+      signedup: false,
       navTitle: '',
       navLinks: [],
       tabIndex: 0,
@@ -418,6 +420,7 @@ export default {
     this.tabCount = this.$refs.mytabs.$children.length
     this.setMode(this.mode0);
     this.attachments = [];
+    this.signedUp = this.signedUp0;
     if (this.modeCreate) {
       this.navTitle = "Create Event"
       this.initialize();
@@ -519,7 +522,7 @@ export default {
         method: "get",
         url: "/api/event/"+this.event.id+"/signup?h="+linkVal
       }).then(response => {
-        console.log(response.data)
+        console.log(this.signedUp)
       }).catch(error => {
         console.log(error.response)
       });
@@ -554,11 +557,11 @@ export default {
             show:true, click:this.mode_change_create, val:null,
             name:'New', toggle:null, icon:'fa-plus-square-o fa-fw'},
           {perm:'Show event', href:'#',
-            show:true, click:this.signup, val:1,
+            show: !this.signedUp0, click:this.signup, val:1,
             name:'Signup', toggle:'Decline', icon:'fa-thumbs-o-up fa-fw'},
           {perm:'Show event', href:'#',
-            show:false, click:this.signup, val:0,
-            name:'Decline', toggle:'Signup', icon:'fa-thumbs-o-down fa-fw'}
+            show: this.signedUp0, click:this.signup, val:0,
+            name:'Decline', toggle:'Signup', icon:'fa-thumbs-o-down fa-fw', class:'text-primary'}
         ]
       }
       if (this.modeEdit) {
@@ -833,9 +836,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.instruction {
-  font-size: 16px;
-}
 label {
   padding: 0px;
   margin: 0px;
@@ -850,11 +850,5 @@ input {
 }
 span {
   width: 100%;
-}
-.mytab {
-  min-height: 230px;
-}
-select {
-  margin-top: 5px;
 }
 </style>

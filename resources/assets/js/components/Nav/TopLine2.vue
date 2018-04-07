@@ -93,3 +93,11 @@ export default {
   }
 }
 </script>
+<style lang="css" scoped>
+i.fa.fa-thumbs-o-down {
+  color: red;
+}
+i.fa.fa-thumbs-o-up {
+  color: darkgreen;
+}
+</style>
