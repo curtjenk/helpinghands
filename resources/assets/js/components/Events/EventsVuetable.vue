@@ -8,17 +8,6 @@
       </b-alert>
     </div>
 
-    <modal name="descriptionhtml" height="auto" :scrollable="true">
-      <div class="pull-right" >
-        <button style="border: none; padding:0; background: none;" class=""
-          @click="$modal.hide('descriptionhtml')" >
-           ❌
-        </button>
-      </div>
-      <div><b>Subject:</b>&nbsp;{{ modaldata.subject }}</div>
-      <hr />
-      <span v-html="modaldata.descriptionhtml"></span>
-    </modal>
     <filter-bar v-if="!isObjectEmpty(user)" filterPlaceholder=" subject, description"
       :filterByMemberships="true"
     ></filter-bar>
@@ -36,6 +25,17 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
+    <template slot="colSubject" scope="props">
+      <div v-b-popover.hover.top.html="subjectPopover(props.rowData)" title="Subject">
+        {{ ellipsisText(props.rowData.subject,30) }}
+      </div>
+    </template>
+      <template slot="colDescription" scope="props">
+        <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
+          {{ ellipsisText(props.rowData.description_text,30) }}
+        </div>
+      </template>
+
       <template slot="actions2" scope="props">
         <div class="">
           <span  v-b-tooltip.hover="'Details'" class="">
@@ -51,7 +51,7 @@
                 <i class="fa fa-envelope-o fa-fw"></i>
             </a>
           </span>
-          <span v-if="props.rowData.can_create_event" v-b-popover.hover.top.html="evitePopoverMethod(props.rowData)" title="Send E-vites" class="">
+          <span v-if="props.rowData.can_create_event" v-b-popover.hover.top.html="evitePopover(props.rowData)" title="Send E-vites" class="">
             <a href="#" type="link" class="" :id="'evite'+props.rowData.id"
               @click="sendEvites(props.rowData, props.rowIndex)">
                 <i class="fa fa-paper-plane-o fa-fw"></i>
@@ -148,19 +148,18 @@ export default {
           callback: 'ellipsis|30'
         },
         {
-          name: 'subject',
+          title: 'Subject',
+          name: '__slot:colSubject',
           sortField: 'subject',
           dataClass: 'text-center',
           titleClass: 'text-center',
           dataClass: 'text-primary',
-          callback: 'ellipsis|30'
         },
         {
           title: 'Description',
-          name: 'description_text',
+          name: '__slot:colDescription',
           titleClass: 'text-center',
           dataClass: 'text-primary',
-          callback: 'ellipsis|30'
         },
         {
           name: 'status',
@@ -168,14 +167,6 @@ export default {
           titleClass: 'text-center',
           dataClass: 'text-center',
         },
-        // {
-        //   name: 'signup_limit',
-        //   title: 'Signup Limit',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   sortField: 'signup_limit',
-        //   callback: 'signupLimit'
-        // },
         {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
@@ -183,13 +174,6 @@ export default {
           dataClass: 'text-primary',
           titleClass: 'text-center '
         },
-        // {
-        //   title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
-        //   name: 'no_responses',
-        //   sortField: 'no_responses',
-        //   dataClass: 'text-primary',
-        //   titleClass: 'text-center'
-        // },
         {
           name: 'date_start',
           title: 'Begin',
@@ -248,12 +232,26 @@ export default {
     });
   },
   methods: {
-    evitePopoverMethod (data) {
+    evitePopover (data) {
       if (data.evite_sent) {
         let date_sent = this.formatDate(data.evite_sent)
         return `Last sent ${date_sent}`
       } else {
         return 'No evites sent'
+      }
+    },
+    subjectPopover (data) {
+      if (data.subject) {
+        return data.subject
+      } else {
+        return ''
+      }
+    },
+    descriptionPopover (data) {
+      if (data.description_text) {
+        return data.description_text
+      } else {
+        return ''
       }
     },
     sendEvites (data, index) {
@@ -290,35 +288,34 @@ export default {
     //   console.log('slot) action: ' + action, data.subject, index)
     },
     getSignupsPay (data, index) {
-    //   console.log(data);
       $("#payups").empty();
       axios.get('/api/member/signups/'+data.id)
-      .then(response => {
-        for(var i=0; i< response.data.length; i++)
-        {
-          let resp = response.data[i];
-        //   console.log(resp);
-          var $div = $("<div>", {"class": "col-md-4"});
-          $('#payups').append($div);
-          $('<input/>', {
-               id: 'pay'+resp.id,
-               type: 'checkbox',
-               name: 'pay[]',
-               checked: resp.paid ? true : false,
-               value: resp.id}).appendTo($div);
-          $('<label />', {
-              'for': 'pay'+resp.id,
-              style: 'padding-left:3px;',
-              text: resp.name }).appendTo($div);
+        .then(response => {
+          for(var i=0; i< response.data.length; i++)
+          {
+            let resp = response.data[i];
+          //   console.log(resp);
+            var $div = $("<div>", {"class": "col-md-4"});
+            $('#payups').append($div);
+            $('<input/>', {
+                 id: 'pay'+resp.id,
+                 type: 'checkbox',
+                 name: 'pay[]',
+                 checked: resp.paid ? true : false,
+                 value: resp.id}).appendTo($div);
+            $('<label />', {
+                'for': 'pay'+resp.id,
+                style: 'padding-left:3px;',
+                text: resp.name }).appendTo($div);
 
-        }
-        $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
-        $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
-        $("#eventPay").modal('show');
-      })
-      .catch(e => {
-        console.log(e);
-      })
+          }
+          $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
+          $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
+          $("#eventPay").modal('show');
+        })
+        .catch(e => {
+          console.log(e);
+        })
     },
     expandAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
@@ -334,6 +331,12 @@ export default {
     ellipsis (value, max = 1) {
       if (value) {
         return value.ellipsis(max)
+      }
+      return value;
+    },
+    ellipsisText (value, max = 1) {
+      if (value) {
+        return value.ellipsisText(max)
       }
       return value;
     },
@@ -389,11 +392,6 @@ export default {
         } else {
           this.$refs.vuetable.toggleDetailRow(data.id)
         }
-      }
-      if (field.name=='description_text' || field.name=='subject') {
-        this.modaldata.descriptionhtml = data.description;
-        this.modaldata.subject = data.subject;
-        this.$modal.show('descriptionhtml');
       }
     },
   },
