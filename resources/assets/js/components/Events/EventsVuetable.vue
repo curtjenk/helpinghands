@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div>
+      <b-alert  :show="gotError" dismissible
+       variant="danger"
+       @dismissed="gotError=false">
+        {{ errorMessage }}
+      </b-alert>
+    </div>
+
     <modal name="descriptionhtml" height="auto" :scrollable="true">
       <div class="pull-right" >
         <button style="border: none; padding:0; background: none;" class=""
@@ -114,6 +122,8 @@ export default {
   data () {
     return {
       ready: false,
+      gotError: false,
+      errorMessage: '',
       modaldata: {
         subject: '',
         descriptionhtml: ''
@@ -231,13 +241,6 @@ export default {
     }
   },
   computed: {
-    evitePopoverConfig () {
-      return {
-        html: true,
-        title: () => { return '<b>Send E-vites</b>' },
-        content: () => { return 'Last sent on <em> Feb 14, 2018 </em>' }
-      }
-    }
   },
   mounted: function() {
     this.$nextTick(function() {
@@ -249,19 +252,35 @@ export default {
       if (data.evite_sent) {
         let date_sent = this.formatDate(data.evite_sent)
         return `Last sent ${date_sent}`
+      } else {
+        return 'No evites sent'
       }
-      return 'No evites sent'
     },
     sendEvites (data, index) {
-      axios.get('/api/evite/'+data.id)
-        .then(response => {
-          console.log(response)
-          let date_sent = this.formatDate(response.data.evite_sent)
-          data.evite_sent = date_sent
+      let message = {
+        title:'Confirm send e-vites for ..',
+        body: data.subject
+      };
+      let options = {}
+      this.$dialog
+        .confirm(message, options)
+        .then(dialog => {
+          dialog.close();
+          axios.get('/api/evite/'+data.id)
+            .then(response => {
+              // console.log(response)
+              this.$refs.vuetable.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              this.errorMessage = "Error occurred while sending e-vites. "+error.response.status
+              this.gotError = true
+            });
         })
-        .catch(error => {
-          console.log(error)
+        .catch(() => {
+          //console.log('Clicked on cancel')
         });
+
     },
     showEvent (data, index) {
         // console.log('slot)', data.subject, index)
