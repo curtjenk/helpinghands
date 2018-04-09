@@ -87,12 +87,39 @@ class UserController extends Controller
         $this->authorize("show", $user);
         $memberships = $user->memberships()
                         ->where('organizations.name','!=','Ministry Engage');
-                        
+
         if ($user->superUser()) {
             return response()->json($memberships->get(['*', DB::raw(" 'Admin' AS role")]));
         } else {
             return response()->json($memberships->get());
         }
+    }
+    /**
+     * Get list of events the $userid has access to
+     * @param  Request $request [description]
+     * @param  [type]  $userid  [description]
+     * @return [type]           [description]
+     */
+    public function proxy_events(Request $request, $user_id)
+    {
+        $authUser = Auth::user();
+        $this->authorize('list-users');
+
+        $user = App\User::findOrFail($user_id);
+        $this->authorize("show", $user);
+        // TODO
+        $query = $user->memberships()
+            ->select('events.*', 'organizations.id as organization_id',
+                'organizations.name as organization_name',
+                'teams.id as team_id', 'teams.name as team_name',
+                'statuses.name as status'
+            )
+            ->join('events', 'events.organization_id', '=', 'organizations.id')
+            ->join('statuses', 'statuses.id', '=', 'events.status_id')
+            ->leftjoin('teams', 'teams.id', '=', 'events.team_id')
+            ->where('statuses.name','Open');
+
+        return response()->json($query->get());
     }
     /**
      * Display a listing of the resource.

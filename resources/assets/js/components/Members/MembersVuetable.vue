@@ -1,11 +1,22 @@
 <template>
   <div>
-    <!-- <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-      :css="css.pagination"
-      :icons="css.icons"
-      @vuetable-pagination:change-page="onChangePage"
-    ></vuetable-pagination> -->
-    <!-- <filter-bar></filter-bar> -->
+    <b-modal ref="proxySignupModal" size="lg" title="Proxy Signup">
+      <b-form-group label="Choose an option">
+        <b-form-radio-group v-model="modal.selected"
+                            :options="modal.options"
+                            name="radioInline">
+        </b-form-radio-group>
+      </b-form-group>
+      <b-table striped small bordered hover
+          :items="modal.events"
+          :fields="modal.event_table_fields">
+        <template slot="check" slot-scope="row">
+          <b-container>
+            <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0" @click.native.stop v-model="row.checked"></b-form-checkbox>
+          </b-container>
+        </template>
+      </b-table>
+    </b-modal>
     <filter-bar filterPlaceholder="name, nickname, email"
       :userid="userid"
       :filterByMemberships="true"
@@ -24,30 +35,30 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-        <template slot="actions" scope="props">
-          <div class="">
-            <span data-toggle="tooltip" title="View profile" data-placement="left" class="">
-                <a href="#" type="link" class=""
-                  @click="showMember(props.rowData, props.rowIndex)">
-                  <i class="fa fa-address-card-o fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <!--     // data-toggle="modal" data-target="#proxySignup"
-             :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id" -->
-            <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="link" class=""
-                    @click="getEvents(props.rowData, props.rowIndex)"
-                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
-                    <i class="fa fa-user-plus fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <!-- <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class="">
-                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
-             </a>
-            </span> -->
-          </div>
-        </template>
+      <template slot="actions" scope="props">
+        <div class="">
+          <span v-b-tooltip.right="'View profile'" class="">
+              <a href="#" type="link" class=""
+                @click="showMember(props.rowData, props.rowIndex)">
+                <i class="fa fa-address-card-o fa-lg fa-fw"></i>
+              </a>
+          </span>
+          <!-- <span v-b-tooltip.right="'Proxy Signup/Decline'" class="">
+              <a v-show="isAdmin" href="#" type="link" class=""
+                  @click="getEvents(props.rowData, props.rowIndex)"
+                   :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
+                  <i class="fa fa-user-plus fa-lg fa-fw"></i>
+              </a>
+          </span> -->
+          <span v-b-tooltip.right="'Proxy Signup/Decline'" class="">
+              <a v-show="isAdmin" href="#" type="link" class=""
+                  @click="showProxyModal(props.rowData, props.rowIndex)"
+                   :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
+                  <i class="fa fa-user-plus fa-lg fa-fw"></i>
+              </a>
+          </span>
+        </div>
+      </template>
     </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -63,6 +74,7 @@
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -79,7 +91,9 @@ Vue.component('member-custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
+
 export default {
+  mixins: [commonMixins],
   components: {
     Vuetable,
     VuetablePagination,
@@ -95,6 +109,18 @@ export default {
   },
   data () {
     return {
+      modal: {
+        selected: 'Signup',
+        options: [{text: 'Signup', value: 'Signup'}, {text: 'Decline', value: 'Decline'}],
+        events: [],
+        event_table_fields: [
+          {key: 'check'},
+          {key: 'date', sortable: true},
+          {key: 'subject', sortable:false},
+          {key: 'organization', sortable: true},
+          {key: 'team', sortable: false},
+        ]
+      },
       events: [],
       fields: [
         {
@@ -161,6 +187,29 @@ export default {
   methods: {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
+    },
+    async showProxyModal (member, index) {
+      console.log(member)
+      let events = {}
+      try {
+        events = await axios.get('/api/member/'+member.id+'/proxyEvents');
+        this.modal.events = [];
+        for(let x=0; x<events.data.length; x++) {
+          let data = events.data[x];
+          let event = {}
+          event.checked = false;
+          event.date = data.date_start
+          event.subject = data.subject
+          event.organization = data.organization_name
+          event.team = data.team_name
+          this.modal.events.push(event)
+        }
+      } catch (e) {
+        console.log(e)
+        return;
+      }
+      console.log(events.data)
+      this.$refs.proxySignupModal.show()
     },
     getEvents (data, index) {
       // console.log(data);
