@@ -89,13 +89,15 @@ common.convert_descendants_to_local_time = function(obj) {
   * truncate a string and add ellipsis ... html compatible
   */
 String.prototype.ellipsis =
-  function(n){
-      return this.substr(0,n-1)+(this.length>n?'&hellip;':'');
-  };
+    function(n){
+      if (this.length > n) return this.substr(0,n-3)+'&hellip;';
+      else return this;
+    };
 /**
 * truncate a string and add ellipsis ... text version
 */
 String.prototype.ellipsisText =
   function(n){
-     return this.substr(0,n-1)+(this.length>n?'...':'');
+    if (this.length > n) return this.substr(0,n-3)+'...';
+    else return this;
   };

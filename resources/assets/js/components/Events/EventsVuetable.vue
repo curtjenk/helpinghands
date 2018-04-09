@@ -25,14 +25,24 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-    <template slot="colSubject" scope="props">
-      <div v-b-popover.hover.top.html="subjectPopover(props.rowData)" title="Subject">
-        {{ ellipsisText(props.rowData.subject,30) }}
-      </div>
-    </template>
+      <template slot="colOrganization" scope="props">
+        <div v-b-popover.hover.top.html="organizationPopover(props.rowData)" title="Organization">
+          {{ ellipsisText(props.rowData.organization_name,20) }}
+        </div>
+      </template>
+      <template slot="colTeam" scope="props">
+        <div v-b-popover.hover.top.html="teamPopover(props.rowData)" title="Team">
+          {{ ellipsisText(props.rowData.team_name,20) }}
+        </div>
+      </template>
+      <template slot="colSubject" scope="props">
+        <div v-b-popover.hover.top.html="subjectPopover(props.rowData)" title="Subject">
+          {{ ellipsisText(props.rowData.subject,20) }}
+        </div>
+      </template>
       <template slot="colDescription" scope="props">
         <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
-          {{ ellipsisText(props.rowData.description_text,30) }}
+          {{ ellipsisText(props.rowData.description_text,20) }}
         </div>
       </template>
 
@@ -131,21 +141,19 @@ export default {
       fields: [
         {
           title: 'Organization',
-          name: 'organization_name',
+          name: '__slot:colOrganization',
           sortField: 'organizations.name',
           dataClass: 'text-center',
           titleClass: 'text-center',
           dataClass: 'text-primary',
-          callback: 'ellipsis|30'
         },
         {
           title: 'Team',
-          name: 'team_name',
+          name: '__slot:colTeam',
           sortField: 'teams.name',
           dataClass: 'text-center',
           titleClass: 'text-center',
           dataClass: 'text-primary',
-          callback: 'ellipsis|30'
         },
         {
           title: 'Subject',
@@ -240,19 +248,21 @@ export default {
         return 'No evites sent'
       }
     },
+    organizationPopover (data) {
+      if (data.organization_name) return data.organization_name;
+      else return '';
+    },
+    teamPopover (data) {
+      if (data.team_name) return data.team_name;
+      else return '';
+    },
     subjectPopover (data) {
-      if (data.subject) {
-        return data.subject
-      } else {
-        return ''
-      }
+      if (data.subject) return data.subject;
+      else return '';
     },
     descriptionPopover (data) {
-      if (data.description_text) {
-        return data.description_text
-      } else {
-        return ''
-      }
+      if (data.description_text) return data.description_text;
+      else return '';
     },
     sendEvites (data, index) {
       let message = {
