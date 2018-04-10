@@ -585,7 +585,7 @@ export default {
     },
     formatOrgTeam() {
       let r = this.organization.name;
-      if (this.team.name) {
+      if (this.team && this.team.name) {
         r += " / " + this.team.name;
       }
       return r;

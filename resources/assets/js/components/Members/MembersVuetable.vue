@@ -1,21 +1,44 @@
 <template>
   <div>
-    <b-modal ref="proxySignupModal" size="lg" title="Proxy Signup">
-      <b-form-group label="Choose an option">
-        <b-form-radio-group v-model="modal.selected"
-                            :options="modal.options"
-                            name="radioInline">
-        </b-form-radio-group>
-      </b-form-group>
+    <b-modal ref="proxySignupModal" size="lg"
+      :title=" `Proxy Signup for ${modal.member_name}`">
+      <b-row>
+        <b-col md="6">
+          <b-form-group label="Choose an option">
+            <b-form-radio-group v-model="modal.selected"
+                                :options="modal.options"
+                                name="radioInline">
+            </b-form-radio-group>
+          </b-form-group>
+        </b-col>
+        <b-col md="6">
+          <span class="align-bottom">
+            Number selected {{ num_events_checked }}
+          </span>
+        </b-col>
+      </b-row>
       <b-table striped small bordered hover
           :items="modal.events"
-          :fields="modal.event_table_fields">
+          :fields="modal.event_table_fields"
+          :current-page="modal.currentPage"
+          :per-page="modal.perPage">
         <template slot="check" slot-scope="row">
           <b-container>
-            <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0" @click.native.stop v-model="row.checked"></b-form-checkbox>
+            <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0"
+              @click.native.stop
+              v-model="row.item.checked">
+            </b-form-checkbox>
           </b-container>
         </template>
       </b-table>
+      <b-container>
+        <b-pagination align-v="center" :total-rows="modal.events.length" size="sm"
+          v-model="modal.currentPage"
+          :per-page="modal.perPage"
+          class="my-0"
+          >
+        </b-pagination>
+      </b-container>
     </b-modal>
     <filter-bar filterPlaceholder="name, nickname, email"
       :userid="userid"
@@ -110,6 +133,9 @@ export default {
   data () {
     return {
       modal: {
+        member_name: '',
+        currentPage: 1,
+        perPage: 5,
         selected: 'Signup',
         options: [{text: 'Signup', value: 'Signup'}, {text: 'Decline', value: 'Decline'}],
         events: [],
@@ -121,7 +147,6 @@ export default {
           {key: 'team', sortable: false},
         ]
       },
-      events: [],
       fields: [
         {
           title: 'Active',
@@ -184,16 +209,30 @@ export default {
       moreParams: {}
     }
   },
+  computed: {
+    num_events_checked () {
+      let tally = 0;
+      const eventsLength = this.modal.events.length;
+      for(let x=0;x<eventsLength;x++){
+        if (this.modal.events[x].checked) {
+          tally++;
+        }
+      }
+      return tally;
+    }
+  },
   methods: {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
     },
     async showProxyModal (member, index) {
-      console.log(member)
+      // console.log(member)
       let events = {}
       try {
         events = await axios.get('/api/member/'+member.id+'/proxyEvents');
         this.modal.events = [];
+        this.modal.currentPage = 1;
+        this.modal.member_name = member.name;
         for(let x=0; x<events.data.length; x++) {
           let data = events.data[x];
           let event = {}
@@ -208,7 +247,7 @@ export default {
         console.log(e)
         return;
       }
-      console.log(events.data)
+      // console.log(events.data)
       this.$refs.proxySignupModal.show()
     },
     getEvents (data, index) {

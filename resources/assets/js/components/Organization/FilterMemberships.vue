@@ -79,7 +79,7 @@ export default {
     tellParent (event) {
       // console.log(event.name);
       let orgid = this.selectedOrg.id ? this.selectedOrg.id : 0;
-      let teamid = event.name == 'org' || orgid==0 ? 0 : this.selectedTeam.id;
+      let teamid = (event.name == 'org' || orgid==0) ? null : this.selectedTeam ? this.selectedTeam.id : null;
       this.$emit('org-team-selected', orgid, teamid, this.selectedOrg, this.selectedTeam);
     }
   } //End of methods
