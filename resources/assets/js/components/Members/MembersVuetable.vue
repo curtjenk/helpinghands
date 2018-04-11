@@ -8,6 +8,7 @@
         <b-col md="6">
           <b-form-group label="Choose an option">
             <b-form-radio-group v-model="modal.action"
+                                :value="modal.action"
                                 :options="modal.options"
                                 name="radioInline">
             </b-form-radio-group>
@@ -239,6 +240,9 @@ export default {
                       url: '/api/member/'+this.modal.member_id+'/proxySignup',
                       data: data
                     });
+         //reset
+        this.$refs.vuetable.reload();
+        this.modal.action = 'signup';
       } catch (e) {
         console.log(e)
       }
