@@ -136,22 +136,28 @@ class UserController extends Controller
         );
 
         if ($user->superuser()) {
+            // Log::debug('f1');
             $query = App\User::with(['organizations','organizations.teams'])
                 ->when($inputs->orgid, function($q) use($inputs) {
                     $q->join('organization_user','organization_user.user_id','=','users.id')
                     ->where('organization_user.organization_id', $inputs->orgid);
                 })
                 ->when($inputs->teamid, function($q) use($inputs) {
-                    Log::debug('f1');
+
                     $q->join('team_user','team_user.user_id','=','users.id')
                     ->where('team_user.team_id', $inputs->teamid);
-                });
+                })->distinct();
         } else {
             $query = $user->peers($inputs->orgid, $inputs->teamid);
         }
 
-        $query = $query->select('users.*', DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'))
-            ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
+        $query = $query->select('users.*', 'r.yes_responses')
+            ->leftjoin(DB::raw('LATERAL (Select user_id,
+                    sum(CASE helping WHEN true THEN 1 ELSE 0 END) AS yes_responses
+                    from responses group by user_id) as r'), function($q) {
+                $q->on('users.id', '=', 'r.user_id');
+            })
+            // ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
                     $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
@@ -160,9 +166,10 @@ class UserController extends Controller
             })
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
-            })
-            ->groupby('users.id');
-
+            });
+            // ->groupby('users.id');
+        // Log::debug($query->toSql());
+        // Log::debug($query->getBindings());
         return $query->paginate($inputs->limit);
     }
 
@@ -199,30 +206,36 @@ class UserController extends Controller
         $user = Auth::user();
         $proxy_user = App\User::findOrFail($user_id);
 
-        $event_id = $request->input('event_id');
+        $event_ids = $request->input('event_ids');
         $action = $request->input('action');
+        // Log::debug($event_ids);
+        // Log::debug($action);
+        foreach ($event_ids as $event_id) {
+            $event = App\Event::findOrFail($event_id);
+            $this->authorize('view', $event);
+        }
+        // //Log::debug($event->subject);
+        foreach ($event_ids as $event_id) {
+            $event = App\Event::findOrFail($event_id);
+            $resp = App\Response::where('event_id',$event->id)
+                ->where('user_id',$proxy_user->id)->first();
 
-        $event = App\Event::findOrFail($event_id);
-        $this->authorize('view', $event);
-        //Log::debug($event->subject);
-        $resp = App\Response::where('event_id',$event->id)
-            ->where('user_id',$proxy_user->id)->first();
+            $helping = $action=='signup'? 1 : 0;
 
-        $helping = $action=='signup'? 1 : 0;
-
-        if ($resp) {
-            $resp->helping = $helping;
-            $resp->save();
-        } else {
-            App\Response::create([
-                'user_id'=>$proxy_user->id,
-                'event_id'=>$event->id,
-                'helping'=>$helping,
-                'token'=>null
-            ]);
+            if ($resp) {
+                $resp->helping = $helping;
+                $resp->save();
+            } else {
+                App\Response::create([
+                    'user_id'=>$proxy_user->id,
+                    'event_id'=>$event->id,
+                    'helping'=>$helping,
+                    'token'=>null
+                ]);
+            }
         }
 
-        return redirect()->back();
+        return;
     }
     /**
      * Save user's avatar

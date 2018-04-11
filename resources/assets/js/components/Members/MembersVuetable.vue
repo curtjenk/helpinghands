@@ -1,11 +1,13 @@
 <template>
   <div>
     <b-modal ref="proxySignupModal" size="lg"
-      :title=" `Proxy Signup for ${modal.member_name}`">
+      :title=" `Proxy Signup/Decline for ${modal.member_name}`"
+      @ok="doProxySignupDecline"
+    >
       <b-row>
         <b-col md="6">
           <b-form-group label="Choose an option">
-            <b-form-radio-group v-model="modal.selected"
+            <b-form-radio-group v-model="modal.action"
                                 :options="modal.options"
                                 name="radioInline">
             </b-form-radio-group>
@@ -133,11 +135,12 @@ export default {
   data () {
     return {
       modal: {
+        member_id: 0,
         member_name: '',
         currentPage: 1,
         perPage: 5,
-        selected: 'Signup',
-        options: [{text: 'Signup', value: 'Signup'}, {text: 'Decline', value: 'Decline'}],
+        action: 'signup',
+        options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
         events: [],
         event_table_fields: [
           {key: 'check'},
@@ -225,6 +228,21 @@ export default {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
     },
+    async doProxySignupDecline () {
+      try {
+        let data = {}
+        data.action = this.modal.action;
+        data.event_ids = this.modal.events.filter((e)=>e.checked).map((e)=>e.id);
+        // console.log(data)
+        let resp = await axios({
+                      method: 'post',
+                      url: '/api/member/'+this.modal.member_id+'/proxySignup',
+                      data: data
+                    });
+      } catch (e) {
+        console.log(e)
+      }
+    },
     async showProxyModal (member, index) {
       // console.log(member)
       let events = {}
@@ -233,10 +251,12 @@ export default {
         this.modal.events = [];
         this.modal.currentPage = 1;
         this.modal.member_name = member.name;
+        this.modal.member_id = member.id;
         for(let x=0; x<events.data.length; x++) {
           let data = events.data[x];
           let event = {}
           event.checked = false;
+          event.id = data.id;
           event.date = data.date_start
           event.subject = data.subject
           event.organization = data.organization_name
