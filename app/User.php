@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
     public function organizations()
     {
-        return $this->belongsToMany('App\Organization');
+        return $this->belongsToMany('App\Organization')->withPivot('role_id');
     }
 
     public function teams()
@@ -118,6 +118,28 @@ class User extends Authenticatable
             ->where('u1.id', $this->id)
             ->where('organizations.name','!=','Ministry Engage')
             ->distinct();
+    }
+    //TODO remove this
+    public function canAdmin($otherUser)
+    {
+        $myOrgs = $this->organizations()
+            ->join('roles','roles.id','=','role_id')
+            ->select('organization.id', 'roles.name')
+            ->get();
+        $otherUser = $otherUser->organizations()
+            ->join('roles','roles.id','=','role_id')
+            ->select('organization.id', 'roles.name')
+            ->get();
+        foreach($myOrgs as $myOrg) {
+            if ($myOrg->name == 'Admin') {
+                foreach($otherUser as $otherOrg) {
+                    if ($myOrg->id == $otherOrg->id) {
+
+                    }
+                }
+            }
+        }
+        return $myOrgs;
     }
     /*
         Get list of permissions

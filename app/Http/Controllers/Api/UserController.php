@@ -170,7 +170,12 @@ class UserController extends Controller
             // ->groupby('users.id');
         // Log::debug($query->toSql());
         // Log::debug($query->getBindings());
-        return $query->paginate($inputs->limit);
+        $peers = $query->paginate($inputs->limit);
+        // Log::debug("START HERE");
+        foreach ($peers as $peer) {
+            // Log::debug(print_r($peer,true));
+        }
+        return $peers;
     }
 
     /**

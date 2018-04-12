@@ -16,7 +16,7 @@ class Organization extends Model
         'state', 'zipcode',
     ];
 
-    protected $hidden = ['pivot'];
+    // protected $hidden = ['pivot'];
 
     public function events()
     {
