@@ -63,20 +63,13 @@
       <template slot="actions" scope="props">
         <div class="">
           <span v-b-tooltip.right="'View profile'" class="">
-              <a href="#" type="link" class=""
+              <a v-show="props.rowData.canUpdateUser" href="#" type="link" class=""
                 @click="showMember(props.rowData, props.rowIndex)">
                 <i class="fa fa-address-card-o fa-lg fa-fw"></i>
               </a>
           </span>
-          <!-- <span v-b-tooltip.right="'Proxy Signup/Decline'" class="">
-              <a v-show="isAdmin" href="#" type="link" class=""
-                  @click="getEvents(props.rowData, props.rowIndex)"
-                   :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
-                  <i class="fa fa-user-plus fa-lg fa-fw"></i>
-              </a>
-          </span> -->
           <span v-b-tooltip.right="'Proxy Signup/Decline'" class="">
-              <a v-show="isAdmin" href="#" type="link" class=""
+              <a v-show="props.rowData.canUpdateEvent" href="#" type="link" class=""
                   @click="showProxyModal(props.rowData, props.rowIndex)"
                    :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
                   <i class="fa fa-user-plus fa-lg fa-fw"></i>

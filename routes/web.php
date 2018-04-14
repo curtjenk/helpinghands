@@ -102,10 +102,5 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     });
-//
-// OLD Session stuff
-//
-    // Route::post('session', 'SessionController@store');
-    // Route::get('session', 'SessionController@index');
 
 });

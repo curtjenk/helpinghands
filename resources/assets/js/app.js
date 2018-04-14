@@ -48,9 +48,45 @@ Vue.component('teamslist', require('./components/Organization/Team/TeamsVuetable
 Vue.component('team-manager', require('./components/Organization/Team/TeamManager.vue'));
 
 import { store } from './appVuexStore.js';
-const app = new Vue({
-    el: '#app',
-    // provide the store using the "store" option.
-    // this will inject the store instance to all child components.
-    store,
-});
+$(function() {
+  const app = new Vue({
+      el: '#app',
+      // provide the store using the "store" option.
+      // this will inject the store instance to all child components.
+      store,
+      mounted() {
+        if (window.location.pathname != '/login') {
+          this.initialize();
+        }
+
+      },
+      methods: {
+        initialize() {
+          let config = {
+            validateStatus: function (status) {
+              return (status >= 200 && status < 300) || status == 401
+            },
+          }
+          let user = null, roles = null, permissions = null
+          axios.get('/api/authmember', config)
+          .then(  (response) => {
+            // console.log('good', response.status)
+            if (response.status != 401) {
+              let data = response.data
+              user = data.user
+              roles = data.roles
+              permissions = data.permissions
+            }
+            this.$store.commit('SETUSER',user)
+            this.$store.commit('SETROLES',roles)
+            this.$store.commit('SETPERMISSIONS',permissions)
+          }).catch((error) => {
+            console.log('error', error)
+            this.$store.commit('SETUSER',null)
+            this.$store.commit('SETROLES',null)
+            this.$store.commit('SETPERMISSIONS',null)
+          });
+        }
+      }
+  })
+})

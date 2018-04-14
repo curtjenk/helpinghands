@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
@@ -24,11 +24,11 @@ Route::group(['middleware' => 'api'], function () {
     });
 });
 
-Route::middleware(['api','auth.basic'])->group(function () {
-    Route::get('user/{i}', function (Request $request, $id) {
-        $self = Auth::user();
-        $user = App\User::findOrFail($id);
-
-        return response()->json($user->memberships()->get());
-    });
-});
+// Route::middleware(['api','auth.basic'])->group(function () {
+//     Route::get('user/{i}', function (Request $request, $id) {
+//         $self = Auth::user();
+//         $user = App\User::findOrFail($id);
+//
+//         return response()->json($user->memberships()->get());
+//     });
+// });

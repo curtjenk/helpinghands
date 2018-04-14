@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Common\Inputs;
+use App\Lib\StopWatch;
 use App;
 use Auth;
 use DB;
@@ -146,7 +147,9 @@ class UserController extends Controller
 
                     $q->join('team_user','team_user.user_id','=','users.id')
                     ->where('team_user.team_id', $inputs->teamid);
-                })->distinct();
+                })
+                ->where('users.name', '!=', 'Site')
+                ->distinct();
         } else {
             $query = $user->peers($inputs->orgid, $inputs->teamid);
         }
@@ -157,7 +160,6 @@ class UserController extends Controller
                     from responses group by user_id) as r'), function($q) {
                 $q->on('users.id', '=', 'r.user_id');
             })
-            // ->leftjoin('responses', 'responses.user_id', '=', 'users.id')
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
                     $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
@@ -167,10 +169,25 @@ class UserController extends Controller
             ->when($inputs->sort, function($q) use($inputs){
                 return $q->orderby($inputs->sort, $inputs->direction);
             });
-            // ->groupby('users.id');
-        // Log::debug($query->toSql());
-        // Log::debug($query->getBindings());
-        return $query->paginate($inputs->limit);
+
+        $query = $query->paginate($inputs->limit);
+        $canUpdateUser = false;
+        $canUpdateEvent = false;
+        foreach($query as &$row) {
+            foreach($row->organizations as $org) {
+                if (!$canUpdateUser) {
+                 $canUpdateUser = $user->has_permission('Update user', $org->id);
+                }
+                if (!$canUpdateEvent) {
+                 $canUpdateEvent = $user->has_permission('Update event', $org->id);
+                }
+            }
+            $row->canUpdateUser = $canUpdateUser;
+            $row->canUpdateEvent = $canUpdateEvent;
+            $canUpdateUser = false;
+            $canUpdateEvent = false;
+        }
+        return $query;
     }
 
     /**
@@ -300,14 +317,18 @@ class UserController extends Controller
      */
     public function authmember()
     {
-        $user = Auth::check() ? Auth::user() : null;
-        if (!empty($user)) {
+        // StopWatch::start('authmember');
+        $user = Auth::user();
+        if (!is_null($user)) {
             $roles = $user->roles()->get()->pluck('name');
             $permissions = $user->permissions()->get()->pluck('name');
         } else {
             $roles = [];
             $permissions = [];
         }
+        // StopWatch::stop('authmember');
+        // StopWatch::show(true);
+
         return response()->json(['user'=>$user,
                                 'roles'=>$roles,
                                 'permissions'=>$permissions]);
