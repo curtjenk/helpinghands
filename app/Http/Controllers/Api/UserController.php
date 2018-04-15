@@ -123,6 +123,25 @@ class UserController extends Controller
         return response()->json($query->get());
     }
     /**
+     * Get list of members who could possibly signup for the $event_id
+     * @param  Request $request [description]
+     * @param  [type]  $event_id  [description]
+     * @return [type]           [description]
+     */
+    public function proxy_members(Request $request, $event_id)
+    {
+        $user = Auth::user();
+        $this->authorize('list-users');
+        $this->authorize('list-events');
+
+        $event = App\Event::findOrFail($event_id);
+        $this->authorize("show", $event);
+
+        $query = $user->peers($event->organization_id, $event->team_id);
+
+        return response()->json($query->get());
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -215,18 +234,32 @@ class UserController extends Controller
     /**
      * The authenticated user is signing-up on behalf of $user_id
      * @param  Request $request [description]
-     * @param  [type]  $user_id [description]
+     * @param  $id [ID of the user to signup for events || ID of the event for users]
      * @return [type]           [description]
      */
-    public function proxy_signup(Request $request, $user_id)
+    public function proxy_signup(Request $request, $id)
     {
         $user = Auth::user();
+        $eventSignup = $request->input('event');
+        if ($eventSignup) {
+            return $this->proxy_signup_event($id);
+        } else {
+            return $this->proxy_signup_user($id);
+        }
+
+    }
+    /**
+     * Signup the $user_id for 1 or more events
+     * @param  [type] $user_id [description]
+     * @return [type]          [description]
+     */
+    private function proxy_signup_user ($user_id)
+    {
         $proxy_user = App\User::findOrFail($user_id);
 
         $event_ids = $request->input('event_ids');
         $action = $request->input('action');
-        // Log::debug($event_ids);
-        // Log::debug($action);
+
         foreach ($event_ids as $event_id) {
             $event = App\Event::findOrFail($event_id);
             $this->authorize('view', $event);
@@ -253,6 +286,17 @@ class UserController extends Controller
         }
 
         return;
+    }
+    /**
+     * Signup users for the $event_id
+     * @param  [type] $event_id [description]
+     * @return [type]           [description]
+     */
+    private function proxy_signup_event ($event_id)
+    {
+        $proxy_event = App\User::findOrFail($event_id);
+        $user_ids = $request->input('user_ids');
+        $action = $request->input('action');
     }
     /**
      * Save user's avatar

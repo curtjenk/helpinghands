@@ -112,8 +112,8 @@ class User extends Authenticatable
                 $q->where('ou2.organization_id', $orgid);
             })
             ->when($teamid, function($q) use($teamid) {
-                $q->join('team_user','team_user.organization_id','=','ou2.organization_id')
-                ->where('team_user.organization_id', $teamid);
+                $q->join('team_user','team_user.user_id','=','ou2.user_id')
+                ->where('team_user.team_id', $teamid);
             })
             ->where('u1.id', $this->id)
             ->where('organizations.name','!=','Ministry Engage')

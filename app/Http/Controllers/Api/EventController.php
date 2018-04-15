@@ -387,7 +387,7 @@ class EventController extends Controller
         $this->authorize('destroy', $event);
 
         $event->delete();
-        return redirect('/event');
+        return;
     }
 
 }

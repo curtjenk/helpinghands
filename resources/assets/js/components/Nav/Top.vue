@@ -18,8 +18,8 @@
               <b-nav-item v-if="canListEvents" href="/event/calendar"><i class="fa fa-cog fa-calendar"></i> Calendar</b-nav-item>
             </template>
             <template class="d-flex justify-content-end">
-              <b-nav-item class="ml-5" v-if="user==null" href="/login">Login</b-nav-item>
-              <b-nav-item-dropdown v-if="user!==null && !isVisitor" right>
+              <b-nav-item class="ml-5" v-if="isObjectEmpty(user)" href="/login">Login</b-nav-item>
+              <b-nav-item-dropdown v-if="!isObjectEmpty(user) && !isVisitor" right>
                 <template slot="button-content">
                   <em class="ml-5">{{ user.name }}</em><span class="caret"></span>
                 </template>

@@ -7,6 +7,49 @@
         {{ errorMessage }}
       </b-alert>
     </div>
+    <b-modal ref="proxySignupModal" size="lg"
+      :title=" `Proxy Signup/Decline for ${signupModal.event_subject}`"
+      @ok="doProxySignupDecline"
+    >
+      <b-row>
+        <b-col md="6">
+          <b-form-group label="Choose an option">
+            <b-form-radio-group v-model="signupModal.action"
+                                :value="signupModal.action"
+                                :options="signupModal.options"
+                                name="radioInline">
+            </b-form-radio-group>
+          </b-form-group>
+        </b-col>
+        <b-col md="6">
+          <span class="align-bottom">
+            Number selected {{ num_members_checked }}
+          </span>
+        </b-col>
+      </b-row>
+      <b-table striped small bordered hover
+          :items="signupModal.members"
+          :fields="signupModal.members_table_fields"
+          :current-page="signupModal.currentPage"
+          :per-page="signupModal.perPage">
+        <template slot="check" slot-scope="row">
+          <b-container>
+            <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0"
+              @click.native.stop
+              v-model="row.item.checked">
+            </b-form-checkbox>
+          </b-container>
+        </template>
+      </b-table>
+      <b-container>
+        <b-pagination align-v="center" :total-rows="signupModal.members.length" size="sm"
+          v-model="signupModal.currentPage"
+          :per-page="signupModal.perPage"
+          class="my-0"
+          >
+        </b-pagination>
+      </b-container>
+    </b-modal>
 
     <filter-bar v-if="!isObjectEmpty(user)" filterPlaceholder=" subject, description"
       :filterByMemberships="true"
@@ -54,6 +97,13 @@
                 <i class="fa fa-eye  fa-fw"></i>
               </a>
           </span>
+          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Proxy Signup/Decline'" class="">
+              <a href="#" type="link" class=""
+                  @click="showProxyModal(props.rowData, props.rowIndex)"
+                  :name="'signup'+props.rowData.id">
+                  <i class="fa fa-user-plus fa-fw"></i>
+              </a>
+          </span>
           <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Notify Sign-ups'" class="">
             <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#eventnotify"
@@ -67,6 +117,7 @@
                 <i class="fa fa-paper-plane-o fa-fw"></i>
             </a>
           </span>
+          <!--  TODO redesign
           <span v-if="props.rowData.can_create_event"  v-b-tooltip.hover="'Pay for an event'" class="">
             <a href="#" type="link" class=""
                @click="getSignupsPay(props.rowData, props.rowIndex)"
@@ -74,10 +125,11 @@
               <i class="fa fa-shopping-cart fa-fw"></i>
             </a>
           </span>
+          -->
           <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Delete'" class="">
             <a href="#" type="link" class=""
-                data-toggle="modal" data-target="#deleteevent"
-                :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
+              @click="deleteEvent(props.rowData, props.rowIndex)"
+            >
                 <i class="fa fa-trash fa-fw"></i>
             </a>
           </span>
@@ -137,6 +189,19 @@ export default {
       modaldata: {
         subject: '',
         descriptionhtml: ''
+      },
+      signupModal: {
+        member_id: 0,
+        event_subject: '',
+        currentPage: 1,
+        perPage: 5,
+        action: 'signup',
+        options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
+        members: [],
+        members_table_fields: [
+          {key: 'check'},
+          {key: 'name', sortable: true},
+        ]
       },
       fields: [
         {
@@ -232,14 +297,94 @@ export default {
       moreParams: {}
     }
   },
-  computed: {
-  },
   mounted: function() {
     this.$nextTick(function() {
       this.ready = true;
     });
   },
+  computed: {
+    num_members_checked () {
+      let tally = 0;
+      const membersLength = this.signupModal.members.length;
+      for(let x=0;x<membersLength;x++){
+        if (this.signupModal.members[x].checked) {
+          tally++;
+        }
+      }
+      return tally;
+    }
+  },
   methods: {
+    deleteEvent (data, index) {
+      let message = {
+        title:'<h3 style="color:red;">' +
+              '<div>Confirm delete for ...</div>' +
+              '<hr/'+
+              '</h3>',
+        body: data.subject
+      };
+      let options = {}
+      this.$dialog
+        .confirm(message, options)
+        .then(dialog => {
+          dialog.close();
+          axios.delete('/api/event/'+data.id)
+            .then(response => {
+              // console.log(response)
+              this.$refs.vuetable.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              this.errorMessage = "Error occurred while deleting event. "+error.response.status
+              this.gotError = true
+            });
+        })
+        .catch(() => {
+          //console.log('Clicked on cancel')
+        });
+    },
+    async doProxySignupDecline () {
+      try {
+        let data = {}
+        data.action = this.signupModal.action;
+        data.member_ids = this.signupModal.members.filter((e)=>e.checked).map((e)=>e.id);
+        // console.log(data)
+        let resp = await axios({
+                      method: 'post',
+                      url: '/api/member/'+this.signupModal.event_id+'/proxySignup?event=true',
+                      data: data
+                    });
+         //reset
+        this.$refs.vuetable.reload();
+        this.signupModal.action = 'signup';
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async showProxyModal (event, index) {
+      // console.log(member)
+      let members = {}
+      try {
+        members = await axios.get('/api/member/'+event.id+'/proxyMembers');
+        this.signupModal.members = [];
+        this.signupModal.currentPage = 1;
+        this.signupModal.event_subject = event.subject;
+        this.signupModal.event_id = event.id;
+        for(let x=0; x<members.data.length; x++) {
+          let data = members.data[x];
+          let member = {}
+          member.checked = false;
+          member.id = data.id;
+          member.name = data.name
+          this.signupModal.members.push(member)
+        }
+      } catch (e) {
+        console.log(e)
+        return;
+      }
+      // console.log(events.data)
+      this.$refs.proxySignupModal.show()
+    },
     evitePopover (data) {
       if (data.evite_sent) {
         let date_sent = this.formatDate(data.evite_sent)
@@ -298,34 +443,35 @@ export default {
     //   console.log('slot) action: ' + action, data.subject, index)
     },
     getSignupsPay (data, index) {
-      $("#payups").empty();
-      axios.get('/api/member/signups/'+data.id)
-        .then(response => {
-          for(var i=0; i< response.data.length; i++)
-          {
-            let resp = response.data[i];
-          //   console.log(resp);
-            var $div = $("<div>", {"class": "col-md-4"});
-            $('#payups').append($div);
-            $('<input/>', {
-                 id: 'pay'+resp.id,
-                 type: 'checkbox',
-                 name: 'pay[]',
-                 checked: resp.paid ? true : false,
-                 value: resp.id}).appendTo($div);
-            $('<label />', {
-                'for': 'pay'+resp.id,
-                style: 'padding-left:3px;',
-                text: resp.name }).appendTo($div);
-
-          }
-          $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
-          $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
-          $("#eventPay").modal('show');
-        })
-        .catch(e => {
-          console.log(e);
-        })
+      //TODO redesign this functionality in a later phase
+      // $("#payups").empty();
+      // axios.get('/api/member/signups/'+data.id)
+      //   .then(response => {
+      //     for(var i=0; i< response.data.length; i++)
+      //     {
+      //       let resp = response.data[i];
+      //     //   console.log(resp);
+      //       var $div = $("<div>", {"class": "col-md-4"});
+      //       $('#payups').append($div);
+      //       $('<input/>', {
+      //            id: 'pay'+resp.id,
+      //            type: 'checkbox',
+      //            name: 'pay[]',
+      //            checked: resp.paid ? true : false,
+      //            value: resp.id}).appendTo($div);
+      //       $('<label />', {
+      //           'for': 'pay'+resp.id,
+      //           style: 'padding-left:3px;',
+      //           text: resp.name }).appendTo($div);
+      //
+      //     }
+      //     $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
+      //     $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
+      //     $("#eventPay").modal('show');
+      //   })
+      //   .catch(e => {
+      //     console.log(e);
+      //   })
     },
     expandAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
@@ -357,15 +503,10 @@ export default {
             return value
         }
     },
-    eviteLabel (value) {
-        return (value == null)
-          ? '<i class="fa fa-frown-o" style="color: red;"></i>'
-          : '<i class="fa fa-check-square" style="color: green;"></i>'
-    },
-    // genderLabel (value) {
-    //   return value === 'M'
-    //     ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-    //     : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    // eviteLabel (value) {
+    //     return (value == null)
+    //       ? '<i class="fa fa-frown-o" style="color: red;"></i>'
+    //       : '<i class="fa fa-check-square" style="color: green;"></i>'
     // },
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
