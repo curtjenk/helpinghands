@@ -242,9 +242,9 @@ class UserController extends Controller
         $user = Auth::user();
         $eventSignup = $request->input('event');
         if ($eventSignup) {
-            return $this->proxy_signup_event($id);
+            return $this->proxy_signup_event($request, $id);
         } else {
-            return $this->proxy_signup_user($id);
+            return $this->proxy_signup_user($request, $id);
         }
 
     }
@@ -253,10 +253,9 @@ class UserController extends Controller
      * @param  [type] $user_id [description]
      * @return [type]          [description]
      */
-    private function proxy_signup_user ($user_id)
+    private function proxy_signup_user (Request $request, $user_id)
     {
         $proxy_user = App\User::findOrFail($user_id);
-
         $event_ids = $request->input('event_ids');
         $action = $request->input('action');
 
@@ -292,11 +291,37 @@ class UserController extends Controller
      * @param  [type] $event_id [description]
      * @return [type]           [description]
      */
-    private function proxy_signup_event ($event_id)
+    private function proxy_signup_event (Request $request, $event_id)
     {
         $proxy_event = App\User::findOrFail($event_id);
-        $user_ids = $request->input('user_ids');
+        $user_ids = $request->input('member_ids');
         $action = $request->input('action');
+
+        $eligible_userids = [];
+        foreach ($user_ids as $user_id) {
+            $user = App\User::findOrFail($user_id);
+            $can = $user->has_permission('Show event', $proxy_event->organization_id, $proxy_event->team_id);
+            if ($can) {
+                $resp = App\Response::where('event_id',$proxy_event->id)
+                    ->where('user_id',$user_id)->first();
+
+                $helping = $action=='signup'? 1 : 0;
+
+                if ($resp) {
+                    $resp->helping = $helping;
+                    $resp->save();
+                } else {
+                    App\Response::create([
+                        'user_id'=>$user_id,
+                        'event_id'=>$proxy_event->id,
+                        'helping'=>$helping,
+                        'token'=>null
+                    ]);
+                }
+
+            }
+        }
+
     }
     /**
      * Save user's avatar
