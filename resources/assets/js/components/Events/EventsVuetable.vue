@@ -179,7 +179,7 @@ export default {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
-          dataClass: 'text-primary',
+          dataClass: 'text-primary text-center',
           titleClass: 'text-center '
         },
         {

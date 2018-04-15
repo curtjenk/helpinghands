@@ -154,7 +154,7 @@ class UserController extends Controller
             $query = $user->peers($inputs->orgid, $inputs->teamid);
         }
 
-        $query = $query->select('users.*', 'r.yes_responses')
+        $query = $query->select('users.*', DB::raw('COALESCE(r.yes_responses,0) as yes_responses' ))
             ->leftjoin(DB::raw('LATERAL (Select user_id,
                     sum(CASE helping WHEN true THEN 1 ELSE 0 END) AS yes_responses
                     from responses group by user_id) as r'), function($q) {

@@ -167,10 +167,10 @@ export default {
         //   callback: 'allcap'
         },
         {
-          title: '<i class="fa fa-thumbs-o-up fa-w"> Events</i>',
+          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
-          dataClass: 'text-center',
+          dataClass: 'text-primary text-center',
           titleClass: 'text-center',
         },
         {
