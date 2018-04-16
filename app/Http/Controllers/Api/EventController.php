@@ -102,6 +102,7 @@ class EventController extends Controller
         }
         //dump($request->input('message'));
         return redirect('/event');
+        // return;
     }
     /**
      * Display a listing of the resource.
@@ -163,7 +164,7 @@ class EventController extends Controller
             foreach ($query->items() as &$item)
             {
                 if (isset($item->team_id)) {
-                    Log::debug("team ".$item->team_id);
+                    // Log::debug("team ".$item->team_id);
                     $canUpdateEvent = $user->has_team_permission($item->team_id, 'Update event');
                     $canShowEvent   = $user->has_team_permission($item->team_id, 'Show event');
                     $canCreateEvent = $user->has_team_permission($item->team_id, 'Create event')
