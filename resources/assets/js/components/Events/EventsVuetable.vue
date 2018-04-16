@@ -8,7 +8,9 @@
       </b-alert>
     </div>
     <b-modal ref="proxySignupModal" size="lg"
-      :title=" `Proxy Signup/Decline for ${signupModal.event_subject}`"
+      :title=" `Proxy Signup/Decline for: ${signupModal.event_subject}`"
+      header-bg-variant="secondary"
+      header-text-variant="light"
       @ok="doProxySignupDecline"
     >
       <b-row>

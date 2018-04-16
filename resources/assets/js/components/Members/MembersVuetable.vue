@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-modal ref="proxySignupModal" size="lg"
-      :title=" `Proxy Signup/Decline for ${modal.member_name}`"
+      :title=" `Proxy Signup/Decline for: ${modal.member_name}`"
+      header-bg-variant="secondary"
+      header-text-variant="light"
       @ok="doProxySignupDecline"
     >
       <b-row>

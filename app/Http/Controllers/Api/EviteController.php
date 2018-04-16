@@ -117,17 +117,13 @@ class EviteController extends Controller
         if($event->signup_limit > 0 && $num_signups == $event->signup_limit){
             Log::debug('limit reached for '.$event->subject);
             return response()->json(['event'=>$event, 'num_evites'=>$cnt, 'msg'=>'Limit reached']);
-            // return view('event.show', [
-            //     'event'=>$event,
-            //     'num_evites'=>0,
-            //     'msg'=>'Limit reached'
-            // ]);
         }
         //--------------------
         $cnt=0;
         $invitees = [];
         foreach($helpers as $helper)
         {
+            Log::debug("checking " . $helper->email);
             //check if already responded Yes/no
             $responded = $helper->responses()
                 ->where('event_id', $event_id)
@@ -136,11 +132,11 @@ class EviteController extends Controller
             if (!$responded || !isset($responded->helping)) {
                 $invitees[] = $helper;
                 ++$cnt;
-                // Mail::to($helper)->queue(new Evite($event, $helper, $responded));
+                // Log::debug("need to send to ".$helper->email);
+            } else {
+                // Log::debug("skip ".$helper->email);
             }
         }
-
-
 
         if ($cnt > 0) {
             //update Event
@@ -156,15 +152,12 @@ class EviteController extends Controller
                 'num_invitations' => $cnt,
             ]);
             foreach($invitees as $invitee) {
-                Mail::to($helper)->queue(new Evite($event, $helper, $responded));
+                Mail::to($invitee)->queue(new Evite($event, $invitee, $responded));
             }
         }
         Log::debug("num evites = $cnt");
 
         return response()->json(['event'=>$event, 'num_evites'=>$cnt]);
-        // return view('event.show', [
-        //     'event'=>$event,
-        //     'num_evites'=>$cnt,
-        // ]);
+
     }
 }
