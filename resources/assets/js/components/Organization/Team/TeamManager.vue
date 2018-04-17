@@ -45,11 +45,9 @@
   <b-row>
     <div class="caption">Team Members &nbsp;&nbsp;&nbsp;
       <span v-if="other_org_members && other_org_members.length>0 && !isAddingMember && modeEdit">
-        <a id="addmember" href="#" class="text-success" @click="toggleIsAddingMember()">
+        <a id="addmember" v-b-tooltip.hover.right="'Add Team Member'" href="#" class="text-success" @click="toggleIsAddingMember()">
           <i class="fa fa-user fa-lg fa-fw text-success"></i>
         </a>
-        <!-- b-tooltip must be place "lower" in the dom than the target element -->
-        <b-tooltip target="addmember" title="Add Team Member" placement="right"></b-tooltip>
       </span>
     </div>
     <template v-if="isAddingMember">
@@ -62,14 +60,12 @@
                 {{ oom.name }} &nbsp;< {{oom.email}} >
              </option>
             </select>
-            <a id="saveNew" href="#" class="text-primary" @click="saveNewMember()">
+            <a id="saveNew" v-b-tooltip.hover.top="'Save'" href="#" class="text-primary" @click="saveNewMember()">
               <i class="fa fa-floppy-o fa-lg fa-fw"></i>
             </a>
-            <a id="cancelNew" href="#" class="text-danger" @click="toggleIsAddingMember()">
+            <a id="cancelNew" v-b-tooltip.hover.top="'Cancel'" href="#" class="text-danger" @click="toggleIsAddingMember()">
               <i class="fa fa-ban fa-lg fa-fw"></i>
             </a>
-            <b-tooltip target="saveNew" title="Save" placement="top"></b-tooltip>
-            <b-tooltip target="cancelNew" title="Cancel" placement="top"></b-tooltip>
           </b-row>
         </b-card-body>
       </b-card>
@@ -77,29 +73,17 @@
   </b-row>
   <div class="row mt-1">
     <b-table striped small bordered hover :items="table_items" :fields="members_table_fields">
-      <!-- <template slot="HEAD_name" slot-scope="data">
-        <div ref="cf">
-          <column-filter field="name" label="Name" :callback="filter_column"
-          ></column-filter>
-        </div>
-      </template>
-      <template slot="HEAD_email" slot-scope="data">
-        <column-filter field="email" label="Email" :callback="filter_column"
-        ></column-filter>
-      </template> -->
       <template  slot="leader" slot-scope="row">
         <span v-if="modeEdit">
           <span v-if="row.item.role=='Lead'">
-            <a :id="'remlead_' + row.item.id" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
+            <a :id="'remlead_' + row.item.id" v-b-tooltip.hover.right="'Remove as Leader'" href="#" class="text-primary" @click.stop="updateLeader('delete', row.index)">
               <i class="fa fa-check-square-o fa-fw"></i>
             </a>
-            <b-tooltip :target="'remlead_' + row.item.id" title="Remove as Leader" placement="right"></b-tooltip>
           </span>
           <span v-else>
-            <a :id="'makelead_' + row.item.id" href="#" class="" @click.stop="updateLeader('post', row.index)">
+            <a :id="'makelead_' + row.item.id" v-b-tooltip.hover.right="'Make Leader'" href="#" class="" @click.stop="updateLeader('post', row.index)">
               <i class="fa fa-square-o fa-fw"></i>
             </a>
-            <b-tooltip :target="'makelead_' + row.item.id" title="Make leader" placement="right"></b-tooltip>
           </span>
         </span>
         <span v-else>
@@ -112,10 +96,9 @@
         </span>
       </template>
       <template v-if="modeEdit" slot="action" slot-scope="row">
-        <a :id="'del_' + row.item.id" href="#" class="text-danger" @click.stop="removeMember2(row.index)">
+        <a :id="'del_' + row.item.id" href="#" v-b-tooltip.hover.right="'Remove'" class="text-danger" @click.stop="removeMember2(row.index)">
           <i class="fa fa-trash-o fa-fw"></i>
         </a>
-        <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
       </template>
     </b-table>
   </div>
@@ -126,11 +109,6 @@
 
 import {commonMixins} from '../../../mixins/common';
 import {MESSAGE_DURATION} from '../../../mixins/constants';
-// import FormError from '../../FormError';
-
-// import VueGoodTable from 'vue-good-table';
-//
-// Vue.use(VueGoodTable);
 import ColumnFilter from '../../../components/Tables/ColumnFilter.vue';
 
 export default {

@@ -195,14 +195,12 @@
               </float-label>
             </b-col>
             <b-col class="ml-1">
-              <a id="saveNew" href="#" class="text-primary" @click="saveNewTeam()">
+              <a id="saveNew" v-b-tooltip="'Save'" href="#" class="text-primary" @click="saveNewTeam()">
                 <i class="fa fa-floppy-o fa-lg fa-fw"></i>
               </a>
-              <a id="cancelNew" href="#" class="text-danger" @click="toggleIsAddingTeam()">
+              <a id="cancelNew" v-b-tooltip="'Cancel'" href="#" class="text-danger" @click="toggleIsAddingTeam()">
                 <i class="fa fa-ban fa-lg fa-fw"></i>
               </a>
-              <b-tooltip target="saveNew" title="Save" placement="top"></b-tooltip>
-              <b-tooltip target="cancelNew" title="Cancel" placement="top"></b-tooltip>
             </b-col>
           </b-row>
           <b-row class="no-gutters mt-3">
@@ -221,14 +219,12 @@
     </template>
     <b-table striped small bordered hover :items="teams" :fields="team_table_fields">
       <template v-if="modeEdit" slot="action" slot-scope="row">
-        <a :id="'edit_' + row.item.id" href="#" class="" @click.stop="editTeam(row.item)">
+        <a :id="'edit_' + row.item.id" v-b-tooltip="'Edit'" href="#" class="" @click.stop="editTeam(row.item)">
           <i class="fa fa-pencil-square-o fa-fw"></i>
         </a>
-        <a :id="'del_' + row.item.id" href="#" class="text-danger" @click.stop="removeTeam(row.item)">
+        <a :id="'del_' + row.item.id" v-b-tooltip="'Remove'" href="#" class="text-danger" @click.stop="removeTeam(row.item)">
           <i class="fa fa-trash-o fa-fw"></i>
         </a>
-        <b-tooltip :target="'edit_' + row.item.id" title="Edit" placement="left"></b-tooltip>
-        <b-tooltip :target="'del_' + row.item.id" title="Remove" placement="right"></b-tooltip>
       </template>
     </b-table>
   </b-row>
