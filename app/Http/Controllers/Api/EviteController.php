@@ -123,7 +123,7 @@ class EviteController extends Controller
         $invitees = [];
         foreach($helpers as $helper)
         {
-            Log::debug("checking " . $helper->email);
+            // Log::debug("checking " . $helper->email);
             //check if already responded Yes/no
             $responded = $helper->responses()
                 ->where('event_id', $event_id)

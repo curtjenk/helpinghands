@@ -9,7 +9,7 @@
         <!-- <div class="col-md-12"> -->
             <div id="scrollarea-content">
                 <ol id="">
-                  <li v-for="item in rowData.members"  class="col-md-3">
+                  <li v-if="rowData.members" v-for="item in rowData.members"  class="col-md-3">
                     {{ item.name }}
                   </li>
                </ol>

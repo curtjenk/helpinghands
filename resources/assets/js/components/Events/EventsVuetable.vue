@@ -357,6 +357,7 @@ export default {
                       data: data
                     });
          //reset
+        this.collapseAllDetailRows();
         this.$refs.vuetable.reload();
         this.signupModal.action = 'signup';
       } catch (e) {
