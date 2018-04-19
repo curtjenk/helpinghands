@@ -51,15 +51,6 @@ export default {
     links: {
       type: Array, default: ()=>[ {name:'Link A'}, {name:'Link B'}, {name:'Link C'}]
     },
-    // user: {
-    //   type: Object, default: null
-    // },
-    // roles: {
-    //   type: Array, default: ()=>[]
-    // },
-    // permissions: {
-    //   type: Array, default: ()=>[]
-    // },
   },
   mounted() {
     // console.log('Component mounted.')

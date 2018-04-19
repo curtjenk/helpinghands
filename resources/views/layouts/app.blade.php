@@ -24,21 +24,9 @@
 <body>
     <div id="app">
         @php
-            // $user = Auth::check() ? Auth::user() : null;
-            // if (!empty($user)) {
-            //     $roles = $user->roles()->get()->pluck('name');
-            //     $permissions = $user->permissions()->get()->pluck('name');
-            // } else {
-            //     $roles = [];
-            //     $permissions = [];
-            // }
         @endphp
-        <nav-top
-            {{-- :user0="{{ json_encode($user) }}"
-            :roles0="{{ json_encode($roles) }}"
-            :permissions0="{{ json_encode($permissions) }}" --}}
-        >
-        </nav-top>
+        
+        <nav-top></nav-top>
 
         <div class="container-fluid">
             @yield('content' )

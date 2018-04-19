@@ -429,9 +429,11 @@ export default {
         // console.log(response)
         this.updateStatus = STATUS_SUCCESS;
         var self = this;
+        //call initialize to get roles/permissions, etc.
+        //top nav will be updated accordingly
+        this.$root.initialize();
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
-            // window.location.reload();
         }, MESSAGE_DURATION);
       }).catch((error) => {
         // console.log(error)

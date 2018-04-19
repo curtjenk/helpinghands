@@ -16,9 +16,17 @@
         </div>
       </div>
     </div>
+    <div>
+      <b-alert :show="signedUp" variant="success">
+        You are signed-up for this event
+      </b-alert>
+      <b-alert :show="!signedUp" variant="warning">
+        You are NOT signed-up for this event
+      </b-alert>
+    </div>
     <b-card no-body>
       <b-tabs pills card v-model="tabIndex" ref="mytabs">
-        <b-tab title="Let's Start">
+        <b-tab title="General">
           <b-row :no-gutters="true">
             <span v-if="modeShow">
               <b-row class="no-gutters">
@@ -29,162 +37,159 @@
                 <b-col sm="2">Subject</b-col>
                 <b-col sm="9" md="9" class=""><u>{{ event.subject }}</u></b-col>
               </b-row>
+              <hr/>
+              <b-row>
+                <b-col>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Start Date</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">End Date</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_end, 'YYYY-MM-DD') }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Type</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ eventTypeName }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Status</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ statusName }}</u></b-col>
+                  </b-row>
+                </b-col>
+                <b-col>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Start Time</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_start) }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">End Time</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_end) }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Cost</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ event.cost }}</u></b-col>
+                  </b-row>
+                  <b-row no-gutters>
+                    <b-col sm="4" md="4">Limit</b-col>
+                    <b-col sm="8" md="8" class=""><u>{{ event.signup_limit }}</u></b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
             </span>
-            <span v-else>
-              <div class="form-group row mb-3" v-if="!isObjectEmpty(user)">
-                <filter-memberships
-                    role="Admin"
-                    :filterByTeam="true"
-                    :organization="organization"
-                    :team="team"
-                    @org-team-selected="setOrgTeam"
-                ></filter-memberships>
-              </div>
-              <div class="form-group row">
-                <label for="subject" class="">Subject</label>
-                <div class="ml-1">
-                    <input required name="subject" class="" v-model="event.subject" type="text" size="70" autofocus>
-                </div>
-              </div>
+            <span v-else style="width: 100%;">
+              <b-row class="pl-1">
+                <b-col>
+                  <div class="form-group row no-gutters mb-3" v-if="!isObjectEmpty(user)">
+                    <label for="filter" class="pt-2 col-md-2 col-sm-2">Organization</label>
+                    <div class="">
+                      <filter-memberships name="filter"
+                          role="Admin"
+                          :filterByTeam="true"
+                          :organization="organization"
+                          :team="team"
+                          @org-team-selected="setOrgTeam"
+                      ></filter-memberships>
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="subject" class="col-md-2 col-sm-2">Subject</label>
+                    <div class="">
+                        <input required name="subject" class="" v-model="event.subject" type="text" size="70" autofocus>
+                    </div>
+                  </div>
+                </b-col>
+              </b-row>
+              <hr/>
+              <b-row>
+                <b-col>
+                  <div class="form-group row no-gutters">
+                    <label for="pdatestart" class="col-md-3 col-sm-3">Start Date</label>
+                    <div class="col-md-5 col-sm-5">
+                      <datepicker name="pdatestart"
+                        :bootstrap-styling="true"
+                        :value="formatDate(event.date_start)"
+                        @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
+                      </datepicker>
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="pdateend" class="col-md-3 col-sm-3">End Date</label>
+                    <div class="col-md-5 col-sm-5">
+                      <datepicker name="pdateend"
+                        :bootstrap-styling="true"
+                        :value="formatDate(event.date_start)"
+                        @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd">
+                      </datepicker>
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
+                    <div class="col-md-7 col-sm-7">
+                      <select v-model="event.event_type_id" name="type">
+                        <option disabled value="">Select one</option>
+                        <option v-for="etype in eventtypes0" v-bind:key="etype.id" v-bind:value="etype.id">
+                          {{ etype.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
+                    <div class="col-md-9 col-sm-9">
+                      <select v-model="event.status_id" name="status">
+                        <option disabled value="">Select one</option>
+                        <option v-for="stat in statuses0" v-bind:key="stat.id" v-bind:value="stat.id" >
+                          {{ stat.name }}
+                       </option>
+                      </select>
+                    </div>
+                  </div>
+                </b-col>
+                <b-col>
+                  <div class="form-group row no-gutters">
+                    <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
+                    <div class="col-md-5 col-sm-5">
+                        <vue-timepicker name="timestart"
+                          v-model="event.time_start"
+                          format="hh:mm a"
+                          :minute-interval="15"
+                          @change="setInitialEndTime"
+                        />
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="timeend" class="col-md-3 col-sm-3 control-label">End Time</label>
+                    <div class="col-md-5 col-sm-5">
+                        <vue-timepicker name="timeend"
+                          v-model="event.time_end"
+                          format="hh:mm a"
+                          :minute-interval="15"
+                        />
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="cost" class="col-md-3 col-sm-3 control-label">Cost</label>
+                    <div class="col-md-4 col-sm-4">
+                      <masked-input name="cost" type="text" size="10" width="10"
+                          v-model="event.cost"
+                          :mask="numberMask">
+                      </masked-input>
+                    </div>
+                  </div>
+                  <div class="form-group row no-gutters">
+                    <label for="limit" class="col-md-3 col-sm-3 control-label">Limit</label>
+                    <div class="col-md-4 col-sm-4">
+                      <masked-input name="limit" type="text" size="3" width="3"
+                          v-model="event.signup_limit"
+                          :mask="numberMaskLimit">
+                      </masked-input>
+                    </div>
+                  </div>
+                </b-col>
+              </b-row>
             </span>
           </b-row>
-          <!-- <b-row :no-gutters="true">
-            <span v-if="modeShow">
-
-            </span>
-            <span v-else>
-
-            </span>
-          </b-row> -->
-        </b-tab>
-        <b-tab title="Date/Time" no-gutters>
-          <div class="row no-gutters">
-            <b-col>
-              <span v-if="modeShow" style="width: 100%;">
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Start Date</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_start, 'YYYY-MM-DD') }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">End Date</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ formatDate(event.date_end, 'YYYY-MM-DD') }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Type</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ eventTypeName }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Status</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ statusName }}</u></b-col>
-                </b-row>
-              </span>
-              <span v-else style="width: 100%;">
-                <div class="form-group row no-gutters">
-                  <label for="pdatestart" class="col-md-3 col-sm-3">Start Date</label>
-                  <div class="col-sm-5">
-                    <datepicker name="pdatestart"
-                      :bootstrap-styling="true"
-                      :value="formatDate(event.date_start)"
-                      @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
-                    </datepicker>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="pdateend" class="col-md-3 col-sm-3">End Date</label>
-                  <div class="col-sm-5">
-                    <datepicker name="pdateend"
-                      :bootstrap-styling="true"
-                      :value="formatDate(event.date_start)"
-                      @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd">
-                    </datepicker>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="eventtype" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Type</label>
-                  <div class="col-sm-7">
-                    <select v-model="event.event_type_id" name="type">
-                      <option disabled value="">Select one</option>
-                      <option v-for="etype in eventtypes0" v-bind:key="etype.id" v-bind:value="etype.id">
-                        {{ etype.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="status" class="col-md-3 col-sm-3 control-label">&nbsp;&nbsp;Status</label>
-                  <div class="col-md-9">
-                    <select v-model="event.status_id" name="status">
-                      <option disabled value="">Select one</option>
-                      <option v-for="stat in statuses0" v-bind:key="stat.id" v-bind:value="stat.id" >
-                        {{ stat.name }}
-                     </option>
-                    </select>
-                  </div>
-                </div>
-              </span>
-            </b-col>
-            <b-col>
-              <span v-if="modeShow">
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Start Time</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_start) }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">End Time</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ formatTimePicker(event.time_end) }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Cost</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ event.cost }}</u></b-col>
-                </b-row>
-                <b-row no-gutters>
-                  <b-col sm="4" md="4">Limit</b-col>
-                  <b-col sm="8" md="8" class=""><u>{{ event.signup_limit }}</u></b-col>
-                </b-row>
-              </span>
-              <span v-else>
-                <div class="form-group row no-gutters">
-                  <label for="timestart" class="col-md-3 col-sm-3 control-label">Start Time</label>
-                  <div class="col-md-9">
-                      <vue-timepicker name="timestart"
-                        v-model="event.time_start"
-                        format="hh:mm a"
-                        :minute-interval="15"
-                        @change="setInitialEndTime"
-                      />
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="timeend" class="col-md-3 col-sm-3 control-label">End Time</label>
-                  <div class="col-md-9">
-                      <vue-timepicker name="timeend"
-                        v-model="event.time_end"
-                        format="hh:mm a"
-                        :minute-interval="15"
-                      />
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="cost" class="col-md-3 col-sm-3 control-label">Cost</label>
-                  <div class="col-md-4">
-                    <masked-input name="cost" type="text" size="10" width="10"
-                        v-model="event.cost"
-                        :mask="numberMask">
-                    </masked-input>
-                  </div>
-                </div>
-                <div class="form-group row no-gutters">
-                  <label for="limit" class="col-md-3 col-sm-3 control-label">Limit</label>
-                  <div class="col-md-4">
-                    <masked-input name="limit" type="text" size="3" width="3"
-                        v-model="event.signup_limit"
-                        :mask="numberMaskLimit">
-                    </masked-input>
-                  </div>
-                </div>
-              </span>
-            </b-col>
-          </div>
         </b-tab>
         <b-tab title="Description">
           <quill-editor v-model="event.description"
@@ -283,7 +288,7 @@
     <!-- Control buttons-->
     <div class="text-center">
       <b-button-group class="mt-2">
-        <b-btn @click="tabIndex--">Previous</b-btn>
+        <b-btn v-if="tabIndex > 0"@click="tabIndex--">Previous</b-btn>
         <span class="ml-2">
           <b-btn v-if="tabIndex < (tabCount - 1)"  @click="tabIndex++">Next</b-btn>
           <b-btn v-if="tabIndex == (tabCount - 1) && !modeShow" @click="wizardOnComplete">Submit</b-btn>
@@ -512,7 +517,8 @@ export default {
         method: "get",
         url: "/api/event/"+this.event.id+"/signup?h="+linkVal
       }).then(response => {
-        console.log(this.signedUp)
+        this.signedUp = !this.signedUp;
+        // console.log(this.signedUp)
       }).catch(error => {
         console.log(error.response)
       });
