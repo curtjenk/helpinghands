@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 // });
 
 Route::group(['middleware' => 'api'], function () {
-    Route::group(['prefix'=>'api', 'namespace'=>'Api'], function () {
+    Route::group(['namespace'=>'Api'], function () {
         Route::get('evite/s/{tid}/{uid}/{token}', 'EviteController@response_yes');
         Route::get('evite/o/{tid}/{uid}/{token}', 'EviteController@response_no');
     });

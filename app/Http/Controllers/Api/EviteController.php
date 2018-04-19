@@ -27,7 +27,7 @@ class EviteController extends Controller
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(!$resp) {
-            abort(400);
+            abort(400, "No evite sent for $user->email");
         }
 
         $num_signups = App\Response::where('event_id', $event_id)

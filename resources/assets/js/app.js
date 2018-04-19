@@ -55,7 +55,11 @@ $(function() {
       // this will inject the store instance to all child components.
       store,
       mounted() {
-        if (window.location.pathname != '/login') {
+        if (window.location.pathname == '/login' ||
+            window.location.pathname == '/register'
+          ) {
+            ;
+        } else {
           this.initialize();
         }
 

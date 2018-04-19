@@ -22,25 +22,20 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+        <nav-top
+            :evite-resp="true"
+        ></nav-top>
 
-                </div>
-            </div>
-        </nav>
+        <div class="container">
+            @yield('content' )
+        </div>
 
-        @yield('content')
     </div>
 
     <!-- Scripts -->
+    <script src="{{ asset('js/manifest.js') }}"></script>
+    <script src="{{ asset('js/vendor.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
