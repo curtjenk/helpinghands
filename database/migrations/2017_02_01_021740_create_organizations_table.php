@@ -31,13 +31,6 @@ class CreateOrganizationsTable extends Migration
             $table->foreign('updated_user_id')
                   ->references('id')->on('users');
         });
-
-        DB::statement("ALTER TABLE organizations ALTER COLUMN name TYPE CITEXT");
-        DB::statement("ALTER TABLE organizations ALTER COLUMN address1 TYPE CITEXT");
-        DB::statement("ALTER TABLE organizations ALTER COLUMN address2 TYPE CITEXT");
-        DB::statement("ALTER TABLE organizations ALTER COLUMN city TYPE CITEXT");
-        DB::statement("ALTER TABLE organizations ALTER COLUMN state TYPE CITEXT");
-        DB::statement("ALTER TABLE organizations ALTER COLUMN phone TYPE CITEXT");
     }
 
     /**
