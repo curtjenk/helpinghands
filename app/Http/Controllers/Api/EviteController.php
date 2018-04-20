@@ -66,7 +66,10 @@ class EviteController extends Controller
             $resp->helping==0 || $resp->helping==false ||
             $resp->helping==1 || $resp->helping==true){
             //already responded
-            return;
+            return view('emails.evite.confirm_no',
+                ['event'=>$event,
+                 'user'=>$user]);
+            // return;
         }
         $resp->helping = false;
         $resp->save();
