@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         $siteAdmin = DB::table('users')->insertGetId([
             'name' => 'Site',
             'email' => 'site@me.net',
-            'password' => Hash::make('abc123'),
+            'password' => Hash::make('iamTheManabc123'),
         ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$ministryEngage,
