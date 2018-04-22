@@ -162,12 +162,6 @@ import VueEvents from 'vue-events'
 import CustomActions from './EventsCustomActions'
 import DetailRow from './EventsDetailRow'
 import FilterBar from './../FilterBar'
-// quill require styles
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
-
 
 Vue.use(VueEvents)
 Vue.component('event-custom-actions', CustomActions)

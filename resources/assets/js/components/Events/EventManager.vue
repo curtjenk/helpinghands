@@ -192,14 +192,10 @@
           </b-row>
         </b-tab>
         <b-tab title="Description">
-          <quill-editor v-model="event.description"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @change="onEditorChange($event)"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)">
-          </quill-editor>
+          <vue-editor
+            v-model="event.description"
+            ref="myQuillEditor"
+          ></vue-editor>
         </b-tab>
         <b-tab title="Attachments">
           <div class="">
@@ -306,25 +302,18 @@ import { commonMixins } from "../../mixins/common";
 import { MESSAGE_DURATION } from "../../mixins/constants";
 import MaskedInput from "vue-text-mask";
 import createNumberMask from "text-mask-addons/dist/createNumberMask"; //addon for vue-text-mask
-// import FormError from '../FormError';
-// import { FormWizard, TabContent } from "vue-form-wizard";
-// import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import Datepicker from "vuejs-datepicker";
 import VueTimepicker from "vue2-timepicker";
-// quill require styles
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import { quillEditor } from "vue-quill-editor";
+
+//Quill.js based component
+import { VueEditor } from 'vue2-editor'
 
 export default {
   mixins: [commonMixins],
   components: {
-    // FormWizard,
-    // TabContent,
     Datepicker,
     VueTimepicker,
-    quillEditor,
+    VueEditor,
     MaskedInput
   },
   props: {
@@ -370,7 +359,7 @@ export default {
           toolbar: [
             { header: [1, 2, 3, 4, false] },
             { 'size': ['small', false, 'large', 'huge'] },
-            'bold', 'italic', 'underline', 'strike',
+            // 'bold', 'italic', 'underline', 'strike',
             {'list': 'ordered'}, { 'list': 'bullet' },
             { 'color': [] }, { 'background': [] },
             { 'indent': '-1'}, { 'indent': '+1' },

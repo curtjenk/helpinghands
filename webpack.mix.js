@@ -22,6 +22,7 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
       'jquery',
       'vuetable-2',
       'vue-good-table',
-      'vue-quill-editor'
+      'vue2-editor',
+      'vue-full-calendar'
     ]);
 
