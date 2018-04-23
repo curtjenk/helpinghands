@@ -87,7 +87,7 @@
       </template>
       <template slot="colDescription" scope="props">
         <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
-          {{ ellipsisText(props.rowData.description_text,20) }}
+          {{ props.rowData.description ? '......' : '' }}
         </div>
       </template>
 
@@ -403,8 +403,10 @@ export default {
       else return '';
     },
     descriptionPopover (data) {
-      if (data.description_text) return data.description_text;
+      if (data.description) return data.description
       else return '';
+      // if (data.description_text) return data.description_text;
+      // else return '';
     },
     sendEvites (data, index) {
       let message = {
