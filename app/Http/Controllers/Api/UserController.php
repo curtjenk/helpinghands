@@ -137,7 +137,8 @@ class UserController extends Controller
         $event = App\Event::findOrFail($event_id);
         $this->authorize("show", $event);
 
-        $query = $user->peers($event->organization_id, $event->team_id);
+        $query = $user->peers($event->organization_id, $event->team_id)
+            ->where('users.active',true);
 
         return response()->json($query->get());
     }
