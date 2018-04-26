@@ -341,7 +341,9 @@ class UserController extends Controller
 
         if (isset($upload)) {
             //Delete previous photo/avatar
-            Storage::disk('public')->deleteDirectory($dir);
+            try {
+                Storage::disk('public')->deleteDirectory($dir);
+            } catch (Exception $e) {}
 
             $original = $upload->getClientOriginalName();
             $filename = $upload->store($dir, 'public');
