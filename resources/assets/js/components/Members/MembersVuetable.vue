@@ -1,5 +1,14 @@
 <template>
   <div>
+    <b-modal ref="photoModal" size="lg" :title="photoModal.name" hide-footer
+      header-bg-variant="secondary"
+      header-text-variant="light"
+    >
+      <div>
+        <b-img v-if="photoModal.avatar_filename" fluid-grow :src="photoModal.avatar_filename" />
+      </div>
+    </b-modal>
+    
     <b-modal ref="proxySignupModal" size="lg"
       :title=" `Proxy Signup/Decline for: ${modal.member_name}`"
       header-bg-variant="secondary"
@@ -49,6 +58,7 @@
       :userid="userid"
       :filterByMemberships="true"
     ></filter-bar>
+
     <vuetable ref="vuetable"
       api-url="/api/member"
       :fields="fields"
@@ -64,11 +74,15 @@
       @vuetable:load-success="onLoadSuccess"
     >
       <template slot="colAvatar" scope="props">
-        <b-img-lazy v-if="props.rowData.avatar_filename"
-          :src="props.rowData.avatar_filename"
-          v-b-tooltip.hover.title="'click to open/close larger image'"
-          v-b-popover.click.top.html="avatarPopover(props.rowData)"
-          width="150" height="100" blank-color="#bbb" thumbnail alt="No Photo" />
+<!-- v-b-popover.click.right.html="avatarPopover(props.rowData)" -->
+        <a v-if="props.rowData.avatar_filename" href="#" type="link" class=""
+            @click="showPhotoModal(props.rowData, props.rowIndex)"
+            :name="'photo'+props.rowData.id">
+          <b-img-lazy
+            :src="props.rowData.avatar_filename"
+            v-b-tooltip.hover.title="'click to open/close larger image'"
+            width="70" height="auto" blank-color="#bbb"  alt="No Photo" />
+        </a>
         <div v-else>
             No Photo
         </div>
@@ -140,6 +154,10 @@ export default {
   },
   data () {
     return {
+      photoModal: {
+        name: '',
+        avatar_filename: null
+      },
       modal: {
         member_id: 0,
         member_name: '',
@@ -239,7 +257,9 @@ export default {
           window.location.href = '/member/'+data.id+'/edit';
     },
     avatarPopover (data) {
-      return `<img src="${data.avatar_filename}" width="600" height="400"/>`;
+      return `<div style="width:50%; height:50%;">
+          <img src="${data.avatar_filename}" max-width="100%" max-height="auto"/>
+        </div>`;
     },
     async doProxySignupDecline () {
       try {
@@ -259,6 +279,12 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    showPhotoModal (member, index) {
+      console.log(member.avatar_filename)
+      this.photoModal.name = member.name;
+      this.photoModal.avatar_filename = member.avatar_filename;
+      this.$refs.photoModal.show()
     },
     async showProxyModal (member, index) {
       // console.log(member)
