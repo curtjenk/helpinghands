@@ -274,7 +274,7 @@
       <img v-else src="//placehold.it/150" class="mx-auto img-fluid img-circle d-block" alt="avatar">
       <h6 class="mt-2">Upload a different photo</h6>
       <label class="custom-file">
-        <b-form-file v-model="file" ref="fileinput" :name="newavatar"
+        <b-form-file v-model="file" :state="Boolean(file)" ref="fileinput" :name="newavatar"
           @change="filesChange($event.target.name, $event.target.files)"
           class="mt-2 custom-file-input" plain accept="image/*"
         ></b-form-file>
@@ -333,7 +333,7 @@ export default {
       user: {},
       avatar_url: '',
       file: null,
-      uploadedFiles: [],
+      // uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
       newavatar: 'photo',
@@ -419,7 +419,7 @@ export default {
     resetAvatar() {
         // reset form to initial state
         this.currentStatus = STATUS_INITIAL;
-        this.uploadedFiles = [];
+        // this.uploadedFiles = [];
         this.uploadError = null;
     },
     update() {
@@ -510,7 +510,7 @@ export default {
       var url = '/api/member/' + this.user.id  + '/avatar';
       axios.post(url, formData)
       .then(  (response) => {
-        this.uploadedFiles = [].concat(response);
+        // this.uploadedFiles = [].concat(response);
         this.currentStatus = STATUS_SUCCESS;
         window.location.reload();
       }).catch((error) => {

@@ -63,6 +63,16 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
+      <template slot="colAvatar" scope="props">
+        <b-img-lazy v-if="props.rowData.avatar_filename"
+          :src="props.rowData.avatar_filename"
+          v-b-tooltip.hover.title="'click to open/close larger image'"
+          v-b-popover.click.top.html="avatarPopover(props.rowData)"
+          width="150" height="100" blank-color="#bbb" thumbnail alt="No Photo" />
+        <div v-else>
+            No Photo
+        </div>
+      </template>
       <template slot="actions" scope="props">
         <div class="">
           <span v-b-tooltip.right="'View profile'" class="">
@@ -155,6 +165,10 @@ export default {
           callback: 'setActiveIcon'
         },
         {
+          title: 'Photo',
+          name: '__slot:colAvatar'
+        },
+        {
           name: 'name',
           sortField: 'name',
           dataClass: 'text-primary'
@@ -223,6 +237,9 @@ export default {
   methods: {
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
+    },
+    avatarPopover (data) {
+      return `<img src="${data.avatar_filename}" width="600" height="400"/>`;
     },
     async doProxySignupDecline () {
       try {

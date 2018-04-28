@@ -71,7 +71,7 @@
       @vuetable:load-success="onLoadSuccess"
     >
       <template slot="colOrganization" scope="props">
-        <div v-b-popover.hover.top.html="organizationPopover(props.rowData)" title="Organization">
+        <div v-b-revopop.hover.top.html="organizationPopover(props.rowData)" title="Organization">
           {{ ellipsisText(props.rowData.organization_name,20) }}
         </div>
       </template>
