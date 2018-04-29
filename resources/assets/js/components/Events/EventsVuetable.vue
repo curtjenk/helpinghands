@@ -71,7 +71,7 @@
       @vuetable:load-success="onLoadSuccess"
     >
       <template slot="colOrganization" scope="props">
-        <div v-b-revopop.hover.top.html="organizationPopover(props.rowData)" title="Organization">
+        <div v-b-popover.hover.top.html="organizationPopover(props.rowData)" title="Organization">
           {{ ellipsisText(props.rowData.organization_name,20) }}
         </div>
       </template>
@@ -88,6 +88,18 @@
       <template slot="colDescription" scope="props">
         <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
           {{ props.rowData.description ? '......' : '' }}
+        </div>
+      </template>
+      <template slot="colResponses" scope="props">
+        <div v-b-tooltip title="Click to see who signed-up"
+          @click="onCellClicked(props.rowData, props.rowField, $event)"
+        >
+          {{ props.rowData.yes_responses }}
+        </div>
+      </template>
+      <template slot="colBeginDate" scope="props">
+        <div v-b-popover.hover.top.html="beginDatePopover(props.rowData)" title="Date(s)">
+          {{ formatDate(props.rowData.date_start, "YYYY-MM-DD") }}
         </div>
       </template>
 
@@ -238,27 +250,26 @@ export default {
         },
         {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
-          name: 'yes_responses',
+          name: '__slot:colResponses',
           sortField: 'yes_responses',
           dataClass: 'text-primary text-center',
           titleClass: 'text-center '
         },
         {
-          name: 'date_start',
+          name: '__slot:colBeginDate',
           title: 'Begin',
           sortField: 'date_start',
           titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatDate|YYYY-MM-DD'
+          dataClass: 'text-primary text-center',
         },
-        {
-          name: 'date_end',
-          title: 'End',
-          sortField: 'date_end',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatDate|YYYY-MM-DD'
-        },
+        // {
+        //   name: 'date_end',
+        //   title: 'End',
+        //   sortField: 'date_end',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   callback: 'formatDate|YYYY-MM-DD'
+        // },
         {
           name: '__slot:actions2',   // <----
           title: 'Actions',
@@ -381,6 +392,15 @@ export default {
       }
       // console.log(events.data)
       this.$refs.proxySignupModal.show()
+    },
+    beginDatePopover (data) {
+      if (data.date_start) {
+        let start = this.formatDate(data.date_start, "YYYY-MM-DD")
+        let end = this.formatDate(data.date_end, "YYYY-MM-DD")
+        return `${start} thru ${end}`
+      } else {
+        return ''
+      }
     },
     evitePopover (data) {
       if (data.evite_sent) {
@@ -528,8 +548,9 @@ export default {
         //console.log('onloadsuccess')
     },
     onCellClicked (data, field, event) {
-      // console.log('cellClicked: ', field.name)
-      if (field.name=='yes_responses' || field.name=='no_responses') {
+      // console.log('cellClicked: ', field)
+      // console.log(event)
+      if (field=='yes_responses' || field=='no_responses') {
         if ($('#'+data.id).length == 0) {
           axios.get('/api/event/' + data.id + '/members')
           .then(  (response) => {
