@@ -208,7 +208,8 @@ export default {
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
         members: [],
         members_table_fields: [
-          {key: 'check', sortable: true},
+          {key: 'check', sortable: false},
+          {key: 'going', sortable: true},
           {key: 'name', sortable: true},
         ]
       },
@@ -402,7 +403,10 @@ export default {
         for(let x=0; x<members.data.length; x++) {
           let data = members.data[x];
           let member = {}
-          member.checked = yesMembers.data.filter(yes=>yes.user_id==data.id).length > 0;
+          member.checked = false;
+          member.going = yesMembers.data
+            .filter(yes=>yes.user_id==data.id)
+            .length > 0 ? 'Yes' : 'No';
           member.id = data.id;
           member.name = data.name
           this.signupModal.members.push(member)

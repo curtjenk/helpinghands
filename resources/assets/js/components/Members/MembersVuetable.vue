@@ -168,7 +168,8 @@ export default {
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
         events: [],
         event_table_fields: [
-          {key: 'check', sortable: true},
+          {key: 'check', sortable: false},
+          {key: 'going', sortable: true},
           {key: 'date', sortable: true},
           {key: 'subject', sortable:false},
           {key: 'organization', sortable: true},
@@ -316,7 +317,10 @@ export default {
           event.subject = data.subject
           event.organization = data.organization_name
           event.team = data.team_name
-          event.checked = yesEvents.data.filter(yes=>yes.id==data.id).length > 0;
+          event.checked = false
+          event.going = yesEvents.data
+            .filter(yes=>yes.id==data.id)
+            .length > 0 ? 'Yes' : 'No';
           this.modal.events.push(event)
         }
       } catch (e) {
