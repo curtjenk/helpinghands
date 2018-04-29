@@ -33,7 +33,8 @@
           :items="signupModal.members"
           :fields="signupModal.members_table_fields"
           :current-page="signupModal.currentPage"
-          :per-page="signupModal.perPage">
+          :per-page="signupModal.perPage"
+          :sort-compare="mysort">
         <template slot="check" slot-scope="row">
           <b-container>
             <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0"
@@ -207,7 +208,7 @@ export default {
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
         members: [],
         members_table_fields: [
-          {key: 'check'},
+          {key: 'check', sortable: true},
           {key: 'name', sortable: true},
         ]
       },
@@ -322,6 +323,22 @@ export default {
     }
   },
   methods: {
+    // custom sort for the "Check" column. defer to default
+    // sort for any other column.
+    mysort(a, b, key) {
+      if (key !== 'check') return null;
+      return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0);
+
+      // if (typeof a.checked === 'number' && typeof b.checked === 'number') {
+      //   // If both compared fields are native numbers
+      //   return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0)
+      // } else {
+      //   // Stringify the field data and use String.localeCompare
+      //   return toString(a.checked).localeCompare(toString(b.checked), undefined, {
+      //     numeric: true
+      //   })
+      // }
+    },
     deleteEvent (data, index) {
       let message = {
         title:'<h3 style="color:red;">' +
@@ -371,9 +388,13 @@ export default {
     },
     async showProxyModal (event, index) {
       // console.log(member)
-      let members = {}
+      // let members = {}
+      // let yesMembers = {}
       try {
-        members = await axios.get('/api/member/'+event.id+'/proxyMembers');
+        let [members, yesMembers] = await Promise.all([
+          axios.get('/api/member/'+event.id+'/proxyMembers'),
+          axios.get('/api/event/' + event.id + '/members')
+        ]);
         this.signupModal.members = [];
         this.signupModal.currentPage = 1;
         this.signupModal.event_subject = event.subject;
@@ -381,7 +402,7 @@ export default {
         for(let x=0; x<members.data.length; x++) {
           let data = members.data[x];
           let member = {}
-          member.checked = false;
+          member.checked = yesMembers.data.filter(yes=>yes.user_id==data.id).length > 0;
           member.id = data.id;
           member.name = data.name
           this.signupModal.members.push(member)

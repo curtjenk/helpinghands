@@ -8,7 +8,7 @@
         <b-img v-if="photoModal.avatar_filename" fluid-grow :src="photoModal.avatar_filename" />
       </div>
     </b-modal>
-    
+
     <b-modal ref="proxySignupModal" size="lg"
       :title=" `Proxy Signup/Decline for: ${modal.member_name}`"
       header-bg-variant="secondary"
@@ -35,7 +35,8 @@
           :items="modal.events"
           :fields="modal.event_table_fields"
           :current-page="modal.currentPage"
-          :per-page="modal.perPage">
+          :per-page="modal.perPage"
+          :sort-compare="mysort">
         <template slot="check" slot-scope="row">
           <b-container>
             <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0"
@@ -167,7 +168,7 @@ export default {
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
         events: [],
         event_table_fields: [
-          {key: 'check'},
+          {key: 'check', sortable: true},
           {key: 'date', sortable: true},
           {key: 'subject', sortable:false},
           {key: 'organization', sortable: true},
@@ -253,6 +254,12 @@ export default {
     }
   },
   methods: {
+    // custom sort for the "Check" column. defer to default
+    // sort for any other column.
+    mysort(a, b, key) {
+      if (key !== 'check') return null;
+      return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0);
+    },
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
     },
@@ -288,9 +295,15 @@ export default {
     },
     async showProxyModal (member, index) {
       // console.log(member)
-      let events = {}
+      let events = {};
+      let yesEvents = {};
       try {
-        events = await axios.get('/api/member/'+member.id+'/proxyEvents');
+        //Get list of events user is eligible for
+        //and list of events already signed-up for
+        [events, yesEvents] = await Promise.all([
+          axios.get('/api/member/'+member.id+'/proxyEvents'),
+          axios.get('/api/member/' + member.id + '/yes')
+        ])
         this.modal.events = [];
         this.modal.currentPage = 1;
         this.modal.member_name = member.name;
@@ -298,12 +311,12 @@ export default {
         for(let x=0; x<events.data.length; x++) {
           let data = events.data[x];
           let event = {}
-          event.checked = false;
           event.id = data.id;
           event.date = data.date_start
           event.subject = data.subject
           event.organization = data.organization_name
           event.team = data.team_name
+          event.checked = yesEvents.data.filter(yes=>yes.id==data.id).length > 0;
           this.modal.events.push(event)
         }
       } catch (e) {
@@ -313,28 +326,28 @@ export default {
       // console.log(events.data)
       this.$refs.proxySignupModal.show()
     },
-    getEvents (data, index) {
-      // console.log(data);
-      $("#proxySignup select").empty();
-      axios.get('/api/event?paginate=0')
-      .then(response => {
-        // console.log(response.data)
-        for(var i=0; i< response.data.length; i++)
-        {
-          if (response.data[i].status=='Open') {
-            $("#proxySignup select").append(
-               $('<option>').text(response.data[i].subject).val(response.data[i].id)
-            );
-          }
-        }
-        $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-        $('#proxySignup form').attr('action', 'api/member/' + data.id + '/proxySignup');
-        $("#proxySignup").modal('show');
-      })
-      .catch(e => {
-        console.log(e);
-      })
-    },
+    // getEvents (data, index) {
+    //   // console.log(data);
+    //   $("#proxySignup select").empty();
+    //   axios.get('/api/event?paginate=0')
+    //   .then(response => {
+    //     // console.log(response.data)
+    //     for(var i=0; i< response.data.length; i++)
+    //     {
+    //       if (response.data[i].status=='Open') {
+    //         $("#proxySignup select").append(
+    //            $('<option>').text(response.data[i].subject).val(response.data[i].id)
+    //         );
+    //       }
+    //     }
+    //     $('#proxySignup h4').text('Signup/Decline for ' + data.name);
+    //     $('#proxySignup form').attr('action', 'api/member/' + data.id + '/proxySignup');
+    //     $("#proxySignup").modal('show');
+    //   })
+    //   .catch(e => {
+    //     console.log(e);
+    //   })
+    // },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
           return item.id

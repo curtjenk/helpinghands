@@ -22,7 +22,7 @@ class UserController extends Controller
         $member = App\User::findOrFail($id);
         $this->authorize('show', $member);
         $responses = $member->responses()
-        ->select("events.subject", 'events.date_start', 'events.date_end')
+        ->select("events.id", "events.subject", 'events.date_start', 'events.date_end')
         ->join('events', 'events.id', '=', 'responses.event_id')
         ->where('responses.helping', true)
         ->orderby('events.date_end','asc')
