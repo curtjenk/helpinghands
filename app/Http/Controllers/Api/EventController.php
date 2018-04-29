@@ -135,8 +135,8 @@ class EventController extends Controller
             // ->where('organization_id', $organization_id)
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
-                    $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
-                    ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
+                    $q2->where('events.subject', 'ilike', '%'.$inputs->filter.'%')
+                    ->orWhere('events.description', 'ilike', '%'.$inputs->filter.'%');
                 });
             })
             ->when($inputs->orgid, function($org) use($inputs) {
