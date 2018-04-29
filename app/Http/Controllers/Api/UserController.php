@@ -182,8 +182,8 @@ class UserController extends Controller
             })
             ->when($inputs->filter, function($q) use($inputs){
                 return $q->where(function($q2) use($inputs) {
-                    $q2->where('users.name', 'like', '%'.$inputs->filter.'%')
-                    ->orWhere('users.email', 'like', '%'.$inputs->filter.'%');
+                    $q2->where('users.name', 'ilike', '%'.$inputs->filter.'%')
+                    ->orWhere('users.email', 'ilike', '%'.$inputs->filter.'%');
                 });
             })
             ->when($inputs->sort, function($q) use($inputs){
