@@ -333,7 +333,6 @@ export default {
       user: {},
       avatar_url: '',
       file: null,
-      // uploadedFiles: [],
       uploadError: null,
       currentStatus: null,
       newavatar: 'photo',
@@ -419,7 +418,6 @@ export default {
     resetAvatar() {
         // reset form to initial state
         this.currentStatus = STATUS_INITIAL;
-        // this.uploadedFiles = [];
         this.uploadError = null;
     },
     update() {
@@ -510,7 +508,6 @@ export default {
       var url = '/api/member/' + this.user.id  + '/avatar';
       axios.post(url, formData)
       .then(  (response) => {
-        // this.uploadedFiles = [].concat(response);
         this.currentStatus = STATUS_SUCCESS;
         window.location.reload();
       }).catch((error) => {
@@ -521,18 +518,27 @@ export default {
     },
     filesChange(fieldName, fileList) {
       // handle file changes
-      // TODO: Now only doing single file upload.
-      // This method can be simplified
-      const formData = new FormData();
-
       if (!fileList.length) return;
 
+      const mb =  Math.pow(1000,2); // 1MB limit
+      const max = 3;
+      const limit = max * mb;
+      const size = fileList[0].size;
+
+      if (size > limit) {
+        const sizeMB =  (size / mb).toFixed(1);
+        alert(`File is too large (${sizeMB} MB).  Limit is ${max} MB`)
+        return;
+      }
+
+      const formData = new FormData();
       // append the files to FormData
-      Array
-        .from(Array(fileList.length).keys())
-        .map(x => {
-          formData.append(fieldName, fileList[x], fileList[x].name);
-        });
+      formData.append(fieldName, fileList[0], fileList[0].name);
+      // Array
+      //   .from(Array(fileList.length).keys())
+      //   .map(x => {
+      //     formData.append(fieldName, fileList[x], fileList[x].name);
+      //   });
       // save it
       this.saveAvatar(formData);
 
