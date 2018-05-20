@@ -8,13 +8,13 @@
             <div class="card-body">
                 <div>
                     One step remaining to "Engage In Ministry"!
-                </div>
+                </div>                
                 <div>
                     Click the following link to verify your email {{ url('/verifyemail/' . $verify_email_token) }}
                 </div>
 
             </div>
         </div>
-    </div>    
+    </div>
 </main>
 @endsection

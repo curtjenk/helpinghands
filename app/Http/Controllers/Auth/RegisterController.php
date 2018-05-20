@@ -105,7 +105,7 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        Mail::to($user)->queue(new EmailVerification($user));
+        Mail::to($user)->queue(new EmailVerification($user, ['from'=>'register']));
 
         return view('verification');
 
@@ -119,7 +119,18 @@ class RegisterController extends Controller
      */
     public function verify($token)
     {
+        if ( ! $token)
+        {
+           return  redirect('login')->with('flash-error','Email Verification Token not provided!');
+        }
+
         $user = User::where('verify_email_token', $token)->first();
+
+        if ( ! $user)
+        {
+           return  redirect('login')->with('flash-error','Invalid Email Verification Token!');
+        }
+
         $user->verified = 1;
 
         if($user->save()){

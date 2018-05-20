@@ -13,6 +13,7 @@ class EmailVerification extends Mailable
     use Queueable, SerializesModels;
 
     protected $user;
+    protected $opts; //array of kv
 
 
     /**
@@ -20,10 +21,11 @@ class EmailVerification extends Mailable
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $opts)
     {
         $this->user = $user;
-        // Log::debug(print_r($user,true));
+        $this->opts = $opts;
+        // Log::debug(print_r($opts,true));
     }
 
     /**
@@ -34,6 +36,7 @@ class EmailVerification extends Mailable
     public function build()
     {
         return $this->view('emails.verify_email')
-        ->with(['verify_email_token' => $this->user->verify_email_token]);
+        ->with(['verify_email_token' => $this->user->verify_email_token,
+                'from'=>$this->opts['from']]);
     }
 }

@@ -2,6 +2,12 @@
 
 @section('content')
 <div class="page-header mx-auto" style="width: 50%;">
+    @if(Session::has('flash-error'))
+     <div class="alert alert-danger alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          {{ Session::get('flash-error') }}
+      </div>
+    @endif
     <div class="card">
         <div class="card-header"><h3>Login</h3></div>
         @if (isset($message))

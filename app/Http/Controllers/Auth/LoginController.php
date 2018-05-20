@@ -39,16 +39,14 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
-
-    protected function authenticated(Request $request, $user)
-{
-    if(!$user->verified) {
-        $this->guard()->logout();
-        
-        Mail::to($user)->queue(new EmailVerification($user));
-        return view('verification');
-        // return redirect('/login')
-        //     ->withError('Please activate your account. <a href="' . route('auth.verify.resend') . '?email=' . $user->email .'">Resend?</a>');
+    /**
+    * Get the needed authorization credentials from the request.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return array
+    */
+    protected function credentials(Request $request)
+    {
+       return ['email' => $request->{$this->username()}, 'password' => $request->password, 'verified' => 1];
     }
-}
 }
