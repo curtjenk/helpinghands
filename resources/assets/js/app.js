@@ -40,6 +40,7 @@ Vue.component('events-list', require('./components/Events/EventsVuetable.vue'));
 Vue.component('events-calendar', require('./components/Events/EventsCalendar.vue'));
 Vue.component('event-manager', require('./components/Events/EventManager.vue'));
 Vue.component('dashboard', require('./components/Charts/Dashboard.vue'));
+Vue.component('filter-bar', require('./components/FilterBar.vue'));
 Vue.component('filter-memberships', require('./components/Organization/FilterMemberships.vue'));
 Vue.component('members-list', require('./components/Members/MembersVuetable.vue'));
 Vue.component('member-profile', require('./components/Members/Profile.vue'));
@@ -66,14 +67,14 @@ $(function() {
 
       },
       methods: {
-        initialize() {
+        async initialize() {
           let config = {
             validateStatus: function (status) {
               return (status >= 200 && status < 300) || status == 401
             },
           }
           let user = null, roles = null, permissions = null
-          axios.get('/api/authmember', config)
+          await axios.get('/api/authmember', config)
           .then(  (response) => {
             // console.log('good', response.status)
             if (response.status != 401) {

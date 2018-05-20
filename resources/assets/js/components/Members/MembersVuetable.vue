@@ -130,12 +130,12 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './MembersCustomActions'
 import DetailRow from './MembersDetailRow'
-import FilterBar from './../FilterBar'
+// import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
 Vue.component('member-custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
-Vue.component('filter-bar', FilterBar)
+// Vue.component('filter-bar', FilterBar)
 
 
 export default {

@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'verify_email_token',
         'mobilephone', 'homephone', 'opt_receive_evite', 'opt_show_mobilephone',
         'opt_show_homephone', 'opt_show_email',
     ];
@@ -31,7 +31,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'pivot'
+        'password', 'remember_token', 'pivot',
     ];
     public function getCanAttribute($type, $id, $perm){
         return true;

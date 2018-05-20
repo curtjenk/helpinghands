@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
         $siteAdmin = DB::table('users')->insertGetId([
             'name' => 'Site',
             'email' => 'site@me.net',
+            'verified' => true,
             'password' => Hash::make('iamTheManabc123'),
         ]);
         DB::table('organization_user')->insert([
@@ -55,6 +56,7 @@ class DatabaseSeeder extends Seeder
         $visitor = DB::table('users')->insertGetId([
             'name' => 'Visitor',
             'email' => 'visitor@me.net',
+            'verified' => true,
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
@@ -66,6 +68,7 @@ class DatabaseSeeder extends Seeder
         $testUser1 =DB::table('users')->insertGetId([
             'name' => 'Test 1',
             'email' => 'test1@me.net',
+            'verified' => true,
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
@@ -77,6 +80,7 @@ class DatabaseSeeder extends Seeder
         $testUser2 =DB::table('users')->insertGetId([
             'name' => 'Test 2',
             'email' => 'test2@me.net',
+            'verified' => true,
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
@@ -93,6 +97,7 @@ class DatabaseSeeder extends Seeder
         $testUser3 =DB::table('users')->insertGetId([
             'name' => 'Test 3',
             'email' => 'test3@me.net',
+            'verified' => true,
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([

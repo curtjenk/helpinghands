@@ -47,35 +47,37 @@ export default {
     }
   },
   mounted: function () {
-    axios('/api/member/'+this.user.id+'/membership')
-    .then(response => {
-      if (!this.isObjectEmpty(this.role) && this.role.length>0) {
-        this.memberships = response.data.filter (m => m.role == this.role)
-      } else {
-        this.memberships = response.data;
-      }
-      //Find the specified organization and team
-      if (!this.isObjectEmpty(this.organization)) {
-        this.selectedOrg = this.memberships.find( (m)=> {
-          return m.id == this.organization.id;
-        });
-        if (!this.isObjectEmpty(this.team)) {
-          this.selectedTeam = this.selectedOrg.teams.find( (t)=> {
-            return t.id == this.team.id;
-          })
-        }
-      }
-    })
-    .catch(e => {
-      console.log(e);
-    });
-
+    this.getmembership()
   },
   computed: {
   },
   watch: {
   },
   methods: {
+    async getmembership() {
+      await axios('/api/member/'+this.user.id+'/membership')
+      .then(response => {
+        if (!this.isObjectEmpty(this.role) && this.role.length>0) {
+          this.memberships = response.data.filter (m => m.role == this.role)
+        } else {
+          this.memberships = response.data;
+        }
+        //Find the specified organization and team
+        if (!this.isObjectEmpty(this.organization)) {
+          this.selectedOrg = this.memberships.find( (m)=> {
+            return m.id == this.organization.id;
+          });
+          if (!this.isObjectEmpty(this.team)) {
+            this.selectedTeam = this.selectedOrg.teams.find( (t)=> {
+              return t.id == this.team.id;
+            })
+          }
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    },
     tellParent (event) {
       // console.log(event.name);
       let orgid = this.selectedOrg.id ? this.selectedOrg.id : 0;

@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get("/verifyemail/{token}", "Auth\RegisterController@verify");
 
 Route::group(['middleware' => 'auth'], function () {
     // Get time until timeout

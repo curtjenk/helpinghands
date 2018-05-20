@@ -6,9 +6,13 @@ use App\User;
 use App\Organization;
 use App\Role;
 use DB;
+use Mail;
+use App\Mail\EmailVerification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -51,7 +55,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:8|confirmed',
         ]);
@@ -65,17 +69,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $email =  strtolower($data['email']);
         $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
+            'email' => $email,
             'password' => bcrypt($data['password']),
+            'verify_email_token' => base64_encode($email),
         ]);
 
         $org0 = Organization::where('name','Ministry Engage')
             ->pluck('id')->first();
         $visitor = Role::where('name','Visitor')
             ->pluck('id')->first();
-        
+
         DB::table('organization_user')->insert([
             'organization_id'=>$org0,
             'user_id'=>$user->id,
@@ -85,5 +91,39 @@ class RegisterController extends Controller
         $this->redirectTo = "/member/$user->id/edit";
 
         return $user;
+    }
+
+    /**** Overrides register() in RegistersUser.php (trait)
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        Mail::to($user)->queue(new EmailVerification($user));
+
+        return view('verification');
+
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param $token
+     * @return \Illuminate\Http\Response
+     */
+    public function verify($token)
+    {
+        $user = User::where('verify_email_token', $token)->first();
+        $user->verified = 1;
+
+        if($user->save()){
+            return view('emailconfirm', ['user' => $user]);
+        }
     }
 }
