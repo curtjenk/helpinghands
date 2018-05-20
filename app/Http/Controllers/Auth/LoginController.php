@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use App\Mail\EmailVerification;
+use Mail;
 
 class LoginController extends Controller
 {
@@ -36,4 +39,16 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    protected function authenticated(Request $request, $user)
+{
+    if(!$user->verified) {
+        $this->guard()->logout();
+        
+        Mail::to($user)->queue(new EmailVerification($user));
+        return view('verification');
+        // return redirect('/login')
+        //     ->withError('Please activate your account. <a href="' . route('auth.verify.resend') . '?email=' . $user->email .'">Resend?</a>');
+    }
+}
 }
