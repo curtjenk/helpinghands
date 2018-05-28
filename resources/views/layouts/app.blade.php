@@ -24,9 +24,16 @@
 <body>
     <div id="app">
         @php
+            $user = Auth::user();
         @endphp
-        
-        <nav-top></nav-top>
+
+        <nav-top
+            :can-list-events="!!{{ isset($user) && $user->can('list-events') ? 1 : 0 }}"
+            :can-list-members="!!{{ isset($user) && $user->can('list-users') ? 1 : 0 }}"
+            :can-administer="!!{{ isset($user) && $user->can('administer') ? 1 : 0 }}"
+            :is-visitor="!!{{ isset($user) && $user->can('visitor') ? 1 : 0 }}"
+            :is-super-user="!!{{ isset($user) && $user->can('superuser') ? 1 : 0 }}"
+        ></nav-top>
 
         <div class="container-fluid">
             @yield('content' )

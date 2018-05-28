@@ -3,10 +3,7 @@
 @section('content')
 <main>
     <nav-top-2
-        title="Events Calendar"
-        {{-- :user="{{ json_encode($userRolesPermissions['user']) }}"
-        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
+        title="Events Calendar"    
         :links="[{perm:'List events', href:'/event', name:'Events', icon:'fa-list'},
                  {perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]"
     ></nav-top-2>

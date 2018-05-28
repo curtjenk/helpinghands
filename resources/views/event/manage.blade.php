@@ -23,10 +23,6 @@
         :statuses0="{{ $statuses }}"
         :eventtypes0="{{ $event_types }}"
         :signed-up0="{{ $signedUp }}"
-
-        {{-- :user="{{ json_encode($userRolesPermissions['user']) }}"
-        :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-        :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
     >
     </event-manager>
 

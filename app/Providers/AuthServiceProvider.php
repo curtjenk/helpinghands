@@ -36,8 +36,30 @@ class AuthServiceProvider extends ServiceProvider
                 return $value->name == 'Admin' || $value->name == 'Lead'
                     || $value->name == 'Site';
             });
-            // Log::debug($okRole);
             return $okRole;
+        });
+        
+        Gate::define('visitor', function($user) {
+            $roles = $user->roles()->get();
+            $okRole = $roles->contains(function($value, $key) {
+                    return $value->name == 'Visitor';
+            });
+            if ($okRole && $roles->count()==1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        Gate::define('superuser', function($user) {
+            $okRole = $user->roles()->get()->contains(function($value, $key) {
+                return $value->name == 'Site';
+            });;
+            if ($okRole) {
+                return 1;
+            } else {
+                return 0;
+            }
         });
 
         Gate::define('create-event', function ($user) {

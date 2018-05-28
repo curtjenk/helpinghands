@@ -49,10 +49,12 @@ export default {
     }
   },
   props: {
-    eviteResp: {
-      type: Boolean,
-      required: false
-    },
+    eviteResp: {type: Boolean, required: false},
+    canAdminister: {type: Boolean, required: false},
+    canListEvents: {type: Boolean, required: false},
+    canListMembers: {type: Boolean, required: false},
+    isVisitor: {type: Boolean, required: false},
+    isSuperUser: {type: Boolean, required: false},
   },
   mounted() {
   },

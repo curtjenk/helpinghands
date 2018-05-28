@@ -84,12 +84,12 @@ $(function() {
               permissions = data.permissions
             }
             this.$store.commit('SETUSER',user)
-            this.$store.commit('SETROLES',roles)
+            // this.$store.commit('SETROLES',roles)
             this.$store.commit('SETPERMISSIONS',permissions)
           }).catch((error) => {
             console.log('error', error)
             this.$store.commit('SETUSER',null)
-            this.$store.commit('SETROLES',null)
+            // this.$store.commit('SETROLES',null)
             this.$store.commit('SETPERMISSIONS',null)
           });
         }

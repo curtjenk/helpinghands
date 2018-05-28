@@ -392,7 +392,8 @@ class UserController extends Controller
         // StopWatch::start('authmember');
         $user = Auth::user();
         if (!is_null($user)) {
-            $roles = $user->roles()->get()->pluck('name');
+            // $roles = $user->roles()->get()->pluck('name');
+            $roles = null;
             $permissions = $user->permissions()->get()->pluck('name');
         } else {
             $roles = [];

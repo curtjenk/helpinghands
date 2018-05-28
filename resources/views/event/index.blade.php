@@ -8,13 +8,7 @@
     :links="[{perm:'Create event', href:'/event/create', name:'Create Event', icon:'fa-plus'}]"
 ></nav-top-2>
 
-<events-list
-  {{-- :is-admin="{{  1 }}"
-  :userid="{{ Auth::user()->id }}"
-  :user="{{ json_encode($userRolesPermissions['user']) }}"
-  :roles="{{ json_encode($userRolesPermissions['roles']) }}"
-  :permissions="{{ json_encode($userRolesPermissions['permissions']) }}" --}}
-></events-list>
+<events-list></events-list>
 
 <div class="modal fade" id="eventPay" tabindex="-1" role="dialog" aria-labelledby="Log Event Payment">
   <div class="modal-dialog modal-md" role="document">
