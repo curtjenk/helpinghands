@@ -20,6 +20,20 @@ class AddMeOrg extends Migration
             'city'=>'Lithia Springs',
             'state'=>'Georgia'
         ]);
+
+        $orgCornerstone = DB::table('organizations')->insertGetId([
+            'name'=>'Cornerstone Baptist Church',
+            'parent_id'=>null,
+            'city'=>'Lithia Springs',
+            'state'=>'Georgia'
+        ]);
+
+        $orgLegBldchildToCornerstone = DB::table('organizations')->insertGetId([
+            'name'=> "Legacy Builders Men's Ministry",
+            'parent_id'=>$orgCornerstone,
+            'city'=>'Lithia Springs',
+            'state'=>'Georgia'
+        ]);
     }
 
     /**

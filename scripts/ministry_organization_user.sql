@@ -1,10 +1,15 @@
 /*
  * Manually export from helpinghands to ministry
  *   users, events & responses
- * 
+ *
+ * Instructions:
+ * users
+ *  skip role_id, organization_id
+ *
  *  SQL below run post users export
  */
 
+-- Confirm organizations were added during migrations
 -- org id 1 = Ministry Engage
 -- 2 = Cornerstone
 -- 3 = Legacy Builders
@@ -13,12 +18,14 @@
 --  2 = Admin
 --  4 = Member
 
---- Run from command line
+--- Run from command line using
+---  su - postgres
+---  psql ministry (per the .env file)
 grant all privileges on all tables in schema public to curtis;
 grant all privileges on all tables in schema public to helping;
 
 -- Add all users to Legacy Builders org (except the Site admin and curtis)
-insert into organization_user (organization_id, user_id, role_id) 
+insert into organization_user (organization_id, user_id, role_id)
 select 3, id, 4 from users where id not in (1, 32);
 
 --Make legacy builders user the site owner/admin
