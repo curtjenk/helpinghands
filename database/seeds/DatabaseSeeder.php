@@ -16,18 +16,12 @@ class DatabaseSeeder extends Seeder
         $ministryEngage = App\Organization::where('name','Ministry Engage')
             ->pluck('id')->first();
 
-        $orgCornerstone = DB::table('organizations')->insertGetId([
-            'name'=>'Cornerstone Baptist Church',
-            'parent_id'=>null,
-            'city'=>'Lithia Springs',
-            'state'=>'Georgia'
-        ]);
-        $orgLegBldchildToCornerstone = DB::table('organizations')->insertGetId([
-            'name'=> "Legacy Builders Men's Ministry",
-            'parent_id'=>$orgCornerstone,
-            'city'=>'Lithia Springs',
-            'state'=>'Georgia'
-        ]);
+        $orgCornerstone = App\Organization::where('name', 'Cornerstone Baptist Church')
+            ->pluck('id')->first();
+
+        $orgLegBldchildToCornerstone = App\Organization::where('name', "Legacy Builders Men's Ministry")
+            ->pluck('id')->first();
+
         $legacyBuildersTeam1 = DB::table('teams')->insertGetId([
             'name'=> "Fellowship",
             'organization_id'=>$orgLegBldchildToCornerstone,

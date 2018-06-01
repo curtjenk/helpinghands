@@ -37,7 +37,7 @@
           :sort-compare="mysort">
         <template slot="check" slot-scope="row">
           <b-container>
-            <b-form-checkbox align-h="center" align-v="center" class="p-0 m-0"
+            <b-form-checkbox align-h="center" align-v="center" class="m-0"
               @click.native.stop
               v-model="row.item.checked">
             </b-form-checkbox>

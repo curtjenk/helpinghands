@@ -3,8 +3,9 @@
  *   users, events & responses
  *
  * Instructions:
- * users
- *  skip role_id, organization_id
+ * users table export
+ *   - skip: role_id, organization_id
+ *   - map : opt_receive_evite to active
  *
  *  SQL below run post users export
  */
@@ -17,6 +18,9 @@
 -- Role 1 = Site Admin
 --  2 = Admin
 --  4 = Member
+
+--- Temporarily set email verified to true
+update users set verified = 1;
 
 --- Run from command line using
 ---  su - postgres
