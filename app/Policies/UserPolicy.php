@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\User;
-
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Log;
 
 class UserPolicy
 {
@@ -47,7 +47,17 @@ class UserPolicy
      */
     public function update(User $self, User $user)
     {
-        return $self->id == $user->id;
+        if ($self->id == $user->id) {
+            return true;
+        }
+
+        foreach ($user->organizations as $org) {
+            if ($self->has_permission('Update user', $org->id)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

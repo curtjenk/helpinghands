@@ -64,6 +64,7 @@ class AddPermissionRole extends Migration
               ->sync(App\Permission::whereIn('name',
                             [
                              'Show user',
+                             'Update user',
                              'List users',
 
                              'Show organization',

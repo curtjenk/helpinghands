@@ -120,27 +120,27 @@ class User extends Authenticatable
             ->distinct();
     }
     //TODO remove this
-    public function canAdmin($otherUser)
-    {
-        $myOrgs = $this->organizations()
-            ->join('roles','roles.id','=','role_id')
-            ->select('organization.id', 'roles.name')
-            ->get();
-        $otherUser = $otherUser->organizations()
-            ->join('roles','roles.id','=','role_id')
-            ->select('organization.id', 'roles.name')
-            ->get();
-        foreach($myOrgs as $myOrg) {
-            if ($myOrg->name == 'Admin') {
-                foreach($otherUser as $otherOrg) {
-                    if ($myOrg->id == $otherOrg->id) {
-
-                    }
-                }
-            }
-        }
-        return $myOrgs;
-    }
+    // public function canAdmin($otherUser)
+    // {
+    //     $myOrgs = $this->organizations()
+    //         ->join('roles','roles.id','=','role_id')
+    //         ->select('organization.id', 'roles.name')
+    //         ->get();
+    //     $otherUser = $otherUser->organizations()
+    //         ->join('roles','roles.id','=','role_id')
+    //         ->select('organization.id', 'roles.name')
+    //         ->get();
+    //     foreach($myOrgs as $myOrg) {
+    //         if ($myOrg->name == 'Admin') {
+    //             foreach($otherUser as $otherOrg) {
+    //                 if ($myOrg->id == $otherOrg->id) {
+    //
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return $myOrgs;
+    // }
     /*
         Get list of permissions
      */
