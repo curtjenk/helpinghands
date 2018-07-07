@@ -26,9 +26,19 @@
           </b-form-group>
         </b-col>
         <b-col md="6">
-          <span class="align-bottom">
+          <b-row>
             Number selected {{ num_events_checked }}
-          </span>
+          </b-row>
+          <b-row>
+            <b-form-group horizontal label="Filter" class="mb-0">
+              <b-input-group>
+                <b-form-input v-model="modal.filter" placeholder="Type to Search" />
+                <b-input-group-append>
+                  <b-btn :disabled="!modal.filter" @click="modal.filter = ''">Clear</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-row>
         </b-col>
       </b-row>
       <b-table striped small bordered hover
@@ -36,6 +46,8 @@
           :fields="modal.event_table_fields"
           :current-page="modal.currentPage"
           :per-page="modal.perPage"
+          :filter="modal.filter"
+          @filtered="onModalFiltered"
           :sort-compare="mysort">
         <template slot="check" slot-scope="row">
           <b-container>
@@ -47,7 +59,7 @@
         </template>
       </b-table>
       <b-container>
-        <b-pagination align-v="center" :total-rows="modal.events.length" size="sm"
+        <b-pagination align-v="center" :total-rows="modal.totalRows" size="sm"
           v-model="modal.currentPage"
           :per-page="modal.perPage"
           class="my-0"
@@ -74,7 +86,7 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-      <template slot="colAvatar" scope="props">
+      <template slot="colAvatar" slot-scope="props">
 <!-- v-b-popover.click.right.html="avatarPopover(props.rowData)" -->
         <a v-if="props.rowData.avatar_filename" href="#" type="link" class=""
             @click="showPhotoModal(props.rowData, props.rowIndex)"
@@ -88,7 +100,7 @@
             No Photo
         </div>
       </template>
-      <template slot="actions" scope="props">
+      <template slot="actions" slot-scope="props">
         <div class="">
           <span v-b-tooltip.right="'View profile'" class="">
               <a v-show="props.rowData.canUpdateUser" href="#" type="link" class=""
@@ -163,6 +175,7 @@ export default {
         member_id: 0,
         member_name: '',
         currentPage: 1,
+        totalRows: 0,
         perPage: 5,
         action: 'signup',
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
@@ -255,6 +268,12 @@ export default {
     }
   },
   methods: {
+    // For proxy modal
+    onModalFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.modal.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
     // custom sort for the "Check" column. defer to default
     // sort for any other column.
     mysort(a, b, key) {
@@ -323,6 +342,7 @@ export default {
             .length > 0 ? 'Yes' : 'No';
           this.modal.events.push(event)
         }
+        this.modal.totalRows = this.modal.events.length
       } catch (e) {
         console.log(e)
         return;
@@ -330,28 +350,6 @@ export default {
       // console.log(events.data)
       this.$refs.proxySignupModal.show()
     },
-    // getEvents (data, index) {
-    //   // console.log(data);
-    //   $("#proxySignup select").empty();
-    //   axios.get('/api/event?paginate=0')
-    //   .then(response => {
-    //     // console.log(response.data)
-    //     for(var i=0; i< response.data.length; i++)
-    //     {
-    //       if (response.data[i].status=='Open') {
-    //         $("#proxySignup select").append(
-    //            $('<option>').text(response.data[i].subject).val(response.data[i].id)
-    //         );
-    //       }
-    //     }
-    //     $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-    //     $('#proxySignup form').attr('action', 'api/member/' + data.id + '/proxySignup');
-    //     $("#proxySignup").modal('show');
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   })
-    // },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
           return item.id

@@ -10,6 +10,18 @@ const { mix } = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+ mix.webpackConfig(webpack => {
+  return {
+	        plugins: [
+	            new webpack.ProvidePlugin({
+	                $: 'jquery',
+	                jQuery: 'jquery',
+	                jquery: 'jquery',
+	               'window.jQuery': 'jquery'
+	        })
+	    ]
+      };
+  })
 
 mix.sass('resources/assets/sass/app.scss', 'public/css')
    .js('resources/assets/js/app.js', 'public/js')

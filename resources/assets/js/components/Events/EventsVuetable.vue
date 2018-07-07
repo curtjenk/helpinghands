@@ -24,9 +24,19 @@
           </b-form-group>
         </b-col>
         <b-col md="6">
-          <span class="align-bottom">
+          <b-row>
             Number selected {{ num_members_checked }}
-          </span>
+          </b-row>
+          <b-row>
+            <b-form-group horizontal label="Filter" class="mb-0">
+              <b-input-group>
+                <b-form-input v-model="signupModal.filter" placeholder="Type to Search" />
+                <b-input-group-append>
+                  <b-btn :disabled="!signupModal.filter" @click="signupModal.filter = ''">Clear</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-row>
         </b-col>
       </b-row>
       <b-table striped small bordered hover
@@ -34,6 +44,8 @@
           :fields="signupModal.members_table_fields"
           :current-page="signupModal.currentPage"
           :per-page="signupModal.perPage"
+          :filter="signupModal.filter"
+          @filtered="onSignupModalFiltered"
           :sort-compare="mysort">
         <template slot="check" slot-scope="row">
           <b-container>
@@ -45,7 +57,7 @@
         </template>
       </b-table>
       <b-container>
-        <b-pagination align-v="center" :total-rows="signupModal.members.length" size="sm"
+        <b-pagination align-v="center" :total-rows="signupModal.totalRows" size="sm"
           v-model="signupModal.currentPage"
           :per-page="signupModal.perPage"
           class="my-0"
@@ -71,40 +83,40 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-      <template slot="colOrganization" scope="props">
+      <template slot="colOrganization" slot-scope="props">
         <div v-b-popover.hover.top.html="organizationPopover(props.rowData)" title="Organization">
           {{ ellipsisText(props.rowData.organization_name,20) }}
         </div>
       </template>
-      <template slot="colTeam" scope="props">
+      <template slot="colTeam" slot-scope="props">
         <div v-b-popover.hover.top.html="teamPopover(props.rowData)" title="Team">
           {{ ellipsisText(props.rowData.team_name,20) }}
         </div>
       </template>
-      <template slot="colSubject" scope="props">
+      <template slot="colSubject" slot-scope="props">
         <div v-b-popover.hover.top.html="subjectPopover(props.rowData)" title="Subject">
           {{ ellipsisText(props.rowData.subject,20) }}
         </div>
       </template>
-      <template slot="colDescription" scope="props">
+      <template slot="colDescription" slot-scope="props">
         <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
           {{ props.rowData.description ? '......' : '' }}
         </div>
       </template>
-      <template slot="colResponses" scope="props">
+      <template slot="colResponses" slot-scope="props">
         <div v-b-tooltip title="Click to see who signed-up"
           @click="onCellClicked(props.rowData, props.rowField, $event)"
         >
           {{ props.rowData.yes_responses }}
         </div>
       </template>
-      <template slot="colBeginDate" scope="props">
+      <template slot="colBeginDate" slot-scope="props">
         <div v-b-popover.hover.top.html="beginDatePopover(props.rowData)" title="Date(s)">
           {{ formatDate(props.rowData.date_start, "YYYY-MM-DD") }}
         </div>
       </template>
 
-      <template slot="actions2" scope="props">
+      <template slot="actions2" slot-scope="props">
         <div class="">
           <span  v-b-tooltip.hover="'Details'" class="">
               <a href="#" type="link" class=""
@@ -202,6 +214,8 @@ export default {
       signupModal: {
         member_id: 0,
         event_subject: '',
+        filter: null,
+        totalRows: 0,
         currentPage: 1,
         perPage: 5,
         action: 'signup',
@@ -324,6 +338,12 @@ export default {
     }
   },
   methods: {
+    // For proxy modal
+    onSignupModalFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.signupModal.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
     // custom sort for the "Check" column. defer to default
     // sort for any other column.
     mysort(a, b, key) {
@@ -411,6 +431,7 @@ export default {
           member.name = data.name
           this.signupModal.members.push(member)
         }
+        this.signupModal.totalRows = this.signupModal.members.length
       } catch (e) {
         console.log(e)
         return;

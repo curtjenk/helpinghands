@@ -19,7 +19,7 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-      <template slot="actions" scope="props">
+      <template slot="actions" slot-scope="props">
         <div class="">
           <span data-toggle="tooltip" title="Edit" data-placement="left" class="">
               <a href="#"  type="link"
