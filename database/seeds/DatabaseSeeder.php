@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'curtjenk@gmail.com',
             'verified' => false,
             'password' => Hash::make('abc123'),
+            'verify_email_token' => base64_encode('curtjenk@gmail.com'),
         ]);
         DB::table('organization_user')->insert([
             'organization_id'=>$orgCornerstone,

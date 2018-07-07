@@ -6,6 +6,7 @@ use App\User;
 use App\Organization;
 use App\Role;
 use DB;
+use Hash;
 use Mail;
 use App\Mail\EmailVerification;
 use App\Http\Controllers\Controller;
@@ -73,7 +74,7 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $email,
-            'password' => bcrypt($data['password']),
+            'password' => Hash::make($data['password']),
             'verify_email_token' => base64_encode($email),
         ]);
 

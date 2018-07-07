@@ -35,6 +35,9 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
+        if (empty($this->user->verify_email_token)) {
+            Log::error("Missing email_token for ". $this->user->email);
+        }
         return $this->view('emails.verify_email')
         ->with(['verify_email_token' => $this->user->verify_email_token,
                 'from'=>$this->opts['from']]);
