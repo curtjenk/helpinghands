@@ -61,8 +61,8 @@ class DatabaseSeeder extends Seeder
         //TEST user 1
         $testUser1 =DB::table('users')->insertGetId([
             'name' => 'Test 1',
-            'email' => 'test1@me.net',
-            'verified' => true,
+            'email' => 'curtjenk@gmail.com',
+            'verified' => false,
             'password' => Hash::make('abc123'),
         ]);
         DB::table('organization_user')->insert([
