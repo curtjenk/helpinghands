@@ -71,6 +71,11 @@ class DatabaseSeeder extends Seeder
             'user_id'=>$testUser1,
             'role_id'=>App\Role::where('name','Member')->pluck('id')->first()
         ]);
+        DB::table('organization_user')->insert([
+            'organization_id'=>$orgLegBldchildToCornerstone,
+            'user_id'=>$testUser1,
+            'role_id'=>App\Role::where('name','Member')->pluck('id')->first()
+        ]);
         //TEST user 2
         $testUser2 =DB::table('users')->insertGetId([
             'name' => 'Test 2',
