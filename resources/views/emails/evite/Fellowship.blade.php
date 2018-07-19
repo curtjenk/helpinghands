@@ -36,11 +36,11 @@
         <h4><u>Fellowship event description</u></h4>
         <p>
             <div>
-                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>
+                <b>{{} $event->date_start}} thru {{ $event->date_end }}</b>
             </div>
             <br/>
             <div>
-                <b><pre>{{ $event->description }}</pre></b>
+                <b><pre>{!! $event->description !!}</pre></b>
             </div>
         </p>
     </div>

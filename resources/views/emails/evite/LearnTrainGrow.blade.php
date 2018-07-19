@@ -36,7 +36,7 @@
         <h4><u>Learn, Train, Grow event description</u></h4>
         <p>
             <div>
-                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>.
+                <b><pre>{!! $event->description !!}</pre></b>
                 <br>
             </div>
             <div>

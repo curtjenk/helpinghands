@@ -33,7 +33,7 @@
             </div>
             <br/>
             <div>
-                <b><pre>{{ $event->description }}</pre></b>
+                <b><pre>{!! $event->description !!}</pre></b>
             </div>
         </p>
     </div>
