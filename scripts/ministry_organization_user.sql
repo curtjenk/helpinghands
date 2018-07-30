@@ -44,9 +44,9 @@ values (2, 32, 2);
 insert into organization_user (organization_id, user_id, role_id)
 values (3, 32, 2);
 
--- Set primary key on users
+-- Set primary key sequence on users, events, responses
 -- run as postgres user via command line
-SELECT setval('users_id_seq', (SELECT max(id) FROM users))
+SELECT setval('users_id_seq', (SELECT max(id) FROM users));
 
 ------  Ancillary scripts below ------
 select * from organizations

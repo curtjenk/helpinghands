@@ -33,15 +33,16 @@
                 <a href="{{ url('/api/evite/o/'.$event->id."/".$user->id."/".$token) }}">Sorry, maybe next time</a>
             </div>
         </p>
-        <h4><u>Learn, Train, Grow event description</u></h4>
+        <h3><u>Learn, Train, Grow event description</u></h3>
         <p>
             <div>
-                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>.
-                <br>
+                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>
             </div>
+            <br/>
             <div>
-                <b><pre>{{ $event->description }}</pre></b>
+                <b>{!! $event->description !!}</b>
             </div>
+            <br/>
         </p>
     </div>
     @include('layouts.email_footer')
