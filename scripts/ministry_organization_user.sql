@@ -20,7 +20,7 @@
 --  4 = Member
 
 --- Temporarily set email verified to true
-update users set verified = 1;
+-- update users set verified = 1;
 
 --- Run from command line using
 ---  su - postgres

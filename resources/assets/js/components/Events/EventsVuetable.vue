@@ -99,7 +99,8 @@
         </div>
       </template>
       <template slot="colDescription" slot-scope="props">
-        <div v-b-popover.hover.top.html="descriptionPopover(props.rowData)" title="Description">
+        <div v-b-tooltip title="Click to open/close description"
+          v-b-popover.click.left.html="descriptionPopover(props.rowData)">
           {{ props.rowData.description ? '......' : '' }}
         </div>
       </template>

@@ -70,8 +70,9 @@ export const commonMixins = {
       });
     },
     formatDate: function(input, formatMask = 'MM/DD/YYYY h:mm:ss a') {
-      // console.log( moment(input).format(formatMask));
-      return (input==null) ? '' : moment.utc(input).local().format(formatMask);
+      // console.log(input, (input==null) ? '' : moment(input).format(formatMask) );
+      // return (input==null) ? '' : moment.utc(input).local().format(formatMask);
+      return (input==null) ? '' : moment(input).format(formatMask);
     },
   },
   computed: {
