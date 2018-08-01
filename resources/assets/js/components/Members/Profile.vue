@@ -94,7 +94,7 @@
                 <toggle-button
                   v-model="user.opt_receive_evite"
                   :sync="true"
-                  :value="user.opt_show_email"
+                  :value="user.opt_receive_evite"
                   :labels="{checked: 'Yes, send me invitations', unchecked: 'Please don\'t send invitations' }"
                   :color="{checked: togOpts.colors.checked, unchecked: togOpts.colors.unchecked}"
                   :height="togOpts.height"

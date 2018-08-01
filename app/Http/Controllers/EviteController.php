@@ -101,6 +101,7 @@ class EviteController extends Controller
         $event = App\Event::findOrFail($event_id);
         $this->authorize('send-evites');
         $helpers = App\User::where('users.opt_receive_evite', true)
+            ->where('users.active', true)
             ->where('users.role_id', '!=', 1)
             ->where('users.organization_id', $event->organization_id)
             ->get();
@@ -122,6 +123,7 @@ class EviteController extends Controller
             //check if already responded Yes/no
             $responded = $helper->responses()
                 ->where('event_id', $event_id)
+                ->orderBy('id', 'desc')
                 ->first();
             //check for first time (!$responded) or resending because no response (helping ==null)
             if (!$responded || !isset($responded->helping)) {
