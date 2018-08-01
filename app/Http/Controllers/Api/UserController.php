@@ -507,7 +507,7 @@ class UserController extends Controller
         $user->mobilephone = $updUser['mobilephone'];
         $user->homephone = $updUser['homephone'];
 
-        // $user->opt_receive_evite = $updUser['opt_receive_evite'];
+        $user->opt_receive_evite = $updUser['opt_receive_evite'];
         $user->opt_show_email = $updUser['opt_show_email'];
         $user->opt_show_mobilephone = $updUser['opt_show_mobilephone'];
         $user->opt_show_homephone = $updUser['opt_show_homephone'];
