@@ -130,12 +130,21 @@ class EviteController extends Controller
             //check if already responded Yes/no
             $responded = $helper->responses()
                 ->where('event_id', $event_id)
+                ->whereNull('helping')
                 ->first();
             //check for first time (!$responded) or resending because no response (helping ==null)
-            if (!$responded || !isset($responded->helping)) {
-                $invitees[] = $helper;
+            if (!isset($responded)) {
+                // Log::debug([print_r($helper->name, true), 'First evite']);
+                $invitees[] = ['user' => $helper,
+                               'firstTime' => true,
+                               'resp' => null];
                 ++$cnt;
-                // Log::debug("need to send to ".$helper->email);
+            } else if (empty($responded->helping)) {
+                // Log::debug([print_r($helper->name, true), $responded->helping, 'Resending evite']);
+                $invitees[] = ['user' => $helper,
+                               'firstTime' => false,
+                               'resp' => $responded];
+                ++$cnt;
             } else {
                 // Log::debug("skip ".$helper->email);
             }
@@ -155,7 +164,8 @@ class EviteController extends Controller
                 'num_invitations' => $cnt,
             ]);
             foreach($invitees as $invitee) {
-                Mail::to($invitee)->queue(new Evite($event, $invitee, $responded));
+                Mail::to($invitee['user'])
+                ->queue(new Evite($event, $invitee));
             }
         }
         Log::debug("num evites = $cnt");
