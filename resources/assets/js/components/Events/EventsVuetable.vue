@@ -139,7 +139,7 @@
                 <i class="fa fa-envelope-o fa-fw"></i>
             </a>
           </span>
-          <span v-if="props.rowData.can_create_event" v-b-popover.hover.top.html="evitePopover(props.rowData)" title="Send E-vites" class="">
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-popover.hover.top.html="evitePopover(props.rowData)" title="Send E-vites" class="">
             <a href="#" type="link" class="" :id="'evite'+props.rowData.id"
               @click="sendEvites(props.rowData, props.rowIndex)">
                 <i class="fa fa-paper-plane-o fa-fw"></i>
