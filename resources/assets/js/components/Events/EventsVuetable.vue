@@ -125,14 +125,14 @@
                 <i class="fa fa-eye  fa-fw"></i>
               </a>
           </span>
-          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Proxy Signup/Decline'" class="">
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-tooltip.hover="'Proxy Signup/Decline'" class="">
               <a href="#" type="link" class=""
                   @click="showProxyModal(props.rowData, props.rowIndex)"
                   :name="'signup'+props.rowData.id">
                   <i class="fa fa-user-plus fa-fw"></i>
               </a>
           </span>
-          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Notify Sign-ups'" class="">
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-tooltip.hover="'Notify Sign-ups'" class="">
             <a href="#" type="link" class=""
                 data-toggle="modal" data-target="#eventnotify"
                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
