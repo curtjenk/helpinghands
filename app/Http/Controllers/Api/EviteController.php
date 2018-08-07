@@ -42,7 +42,6 @@ class EviteController extends Controller
                  'user'=>$user]);
         }
 
-
         $resp->helping = true;
         $resp->save();
 
@@ -138,7 +137,6 @@ class EviteController extends Controller
             //check if already responded Yes/no
             $responded = $helper->responses()
                 ->where('event_id', $event_id)
-                ->whereNull('helping')
                 ->first();
             //check for first time (!$responded) or resending because no response (helping ==null)
             if (!isset($responded)) {
