@@ -26,7 +26,8 @@ class EviteController extends Controller
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
-        if(!$resp) {
+        if(!isset($resp)) {
+            Log::debug('response_yes: failed: No evite sent'.$user->name);
             abort(400, "No evite sent for $user->email");
         }
 
@@ -46,7 +47,10 @@ class EviteController extends Controller
         $resp->save();
 
         Log::debug('response_yes: send confirmation email '.$user->name);
-        Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>1]));
+        $invitee = ['user' => $user,
+                     'firstTime' => false,
+                     'resp' => $resp];
+        Mail::to($user)->queue(new Evite($event, $invitee, ['confirm'=>1]));
         return view('emails.evite.confirm_yes',
             ['event'=>$event,
              'user'=>$user]);
@@ -59,8 +63,9 @@ class EviteController extends Controller
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
-        if(!$resp) {
-            abort(400);
+        if(!isset($resp)) {
+            Log::debug('response_no: failed: No evite sent'.$user->name);
+            abort(400, "No evite sent for $user->email");
         }
         if ($resp->helping != null ||
             $resp->helping==0 || $resp->helping==false ||
@@ -74,7 +79,10 @@ class EviteController extends Controller
         $resp->helping = false;
         $resp->save();
         Log::debug('response_no: send confirmation email '.$user->name);
-        Mail::to($user)->queue(new Evite($event, $user, $resp, ['confirm'=>0]));
+        $invitee = ['user' => $user,
+                    'firstTime' => false,
+                    'resp' => $resp];
+        Mail::to($user)->queue(new Evite($event, $invitee, ['confirm'=>0]));
         return view('emails.evite.confirm_no',
             ['event'=>$event,
              'user'=>$user]);
