@@ -24,6 +24,13 @@ Route::group(['middleware' => 'api'], function () {
     });
 });
 
+Route::group(['middleware' => 'api'], function () {
+    Route::group(['namespace'=>'Grilloff'], function () {
+        Route::resource('contestant', 'ContestantController');
+        Route::resource('judge', 'JudgeController');
+        Route::resource('user', 'UserController');
+    });
+});
 // Route::middleware(['api','auth.basic'])->group(function () {
 //     Route::get('user/{i}', function (Request $request, $id) {
 //         $self = Auth::user();
