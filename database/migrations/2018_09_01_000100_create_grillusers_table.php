@@ -19,6 +19,7 @@ class CreateGrillusersTable extends Migration
             $table->string('email')->nullable();
             $table->smallinteger('type')->nullable();
             $table->string('token')->nullable();
+            $table->timestamp('tokentime')->nullable();
           
         });
     }
