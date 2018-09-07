@@ -29,7 +29,8 @@ Route::group(['middleware' => 'api'], function () {
         Route::resource('contestant', 'ContestantController');
         Route::resource('judge', 'JudgeController');
         Route::resource('user', 'UserController');
-        Route::post('user/vote', 'UserController@vote');
+        Route::post('judge/vote', 'JudgeController@vote');
+        Route::get('judge/tally', 'JudgeController@tally');
     });
 });
 // Route::middleware(['api','auth.basic'])->group(function () {

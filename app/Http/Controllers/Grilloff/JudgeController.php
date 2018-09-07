@@ -15,6 +15,54 @@ use Hash;
 
 class JudgeController extends Controller
 {
+     /**
+     * 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function vote(Request $request)
+    {
+        // Log::debug($request->all());
+        $judge = $request->person;
+        $votes = $request->vote;
+
+        $alreadyVoted = DB::table('grillvotes')
+                ->where('judge_id', $judge['id'])
+                ->first();
+        if (!empty($alreadyVoted)) {
+            Log::debug("already voted");
+        }
+
+        foreach($votes as $vote) {
+            DB::table('grillvotes')->insert([
+                'judge_id'=>$judge['id'], 
+                'contestant_id'=>$vote['id'],
+                'taste'=>$vote['taste'],
+                'texture'=>$vote['text'],
+                'appearance'=>$vote['appear']
+                ]);
+        }
+
+        return response()->json($request->person);
+    }
+
+    public function tally(Request $request)
+    {
+        /*
+select name, sum(taste) as taste, sum(texture) as texture, sum(appearance) as appearance
+from grillvotes as v
+join grillusers as u on u.id = v.contestant_id 
+group by name
+
+        */
+        // Log::debug($request->all());
+        // Log::debug($request->person);
+        // Log::debug($request->vote);
+
+        // return response()->json($request->person);
+    }
+
     /**
      * Display a listing of the resource.
      *

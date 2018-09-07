@@ -24,7 +24,10 @@ class ContestantController extends Controller
     {
         Log::debug("get all contestants");
         $person = [];
-        foreach (DB::table("grillusers")->where('type',1)->get() as $u) {
+        $query = DB::table("grillusers")->where('type',1)
+            ->orderBy('id','asc')
+            ->get();
+        foreach ($query as $u) {
             $person[] = [
                 'id'=>$u->id,
                 'name'=>$u->name,

@@ -15,20 +15,6 @@ use Hash;
 
 class UserController extends Controller
 {
-     /**
-     * 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function vote(Request $request)
-    {
-        // Log::debug($request->all());
-        Log::debug($request->person);
-        Log::debug($request->vote);
-
-        return response()->json($request->person);
-    }
     /**
      * 
      *
