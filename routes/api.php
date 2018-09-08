@@ -26,11 +26,11 @@ Route::group(['middleware' => 'api'], function () {
 
 Route::group(['middleware' => 'api'], function () {
     Route::group(['namespace'=>'Grilloff'], function () {
+        Route::post('judge/vote', 'JudgeController@vote');
+        Route::get('judge/results', 'JudgeController@results');
         Route::resource('contestant', 'ContestantController');
         Route::resource('judge', 'JudgeController');
         Route::resource('user', 'UserController');
-        Route::post('judge/vote', 'JudgeController@vote');
-        Route::get('judge/tally', 'JudgeController@tally');
     });
 });
 // Route::middleware(['api','auth.basic'])->group(function () {

@@ -47,12 +47,18 @@ class JudgeController extends Controller
         return response()->json($request->person);
     }
 
-    public function tally(Request $request)
+    public function results(Request $request)
     {
         $query = DB::table('grillvotes')
-            ->join("grillusers", "grillusers.id", "=", "grillvotes.judge_id" )
-            ->select(DB::raw("name, sum(taste) as taste, sum(texture) as texture, sum(appearance) as appearance"))
+            ->join("grillusers", "grillusers.id", "=", "grillvotes.contestant_id" )
+            ->select(
+                DB::raw("name, sum(taste) as taste, 
+                        sum(texture) as texture, 
+                        sum(appearance) as appearance,
+                        sum(taste)+sum(texture)+sum(appearance) as total
+                        "))
             ->groupBy("name")
+            ->orderByRaw("total DESC")
             ->get();
         return response()->json($query);
     }
