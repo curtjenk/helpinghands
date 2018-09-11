@@ -14,6 +14,7 @@ return [
 
     'name' => 'Ministry Engage',
     'pitmaster' => env('PITMASTER'),
+    'thesecret' => env('THESECRET'),
 
     /*
     |--------------------------------------------------------------------------

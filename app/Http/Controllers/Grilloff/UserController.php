@@ -23,28 +23,29 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // Log::debug("login user");
-        // Log::debug($request->all());
-        // Log::debug(config('app.pitmaster'));
+        if (empty($request->email)){
+            abort(400);
+        }
+        if ( !($request->email == config('app.thesecret') ||
+            $request->email == config('app.pitmaster') )
+        ) {
+            abort(400);
+        } 
 
         $person = $this->getUser($request->name, $request->email);
 
         if (!isset($person)) {
             DB::table('grillusers')->insert([
                 'name'=>$request->name, 
-                'email'=>$request->email, 'type'=>2]);
+                'type'=>2]);
             $person = $this->getUser($request->name, $request->email);
         }
 
-        if ($person->email == config('app.pitmaster')) {
-            return response()->json($person);
-        }
         return response()->json($person);
     }
  
-    private function getUser($name, $email) {
+    private function getUser($name) {
         return DB::table('grillusers')
-            ->where('email', $email)
             ->where('name', $name)
             ->first();
     }
