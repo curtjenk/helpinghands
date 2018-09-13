@@ -30,7 +30,7 @@ class JudgeController extends Controller
         $alreadyVoted = DB::table('grillvotes')
                 ->where('judge_id', $judge['id'])
                 ->first();
-                
+
         if (!empty($alreadyVoted)) {
             Log::debug("already voted");
             abort(409);
@@ -66,11 +66,13 @@ class JudgeController extends Controller
         $query = DB::table('grillvotes')
             ->join("grillusers", "grillusers.id", "=", "grillvotes.contestant_id" )
             ->select(
-                DB::raw("name, sum(taste) as taste, 
+                DB::raw("grillusers.id as id,
+                        name, sum(taste) as taste, 
                         sum(texture) as texture, 
                         sum(appearance) as appearance,
                         sum(taste)+sum(texture)+sum(appearance) as total
                         "))
+            ->groupBy("grillusers.id")
             ->groupBy("name")
             ->orderByRaw("total DESC")
             ->get();
