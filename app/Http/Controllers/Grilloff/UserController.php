@@ -26,6 +26,11 @@ class UserController extends Controller
         if (empty($request->email)){
             abort(400);
         }
+        if ($request->name == config('app.pitmaster')) {
+            if ($request->email != config('app.pitmaster')) {
+                abort(400);
+            }
+        }
         if ( !($request->email == config('app.thesecret') ||
             $request->email == config('app.pitmaster') )
         ) {

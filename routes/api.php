@@ -28,6 +28,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::group(['namespace'=>'Grilloff'], function () {
         Route::post('judge/vote', 'JudgeController@vote');
         Route::get('judge/results', 'JudgeController@results');
+        Route::delete('judge/results', 'JudgeController@results_delete');
         Route::resource('contestant', 'ContestantController');
         Route::resource('judge', 'JudgeController');
         Route::resource('user', 'UserController');

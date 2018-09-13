@@ -47,6 +47,18 @@ class JudgeController extends Controller
         return response()->json($request->person);
     }
 
+    public function results_delete(Request $request) 
+    {   
+        if (empty($request->name)) {
+            abort(400);
+        }
+        if ($request->name != config('app.pitmaster')) {
+            abort(400);
+        }
+    
+        $res = DB::table('grillvotes')->delete();
+        return response()->json($res);
+    }
     public function results(Request $request)
     {
         $query = DB::table('grillvotes')
