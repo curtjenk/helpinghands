@@ -30,8 +30,10 @@ class JudgeController extends Controller
         $alreadyVoted = DB::table('grillvotes')
                 ->where('judge_id', $judge['id'])
                 ->first();
+                
         if (!empty($alreadyVoted)) {
             Log::debug("already voted");
+            abort(409);
         }
 
         foreach($votes as $vote) {
