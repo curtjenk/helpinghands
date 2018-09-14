@@ -23,27 +23,30 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if (empty($request->email)){
+        if (empty($request->email) || empty($request->name)){
             abort(400);
         }
-        if ($request->name == config('app.pitmaster')) {
-            if ($request->email != config('app.pitmaster')) {
+        $name = strtoupper($request->name);
+        $email = $request->email;
+
+        if ($name == config('app.pitmaster')) {
+            if ($email != config('app.pitmaster')) {
                 abort(400);
             }
         }
-        if ( !($request->email == config('app.thesecret') ||
-            $request->email == config('app.pitmaster') )
+        if ( !($email == config('app.thesecret') ||
+               $email == config('app.pitmaster') )
         ) {
             abort(400);
         } 
-
-        $person = $this->getUser($request->name, $request->email);
+       
+        $person = $this->getUser($name, $email);
 
         if (!isset($person)) {
             DB::table('grillusers')->insert([
-                'name'=>$request->name, 
+                'name'=>$name, 
                 'type'=>2]);
-            $person = $this->getUser($request->name, $request->email);
+            $person = $this->getUser($name, $email);
         }
 
         return response()->json($person);
