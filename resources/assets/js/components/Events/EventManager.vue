@@ -109,7 +109,8 @@
                       <datepicker name="pdatestart"
                         :bootstrap-styling="true"
                         :value="formatDate(event.date_start)"
-                        @selected=" d => {event.date_end = d; event.date_start = d;} " format="yyyy-MM-dd">
+                        @selected=" d => {event.date_end = formatDate(d, 'YYYY-MM-DD'); event.date_start = formatDate(d, 'YYYY-MM-DD');} "
+                        format="yyyy-MM-dd">
                       </datepicker>
                     </div>
                   </div>
@@ -119,7 +120,7 @@
                       <datepicker name="pdateend"
                         :bootstrap-styling="true"
                         :value="formatDate(event.date_start)"
-                        @selected=" d => {event.date_end = d;} " format="yyyy-MM-dd">
+                        @selected=" d => {event.date_end = formatDate(d, 'YYYY-MM-DD');} " format="yyyy-MM-dd">
                       </datepicker>
                     </div>
                   </div>
@@ -282,14 +283,17 @@
       </b-tabs>
     </b-card>
     <!-- Control buttons-->
-    <div class="text-center">
-      <b-button-group class="mt-2">
+    <div class="container">
+      <!-- <b-button-group class="mt-2"> -->
+      <div class="mt-2">
         <b-btn v-if="tabIndex > 0"@click="tabIndex--">Previous</b-btn>
-        <span class="ml-2">
+        <span class="ml-2 text-center">
           <b-btn v-if="tabIndex < (tabCount - 1)"  @click="tabIndex++">Next</b-btn>
-          <b-btn v-if="tabIndex == (tabCount - 1) && !modeShow" @click="wizardOnComplete">Submit</b-btn>
+          <b-btn v-if="!modeShow" variant="success" class="ml-6" @click="wizardOnComplete">Submit</b-btn>
+          <!-- <b-btn v-if="tabIndex == (tabCount - 1) && !modeShow" @click="wizardOnComplete">Submit</b-btn> -->
         </span>
-      </b-button-group>
+      </div>
+      <!-- </b-button-group> -->
       <!-- <br>
       <span class="text-muted">Current Tab: {{tabIndex}}</span> -->
     </div>

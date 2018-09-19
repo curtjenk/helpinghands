@@ -113,7 +113,7 @@
       </template>
       <template slot="colBeginDate" slot-scope="props">
         <div v-b-popover.hover.top.html="beginDatePopover(props.rowData)" title="Date(s)">
-          {{ formatDate(props.rowData.date_start, "YYYY-MM-DD") }}
+          {{ props.rowData.date_start}}
         </div>
       </template>
 
@@ -442,9 +442,10 @@ export default {
     },
     beginDatePopover (data) {
       if (data.date_start) {
-        let start = this.formatDate(data.date_start, "YYYY-MM-DD")
-        let end = this.formatDate(data.date_end, "YYYY-MM-DD")
-        return `${start} thru ${end}`
+        // let start = this.formatDate(data.date_start, "YYYY-MM-DD")
+        // let end = this.formatDate(data.date_end, "YYYY-MM-DD")
+        // return `${start} thru ${end}`
+        return `${data.date_start} thru ${data.date_end}`
       } else {
         return ''
       }
