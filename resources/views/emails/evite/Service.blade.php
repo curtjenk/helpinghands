@@ -1,6 +1,12 @@
 @extends('layouts.email')
 
 @section('content')
+    @php
+        $timeStart = json_decode($event->time_start);
+        $timeStart = $timeStart->hh.":".$timeStart->mm." ".$timeStart->a;
+        $timeEnd = json_decode($event->time_end);
+        $timeEnd = $timeEnd->hh.":".$timeEnd->mm." ".$timeEnd->a;
+    @endphp
 <main>
     @include('layouts.email_header')
     <div class="container">
@@ -29,7 +35,7 @@
         <h3><u>Service Opportunity Description</u></h3>
         <p>
             <div>
-                <b>{{ $event->date_start}} thru {{ $event->date_end }}</b>
+                <b>{{ $event->date_start @ $timeStart }} thru {{ $event->date_end @ $timeEnd}}</b>
             </div>
             <br/>
             <div>
