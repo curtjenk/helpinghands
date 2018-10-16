@@ -60,22 +60,16 @@ class EventController extends Controller
      */
     public function calendar(Request $request)
     {
-        $this->authorize('list-events');
+        // $this->authorize('list-events');
         $user = Auth::user();
         $organization_id = $this->getOrg($request, $user);
         $query=App\Event::select('id', 'subject', 'date_start', 'date_end')
-            ->where('organization_id', $organization_id)
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
+            // ->where('organization_id', $organization_id)
             ->orderBy('events.date_start', 'asc')
             ->get();
 
         $counts=App\Event::select(DB::raw("to_char(date_start, 'YYYY mm Mon') as interval, count(*) as num"))
-            ->where('organization_id', $organization_id)
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
+            // ->where('organization_id', $organization_id)
             ->whereRaw("to_char(date_start, 'YYYYMM') >= '".Carbon::now()->subMonths(3)->format('Ym')."'")
             ->groupBy('interval')
             ->orderBy('interval', 'asc')
@@ -91,26 +85,22 @@ class EventController extends Controller
      * Send an email to people who've signed-up for this event.
      * @param Request $request [description]
      */
-    public function notify(Request $request, $event_id)
-    {
-        $event = App\Event::findOrFail($event_id);
-        $this->authorize('update', $event);
-        $this->validate($request, [
-            'message' => 'required',
-        ]);
-        $signups = $event->signups()->get();
-        $message = $request->input('message');
-        // dump($signups);
-        foreach ($signups as $u) {
-            // dump($u);
-            // if ($u->id != 3){
-            // Log::debug($u->email);
-            Mail::to($u)->queue(new EventNotification($event, $u, $message));
-            // }
-        }
-        //dump($request->input('message'));
-        return redirect('/event');
-    }
+    // public function notify(Request $request, $event_id)
+    // {
+    //     $event = App\Event::findOrFail($event_id);
+    //     $this->authorize('update', $event);
+    //     $this->validate($request, [
+    //         'message' => 'required',
+    //     ]);
+    //     $signups = $event->signups()->get();
+    //     $message = $request->input('message');
+    //     // dump($signups);
+    //     foreach ($signups as $u) {
+    //         Mail::to($u)->queue(new EventNotification($event, $u, $message));
+    //     }
+    //     //dump($request->input('message'));
+    //     return redirect('/event');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -118,55 +108,46 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('list-events');
-        $user = Auth::user();
-        if (!$request->ajax()) {
-            return view('event.index', []);
-        }
-
-        $inputs = new Inputs($request,
-            [ ]
-        );
-        $organization_id = $this->getOrg($request, $user);
-        // if($request->session()->has('orgid')) {
-        //     $organization_id = $request->session()->get('orgid');
-        // } else {
-        //     $organization_id = $user->organization_id;
+        // $user = Auth::user();
+        // if (!$request->ajax() && !$request->wantsJson()) {
+        return view('event.index', []);
         // }
-        $query = App\Event::
-            select('events.*', 'statuses.name as status', 'event_types.name as type',
-                DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
-                DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
-            )
-            ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
-            ->join('statuses', 'statuses.id', '=', 'events.status_id')
-            ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
-            // ->when($user->is_orgLevel(), function($q) use($user) {
-            //     return $q->where('organization_id', $user->organization_id);
-            // })
-            ->where('organization_id', $organization_id)
-            ->when($inputs->filter, function($q) use($inputs){
-                return $q->where(function($q2) use($inputs) {
-                    $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
-                    ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
-                });
-            })
-            ->when($inputs->sort, function($q) use($inputs){
-                return $q->orderby($inputs->sort, $inputs->direction);
-            })
-            ->groupby('events.id')
-            ->groupby('statuses.id')
-            ->groupby('event_types.id');
-
-        //check that it wasn't a vue-tables-2 request
-        if ($request->input('paginate') == '0') {
-            // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
-            $query = $query->where('statuses.name', 'Open')
-                ->orderby('events.date_start', 'desc');
-            return response()->json($query->get());
-        } else {
-            return $query->paginate(10);
-        }
+        //
+        // $inputs = new Inputs($request,
+        //     [ ]
+        // );
+        // $organization_id = $this->getOrg($request, $user);
+        // $query = App\Event::
+        //     select('events.*', 'statuses.name as status', 'event_types.name as type',
+        //         DB::raw('sum(CASE responses.helping WHEN true THEN 1 ELSE 0 END) AS yes_responses'),
+        //         DB::raw('sum(CASE responses.helping WHEN false THEN 1 ELSE 0 END) AS no_responses')
+        //     )
+        //     ->leftjoin('responses', 'responses.event_id', '=', 'events.id')
+        //     ->join('statuses', 'statuses.id', '=', 'events.status_id')
+        //     ->join('event_types', 'event_types.id', '=', 'events.event_type_id')
+        //     // ->where('organization_id', $organization_id)
+        //     ->when($inputs->filter, function($q) use($inputs){
+        //         return $q->where(function($q2) use($inputs) {
+        //             $q2->where('events.subject', 'like', '%'.$inputs->filter.'%')
+        //             ->orWhere('events.description', 'like', '%'.$inputs->filter.'%');
+        //         });
+        //     })
+        //     ->when($inputs->sort, function($q) use($inputs){
+        //         return $q->orderby($inputs->sort, $inputs->direction);
+        //     })
+        //     ->groupby('events.id')
+        //     ->groupby('statuses.id')
+        //     ->groupby('event_types.id');
+        //
+        // //check that it wasn't a vue-tables-2 request
+        // // if ($request->input('paginate') == '0') {
+        // //     // $open_status = App\Status::where('name', 'Open')->first()->pluck('id');
+        // //     $query = $query->where('statuses.name', 'Open')
+        // //         ->orderby('events.date_start', 'desc');
+        // //     return response()->json($query->get());
+        // // } else {
+        //     return $query->paginate($inputs->limit);
+        // // }
     }
 
     /**
@@ -177,19 +158,81 @@ class EventController extends Controller
     public function create()
     {
         $this->authorize('create-event');
-        $user = Auth::user();
+        $event_types = App\EventType::select('id','name')
+            ->get()->toArray();
 
-        $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
-            ->get();
+        $statuses = App\Status::select('id','name')
+            ->get()->toArray();
 
-        return view('event.create_edit',
-            ['orgs'=>$orgs,
-             'statuses'=>App\Status::all(),
-             'event_types'=>App\EventType::all(),
+        $authorizations = ["can_update_event"=>true,
+                          "can_show_event"=>true,
+                          "can_create_event"=>true];
+
+        return view('event.manage', [
+            'event'=>json_encode(null),
+            'organization'=>json_encode(null),
+            'team'=>json_encode(null),
+            'statuses'=>json_encode($statuses),
+            'event_types'=>json_encode($event_types),
+            'attachments'=>json_encode(null),
+            'authorizations'=>json_encode($authorizations),
+            'mode'=>'Create'
          ]);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $user = Auth::user();
+        $event = App\Event::findOrFail($id);
+        $organization = $event->organization;
+        if (isset($event->team_id)) {
+            $team = $event->team->first();
+            $canUpdateEvent = $user->has_team_permission($team->id, 'Update event');
+            $canCreateEvent = $user->has_team_permission($team->id, 'Create event');
+        } else {
+            $team = null;
+            $canUpdateEvent = $user->has_org_permission($organization->id, 'Update event');
+            $canCreateEvent = $user->has_org_permission($organization->id, 'Create event');
+        }
+        $this->authorize('show', $event);
+
+        $authorizations = ["can_update_event"=>$canUpdateEvent,
+                          "can_show_event"=>true,
+                          "can_create_event"=>$canCreateEvent];
+
+         $event_types = App\EventType::select('id','name')
+             ->get()->toArray();
+
+         $statuses = App\Status::select('id','name')
+             ->get()->toArray();
+
+         $event->time_start = json_decode($event->time_start);
+         $event->time_end = json_decode($event->time_end);
+
+         $attachments = App\EventFile::select('id', 'original_filename', 'description')
+            ->where('event_id',$event->id)
+            ->when(isset($event->organization_id), function($q) use($event) {
+                $q->where('organization_id',$event->organization_id)
+                ->when(isset($event->team_id), function($t) use($event){
+                    $t->where('team_id',$event->team_id);
+                });
+            })->get();
+
+         return view('event.manage', [
+             'event'=>json_encode($event),
+             'organization'=>json_encode($organization),
+             'team'=>json_encode($team),
+             'statuses'=>json_encode($statuses),
+             'event_types'=>json_encode($event_types),
+             'attachments'=>json_encode($attachments),
+             'authorizations'=>json_encode($authorizations),
+             'mode'=>'Show'
+          ]);
     }
 
     public function members(Request $request, $id)
@@ -209,104 +252,32 @@ class EventController extends Controller
 
         return response()->json($members);
     }
-    /**
-     * Download the requested file/attachment
-     * @param  Request $request [description]
-     * @param  [type]  $event_id      [description]
-     * @param  [type]  $file_id [description]
-     * @return [type]           [description]
-     */
-    public function download(Request $request, $event_id, $file_id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($event_id);
-        $this->authorize('show', $event);
-        $file = App\EventFiles::where('id', $file_id)
-            ->where('event_id', $event->id)
-            ->first();
-        if(!isset($file)){
-            Log::debug("File not found. id = ".$file_id." event=".$event_id);
-            return;
-        }
-        $pathToFile =  Storage::disk('public')
-            ->getDriver()->getAdapter()
-            ->applyPathPrefix($file->filename);
-        //dump($pathToFile);
-        return response()->download($pathToFile, $file->original_filename);
-    }
+    // /**
+    //  * Download the requested file/attachment
+    //  * @param  Request $request [description]
+    //  * @param  [type]  $event_id      [description]
+    //  * @param  [type]  $file_id [description]
+    //  * @return [type]           [description]
+    //  */
+    // public function download(Request $request, $event_id, $file_id)
+    // {
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($event_id);
+    //     $this->authorize('show', $event);
+    //     $file = App\EventFiles::where('id', $file_id)
+    //         ->where('event_id', $event->id)
+    //         ->first();
+    //     if(!isset($file)){
+    //         Log::debug("File not found. id = ".$file_id." event=".$event_id);
+    //         return;
+    //     }
+    //     $pathToFile =  Storage::disk('public')
+    //         ->getDriver()->getAdapter()
+    //         ->applyPathPrefix($file->filename);
+    //     //dump($pathToFile);
+    //     return response()->download($pathToFile, $file->original_filename);
+    // }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $user = Auth::user();
-        $this->authorize('create-event');
-        $this->validate($request, [
-            'subject' => 'required|max:255',
-            'description' => 'string',
-            'date_start' => 'date',
-            'date_end' => 'date',
-            'organization_id' => 'required|exists:organizations,id',
-            'event_type_id' => 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric',
-            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        ]);
-        // dump($request->all());
-        $newEvent = App\Event::create([
-            'subject'=>$request->input('subject'),
-            'description'=>$request->input('description'),
-            'date_start'=>$request->input('date_start'),
-            'date_end'=>$request->input('date_end'),
-            'user_id'=>$user->id,
-            'status_id'=>$request->input('status_id'),
-            'event_type_id'=>$request->input('event_type_id'),
-            'organization_id'=>$request->input('organization_id'),
-            'signup_limit'=>$request->input('signup_limit'),
-            'cost'=>$request->input('cost'),
-        ]);
-        //Store to 'pubilic'
-        //created sym link using php artisan storage:link
-        //so files are accessible from web
-        $dir = 'event_files/'.$newEvent->id;
-        $uploads = $request->file('event_file');
-        if (isset($uploads)) {
-            // Log::debug("about to upload");
-            foreach($uploads as $upload) {
-                $original = $upload->getClientOriginalName();
-                $filename = $upload->store($dir, 'public');
-                // Log::debug(Storage::disk('public')->url($filename));
-                App\EventFiles::create(['event_id'=>$newEvent->id,
-                    'filename'=>$filename,
-                    'original_filename'=>$original]);
-            }
-        }
-
-        return redirect("event/$newEvent->id");
-        // return view('event.show', [
-        //     'event'=>$newEvent,
-        // ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('show', $event);
-        return view('event.show', [
-            'event'=>$event,
-        ]);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -314,23 +285,24 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('update', $event);
-        $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
-            ->get();
-        return view('event.create_edit', [
-            'event'=>$event,
-            'orgs'=>$orgs,
-            'statuses'=>App\Status::all(),
-            'event_types'=>App\EventType::all()
-        ]);
-    }
+    // public function edit($id)
+    // {
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('update', $event);
+    //     // $orgs = App\Organization::select('organizations.*')
+    //     //     ->when($user->is_orgLevel(), function($q) use($user) {
+    //     //         return $q->where('organizations.id', $user->organization_id);
+    //     //     })
+    //         // ->get();
+    //     $orgs = [];
+    //     return view('event.create_edit', [
+    //         'event'=>$event,
+    //         'orgs'=>$orgs,
+    //         'statuses'=>App\Status::all(),
+    //         'event_types'=>App\EventType::all()
+    //     ]);
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -339,73 +311,73 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        // Log::debug(print_r(Cache::all(),true));
-        $user = Auth::user();
-        $event = App\Event::findOrFail($id);
-        $this->authorize('update', $event);
-        $this->validate($request, [
-            'subject' => 'required|max:255',
-            'description' => 'string',
-            'date_start' => 'date',
-            'date_end' => 'date',
-            'organization_id' => 'required|exists:organizations,id',
-            'event_type_id'=> 'required|exists:event_types,id',
-            'status_id' => 'required|exists:statuses,id',
-            'signup_limit'=> 'required|numeric',
-            'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
-        ]);
-
-        $event->subject = $request->input('subject');
-        $event->description = $request->input('description');
-        $event->date_start = $request->input('date_start');
-        $event->date_end = $request->input('date_end');
-        $event->updated_user_id = $user->id;
-        $event->organization_id = $request->input('organization_id');
-        $event->status_id = $request->input('status_id');
-        $event->event_type_id = $request->input('event_type_id');
-        $event->signup_limit = $request->input('signup_limit');
-        $event->cost = $request->input('cost');
-        $event->save();
-
-        $dir = 'event_files/'.$event->id;
-
-        $uploads = $request->file('event_file');
-        if (isset($uploads)) {
-            //cleanup storage and db rows from previous
-            Storage::disk('public')->deleteDirectory($dir);
-            $event->files()->delete();
-            //now save the uploaded
-            foreach($uploads as $upload) {
-                $original = $upload->getClientOriginalName();
-                $filename = $upload->store($dir, 'public');
-                App\EventFiles::create(['event_id'=>$event->id,
-                    'filename'=>$filename,
-                    'original_filename'=>$original]);
-            }
-        }
-        $todelete = $request->input('delete_file');
-        if(is_array($todelete))
-        {
-            foreach($todelete as $id) {
-                $eventFile = App\EventFiles::findOrFail($id);
-                Storage::disk('public')->delete($eventFile->filename);
-                $eventFile->delete();
-            }
-            //delete directory if empty
-            $diskfiles = Storage::disk('public')->files($dir);
-            // Log::debug(print_r($diskfiles, true));
-            if (count($diskfiles)==0) {
-                // Log::debug("delete directory");
-                Storage::disk('public')->deleteDirectory($dir);
-            }
-        }
-        return redirect("event/$event->id");
-        // return view('event.show', [
-        //     'event'=>$event,
-        // ]);
-    }
+    // public function update(Request $request, $id)
+    // {
+    //     Log::debug(print_r($request->all(),true));
+    //     $user = Auth::user();
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('update', $event);
+    //     $this->validate($request, [
+    //         'subject' => 'required|max:255',
+    //         'description' => 'string',
+    //         'date_start' => 'date',
+    //         'date_end' => 'date',
+    //         // 'organization_id' => 'required|exists:organizations,id',
+    //         'event_type_id'=> 'required|exists:event_types,id',
+    //         'status_id' => 'required|exists:statuses,id',
+    //         'signup_limit'=> 'required|numeric',
+    //         'cost'=> 'required|regex:/^\d*(\.\d{1,2})?$/'
+    //     ]);
+    //
+    //     $event->subject = $request->input('subject');
+    //     $event->description = $request->input('description');
+    //     $event->date_start = $request->input('date_start');
+    //     $event->date_end = $request->input('date_end');
+    //     $event->updated_user_id = $user->id;
+    //     $event->organization_id = 1;
+    //     $event->status_id = $request->input('status_id');
+    //     $event->event_type_id = $request->input('event_type_id');
+    //     $event->signup_limit = $request->input('signup_limit');
+    //     $event->cost = $request->input('cost');
+    //     $event->save();
+    //
+    //     $dir = 'event_files/'.$event->id;
+    //
+    //     $uploads = $request->file('event_file');
+    //     if (isset($uploads)) {
+    //         //cleanup storage and db rows from previous
+    //         Storage::disk('public')->deleteDirectory($dir);
+    //         $event->files()->delete();
+    //         //now save the uploaded
+    //         foreach($uploads as $upload) {
+    //             $original = $upload->getClientOriginalName();
+    //             $filename = $upload->store($dir, 'public');
+    //             App\EventFiles::create(['event_id'=>$event->id,
+    //                 'filename'=>$filename,
+    //                 'original_filename'=>$original]);
+    //         }
+    //     }
+    //     $todelete = $request->input('delete_file');
+    //     if(is_array($todelete))
+    //     {
+    //         foreach($todelete as $id) {
+    //             $eventFile = App\EventFiles::findOrFail($id);
+    //             Storage::disk('public')->delete($eventFile->filename);
+    //             $eventFile->delete();
+    //         }
+    //         //delete directory if empty
+    //         $diskfiles = Storage::disk('public')->files($dir);
+    //         // Log::debug(print_r($diskfiles, true));
+    //         if (count($diskfiles)==0) {
+    //             // Log::debug("delete directory");
+    //             Storage::disk('public')->deleteDirectory($dir);
+    //         }
+    //     }
+    //     return redirect("event/$event->id");
+    //     // return view('event.show', [
+    //     //     'event'=>$event,
+    //     // ]);
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -413,13 +385,13 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $event = App\Event::findOrFail($id);
-        $this->authorize('destroy', $event);
-
-        $event->delete();
-        return redirect('/event');
-    }
+    // public function destroy($id)
+    // {
+    //     $event = App\Event::findOrFail($id);
+    //     $this->authorize('destroy', $event);
+    //
+    //     $event->delete();
+    //     return redirect('/event');
+    // }
 
 }

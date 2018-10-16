@@ -1,0 +1,3 @@
+
+Example entry
+  {perm:'Show event', href:'#', show:false, click:this.signup, val:0, name:'Decline', toggle:'OtherLinkName', icon:'fa-thumbs-o-down fa-fw'}

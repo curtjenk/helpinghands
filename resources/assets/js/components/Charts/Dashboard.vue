@@ -1,55 +1,53 @@
-partdata<template>
-    <div class="">
-        <div class="container-fluid">
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                    Overall Participation Rate
-                </div>
-                <div class="panel-body">
-                    <pie-chart id="p1" :data="partdata"
-                        :labels="partlabels"
-                        :bgColors="partBGColors"
-                        :hoverBGColors="partHoverBGColors"
-                        :options="partoptions">
-                    </pie-chart>
-                </div>
-            </div>
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                     Year-To-Date Count Per Event Type
-                </div>
-                <div class="panel-body">
-                    <doughnut-chart id="d1" :data="doughnutdata1"
-                        :labels="doughnutlabels1"
-                        :bgColors="doughnutBGColors1"
-                        :hoverBGColors="doughnutHoverBGColors1"
-                        :options="doughnutoptions1">
-                    </doughnut-chart>
-                </div>
-            </div>
-            <div class="col-md-6 panel panel-default">
-                <div class="panel-heading text-center">
-                    Year-To-Date Events Per Month
-                </div>
-                <div class="panel-body">
-                    <bar-chart id="b1" :datasets="bardata1"
-                        :labels="barlabels1"
-                        :options="baroptions1">
-                    </bar-chart>
-                </div>
-            </div>
+<template>
+  <div class="container-fluid">
+  <div class="row mt-5">
+      <div class="mx-auto">
+          <div class="card">
+              <div class="card-body text-center">
+                   <h1>How are we doing?</h1>
+                  <div class="form-group" v-if="!isObjectEmpty(user)">
+                      <filter-memberships @org-team-selected="get_data"></filter-memberships>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="card-group">
+    <div class="card">
+        <div class="card-header text-center">Overall Participation Rate</div>
+        <div class="card-body">
+            <pie-chart id="p1" :data="partdata" :labels="partlabels" :bg-colors="partBGColors"
+            :hover-bg-colors="partHoverBGColors" :options="partoptions"></pie-chart>
         </div>
     </div>
+    <div class="card">
+        <div class="card-header text-center">Year-To-Date Count Per Event Type</div>
+        <div class="card-body">
+            <doughnut-chart id="d1" :data="doughnutdata1" :labels="doughnutlabels1"
+            :bg-colors="doughnutBGColors1" :hover-bg-colors="doughnutHoverBGColors1" :options="doughnutoptions1"></doughnut-chart>
+        </div>
+    </div>
+    <div class=" card">
+        <div class="card-header text-center">Year-To-Date Events Per Month</div>
+        <div class="card-body">
+            <bar-chart id="b1" ref="barChart" :datasets="bardata1" :labels="barlabels1" :options="baroptions1"></bar-chart>
+        </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import BarChart from './bar'
 import DoughnutChart from './doughnut'
 import PieChart from './pie'
 Vue.component('bar-chart', BarChart)
 Vue.component('pie-chart', PieChart)
 Vue.component('doughnut-chart', DoughnutChart)
+
 export default {
+  mixins: [commonMixins],
   data () {
     return {
       bardata1: [],
@@ -69,20 +67,51 @@ export default {
       partoptions: {},
     }
   },
+  props: {
+    // userid: {
+    //   type: Number,
+    //   required: false
+    // }
+  },
   mounted () {
-    // console.log("mounted.")
-    axios('/db')
-    .then(response => {
-      this.bar1(response.data.EventTypesOverTime);
-      this.doughnut1(response.data.TotalByType);
-      this.participation(response.data.ParticpationRate);
-    })
-    .catch(e => {
-      console.log(e);
-    })
-
+    this.get_data(null,null);
   },
   methods: {
+    get_data(selectedOrgId, selectedTeamId) {
+      // console.log(selectedOrgId, selectedTeamId)
+      let params = {
+          orgid: selectedOrgId,
+          teamid: selectedTeamId
+      }
+      axios.get('/api/dashboard', {params: params})
+      .then(response => {
+        this.bar1(response.data.EventTypesOverTime);
+        this.doughnut1(response.data.TotalByType);
+        this.participation(response.data.ParticpationRate);
+      })
+      // axios.get('/api/db?q=ETOT', {params: params})
+      // .then(response => {
+      //   this.bar1(response.data.EventTypesOverTime);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+      // axios.get('/api/db?q=TBT', {params: params})
+      // .then(response => {
+      //   this.doughnut1(response.data.TotalByType);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+      // axios.get('/api/db?q=PR', {params: params})
+      // .then(response => {
+      //   this.participation(response.data.ParticpationRate);
+      // })
+      // .catch(e => {
+      //   console.log(e);
+      // })
+
+    },
     participation(data) {
     // pie chart
       this.partlabels = ['Yes', 'No', 'NoReply'];
@@ -92,7 +121,7 @@ export default {
                 "rgba(255, 255, 0, 0.7)"];
       this.partoptions = {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
@@ -132,16 +161,21 @@ export default {
             }
           }
       };
-      this.partdata = [data.yes, data.no, data.noreply];
+      this.partdata = [data.yes ? data.yes : 0,
+                       data.no ? data.no : 0,
+                       data.noreply ? data.noreply : 0];
     },
     doughnut1(data) {
         this.doughnutlabels1 = [];
+        this.doughnutBGColors1 = [];
+        this.doughnutdata1 = [];
+
         // this.doughnutoptions1 = {responsive: true,
         //   maintainAspectRatio: false,
         // };
         this.doughnutoptions1 = {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           legend: {
             position: 'bottom'
           },
@@ -183,65 +217,67 @@ export default {
         this.doughnutdata1.push(data.LearnTrainGrow);
       },
     bar1(data) {
-          this.barlabels1 = [];
-          this.baroptions1 = {
-            responsive: true,
-            maintainAspectRatio: false,
-            tooltips: {
-              mode: 'label',
-              callbacks: {
-                label: function(tooltipItem, data) {
-                  return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
-                }
-              }
-            },
-            scales: {
-              xAxes: [{ stacked: true }],
-              yAxes: [{ stacked: true }]
-            },
-            legend: {
-              position: 'bottom'
-            }
-          };
-          let ltg = []
-          let service = []
-          let fellowship = []
-          for(var i=0; i<data.length; i++)
-          {
-            // console.log(data[i]);
-            this.barlabels1.push(data[i].interval);
-            service.push(data[i].types.Service);
-            fellowship.push(data[i].types.Fellowship);
-            ltg.push(data[i].types.LearnTrainGrow);
-          }
-          this.bardata1 = [
-            {
-                label: 'Service',
-                data: service,
-                backgroundColor: "rgba(55, 160, 225, 0.7)",
-                hoverBackgroundColor: "rgba(55, 160, 225, 0.7)",
-                hoverBorderWidth: 2,
-                hoverBorderColor: 'lightgrey'
-            },
-            {
-              label: 'Fellowship',
-              data: fellowship,
-              backgroundColor: "rgba(225, 58, 55, 0.7)",
-              hoverBackgroundColor: "rgba(225, 58, 55, 0.7)",
-              hoverBorderWidth: 2,
-              hoverBorderColor: 'lightgrey'
-            },
-            {
-              label: 'LearnTrainGrow',
-              data: ltg,
-              backgroundColor: "rgba(0, 255, 0, 0.7)",
-              hoverBackgroundColor: "rgba(0, 255, 0, 0.7)",
-              hoverBorderWidth: 2,
-              hoverBorderColor: 'lightgrey'
-            }
-          ];
+      this.barlabels1 = [];
+      this.bardata1 = [];
+      this.baroptions = {};
 
+      this.baroptions1 = {
+        responsive: true,
+        maintainAspectRatio: true,
+        tooltips: {
+          mode: 'label',
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
+            }
+          }
+        },
+        scales: {
+          xAxes: [{ stacked: true }],
+          yAxes: [{ stacked: true }]
+        },
+        legend: {
+          position: 'bottom'
+        }
+      };
+      let ltg = []
+      let service = []
+      let fellowship = []
+      for(var i=0; i<data.length; i++)
+      {
+        // console.log(data[i]);
+        this.barlabels1.push(data[i].interval);
+        service.push(data[i].types.Service);
+        fellowship.push(data[i].types.Fellowship);
+        ltg.push(data[i].types.LearnTrainGrow);
       }
+      this.bardata1 = [
+        {
+            label: 'Service',
+            data: service,
+            backgroundColor: "rgba(55, 160, 225, 0.7)",
+            hoverBackgroundColor: "rgba(55, 160, 225, 0.7)",
+            hoverBorderWidth: 2,
+            hoverBorderColor: 'lightgrey'
+        },
+        {
+          label: 'Fellowship',
+          data: fellowship,
+          backgroundColor: "rgba(225, 58, 55, 0.7)",
+          hoverBackgroundColor: "rgba(225, 58, 55, 0.7)",
+          hoverBorderWidth: 2,
+          hoverBorderColor: 'lightgrey'
+        },
+        {
+          label: 'LearnTrainGrow',
+          data: ltg,
+          backgroundColor: "rgba(0, 255, 0, 0.7)",
+          hoverBackgroundColor: "rgba(0, 255, 0, 0.7)",
+          hoverBorderWidth: 2,
+          hoverBorderColor: 'lightgrey'
+        }
+      ];
+    }
   } //end-methods
 
 }

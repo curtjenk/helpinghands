@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models;
 use App;
+use Log;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         App\User::class => App\Policies\UserPolicy::class,
         App\Organization::class => App\Policies\OrganizationPolicy::class,
+        App\Team::class => App\Policies\TeamPolicy::class,
         App\Event::class => App\Policies\EventPolicy::class,
     ];
 
@@ -27,6 +30,38 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('administer', function($user) {
+            $okRole = $user->roles()->get()->contains(function($value, $key) {
+                return $value->name == 'Admin' || $value->name == 'Lead'
+                    || $value->name == 'Site';
+            });
+            return $okRole;
+        });
+        
+        Gate::define('visitor', function($user) {
+            $roles = $user->roles()->get();
+            $okRole = $roles->contains(function($value, $key) {
+                    return $value->name == 'Visitor';
+            });
+            if ($okRole && $roles->count()==1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        Gate::define('superuser', function($user) {
+            $okRole = $user->roles()->get()->contains(function($value, $key) {
+                return $value->name == 'Site';
+            });;
+            if ($okRole) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
         Gate::define('create-event', function ($user) {
             return $user->has_permission('Create event');
         });
@@ -40,18 +75,31 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('list-organizations', function ($user) {
             return $user->has_permission('List organizations');
         });
-        Gate::define('administer', function($user) {
-            return $user->is_admin() ||
-                $user->is_orgAdmin() ||
-                $user->is_superuser();
+        Gate::define('manage-organization', function ($user) {
+            return $user->has_org_permission(null, 'Create organization')
+                || $user->has_org_permission(null, 'Update organization')
+                || $user->has_org_permission(null, 'Delete organization');
         });
+
+
+        Gate::define('create-team', function ($user) {
+            return $user->has_permission('Create team');
+        });
+        Gate::define('manage-team', function ($user) {
+            return $user->has_org_permission(null, 'Update organization')
+                || $user->has_team_permission(null, 'Update team')
+                || $user->has_team_permission(null, 'Delete team');
+        });
+
         Gate::define('create-user', function ($user) {
             return $user->has_permission('Create user');
         });
         Gate::define('list-users', function ($user) {
             return $user->has_permission('List users');
         });
+
         Gate::define('send-evites', function ($user) {
+            return true;
             return !$user->is_superuser() &&
                   ($user->is_admin() || $user->is_orgAdmin());
         });

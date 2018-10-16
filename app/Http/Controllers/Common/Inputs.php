@@ -17,33 +17,12 @@ class Inputs
     public $hasExportInvalid;
     public $from;
     public $until;
+    public $orgid;
+    public $teamid;
     private $request;
     public function __construct(Request $request, $defaults = [])
     {
         $this->request = $request;
-        // from-until filter for provider's screens
-        if ($request->exists('from')) {
-            if ($request->input('from') == '') {
-                session()->forget('from');
-                $this->from = null;
-            } else {
-                $this->from = $request->input('from');
-                session(['from'=>$this->from]);
-            }
-        } else {
-            $this->from = session('from');
-        }
-        if ($request->exists('until')) {
-            if ($request->input('until') == '') {
-                session()->forget('until');
-                $this->until = null;
-            } else {
-                $this->until = $request->input('until');
-                session(['until'=>$this->until]);
-            }
-        } else {
-            $this->until = session('until');
-        }
 
         //Log::debug($request->all());
         $this->hasExportCsv = false;
@@ -62,6 +41,16 @@ class Inputs
         }
         $this->limit = $request->input(
                 'limit', config('app.default_table_rows_limit'));
+        if ($request->filled('per_page')) {
+            $this->limit = $request->input('per_page');
+        }
+
+        $this->orgid = $request->input('orgid', 0);
+        if ($this->orgid == 0) {$this->orgid=null;}
+        
+        $this->teamid = $request->input('teamid', 0);
+        if ($this->teamid == 0) {$this->teamid=null;}
+
         $this->skip = $request->input('skip', 0);
         if (!empty($request->input('export'))) {
             switch ($request->input('export'))
@@ -89,10 +78,6 @@ class Inputs
         }
     }
 
-    public static function forget_from_until()
-    {
-        session()->forget(['from','until']);
-    }
     public function all()
     {
         return $this->request->all();

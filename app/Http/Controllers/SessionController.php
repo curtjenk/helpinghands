@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use App\Http\Requests;
 use Auth;
-use App;
-use DB;
-use Session;
-use Log;
 
 class SessionController extends Controller
 {
@@ -18,57 +16,31 @@ class SessionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
-     * Return all session content.
+     * Get the number of seconds left in the session
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function get(Request $request)
     {
-        $user = Auth::user();
-        return response()->json($request->session()->all());
-    }
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $user = Auth::user();
-        // if ($this->expired()) {
-        //     redirect("/login");
-        // }
-        $vars = [];
-        foreach($request->all() as $key=>$value)
-        {
-            $vars[] = [$key=>$value];
-            $request->session()->put($key,$value);
-        }
-        // Log::debug(print_r($vars,true));
-        return response()->json($vars);
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = Auth::user();
+      if ($request->session()->has('lastActivity')) {
+        $timeout = intval(config('session.lifetime')) * 60;
+        return $request->session()->get('lastActivity') + $timeout - time();
+      }
     }
 
-    private function expired()
+    /**
+     * Dummy method to reset the timeout
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function put(Request $request)
     {
-        if ((time() - Session::activity()) > (Config::get('session.lifetime') * 60))
-        {
-            return true;
-        }
-        return false;
     }
 
 }

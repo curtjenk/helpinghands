@@ -16,8 +16,29 @@ class Organization extends Model
         'state', 'zipcode',
     ];
 
+    // protected $hidden = ['pivot'];
+
     public function events()
     {
         return $this->hasMany('App\Event');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Organization', 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\Organization', 'parent_id');
+    }
+    public function teams()
+    {
+        return $this->hasMany('App\Team');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User')->withPivot('role_id');
     }
 }

@@ -1,22 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="content" style="margin-top: 70px">
-        <div class="title m-b-md">
-            Legacy Builders
+    {{-- <div class="container-fluid"> --}}
+        <br><br />
+        <div class="row">
+            <div class="subtitle mx-auto mt-8">
+                Helping Your Ministry Engage
+            </div>
         </div>
-        <div class="subtitle m-b-sm">
-            A Christian Men's Ministry
+        <div class="row">
+            <div class="mx-auto">
+                <a href="http://cornerstonesbc.net">
+                    <h5>
+                        Supported by <u>Cornerstone Baptist Church</u>
+                    </h5>
+                </a>
+            </div>
         </div>
-        <div class="links">
-            <a href="http://cornerstonesbc.net">
-            <h5>
-                Supported by <u>Cornerstone Baptist Church</u>
-            </h5>
-            <h6>
-                Lithia Springs, GA
-            </h6>
-            </a>
+        <div class="row">
+            <div class="mx-auto">
+                <h6>
+                    Lithia Springs, GA
+                </h6>
+            </div>
         </div>
-    </div>
+    {{-- </div> --}}
 @endsection

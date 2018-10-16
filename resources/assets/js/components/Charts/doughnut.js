@@ -1,7 +1,18 @@
 import { Doughnut } from 'vue-chartjs'
 export default Doughnut.extend({
+  name: "doughnut-chart",
   mounted () {
     // Overwriting base render method with actual data.
+    this.renderChart({
+      labels: this.labels,
+      datasets: [{
+        data: this.data,
+        backgroundColor: this.bgColors
+      //   hoverBackgroundColor: this.hoverBGColors
+      }]
+    },
+    this.options
+    )
   },
   props : {
       labels: {
@@ -16,7 +27,7 @@ export default Doughnut.extend({
           type: Array,
           required: false
       },
-      hoverBGColors: {
+      hoverBgColors: {
           type: Array,
           required: false
       },
@@ -27,6 +38,7 @@ export default Doughnut.extend({
   },
   watch: {
     data () {
+      this._chart.destroy()
       this.renderChart({
         labels: this.labels,
         datasets: [{

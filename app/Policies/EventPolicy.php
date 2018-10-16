@@ -19,8 +19,9 @@ class EventPolicy
      */
     public function view(User $user, Event $event)
     {
-        return $user->has_permission('Show event')&&
-        ($user->is_admin() || $user->organization_id == $event->organization_id);
+        return true;
+        // return $user->has_permission('Show event')&&
+        // ($user->is_admin() || $user->organization_id == $event->organization_id);
     }
     public function show(User $user, Event $event)
     {
@@ -37,8 +38,9 @@ class EventPolicy
      */
     public function update(User $user, Event $event)
     {
-        return $user->has_permission('Update event')&&
-        ($user->is_admin() || $user->organization_id == $event->organization_id);
+        return true;
+        // return $user->has_permission('Update event')&&
+        // ($user->is_admin() || $user->organization_id == $event->organization_id);
     }
 
     /**
@@ -50,11 +52,13 @@ class EventPolicy
      */
     public function delete(User $user, Event $event)
     {
-        return $user->has_permission('Delete event')&&
-        ($user->is_admin() || $user->organization_id == $event->organization_id);
+        return true;
+        // return $user->has_permission('Delete event')&&
+        // ($user->is_admin() || $user->organization_id == $event->organization_id);
     }
     public function destroy(User $user, Event $event)
     {
-        return $this->delete($user, $event);
+        return true;
+        // return $this->delete($user, $event);
     }
 }

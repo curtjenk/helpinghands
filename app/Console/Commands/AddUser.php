@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use App;
 use Log;
+use DB;
 
 class AddUser extends Command
 {
@@ -49,26 +50,28 @@ class AddUser extends Command
             dump($name);
             die();
         }
-        $role_id = App\Role::where('name','Organization User')->first()->id;
 
-        try {
-            App\User::create([
+
+        DB::transaction(function() use($name, $email){
+            $org = App\Organization::find(3); //Legacy Builders
+            $role = App\Role::find(4); //Member
+            $user = App\User::create([
                 'password'=>bcrypt($email),
                 'name'=>ucwords($name),
                 'email'=>$email,
                 'homephone'=>null,
                 'mobilephone'=>null,
-                'role_id'=>$role_id,
-                'organization_id'=>1,
                 'opt_receive_evite'=>true,
                 'opt_show_email'=>true,
                 'opt_show_mobilephone'=>false,
                 'opt_show_homephone'=>false,
             ]);
-
-        } catch (QueryException $qe) {
-            echo print_r($qe->getMessage, true);
-        }
+            DB::table('organization_user')->insert([
+                'organization_id' => $org->id,
+                'user_id' => $user->id,
+                'role_id' => $role->id
+            ]);
+        });
 
     }
 }

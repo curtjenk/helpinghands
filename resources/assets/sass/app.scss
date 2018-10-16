@@ -1,88 +1,29 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+// @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 @import url(https://fonts.googleapis.com/css?family=Lato);
 
 
-// Variables
-@import "variables";
+@import "colors";
+
 @import "layout";
-
+@import "variables";
 // Bootstrap and others
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-$fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
-@import 'node_modules/font-awesome/scss/font-awesome.scss';
-@import 'node_modules/jquery-ui-bundle/jquery-ui.min';
-@import 'node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min';
+// @import 'node_modules/jquery-ui-bundle/jquery-ui.min';
 @import 'node_modules/fullcalendar/dist/fullcalendar.min';
+@import 'node_modules/font-awesome/scss/font-awesome.scss';
+@import "node_modules/bootstrap/scss/bootstrap";
+// @import "bootstrap4Nav";
+// Variables
 
-html, body {
-    background-color: #fff;
-    color: #636b6f;
-    font-family: 'Raleway', sans-serif;
-    font-weight: 100;
-    height: 100vh;
-    margin: 0;
-}
 
-.full-height {
-    height: 100vh;
-}
-// override bootstrap from-group
-.form-group {
-    margin-bottom: 10px !important;
-}
-.flex-center {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.snow.css';
+@import '~quill/dist/quill.bubble.css';
 
-.position-ref {
-    position: relative;
-}
-
-.top-right {
-    position: absolute;
-    right: 10px;
-    top: 18px;
-}
-
-.content {
-    text-align: center;
-}
-.control-text-left {
-    text-align: left;
-    margin-bottom: 0;
-    padding-top: 7px;
-}
-.control-text-right {
-    text-align: right;
-    margin-bottom: 0;
-    padding-top: 7px;
-}
-.title {
-    font-size: 84px;
-}
-.subtitle {
-    font-size: 50px;
-}
-
-.links > a {
-    color: #636b6f;
-    padding: 0 25px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-.m-b-md {
-    margin-bottom: 30px;
-}
-.m-b-sm {
-    margin-bottom: 20px;
+select {
+    // border-width: 0px 0px 1px 0px;
+    background-color: inherit;
 }
 
 input[type=checkbox].red-cb:not(old) {

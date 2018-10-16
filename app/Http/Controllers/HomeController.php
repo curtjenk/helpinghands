@@ -26,20 +26,11 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
-        if (!Session::has('orgid')) {
-            Session::put('orgid',$user->organization_id);
-        }
         return view('home', []);
     }
 
     public function administrator() {
         $user = Auth::user();
-        if (!$user->is_admin() &&
-            !$user->is_superuser() &&
-            !$user->is_orgAdmin()) {
-            abort(403);
-        }
         return view('administrator', ['user'=>$user]);
     }
 }

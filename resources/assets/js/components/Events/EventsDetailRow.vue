@@ -1,20 +1,26 @@
 <template>
-  <div @click="onClick" :id="rowData.id">
-    <div class="col-md-2">
-        <h5 class="">
-         {{ rowData.members.length }} Signed-up
-        </h5>
+  <div @click="onClick" :id="rowData.id" class="container-fluid">
+    <div class="row">
+      <b-col md="5">
+          <h5 class="">
+           {{ rowData.members.length }} Signed-up
+          </h5>
+      </b-col>
     </div>
-    <div class="col-md-10" id="scrollarea-invalid">
-        <!-- <div class="col-md-12"> -->
-            <div id="scrollarea-content">
-                <ol id="">
-                  <li v-for="item in rowData.members"  class="col-md-3">
+    <div id="scrollarea-invalid" class="row">
+      <div id="scrollarea-content">
+        <ol>
+          <template v-if="rowData.members">
+            <div v-for="items in groupedItems" class="row">
+              <div v-for="item in items" class="col-md-3">
+                <li>
                     {{ item.name }}
-                  </li>
-               </ol>
+                </li>
+              </div>
             </div>
-        <!-- </div> -->
+          </template>
+        </ol>
+      </div>
     </div>
   </div>
 </template>
@@ -30,9 +36,15 @@ export default {
       type: Number
     }
   },
+  computed: {
+    groupedItems() {
+      //using lodash
+      return _.chunk(this.rowData.members, 4);
+    }
+  },
   methods: {
     onClick (event) {
-      //console.log('events-detail-row: on-click', event.target)
+      console.log('events-detail-row: on-click', event.target)
     //   console.log(this.rowData);
     }
   },
@@ -55,5 +67,6 @@ ol {
 }
 #scrollarea-content{
     min-height:101%;
+    min-width:100%;
 }
 </style>

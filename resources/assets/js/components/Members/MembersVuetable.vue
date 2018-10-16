@@ -1,54 +1,122 @@
 <template>
   <div>
-      <!-- <div class="vuetable-pagination"> -->
-        <!-- <vuetable-pagination-info ref="paginationInfoTop"
-          info-class="pagination-info"
-        ></vuetable-pagination-info> -->
-        <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-          :css="css.pagination"
-          :icons="css.icons"
-          @vuetable-pagination:change-page="onChangePage"
-        ></vuetable-pagination>
-    <!-- </div> -->
-    <!-- <filter-bar></filter-bar> -->
-    <filter-bar filterPlaceholder="name, nickname, email"></filter-bar>
+    <b-modal ref="photoModal" size="lg" :title="photoModal.name" hide-footer
+      header-bg-variant="secondary"
+      header-text-variant="light"
+    >
+      <div>
+        <b-img v-if="photoModal.avatar_filename" fluid-grow :src="photoModal.avatar_filename" />
+      </div>
+    </b-modal>
+
+    <b-modal ref="proxySignupModal" size="lg"
+      :title=" `Proxy Signup/Decline for: ${modal.member_name}`"
+      header-bg-variant="secondary"
+      header-text-variant="light"
+      @ok="doProxySignupDecline"
+    >
+      <b-row>
+        <b-col md="6">
+          <b-form-group label="Choose an option">
+            <b-form-radio-group v-model="modal.action"
+                                :value="modal.action"
+                                :options="modal.options"
+                                name="radioInline">
+            </b-form-radio-group>
+          </b-form-group>
+        </b-col>
+        <b-col md="6">
+          <b-row>
+            Number selected {{ num_events_checked }}
+          </b-row>
+          <b-row>
+            <b-form-group horizontal label="Filter" class="mb-0">
+              <b-input-group>
+                <b-form-input v-model="modal.filter" placeholder="Type to Search" />
+                <b-input-group-append>
+                  <b-btn :disabled="!modal.filter" @click="modal.filter = ''">Clear</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-row>
+        </b-col>
+      </b-row>
+      <b-table striped small bordered hover
+          :items="modal.events"
+          :fields="modal.event_table_fields"
+          :current-page="modal.currentPage"
+          :per-page="modal.perPage"
+          :filter="modal.filter"
+          @filtered="onModalFiltered"
+          :sort-compare="mysort">
+        <template slot="check" slot-scope="row">
+          <b-container>
+            <b-form-checkbox align-h="center" align-v="center" class="m-0"
+              @click.native.stop
+              v-model="row.item.checked">
+            </b-form-checkbox>
+          </b-container>
+        </template>
+      </b-table>
+      <b-container>
+        <b-pagination align-v="center" :total-rows="modal.totalRows" size="sm"
+          v-model="modal.currentPage"
+          :per-page="modal.perPage"
+          class="my-0"
+          >
+        </b-pagination>
+      </b-container>
+    </b-modal>
+    <filter-bar filterPlaceholder="name, nickname, email"
+      :userid="userid"
+      :filterByMemberships="true"
+    ></filter-bar>
+
     <vuetable ref="vuetable"
-      api-url="/member"
+      api-url="/api/member"
       :fields="fields"
       pagination-path=""
       :css="css.table"
       :sort-order="sortOrder"
       :multi-sort="true"
+      :per-page="15"
       detail-row-component="member-detail-row"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-        <template slot="actions" scope="props">
-          <div class="">
-            <span data-toggle="tooltip" title="View profile" data-placement="left" class="">
-                <a href="#" type="button" class=""
-                  @click="showMember(props.rowData, props.rowIndex)">
-                  <i class="fa fa-address-card-o fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <!--     // data-toggle="modal" data-target="#proxySignup"
-             :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id" -->
-            <span data-toggle="tooltip" title="Proxy Signup/Decline" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="button" class=""
-                    @click="getEvents(props.rowData, props.rowIndex)"
-                     :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
-                    <i class="fa fa-user-plus fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <!-- <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class="">
-                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
-             </a>
-            </span> -->
-          </div>
-        </template>
+      <template slot="colAvatar" slot-scope="props">
+<!-- v-b-popover.click.right.html="avatarPopover(props.rowData)" -->
+        <a v-if="props.rowData.avatar_filename" href="#" type="link" class=""
+            @click="showPhotoModal(props.rowData, props.rowIndex)"
+            :name="'photo'+props.rowData.id">
+          <b-img-lazy
+            :src="props.rowData.avatar_filename"
+            v-b-tooltip.hover.title="'click to open/close larger image'"
+            width="70" height="auto" blank-color="#bbb"  alt="No Photo" />
+        </a>
+        <div v-else>
+            No Photo
+        </div>
+      </template>
+      <template slot="actions" slot-scope="props">
+        <div class="">
+          <span v-b-tooltip.right="'View profile'" class="">
+              <a v-show="props.rowData.canUpdateUser" href="#" type="link" class=""
+                @click="showMember(props.rowData, props.rowIndex)">
+                <i class="fa fa-address-card-o fa-lg fa-fw"></i>
+              </a>
+          </span>
+          <span v-b-tooltip.right="'Proxy Signup/Decline'" class="">
+              <a v-show="props.rowData.canUpdateEvent" href="#" type="link" class=""
+                  @click="showProxyModal(props.rowData, props.rowIndex)"
+                   :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'signup'+props.rowData.id">
+                  <i class="fa fa-user-plus fa-lg fa-fw"></i>
+              </a>
+          </span>
+        </div>
+      </template>
     </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -64,6 +132,7 @@
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -73,43 +142,64 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './MembersCustomActions'
 import DetailRow from './MembersDetailRow'
-import FilterBar from './../FilterBar'
+// import FilterBar from './../FilterBar'
 
 Vue.use(VueEvents)
 Vue.component('member-custom-actions', CustomActions)
 Vue.component('member-detail-row', DetailRow)
-Vue.component('filter-bar', FilterBar)
+// Vue.component('filter-bar', FilterBar)
+
 
 export default {
+  mixins: [commonMixins],
   components: {
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  props: [
-      'isAdmin'
-  ],
+  props: {
+    userid: {
+      type: Number,
+      required: true
+    },
+    isAdmin: {
+    }
+  },
   data () {
     return {
-      events: [],
+      photoModal: {
+        name: '',
+        avatar_filename: null
+      },
+      modal: {
+        member_id: 0,
+        member_name: '',
+        currentPage: 1,
+        totalRows: 0,
+        perPage: 5,
+        action: 'signup',
+        options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
+        events: [],
+        event_table_fields: [
+          {key: 'check', sortable: false},
+          {key: 'going', sortable: true},
+          {key: 'date', sortable: true},
+          {key: 'subject', sortable:false},
+          {key: 'organization', sortable: true},
+          {key: 'team', sortable: false},
+        ]
+      },
       fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
         {
           title: 'Active',
-          name: 'opt_receive_evite',
-          sortField: 'opt_receive_evite',
+          name: 'active',
+          sortField: 'active',
           dataClass: 'text-primary',
           callback: 'setActiveIcon'
+        },
+        {
+          title: 'Photo',
+          name: '__slot:colAvatar'
         },
         {
           name: 'name',
@@ -120,38 +210,18 @@ export default {
           name: 'email',
           sortField: 'email'
         },
-        // {
-        //   name: 'birthdate',
-        //   sortField: 'birthdate',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
         {
           name: 'nickname',
           sortField: 'nickname'
         //   callback: 'allcap'
         },
         {
-          title: '<i class="fa fa-thumbs-o-up fa-w"> Events</i>',
+          title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
           name: 'yes_responses',
           sortField: 'yes_responses',
-          dataClass: 'text-center',
+          dataClass: 'text-primary text-center',
           titleClass: 'text-center',
         },
-        // {
-        //   name: 'salary',
-        //   sortField: 'salary',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:member-custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // },
         {
           name: '__slot:actions',   // <----
           title: 'Actions',
@@ -161,9 +231,9 @@ export default {
       ],
       css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
-          ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down'
+          tableClass: 'table table-bordered table-striped table-hover table-condensed',
+          ascendingIcon: 'fa fa-chevron-up',
+          descendingIcon: 'fa fa-chevron-down'
         },
         pagination: {
           wrapperClass: 'pagination',
@@ -172,10 +242,10 @@ export default {
           pageClass: 'page',
           linkClass: 'link',
           icons: {
-            first: 'glyphicon glyphicon-step-backward',
-            prev: 'glyphicon glyphicon-chevron-left',
-            next: 'glyphicon glyphicon-chevron-right',
-            last: 'glyphicon glyphicon-step-forward'
+            first: 'fa fa-step-backward',
+            prev: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            last: 'fa fa-step-forward'
           }
         }
       },
@@ -185,30 +255,100 @@ export default {
       moreParams: {}
     }
   },
+  computed: {
+    num_events_checked () {
+      let tally = 0;
+      const eventsLength = this.modal.events.length;
+      for(let x=0;x<eventsLength;x++){
+        if (this.modal.events[x].checked) {
+          tally++;
+        }
+      }
+      return tally;
+    }
+  },
   methods: {
+    // For proxy modal
+    onModalFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.modal.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
+    // custom sort for the "Check" column. defer to default
+    // sort for any other column.
+    mysort(a, b, key) {
+      if (key !== 'check') return null;
+      return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0);
+    },
     showMember (data, index) {
           window.location.href = '/member/'+data.id+'/edit';
     },
-    getEvents (data, index) {
-      console.log(data);
-      $("#proxySignup select").empty();
-      axios('/event?paginate=0')
-      .then(response => {
-        for(var i=0; i< response.data.length; i++)
-        {
-          if (response.data[i].status=='Open') {
-            $("#proxySignup select").append(
-               $('<option>').text(response.data[i].subject).val(response.data[i].id)
-            );
-          }
+    avatarPopover (data) {
+      return `<div style="width:50%; height:50%;">
+          <img src="${data.avatar_filename}" max-width="100%" max-height="auto"/>
+        </div>`;
+    },
+    async doProxySignupDecline () {
+      try {
+        let data = {}
+        data.action = this.modal.action;
+        data.event_ids = this.modal.events.filter((e)=>e.checked).map((e)=>e.id);
+        // console.log(data)
+        let resp = await axios({
+                      method: 'post',
+                      url: '/api/member/'+this.modal.member_id+'/proxySignup',
+                      data: data
+                    });
+         //reset
+        this.collapseAllDetailRows();
+        this.$refs.vuetable.reload();
+        this.modal.action = 'signup';
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    showPhotoModal (member, index) {
+      console.log(member.avatar_filename)
+      this.photoModal.name = member.name;
+      this.photoModal.avatar_filename = member.avatar_filename;
+      this.$refs.photoModal.show()
+    },
+    async showProxyModal (member, index) {
+      // console.log(member)
+      let events = {};
+      let yesEvents = {};
+      try {
+        //Get list of events user is eligible for
+        //and list of events already signed-up for
+        [events, yesEvents] = await Promise.all([
+          axios.get('/api/member/'+member.id+'/proxyEvents'),
+          axios.get('/api/member/' + member.id + '/yes')
+        ])
+        this.modal.events = [];
+        this.modal.currentPage = 1;
+        this.modal.member_name = member.name;
+        this.modal.member_id = member.id;
+        for(let x=0; x<events.data.length; x++) {
+          let data = events.data[x];
+          let event = {}
+          event.id = data.id;
+          event.date = data.date_start
+          event.subject = data.subject
+          event.organization = data.organization_name
+          event.team = data.team_name
+          event.checked = false
+          event.going = yesEvents.data
+            .filter(yes=>yes.id==data.id)
+            .length > 0 ? 'Yes' : 'No';
+          this.modal.events.push(event)
         }
-        $('#proxySignup h4').text('Signup/Decline for ' + data.name);
-        $('#proxySignup form').attr('action', 'member/' + data.id + '/proxySignup');
-        $("#proxySignup").modal('show');
-      })
-      .catch(e => {
-        console.log(e);
-      })
+        this.modal.totalRows = this.modal.events.length
+      } catch (e) {
+        console.log(e)
+        return;
+      }
+      // console.log(events.data)
+      this.$refs.proxySignupModal.show()
     },
     expandAllDetailRows: function() {
       this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
@@ -220,8 +360,8 @@ export default {
     },
     setActiveIcon (value) {
           return value == true
-            ? '<span class="label label-success"><i class="glyphicon glyphicon-ok"></i> Yes</span>'
-            : '<span class="label label-danger"><i class="glyphicon glyphicon-remove"></i> No</span>'
+            ? '<span class="label label-success"><i class="fa fa-check"></i> Yes</span>'
+            : '<span class="label label-danger"><i class="fa fa-minus"></i> No</span>'
     },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
@@ -240,7 +380,7 @@ export default {
         : moment(value, 'YYYY-MM-DD').format(fmt)
     },
     onPaginationData (paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+      // this.$refs.paginationTop.setPaginationData(paginationData)      // <----
      // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
 
       this.$refs.pagination.setPaginationData(paginationData)
@@ -250,24 +390,12 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onLoadSuccess (response) {
-        response.data.data.forEach(function(el){
-            //console.log(el.opt_show_email)
-            if (el.opt_show_email==false) {
-                el.email=''
-            }
-            if (el.opt_show_homephone==false){
-                el.homephone=''
-            }
-            if (el.opt_show_mobilephone==false){
-                el.mobilephone=''
-            }
-        })
     },
     onCellClicked (data, field, event) {
     //   console.log('cellClicked: ', field.name)
 
       if ($('#'+data.id).length == 0) {
-        axios.get('/member/' + data.id )
+        axios.get('/api/member/' + data.id + '/yes' )
         .then(  (response) => {
           data.events = response.data;
           this.$refs.vuetable.toggleDetailRow(data.id)
@@ -281,18 +409,20 @@ export default {
     },
   },
   events: {
-      'filter-set' (filterText) {
-       // console.log("<",filterText,">")
-        this.moreParams = {
-          filter: filterText
-        }
-        Vue.nextTick( () => this.$refs.vuetable.refresh() )
-      },
-      'filter-reset' () {
-        this.moreParams = {}
-        this.collapseAllDetailRows();
-        Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    'filter-set' (filterText, orgid, teamid) {
+     // console.log("<",filterText,">")
+      this.moreParams = {
+        filter: filterText,
+        orgid: orgid,
+        teamid: teamid
       }
+      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    },
+    'filter-reset' () {
+      this.moreParams = {}
+      this.collapseAllDetailRows();
+      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    }
   }
 }
 </script>

@@ -27,25 +27,28 @@ events.preview_image = function(event)
  */
 $(function() {
 
-  $( "#dateEventStartPicker" ).datepicker();
-  $( "#dateEventEndPicker" ).datepicker();
-
-  $('#deleteevent').on('show.bs.modal', function(event) {
-    const button = $(event.relatedTarget);
-    $('#deleteevent h4').text('Delete ' + button.data('name'));
-    $('#deleteevent form').attr('action', 'event/' + button.data('id'));
-  });
-  $('#eventnotify').on('show.bs.modal', function(event) {
+  //TODO remove. Converted to BootstrapVue
+  // $('#deleteevent').on('show.bs.modal', function(event) {
+  //
+  //   const button = $(event.relatedTarget);
+  //   $('#deleteevent h4').text('Delete ' + button.data('name'));
+  //   $('#deleteevent form').attr('action', '/api/event/' + button.data('id'));
+  // });
+  // $('#eventnotify').on('show.bs.modal', function(event) {
+  $(document).on('show.bs.modal', '#eventnotify', function(event) {
+      console.log('Loading eventnotify')
     const button = $(event.relatedTarget);
     $('#eventnotify h4').text('Send notification ');
-    $('#eventnotify form').attr('action', 'event/notify/' + button.data('id'));
+    $('#eventnotify form').attr('action', 'api/event/notify/' + button.data('id'));
   });
-  $('#eventevite').on('show.bs.modal', function(event) {
-    const button = $(event.relatedTarget);
-    $('#eventevite h4').text('Send evites ');
-    $('#eventevite form').attr('action', 'evite' + button.data('id'));
-  });
-  $('#event_file').on('change', function(event) {
-    events.preview_image(event);
-  });
+  //TODO remove.  Converted to BootstrapVue
+  // $('#eventevite').on('show.bs.modal', function(event) {
+  //   const button = $(event.relatedTarget);
+  //   $('#eventevite h4').text('Send evites ');
+  //   $('#eventevite form').attr('action', 'api/evite' + button.data('id'));
+  // });
+  //TODO remove
+  // $('#event_file').on('change', function(event) {
+  //   events.preview_image(event);
+  // });
 });

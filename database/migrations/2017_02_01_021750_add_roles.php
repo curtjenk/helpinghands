@@ -15,10 +15,14 @@ class AddRoles extends Migration
     {
 
         DB::table('roles')->insert([
-            ['name'=>'Super User'],
-            ['name'=>'Admin'],
-            ['name'=>'Organization Admin'],
-            ['name'=>'Organization User'],
+            ['name'=>'Site', 'level'=>0],
+    //The following apply to Organizations and Teams
+            ['name'=>'Admin', 'level'=>1],
+            ['name'=>'Lead', 'level'=>2],
+            ['name'=>'Member', 'level'=>3],
+    //Person can see lists of orgs, teams, events and see event details
+    //"The Browser".  Role given to everyone upon initial signup.
+           ['name'=>'Visitor', 'level'=>99],
         ]);
     }
 

@@ -13,15 +13,18 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'subject', 'description', 'evite_sent', 'date_start', 'organization_id',
-        'date_end', 'cost', 'user_id', 'status_id', 'event_type_id'
+        'subject', 'description', 'description_text', 'evite_sent',
+        'date_start', 'date_end', 'time_start', 'time_end',
+        'organization_id', 'team_id',
+        'user_id', 'status_id', 'event_type_id',
+        'cost', 'signup_limit'
     ];
     /**
      * Get the Files/Attachments for this Event.
      */
     public function files()
     {
-        return $this->hasMany('App\EventFiles');
+        return $this->hasMany('App\EventFile');
     }
     /**
      * Get the Organization for this Event.
@@ -29,6 +32,13 @@ class Event extends Model
     public function organization()
     {
         return $this->belongsTo('App\Organization');
+    }
+    /**
+     * Get the Team for this Event.
+     */
+    public function team()
+    {
+        return $this->belongsTo('App\Team');
     }
     /**
      * Get the User that created this .

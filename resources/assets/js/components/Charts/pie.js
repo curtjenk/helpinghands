@@ -1,7 +1,18 @@
 import { Pie } from 'vue-chartjs'
 export default Pie.extend({
+  name:"pie-chart",
   mounted () {
     // Overwriting base render method with actual data.
+    this.renderChart({
+      labels: this.labels,
+      datasets: [{
+        data: this.data,
+        backgroundColor: this.bgColors
+      //   hoverBackgroundColor: this.hoverBGColors
+      }]
+    },
+    this.options
+    )
   },
   props : {
       labels: {
@@ -16,7 +27,7 @@ export default Pie.extend({
           type: Array,
           required: false
       },
-      hoverBGColors: {
+      hoverBgColors: {
           type: Array,
           required: false
       },
@@ -27,6 +38,7 @@ export default Pie.extend({
   },
   watch: {
     data () {
+      this._chart.destroy()
       this.renderChart({
         labels: this.labels,
         datasets: [{

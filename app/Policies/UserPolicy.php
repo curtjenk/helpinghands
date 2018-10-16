@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\User;
-
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Log;
 
 class UserPolicy
 {
@@ -27,10 +27,7 @@ class UserPolicy
      */
     public function destroy(User $self, User $user)
     {
-        if ($self->id == $user->id) { return false; }
-        if (!$self->has_permission('Delete user')) { return false; }
-        if (!$self->is_admin()) {return false;}
-        return true;
+        return $self->superuser();
     }
 
     /**
@@ -40,11 +37,7 @@ class UserPolicy
      */
     public function show(User $self, User $user)
     {
-        return $self->has_permission('Show user')&&
-        ($self->is_admin() ||
-         $self->is_orgAdmin() ||
-         $self->is_superuser() ||
-         $self->organization_id == $user->organization_id);
+        return true;
     }
 
     /**
@@ -54,15 +47,26 @@ class UserPolicy
      */
     public function update(User $self, User $user)
     {
-        // dump($self->has_permission('Update user'));
-        // dump($self->id == $user->id);
-        // dump($self->is_orgAdmin());
-        // dump($self->is_admin());
-        $rtn = $self->has_permission('Update user') &&
-        ($self->id == $user->id ||
-        $self->is_orgAdmin() ||
-        $self->is_admin());
-        // dump($rtn);
-        return $rtn;
+        if ($self->id == $user->id) {
+            return true;
+        }
+
+        foreach ($user->organizations as $org) {
+            if ($self->has_permission('Update user', $org->id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return true if user can create a user
+     *
+     * @return boolean
+     */
+    public function create(User $self)
+    {
+        return $self->superuser();
     }
 }

@@ -1,19 +1,77 @@
 <template>
   <div>
-      <!-- <div class="vuetable-pagination"> -->
-        <!-- <vuetable-pagination-info ref="paginationInfoTop"
-          info-class="pagination-info"
-        ></vuetable-pagination-info> -->
-        <vuetable-pagination ref="paginationTop" style="padding-top:20px"
-          :css="css.pagination"
-          :icons="css.icons"
-          @vuetable-pagination:change-page="onChangePage"
-        ></vuetable-pagination>
-    <!-- </div> -->
-    <filter-bar filterPlaceholder=" subject, description"></filter-bar>
+    <div>
+      <b-alert  :show="gotError" dismissible
+       variant="danger"
+       @dismissed="gotError=false">
+        {{ errorMessage }}
+      </b-alert>
+    </div>
+    <b-modal ref="proxySignupModal" size="lg"
+      :title=" `Proxy Signup/Decline for: ${signupModal.event_subject}`"
+      header-bg-variant="secondary"
+      header-text-variant="light"
+      @ok="doProxySignupDecline"
+    >
+      <b-row>
+        <b-col md="6">
+          <b-form-group label="Choose an option">
+            <b-form-radio-group v-model="signupModal.action"
+                                :value="signupModal.action"
+                                :options="signupModal.options"
+                                name="radioInline">
+            </b-form-radio-group>
+          </b-form-group>
+        </b-col>
+        <b-col md="6">
+          <b-row>
+            Number selected {{ num_members_checked }}
+          </b-row>
+          <b-row>
+            <b-form-group horizontal label="Filter" class="mb-0">
+              <b-input-group>
+                <b-form-input v-model="signupModal.filter" placeholder="Type to Search" />
+                <b-input-group-append>
+                  <b-btn :disabled="!signupModal.filter" @click="signupModal.filter = ''">Clear</b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+          </b-row>
+        </b-col>
+      </b-row>
+      <b-table striped small bordered hover
+          :items="signupModal.members"
+          :fields="signupModal.members_table_fields"
+          :current-page="signupModal.currentPage"
+          :per-page="signupModal.perPage"
+          :filter="signupModal.filter"
+          @filtered="onSignupModalFiltered"
+          :sort-compare="mysort">
+        <template slot="check" slot-scope="row">
+          <b-container>
+            <b-form-checkbox align-h="center" align-v="center" class="m-0"
+              @click.native.stop
+              v-model="row.item.checked">
+            </b-form-checkbox>
+          </b-container>
+        </template>
+      </b-table>
+      <b-container>
+        <b-pagination align-v="center" :total-rows="signupModal.totalRows" size="sm"
+          v-model="signupModal.currentPage"
+          :per-page="signupModal.perPage"
+          class="my-0"
+          >
+        </b-pagination>
+      </b-container>
+    </b-modal>
+
+    <filter-bar v-if="!isObjectEmpty(user)" filterPlaceholder=" subject, description"
+      :filterByMemberships="true"
+    ></filter-bar>
 
     <vuetable ref="vuetable"
-      api-url="/event"
+      api-url="/api/event"
       :fields="fields"
       pagination-path=""
       :css="css.table"
@@ -25,37 +83,86 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
-        <template slot="actions2" scope="props">
-          <div class="">
-            <span data-toggle="tooltip" title="Details" data-placement="left" class="">
-                <a href="#" type="button" class=""
-                  @click="showEvent(props.rowData, props.rowIndex)">
-                  <i class="fa fa-edit fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <span data-toggle="tooltip" title="Notify Sign-ups" data-placement="left" class="">
-                <a v-show="isAdmin" href="#" type="button" class=""
-                    data-toggle="modal" data-target="#eventnotify"
-                    :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
-                    <i class="fa fa-envelope-o fa-lg fa-fw"></i>
-                </a>
-            </span>
-            <span data-toggle="tooltip" title="Pay for an event" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class=""
-                 @click="getSignupsPay(props.rowData, props.rowIndex)"
-                  :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
-                 <i class="fa fa-shopping-cart fa-lg fa-fw"></i>
-             </a>
-            </span>
-            <span data-toggle="tooltip" title="Delete" data-placement="right" class="">
-             <a v-show="isAdmin" href="#" type="button" class=""
-                 data-toggle="modal" data-target="#deleteevent"
-                 :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'delete_'+props.rowData.id">
-                 <i class="fa fa-trash fa-lg fa-fw"></i>
-             </a>
-            </span>
-          </div>
-        </template>
+      <template slot="colOrganization" slot-scope="props">
+        <div v-b-popover.hover.top.html="organizationPopover(props.rowData)" title="Organization">
+          {{ ellipsisText(props.rowData.organization_name,20) }}
+        </div>
+      </template>
+      <template slot="colTeam" slot-scope="props">
+        <div v-b-popover.hover.top.html="teamPopover(props.rowData)" title="Team">
+          {{ ellipsisText(props.rowData.team_name,20) }}
+        </div>
+      </template>
+      <template slot="colSubject" slot-scope="props">
+        <div v-b-popover.hover.top.html="subjectPopover(props.rowData)" title="Subject">
+          {{ ellipsisText(props.rowData.subject,20) }}
+        </div>
+      </template>
+      <template slot="colDescription" slot-scope="props">
+        <div v-b-tooltip title="Click to open/close description"
+          v-b-popover.click.left.html="descriptionPopover(props.rowData)">
+          {{ props.rowData.description ? '......' : '' }}
+        </div>
+      </template>
+      <template slot="colResponses" slot-scope="props">
+        <div v-b-tooltip title="Click to see who signed-up"
+          @click="onCellClicked(props.rowData, props.rowField, $event)"
+        >
+          {{ props.rowData.yes_responses }}
+        </div>
+      </template>
+      <template slot="colBeginDate" slot-scope="props">
+        <div v-b-popover.hover.top.html="beginDatePopover(props.rowData)" title="Date(s)">
+          {{ props.rowData.date_start}}
+        </div>
+      </template>
+
+      <template slot="actions2" slot-scope="props">
+        <div class="">
+          <span  v-b-tooltip.hover="'Details'" class="">
+              <a href="#" type="link" class=""
+                @click="showEvent(props.rowData, props.rowIndex)">
+                <i class="fa fa-eye  fa-fw"></i>
+              </a>
+          </span>
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-tooltip.hover="'Proxy Signup/Decline'" class="">
+              <a href="#" type="link" class=""
+                  @click="showProxyModal(props.rowData, props.rowIndex)"
+                  :name="'signup'+props.rowData.id">
+                  <i class="fa fa-user-plus fa-fw"></i>
+              </a>
+          </span>
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-tooltip.hover="'Notify Sign-ups'" class="">
+            <a href="#" type="link" class=""
+                data-toggle="modal" data-target="#eventnotify"
+                :data-id="props.rowData.id" :data-name="props.rowData.subject.ellipsisText(20)" :name="'notify'+props.rowData.id">
+                <i class="fa fa-envelope-o fa-fw"></i>
+            </a>
+          </span>
+          <span v-if="props.rowData.can_create_event && props.rowData.status_id==1" v-b-popover.hover.top.html="evitePopover(props.rowData)" title="Send E-vites" class="">
+            <a href="#" type="link" class="" :id="'evite'+props.rowData.id"
+              @click="sendEvites(props.rowData, props.rowIndex)">
+                <i class="fa fa-paper-plane-o fa-fw"></i>
+            </a>
+          </span>
+          <!--  TODO redesign
+          <span v-if="props.rowData.can_create_event"  v-b-tooltip.hover="'Pay for an event'" class="">
+            <a href="#" type="link" class=""
+               @click="getSignupsPay(props.rowData, props.rowIndex)"
+               :data-id="props.rowData.id" :data-name="props.rowData.name" :name="'pay'+props.rowData.id">
+              <i class="fa fa-shopping-cart fa-fw"></i>
+            </a>
+          </span>
+          -->
+          <span v-if="props.rowData.can_create_event" v-b-tooltip.hover="'Delete'" class="">
+            <a href="#" type="link" class=""
+              @click="deleteEvent(props.rowData, props.rowIndex)"
+            >
+                <i class="fa fa-trash fa-fw"></i>
+            </a>
+          </span>
+        </div>
+      </template>
     </vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -71,8 +178,8 @@
 </template>
 
 <script>
+import {commonMixins} from '../../mixins/common';
 import accounting from 'accounting'
-import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
@@ -88,44 +195,69 @@ Vue.component('events-detail-row', DetailRow)
 Vue.component('filter-bar', FilterBar)
 
 export default {
+  mixins: [commonMixins],
   components: {
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  props: [
-      'isAdmin'
-  ],
+  props: {
+  },
   data () {
     return {
+      ready: false,
+      gotError: false,
+      errorMessage: '',
+      modaldata: {
+        subject: '',
+        descriptionhtml: ''
+      },
+      signupModal: {
+        member_id: 0,
+        event_subject: '',
+        filter: null,
+        totalRows: 0,
+        currentPage: 1,
+        perPage: 5,
+        action: 'signup',
+        options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
+        members: [],
+        members_table_fields: [
+          {key: 'check', sortable: false},
+          {key: 'going', sortable: true},
+          {key: 'name', sortable: true},
+        ]
+      },
       fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
         {
-          name: 'subject',
+          title: 'Organization',
+          name: '__slot:colOrganization',
+          sortField: 'organizations.name',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+          dataClass: 'text-primary',
+        },
+        {
+          title: 'Team',
+          name: '__slot:colTeam',
+          sortField: 'teams.name',
+          dataClass: 'text-center',
+          titleClass: 'text-center',
+          dataClass: 'text-primary',
+        },
+        {
+          title: 'Subject',
+          name: '__slot:colSubject',
           sortField: 'subject',
           dataClass: 'text-center',
           titleClass: 'text-center',
-          callback: 'ellipsis|30'
+          dataClass: 'text-primary',
         },
         {
-          name: 'description',
+          title: 'Description',
+          name: '__slot:colDescription',
           titleClass: 'text-center',
-        //   sortField: 'description'
-          callback: 'ellipsis|50'
-        },
-        {
-          name: 'type',
-          titleClass: 'text-center',
+          dataClass: 'text-primary',
         },
         {
           name: 'status',
@@ -134,62 +266,26 @@ export default {
           dataClass: 'text-center',
         },
         {
-          name: 'cost',
-          sortField: 'cost',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatMoney'
-        },
-        {
-          name: 'signup_limit',
-          title: 'Signup Limit',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          sortField: 'signup_limit',
-          callback: 'signupLimit'
-        },
-        {
           title: '<i class="fa fa-thumbs-o-up fa-w"></i>',
-          name: 'yes_responses',
+          name: '__slot:colResponses',
           sortField: 'yes_responses',
-          dataClass: 'text-primary',
+          dataClass: 'text-primary text-center',
           titleClass: 'text-center '
         },
         {
-          title: '<i class="fa fa-thumbs-o-down fa-w"></i>',
-          name: 'no_responses',
-          sortField: 'no_responses',
-          dataClass: 'text-primary',
-          titleClass: 'text-center'
-        },
-        {
-          name: 'date_start',
+          name: '__slot:colBeginDate',
           title: 'Begin',
           sortField: 'date_start',
           titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatDate|MM-DD-YYYY'
-        },
-        {
-          name: 'date_end',
-          title: 'End',
-          sortField: 'date_end',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          callback: 'formatDate|MM-DD-YYYY'
+          dataClass: 'text-primary text-center',
         },
         // {
-        //   name: 'salary',
-        //   sortField: 'salary',
+        //   name: 'date_end',
+        //   title: 'End',
+        //   sortField: 'date_end',
         //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:event-custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
+        //   dataClass: 'text-center',
+        //   callback: 'formatDate|YYYY-MM-DD'
         // },
         {
           name: '__slot:actions2',   // <----
@@ -200,9 +296,9 @@ export default {
       ],
       css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
-          ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down',
+          tableClass: 'table table-bordered table-striped table-hover table-condensed',
+          ascendingIcon: 'fa fa-chevron-up',
+          descendingIcon: 'fa fa-chevron-down',
           thumbsup: 'fa fa-thumbs-o-up'
         },
         pagination: {
@@ -212,11 +308,11 @@ export default {
           pageClass: 'page',
           linkClass: 'link',
           icons: {
-            first: 'glyphicon glyphicon-step-backward',
-            prev: 'glyphicon glyphicon-chevron-left',
-            next: 'glyphicon glyphicon-chevron-right',
-            last: 'glyphicon glyphicon-step-forward',
-          },
+            first: 'fa fa-step-backward',
+            prev: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            last: 'fa fa-step-forward'
+          }
         },
       },
       sortOrder: [
@@ -225,7 +321,187 @@ export default {
       moreParams: {}
     }
   },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.ready = true;
+    });
+  },
+  computed: {
+    num_members_checked () {
+      let tally = 0;
+      const membersLength = this.signupModal.members.length;
+      for(let x=0;x<membersLength;x++){
+        if (this.signupModal.members[x].checked) {
+          tally++;
+        }
+      }
+      return tally;
+    }
+  },
   methods: {
+    // For proxy modal
+    onSignupModalFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.signupModal.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
+    // custom sort for the "Check" column. defer to default
+    // sort for any other column.
+    mysort(a, b, key) {
+      if (key !== 'check') return null;
+      return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0);
+
+      // if (typeof a.checked === 'number' && typeof b.checked === 'number') {
+      //   // If both compared fields are native numbers
+      //   return a.checked < b.checked ? -1 : (a.checked > b.checked ? 1 : 0)
+      // } else {
+      //   // Stringify the field data and use String.localeCompare
+      //   return toString(a.checked).localeCompare(toString(b.checked), undefined, {
+      //     numeric: true
+      //   })
+      // }
+    },
+    deleteEvent (data, index) {
+      let message = {
+        title:'<h3 style="color:red;">' +
+              '<div>Confirm delete for ...</div>' +
+              '<hr/'+
+              '</h3>',
+        body: data.subject
+      };
+      let options = {}
+      this.$dialog
+        .confirm(message, options)
+        .then(dialog => {
+          dialog.close();
+          axios.delete('/api/event/'+data.id)
+            .then(response => {
+              // console.log(response)
+              this.$refs.vuetable.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              this.errorMessage = "Error occurred while deleting event. "+error.response.status
+              this.gotError = true
+            });
+        })
+        .catch(() => {
+          //console.log('Clicked on cancel')
+        });
+    },
+    async doProxySignupDecline () {
+      try {
+        let data = {}
+        data.action = this.signupModal.action;
+        data.member_ids = this.signupModal.members.filter((e)=>e.checked).map((e)=>e.id);
+        // console.log(data)
+        let resp = await axios({
+                      method: 'post',
+                      url: '/api/member/'+this.signupModal.event_id+'/proxySignup?event=true',
+                      data: data
+                    });
+         //reset
+        this.collapseAllDetailRows();
+        this.$refs.vuetable.reload();
+        this.signupModal.action = 'signup';
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async showProxyModal (event, index) {
+      // console.log(member)
+      // let members = {}
+      // let yesMembers = {}
+      try {
+        let [members, yesMembers] = await Promise.all([
+          axios.get('/api/member/'+event.id+'/proxyMembers'),
+          axios.get('/api/event/' + event.id + '/members')
+        ]);
+        this.signupModal.members = [];
+        this.signupModal.currentPage = 1;
+        this.signupModal.event_subject = event.subject;
+        this.signupModal.event_id = event.id;
+        for(let x=0; x<members.data.length; x++) {
+          let data = members.data[x];
+          let member = {}
+          member.checked = false;
+          member.going = yesMembers.data
+            .filter(yes=>yes.user_id==data.id)
+            .length > 0 ? 'Yes' : 'No';
+          member.id = data.id;
+          member.name = data.name
+          this.signupModal.members.push(member)
+        }
+        this.signupModal.totalRows = this.signupModal.members.length
+      } catch (e) {
+        console.log(e)
+        return;
+      }
+      // console.log(events.data)
+      this.$refs.proxySignupModal.show()
+    },
+    beginDatePopover (data) {
+      if (data.date_start) {
+        // let start = this.formatDate(data.date_start, "YYYY-MM-DD")
+        // let end = this.formatDate(data.date_end, "YYYY-MM-DD")
+        // return `${start} thru ${end}`
+        return `${data.date_start} thru ${data.date_end}`
+      } else {
+        return ''
+      }
+    },
+    evitePopover (data) {
+      if (data.evite_sent) {
+        let date_sent = this.formatDate(data.evite_sent)
+        return `Last sent ${date_sent}`
+      } else {
+        return 'No evites sent'
+      }
+    },
+    organizationPopover (data) {
+      if (data.organization_name) return data.organization_name;
+      else return '';
+    },
+    teamPopover (data) {
+      if (data.team_name) return data.team_name;
+      else return '';
+    },
+    subjectPopover (data) {
+      if (data.subject) return data.subject;
+      else return '';
+    },
+    descriptionPopover (data) {
+      if (data.description) return data.description
+      else return '';
+      // if (data.description_text) return data.description_text;
+      // else return '';
+    },
+    sendEvites (data, index) {
+      let message = {
+        title:'Confirm send e-vites for ..',
+        body: data.subject
+      };
+      let options = {}
+      this.$dialog
+        .confirm(message, options)
+        .then(dialog => {
+          dialog.close();
+          axios.get('/api/evite/'+data.id)
+            .then(response => {
+              // console.log(response)
+              this.$refs.vuetable.reload()
+            })
+            .catch(error => {
+              console.log(error)
+              this.errorMessage = "Error occurred while sending e-vites. "+error.response.status
+              this.gotError = true
+            });
+        })
+        .catch(() => {
+          //console.log('Clicked on cancel')
+        });
+
+    },
     showEvent (data, index) {
         // console.log('slot)', data.subject, index)
         window.location.href = '/event/'+data.id;
@@ -234,35 +510,35 @@ export default {
     //   console.log('slot) action: ' + action, data.subject, index)
     },
     getSignupsPay (data, index) {
-    //   console.log(data);
-      $("#payups").empty();
-      axios('/member/signups/'+data.id)
-      .then(response => {
-        for(var i=0; i< response.data.length; i++)
-        {
-          let resp = response.data[i];
-        //   console.log(resp);
-          var $div = $("<div>", {"class": "col-md-4"});
-          $('#payups').append($div);
-          $('<input/>', {
-               id: 'pay'+resp.id,
-               type: 'checkbox',
-               name: 'pay[]',
-               checked: resp.paid ? true : false,
-               value: resp.id}).appendTo($div);
-          $('<label />', {
-              'for': 'pay'+resp.id,
-              style: 'padding-left:3px;',
-              text: resp.name }).appendTo($div);
-
-        }
-        $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
-        $('#eventPay form').attr('action', 'member/eventpay/'+data.id);
-        $("#eventPay").modal('show');
-      })
-      .catch(e => {
-        console.log(e);
-      })
+      //TODO redesign this functionality in a later phase
+      // $("#payups").empty();
+      // axios.get('/api/member/signups/'+data.id)
+      //   .then(response => {
+      //     for(var i=0; i< response.data.length; i++)
+      //     {
+      //       let resp = response.data[i];
+      //     //   console.log(resp);
+      //       var $div = $("<div>", {"class": "col-md-4"});
+      //       $('#payups').append($div);
+      //       $('<input/>', {
+      //            id: 'pay'+resp.id,
+      //            type: 'checkbox',
+      //            name: 'pay[]',
+      //            checked: resp.paid ? true : false,
+      //            value: resp.id}).appendTo($div);
+      //       $('<label />', {
+      //           'for': 'pay'+resp.id,
+      //           style: 'padding-left:3px;',
+      //           text: resp.name }).appendTo($div);
+      //
+      //     }
+      //     $('#eventPay h4').text('Check member(s) paying/paid for "' + data.subject + '"');
+      //     $('#eventPay form').attr('action', 'api/member/eventpay/'+data.id);
+      //     $("#eventPay").modal('show');
+      //   })
+      //   .catch(e => {
+      //     console.log(e);
+      //   })
     },
     expandAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = this.$refs.vuetable.tableData.map(function(item) {
@@ -276,7 +552,16 @@ export default {
       return value==null ? '' : value.toUpperCase()
     },
     ellipsis (value, max = 1) {
-      return value.ellipsis(max)
+      if (value) {
+        return value.ellipsis(max)
+      }
+      return value;
+    },
+    ellipsisText (value, max = 1) {
+      if (value) {
+        return value.ellipsisText(max)
+      }
+      return value;
     },
     signupLimit (value) {
         if(!value || value==0){
@@ -285,30 +570,20 @@ export default {
             return value
         }
     },
-    eviteLabel (value) {
-        return (value == null)
-          ? '<i class="fa fa-frown-o" style="color: red;"></i>'
-          : '<i class="fa fa-check-square" style="color: green;"></i>'
-
-    },
-    // genderLabel (value) {
-    //   return value === 'M'
-    //     ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-    //     : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    // eviteLabel (value) {
+    //     return (value == null)
+    //       ? '<i class="fa fa-frown-o" style="color: red;"></i>'
+    //       : '<i class="fa fa-check-square" style="color: green;"></i>'
     // },
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
     },
-    formatDate (value, fmt = 'D MMM YYYY') {
-      return (value == null)
-        ? ''
-        : moment(value, 'YYYY-MM-DD').format(fmt)
-    },
     formatMoney (value) {
-        return '$'+value;
+        return value;
+        // return '$'+value;
     },
     onPaginationData (paginationData) {
-      this.$refs.paginationTop.setPaginationData(paginationData)      // <----
+      //this.$refs.paginationTop.setPaginationData(paginationData)      // <----
      // this.$refs.paginationInfoTop.setPaginationData(paginationData)  // <----
 
       this.$refs.pagination.setPaginationData(paginationData)
@@ -321,10 +596,11 @@ export default {
         //console.log('onloadsuccess')
     },
     onCellClicked (data, field, event) {
-      // console.log('cellClicked: ', field.name)
-      if (field.name=='yes_responses' || field.name=='no_responses') {
+      // console.log('cellClicked: ', field)
+      // console.log(event)
+      if (field=='yes_responses' || field=='no_responses') {
         if ($('#'+data.id).length == 0) {
-          axios.get('/event/' + data.id + '/members')
+          axios.get('/api/event/' + data.id + '/members')
           .then(  (response) => {
            // console.log(response.data);
             data.members = response.data;
@@ -339,9 +615,11 @@ export default {
     },
   },
   events: {
-    'filter-set' (filterText) {
+    'filter-set' (filterText, orgid, teamid) {
       this.moreParams = {
-        filter: filterText
+        filter: filterText,
+        orgid: orgid,
+        teamid: teamid
       }
       Vue.nextTick( () =>
             this.$refs.vuetable.refresh()

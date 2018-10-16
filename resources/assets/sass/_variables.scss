@@ -1,6 +1,28 @@
-
+//override Bootstrap $spacers map
+$spacer: 1rem;
+$spacers: ();
+$spacers: map-merge((
+  0: 0,
+  1: ($spacer * .25),
+  2: ($spacer * .5),
+  3: $spacer,
+  4: ($spacer * 1.5),
+  5: ($spacer * 3),
+  6: ($spacer * 3.5),
+  7: ($spacer * 4),
+  8: ($spacer * 4.5),
+  9: ($spacer * 5),
+  10: ($spacer * 5.5),
+  11: ($spacer * 6),
+  12: ($spacer * 6.5)
+), $spacers);
+// override default font size from 1rem
+$font-size-base: 0.875rem;
+// overrid default line-height from 1.5
+$line-height-base: 1.25rem;
 // Body
 $body-bg: #f5f8fa;
+// $body-bg: #D6E9FE;
 
 // Borders
 $laravel-border-color: darken($body-bg, 10%);
@@ -18,13 +40,14 @@ $brand-danger: #bf5329;
 
 // Typography
 //$font-family-sans-serif: "Raleway", sans-serif;
+$fa-font-path: "../../../node_modules/font-awesome/fonts" !default;
 $font-family-sans-serif: 'Lato', sans-serif;
-$font-size-base: 14px;
+// $font-size-base: 14px;
 $line-height-base: 1.6;
 $text-color: #222b2f;
 
 // Navbar
-$navbar-default-bg: #fff;
+// $navbar-default-bg: #fff;
 
 // Buttons
 $btn-default-color: $text-color;
@@ -35,8 +58,10 @@ $input-border-focus: lighten($brand-primary, 25%);
 $input-color-placeholder: lighten($text-color, 30%);
 
 $blue: #3D8AE9;
+$blue-2:  #eaeef4;
+$blue-1: #5995DA;
 $silver: #bdc3c7;
-$input: #9D9D9D;
+$input: #802424;
 
 // Panels
 $panel-default-heading-bg: #fff;

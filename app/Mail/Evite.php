@@ -21,6 +21,7 @@ class Evite extends Mailable
     */
    protected $event;
    protected $user;
+   protected $firstTime;
    protected $resp;
    protected $confirm; //
 
@@ -29,12 +30,12 @@ class Evite extends Mailable
      *
      * @return void
      */
-    public function __construct(App\Event $event, App\User $user,
-            App\Response $resp = null, Array $confirm = null)
+    public function __construct(App\Event $event, Array $userData, Array $confirm = null)
     {
         $this->event = $event;
-        $this->user = $user;
-        $this->resp = $resp;
+        $this->user = $userData['user'];
+        $this->firstTime = $userData['firstTime'];
+        $this->resp = isset($userData['resp']) ? $userData['resp'] : null;
         if (isset($confirm)) {
             $this->confirm = $confirm['confirm'];
         } else {
@@ -77,7 +78,7 @@ class Evite extends Mailable
         }
         //check for first time (!$responded) or resending because no response (helping ==null)
         $token = '';
-        if (!$this->resp) {
+        if ($this->firstTime) {
             Log::debug("Send evite to ".$this->user->name.' '.$this->user->email);
             $newresp = \App\Response::create([
                 'user_id'=>$this->user->id,
