@@ -35,7 +35,7 @@
         <h3><u>Service Opportunity Description</u></h3>
         <p>
             <div>
-                <b>{{ $event->date_start @ $timeStart }} thru {{ $event->date_end @ $timeEnd}}</b>
+                <b>{{ $event->date_start }} at {{ $timeStart }} Thru {{ $event->date_end }} at {{ $timeEnd }}</b>
             </div>
             <br/>
             <div>

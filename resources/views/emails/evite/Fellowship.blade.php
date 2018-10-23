@@ -37,7 +37,7 @@
         <h3><u>Fellowship event description</u></h3>
         <p>
             <div>
-                <b>{{ $event->date_start @ $timeStart }} thru {{ $event->date_end @ $timeEnd}}</b>
+                <b>{{ $event->date_start }} at {{ $timeStart }} Thru {{ $event->date_end }} at {{ $timeEnd }}</b>
             </div>
             <br/>
             <div>
