@@ -303,6 +303,8 @@ class UserController extends Controller
         return;
     }
 
+    
+
     public function update_password(Request $request, $id)
     {
         $user = App\User::findOrFail($id);

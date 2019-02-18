@@ -462,6 +462,19 @@ class UserController extends Controller
         return;
     }
 
+    public function update_status(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        $this->authorize('update', $user);
+        // if ($user->id != $self->id) {
+        //     App::abort(401, 'Not you. Cant update');
+        // }
+        $user->active = $request->input('active');
+        $user->save();
+        return;
+    }
+
     public function update_password(Request $request, $id)
     {
         $user = App\User::findOrFail($id);

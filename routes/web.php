@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('member/signups/{eventid}', 'UserController@signups');
             Route::post('member/eventpay/{eventid}', 'UserController@pay');
             Route::post('member/{id}/avatar', 'UserController@avatar');
+            Route::put('member/{id}/status', 'UserController@update_status');
             Route::put('member/{id}/email', 'UserController@update_email');
             Route::put('member/{id}/password', 'UserController@update_password');
             Route::get('member.destroy', 'UserController@destroy');
