@@ -11,8 +11,7 @@
           <b-form-group label="Set Member Status">
             <b-form-radio-group v-model="modal.action"
                                 :value="modal.action"
-                                :options="modal.activeOptions"
-                                name="radioInline">
+                                :options="modal.activeOptions">
             </b-form-radio-group>
           </b-form-group>
         </b-col>
@@ -480,6 +479,9 @@ export default {
 }
 </script>
 <style>
+/* .custom-control-label::before {
+    background-color: darkorange;
+} */
 .pagination {
   margin: 0;
   float: right;

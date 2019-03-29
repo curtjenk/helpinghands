@@ -168,7 +168,7 @@ class UserController extends Controller
                     $q->join('team_user','team_user.user_id','=','users.id')
                     ->where('team_user.team_id', $inputs->teamid);
                 })
-                ->where('users.name', '!=', 'Site')
+                ->where('users.name', '!=', 'Legacy Builder')
                 ->distinct();
         } else {
             $query = $user->peers($inputs->orgid, $inputs->teamid);
