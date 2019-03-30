@@ -14,44 +14,7 @@ use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 
 class UserController extends Controller
 {
-    // public function yes_responses($id)
-    // {
-    //     $user = Auth::user();
-    //     $member = App\User::findOrFail($id);
-    //     $this->authorize('show', $member);
-    //     $responses = $member->responses()
-    //     ->select("events.subject", 'events.date_start', 'events.date_end')
-    //     ->join('events', 'events.id', '=', 'responses.event_id')
-    //     ->where('responses.helping', true)
-    //     ->orderby('events.date_end','asc')
-    //     ->get();
-    //
-    //     // $responses = App\User::
-    //     //     leftjoin('responses', 'responses.user_id', '=', 'users.id')
-    //     //     ->leftjoin('events', 'events.id', '=', 'responses.event_id')
-    //     //     ->groupby('users.id')
-    //     //     ->groupby('responses.id')
-    //     //     ->groupby('events.id')
-    //     //     ->paginate(10);
-    //
-    //     return response()->json($responses);
-    // }
-    /**
-     * Get list of members who signed-up for the event
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    // public function signups(Request $request, $event_id)
-    // {
-    //     $user = Auth::user();
-    //     $this->authorize('list-users');
-    //     $event = App\Event::findOrFail($event_id);
-    //     $this->authorize('show', $event);
-    //     if (!$request->ajax()) {
-    //         return abort(400);
-    //     }
-    //     return response()->json($event->signups()->get());
-    // }
+   
     /**
      *
      */
@@ -88,14 +51,6 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    // public function membership(Request $request, $id)
-    // {
-    //     $user = App\User::findOrFail($id);
-    //     $this->authorize("show", $user);
-    //     $memberships = $user->memberships()
-    //                     ->where('name','!=','Ministry Engage')->get();
-    //     return response()->json($memberships);
-    // }
     /**
      * Display a listing of the resource.
      *
@@ -139,18 +94,13 @@ class UserController extends Controller
     public function create()
     {
         $this->authorize('create-user');
-        $user = Auth::user();
-
-        $roles = App\Role::where('roles.id', '>=', $user->role_id)->get();
-        $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
-            ->get();
-
-        return view('user.create_edit',
-            ['orgs'=>$orgs,
-             'roles'=>$roles]);
+        $user = new App\User;
+        return view('user.profile', [
+            'user'=>$user,
+            'orgteams'=> App\Organization::with('teams')
+                ->where('organizations.name','!=','Ministry Engage')
+                ->get()
+        ]);
     }
 
     /**
@@ -222,31 +172,31 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $this->authorize('create-user');
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|max:255',
-            'nickname' => 'max:255',
-            'mobilephone' => 'max:255',
-            'homephone' => 'max:255',
-            'organization_id' => 'required|exists:organizations,id',
-            'role_id' => 'required|exists:roles,id',
-        ]);
-        $newuser = App\User::create([
-            'name'=>$request->input('name'),
-            'email'=>$request->input('email'),
-            'nickname'=>$request->input('nickname'),
-            'mobilephone'=>$request->input('mobilephone'),
-            'homephone'=>$request->input('homephone'),
-            'organization_id'=>$request->input('organization_id'),
-            'role_id'=>$request->input('role_id')
-        ]);
-        return view('user.show', [
-            'user'=>$newuser,
-        ]);
-    }
+    // public function store(Request $request)
+    // {
+    //     $this->authorize('create-user');
+    //     $this->validate($request, [
+    //         'name' => 'required|max:255',
+    //         'email' => 'required|max:255',
+    //         'nickname' => 'max:255',
+    //         'mobilephone' => 'max:255',
+    //         'homephone' => 'max:255',
+    //         'organization_id' => 'required|exists:organizations,id',
+    //         'role_id' => 'required|exists:roles,id',
+    //     ]);
+    //     $newuser = App\User::create([
+    //         'name'=>$request->input('name'),
+    //         'email'=>$request->input('email'),
+    //         'nickname'=>$request->input('nickname'),
+    //         'mobilephone'=>$request->input('mobilephone'),
+    //         'homephone'=>$request->input('homephone'),
+    //         'organization_id'=>$request->input('organization_id'),
+    //         'role_id'=>$request->input('role_id')
+    //     ]);
+    //     return view('user.show', [
+    //         'user'=>$newuser,
+    //     ]);
+    // }
     /**
      * Display the specified resource.
      *

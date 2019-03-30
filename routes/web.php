@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/authmember','UserController@authmember');
             Route::get('/member', 'UserController@index');
             Route::put('/member/{id}', 'UserController@update');
+            Route::post('/member/store', 'UserController@store');
             Route::get('member/{id}/membership', 'UserController@membership');
             Route::get('member/{id}/yes', 'UserController@yes_responses');
             Route::post('member/{id}/proxySignup', 'UserController@proxy_signup');
@@ -91,7 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
             ['only'=>['index', 'create', 'show']]
         );
         Route::resource('member', 'UserController',
-            ['only'=>['edit']]
+            ['only'=>['edit', 'create']]
         );
 
         Route::get('administrator', 'HomeController@administrator');

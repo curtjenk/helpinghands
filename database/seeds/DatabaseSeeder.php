@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         //Create users
         $siteAdmin = DB::table('users')->insertGetId([
-            'name' => 'Site',
+            'name' => 'Legacy Builder',
             'email' => 'site@me.net',
             'verified' => true,
             'password' => Hash::make('iamTheManabc123'),
