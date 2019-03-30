@@ -1,5 +1,22 @@
 <template>
   <div>
+    <b-modal ref="memberStatusModal" size=""
+     :title=" `${modal.member_name}`"
+      header-bg-variant="secondary"
+      header-text-variant="light"
+      @ok="doUpdateMemberStatus"
+    >
+      <b-row>
+        <b-col md="6">
+          <b-form-group label="Set Member Status">
+            <b-form-radio-group v-model="modal.action"
+                                :value="modal.action"
+                                :options="modal.activeOptions">
+            </b-form-radio-group>
+          </b-form-group>
+        </b-col>
+      </b-row>  
+    </b-modal>
     <b-modal ref="photoModal" size="lg" :title="photoModal.name" hide-footer
       header-bg-variant="secondary"
       header-text-variant="light"
@@ -30,7 +47,7 @@
             Number selected {{ num_events_checked }}
           </b-row>
           <b-row>
-            <b-form-group horizontal label="Filter" class="mb-0">
+            <b-form-group label="Filter" label-cols="2" class="mb-0">
               <b-input-group>
                 <b-form-input v-model="modal.filter" placeholder="Type to Search" />
                 <b-input-group-append>
@@ -86,6 +103,18 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:load-success="onLoadSuccess"
     >
+      <template slot="memberActive" slot-scope="props">
+        <span v-if="!props.rowData.canUpdateUser">
+            <span v-if="props.rowData.active" class="badge badge-success"><i class="fa fa-check"></i> Yes</span>
+            <span v-if="!props.rowData.active" class="badge badge-danger"><i class="fa fa-minus"></i> No</span>
+        </span>
+        <span v-else v-b-tooltip.right="'Update Status'" class="">
+          <a @click="showMemberStatusModal(props.rowData, props.rowIndex)" href="#" >
+            <span v-if="props.rowData.active" class="badge badge-success"><i class="fa fa-check"></i> Yes</span>
+            <span v-if="!props.rowData.active" class="badge badge-danger"><i class="fa fa-minus"></i> No</span>
+          </a>
+          </span>
+      </template>
       <template slot="colAvatar" slot-scope="props">
 <!-- v-b-popover.click.right.html="avatarPopover(props.rowData)" -->
         <a v-if="props.rowData.avatar_filename" href="#" type="link" class=""
@@ -179,6 +208,7 @@ export default {
         perPage: 5,
         action: 'signup',
         options: [{text: 'Signup', value: 'signup'}, {text: 'Decline', value: 'decline'}],
+        activeOptions: [{text: 'Active', value: true}, {text: 'In-active', value: false}],
         events: [],
         event_table_fields: [
           {key: 'check', sortable: false},
@@ -192,10 +222,10 @@ export default {
       fields: [
         {
           title: 'Active',
-          name: 'active',
           sortField: 'active',
-          dataClass: 'text-primary',
-          callback: 'setActiveIcon'
+          name: '__slot:memberActive',
+          // dataClass: 'text-primary',
+          // callback: 'setActiveIcon'
         },
         {
           title: 'Photo',
@@ -307,6 +337,28 @@ export default {
         console.log(e)
       }
     },
+    showMemberStatusModal(member, index) {
+      this.modal.member_name = `${member.name} (${member.email})`;
+      this.modal.member_id = member.id;
+      this.modal.action = member.active;
+      this.$refs.memberStatusModal.show()
+    },
+    doUpdateMemberStatus() {
+      try {
+        var url = '/api/member/' + this.modal.member_id + '/status';
+      axios.put(url, {active: this.modal.action})
+      .then(  (response) => {
+        console.log('ok')
+      }).catch((error) => {
+        console.log('error')
+      });
+
+        this.$refs.vuetable.reload();
+        
+      } catch (e) {
+        console.log(e)
+      }
+    },
     showPhotoModal (member, index) {
       console.log(member.avatar_filename)
       this.photoModal.name = member.name;
@@ -358,11 +410,11 @@ export default {
     collapseAllDetailRows: function() {
      this.$refs.vuetable.visibleDetailRows = []
     },
-    setActiveIcon (value) {
-          return value == true
-            ? '<span class="label label-success"><i class="fa fa-check"></i> Yes</span>'
-            : '<span class="label label-danger"><i class="fa fa-minus"></i> No</span>'
-    },
+    // setActiveIcon (value) {
+    //       return value == true
+    //         ? '<span class="label label-success"><i class="fa fa-check"></i> Yes</span>'
+    //         : '<span class="label label-danger"><i class="fa fa-minus"></i> No</span>'
+    // },
     allcap (value) {
       return value==null ? '' : value.toUpperCase()
     },
@@ -427,6 +479,9 @@ export default {
 }
 </script>
 <style>
+/* .custom-control-label::before {
+    background-color: darkorange;
+} */
 .pagination {
   margin: 0;
   float: right;

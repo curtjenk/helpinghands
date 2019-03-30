@@ -10,13 +10,13 @@
                   <div class="d-none d-sm-block">Personal</div>
                 </button>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!this.modeCreate">
                 <button data-target="#preferences" data-toggle="tab" class="nav-link btn">
                   <span class="fa fa-heart" aria-hidden="true"></span>
                   <div class="d-none d-sm-block">Preferences</div>
                 </button>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!this.modeCreate">
                 <button data-target="#memberships" data-toggle="tab" class="nav-link btn btn-default">
                   <span class="fa fa-sitemap" aria-hidden="true"></span>
                   <div class="d-none d-sm-block">Membership</div>
@@ -71,8 +71,11 @@
                 </div>
               </div>
               <div class="row block text-center">
-                <div class="col-md-offset-1 col-md-2">
-                  <button type="submit" class="btn btn-primary" name="submit" @click.prevent="update">
+                <div class="col-md-offset-1 col-md-3">
+                  <h4 v-if="this.modeCreate">
+                      Next "Credentials"
+                  </h4>
+                  <button v-if="!this.modeCreate" type="submit" class="btn btn-primary" name="submit" @click.prevent="update">
                     <i class="fa fa-btn fa-check"></i> Update Information
                   </button>
                 </div>.
@@ -204,7 +207,7 @@
             </div>
             <div class="row">
               <b-col md="6" sm="6">
-                <b-row class="" no-gutters>
+                <b-row class="" no-gutters v-if="!modeCreate">
                   <b-col md="4" sm="4"><label>Current Email</label></b-col>
                   <b-col md="7" sm="7">
                     <input type="text" :value="user.email" disabled>
@@ -213,13 +216,13 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4"><label>New Email</label></b-col>
                   <b-col md="7" sm="7">
-                    <input v-validate="'email'" id="email" v-model="newEmail" type="email">
+                    <input v-validate="'email'" id="email" name="email" v-model="newEmail" type="email">
                     <span v-show="vErrors.has('email')" class="alert alert-danger">{{ vErrors.first('email') }}</span>
                   </b-col>
                 </b-row>
               </b-col>
               <b-col md="6" sm="6">
-                <b-row class="" no-gutters>
+                <b-row class="" no-gutters v-if="!modeCreate">
                   <b-col md="4" sm="4" class="ml-1"><label>Old Password</label></b-col>
                   <b-col md="7" sm="7">
                     <input type="password" v-model="oldPassword" name="oldpassword">
@@ -228,7 +231,7 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4" class="ml-1"><label>New Password</label></b-col>
                   <b-col md="7" sm="7">
-                    <vue-password id="newpassword" v-model="newPassword" name="newpassword"
+                    <vue-password id="newpassword" v-model="newPassword" name="newpassword" ref="newpassword"
                       classes=""
                       :user-inputs="[user.email]"
                       ></vue-password>
@@ -237,7 +240,10 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4" class="ml-1"><label>Confirm Password</label></b-col>
                   <b-col md="7" sm="7">
-                    <input v-validate="'confirmed:newpassword'" data-vv-as="password" name="newpasswordconfirm" v-model="newPasswordConfirm" type="password">
+                    <input v-validate="'confirmed:newpassword'" data-vv-as="password" 
+                      name="newpasswordconfirm" 
+                      v-model="newPasswordConfirm" 
+                      type="password">
                     <div v-show="vErrors.has('newpasswordconfirm')" class="alert alert-danger p-0" role="alert" style="font-size:x-small;">
                       {{ vErrors.first('newpasswordconfirm') }}
                     </div>
@@ -245,7 +251,14 @@
                 </b-row>
               </b-col>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-3" v-if="this.modeCreate">
+              <div class="text-center">
+                  <button type="submit" class="btn btn-primary" name="submit" @click="update">
+                    <i class="fa fa-btn fa-check"></i> Add Member
+                  </button>
+              </div>.
+            </div>   
+            <div class="row mt-3" v-if="!this.modeCreate">
               <b-col md="6" sm="6">
                 <b-row no-gutters>
                   <div class="text-center">
@@ -318,6 +331,7 @@ export default {
   },
   data () {
     return {
+      modeCreate: false,
       togOpts: {
         height:24,
         width:240,
@@ -352,6 +366,9 @@ export default {
   mounted: function () {
     // this.$nextTick(function () {  // Code that will run only after the entire view has been rendered
     this.user = this.user0;
+    if (!this.user.id) {
+        this.modeCreate = true;
+    }
     this.avatar_url = this.avatar0;
     this.resetAvatar();
     this.orgData = [];
@@ -360,14 +377,16 @@ export default {
         let teams = [];
         let userOrgCheckedItem=null;
         //look if the user is in this organization
-        this.user.organizations.forEach( userOrgItem => {
-          if (userOrgItem.id == org0.id) {
-            userOrgCheckedItem=userOrgItem;
-          }
-        })
+        if (this.user.organizations) {
+          this.user.organizations.forEach( userOrgItem => {
+            if (userOrgItem.id == org0.id) {
+              userOrgCheckedItem=userOrgItem;
+            }
+          })
+        }
         org0.teams.forEach( team0 => {
           let isChecked=false;
-          if (userOrgCheckedItem != null) {
+          if (userOrgCheckedItem != null && this.user.teams ) {
             this.user.teams.forEach (userTeamItem => {
               if (userTeamItem.id == team0.id)
                 isChecked = true;
@@ -421,10 +440,29 @@ export default {
         this.uploadError = null;
     },
     update() {
-      var url = '/api/member/' + this.user.id;
-      axios.put(url, {user: this.user, org: this.orgData})
+      var url = '/api/member/';
+      var method = 'PUT';
+      if (this.modeCreate) {
+        url = url + 'store';
+        method = 'POST';
+        this.user.email = this.newEmail;
+        this.user.password = this.newPassword;
+      } else {
+        url = url + this.user.id;
+      }
+      axios({
+        method: method,
+        url: url,
+        data: {user: this.user, org: this.orgData}
+      })
+      // axios.put(url, {user: this.user, org: this.orgData})
       .then(  (response) => {
-        // console.log(response)
+        console.log(response.data)
+        if (this.modeCreate) {
+          this.modeCreate = false;
+          this.credential = 'information';
+          this.user = response.data;
+        }
         this.updateStatus = STATUS_SUCCESS;
         var self = this;
         //call initialize to get roles/permissions, etc.
@@ -437,6 +475,9 @@ export default {
         // console.log(error)
         this.updateStatus = STATUS_FAILED;
         var self = this;
+        if (this.modeCreate) {
+          this.credentialMessage = 'Unable to add member'
+        }
         setTimeout(function(){
             self.updateStatus = STATUS_INITIAL;
         }, MESSAGE_DURATION + 1000);

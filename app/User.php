@@ -13,6 +13,26 @@ use Log;
 class User extends Authenticatable
 {
     use Notifiable;
+    
+    //set default attributes
+    protected $attributes = array(
+        'name' => null,
+        'email' => null,
+        'birth_mm' => null,
+        'birth_dd' => null,
+        'birth_yyyy' => null,
+        'password' => null,
+        'nickname' => null,
+        'mobilephone' => null,
+        'homephone' => null,
+        'opt_receive_evite' => true,
+        'opt_show_mobilephone' => true,
+        'opt_show_homephone' => true, 
+        'opt_show_email' => true,
+        'verified' => false,
+        'verify_email_token' => null,
+        'avatar_filename' => null
+    );
 
     /**
      * The attributes that are mass assignable.
@@ -20,9 +40,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'verify_email_token',
+        'name', 'email', 'password', 'verified', 'verify_email_token', 'nickname',
         'mobilephone', 'homephone', 'opt_receive_evite', 'opt_show_mobilephone',
-        'opt_show_homephone', 'opt_show_email',
+        'opt_show_homephone', 'opt_show_email', 'avatar_filename',  'birth_mm',
+        'birth_dd', 'birth_yyyy',
     ];
 
     /**

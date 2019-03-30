@@ -47,6 +47,10 @@ class UserPolicy
      */
     public function update(User $self, User $user)
     {
+        if ($self->superuser()) {
+            return true;
+        }
+        
         if ($self->id == $user->id) {
             return true;
         }

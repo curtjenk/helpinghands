@@ -67,7 +67,7 @@ class LoginController extends Controller
     {
         $msg = trans('auth.failed');
         $user = App\User::where('email', $request->email)->first();
-        if (Hash::check($request->password, $user->password)) {
+        if ($user && Hash::check($request->password, $user->password)) {
             if (!$user->verified) {
                 $msg = trans('auth.failed_verifyemail');
                 Mail::to($user)->queue(new EmailVerification($user, ['from'=>'login']));

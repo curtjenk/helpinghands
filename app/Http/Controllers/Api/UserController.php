@@ -155,8 +155,8 @@ class UserController extends Controller
         $inputs = new Inputs($request,
             [ ]
         );
-
-        if ($user->superuser()) {
+        $isSuperUser = $user->superuser();
+        if ($isSuperUser) {
             // Log::debug('f1');
             $query = App\User::with(['organizations','organizations.teams'])
                 ->when($inputs->orgid, function($q) use($inputs) {
@@ -168,7 +168,7 @@ class UserController extends Controller
                     $q->join('team_user','team_user.user_id','=','users.id')
                     ->where('team_user.team_id', $inputs->teamid);
                 })
-                ->where('users.name', '!=', 'Site')
+                ->where('users.name', '!=', 'Legacy Builder')
                 ->distinct();
         } else {
             $query = $user->peers($inputs->orgid, $inputs->teamid);
@@ -191,8 +191,8 @@ class UserController extends Controller
             });
 
         $query = $query->paginate($inputs->limit);
-        $canUpdateUser = false;
-        $canUpdateEvent = false;
+        $canUpdateUser = $isSuperUser;
+        $canUpdateEvent = $isSuperUser;
         foreach($query as &$row) {
             foreach($row->organizations as $org) {
                 if (!$canUpdateUser) {
@@ -204,8 +204,8 @@ class UserController extends Controller
             }
             $row->canUpdateUser = $canUpdateUser;
             $row->canUpdateEvent = $canUpdateEvent;
-            $canUpdateUser = false;
-            $canUpdateEvent = false;
+            $canUpdateUser = $isSuperUser;
+            $canUpdateEvent = $isSuperUser;
         }
         return $query;
     }
@@ -215,22 +215,22 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $this->authorize('create-user');
-        $user = Auth::user();
+    // public function create()
+    // {
+    //     $this->authorize('create-user');
+    //     $user = Auth::user();
 
-        $roles = App\Role::where('roles.id', '>=', $user->role_id)->get();
-        $orgs = App\Organization::select('organizations.*')
-            ->when($user->is_orgLevel(), function($q) use($user) {
-                return $q->where('organizations.id', $user->organization_id);
-            })
-            ->get();
+    //     $roles = App\Role::where('roles.id', '>=', $user->role_id)->get();
+    //     $orgs = App\Organization::select('organizations.*')
+    //         ->when($user->is_orgLevel(), function($q) use($user) {
+    //             return $q->where('organizations.id', $user->organization_id);
+    //         })
+    //         ->get();
 
-        return view('user.create_edit',
-            ['orgs'=>$orgs,
-             'roles'=>$roles]);
-    }
+    //     return view('user.create_edit',
+    //         ['orgs'=>$orgs,
+    //          'roles'=>$roles]);
+    // }
 
     /**
      * The authenticated user is signing-up on behalf of $user_id
@@ -361,28 +361,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create-user');
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|max:255',
-            'nickname' => 'max:255',
-            'mobilephone' => 'max:255',
-            'homephone' => 'max:255',
-            'organization_id' => 'required|exists:organizations,id',
-            'role_id' => 'required|exists:roles,id',
-        ]);
-        $newuser = App\User::create([
-            'name'=>$request->input('name'),
-            'email'=>$request->input('email'),
-            'nickname'=>$request->input('nickname'),
-            'mobilephone'=>$request->input('mobilephone'),
-            'homephone'=>$request->input('homephone'),
-            'organization_id'=>$request->input('organization_id'),
-            'role_id'=>$request->input('role_id')
-        ]);
-        return view('user.show', [
-            'user'=>$newuser,
-        ]);
+        $data = $request->input('user');
+        $data['password'] = Hash::make($data['password']);
+        $data['verified'] =  true;
+        // Log::debug(print_r($data, true));
+        $user = App\User::create($data);
+        return response()->json($user);
     }
     /*
 
@@ -406,43 +390,6 @@ class UserController extends Controller
                                 'roles'=>$roles,
                                 'permissions'=>$permissions]);
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function show($id)
-    // {
-    //     //dump("here");
-    //     $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
-    //     if (!isset($user)) {
-    //         abort(400);
-    //     }
-    //     $this->authorize('show', $user);
-    //     return view('user.profile', [
-    //         'user'=>$user,
-    //     ]);
-    // }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-    //     $self = Auth::user();
-    //     $user = App\User::where('id',$id)->with(['organizations','teams'])->first();
-    //     $this->authorize('update', $user);
-    //     // Log::debug(print_r($user,true));
-    //     return view('user.profile', [
-    //         'user'=>$user,
-    //         'orgteams'=> App\Organization::with('teams')
-    //             ->where('organizations.name','!=','Ministry Engage')
-    //             ->get()
-    //     ]);
-    // }
 
     public function update_email(Request $request, $id)
     {
@@ -458,6 +405,19 @@ class UserController extends Controller
         }
 
         $user->email = $request->input('newEmail');
+        $user->save();
+        return;
+    }
+
+    public function update_status(Request $request, $id)
+    {
+        $user = App\User::findOrFail($id);
+        $self = Auth::user();
+        $this->authorize('update', $user);
+        // if ($user->id != $self->id) {
+        //     App::abort(401, 'Not you. Cant update');
+        // }
+        $user->active = $request->input('active');
         $user->save();
         return;
     }
