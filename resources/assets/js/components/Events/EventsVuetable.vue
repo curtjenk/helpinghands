@@ -28,7 +28,7 @@
             Number selected {{ num_members_checked }}
           </b-row>
           <b-row>
-            <b-form-group horizontal label="Filter" class="mb-0">
+            <b-form-group label="Filter" label-cols="2" class="mb-0">
               <b-input-group>
                 <b-form-input v-model="signupModal.filter" placeholder="Type to Search" />
                 <b-input-group-append>
