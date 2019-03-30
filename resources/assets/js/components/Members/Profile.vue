@@ -216,7 +216,7 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4"><label>New Email</label></b-col>
                   <b-col md="7" sm="7">
-                    <input v-validate="'email'" id="email" v-model="newEmail" type="email">
+                    <input v-validate="'email'" id="email" name="email" v-model="newEmail" type="email">
                     <span v-show="vErrors.has('email')" class="alert alert-danger">{{ vErrors.first('email') }}</span>
                   </b-col>
                 </b-row>
@@ -231,7 +231,7 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4" class="ml-1"><label>New Password</label></b-col>
                   <b-col md="7" sm="7">
-                    <vue-password id="newpassword" v-model="newPassword" name="newpassword"
+                    <vue-password id="newpassword" v-model="newPassword" name="newpassword" ref="newpassword"
                       classes=""
                       :user-inputs="[user.email]"
                       ></vue-password>
@@ -240,7 +240,10 @@
                 <b-row class="" no-gutters>
                   <b-col md="4" sm="4" class="ml-1"><label>Confirm Password</label></b-col>
                   <b-col md="7" sm="7">
-                    <input v-validate="'confirmed:newpassword'" data-vv-as="password" name="newpasswordconfirm" v-model="newPasswordConfirm" type="password">
+                    <input v-validate="'confirmed:newpassword'" data-vv-as="password" 
+                      name="newpasswordconfirm" 
+                      v-model="newPasswordConfirm" 
+                      type="password">
                     <div v-show="vErrors.has('newpasswordconfirm')" class="alert alert-danger p-0" role="alert" style="font-size:x-small;">
                       {{ vErrors.first('newpasswordconfirm') }}
                     </div>
