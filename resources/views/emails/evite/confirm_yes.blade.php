@@ -3,9 +3,17 @@
 @section('content')
     @php
         $timeStart = json_decode($event->time_start);
-        $timeStart = $timeStart->hh.":".$timeStart->mm." ".$timeStart->a;
+        $hh = empty($timeStart->hh) ? "" : $timeStart->hh;
+        $mm = empty($timeStart->mm) ? "" : $timeStart->mm;
+        $a = empty($timeStart->a) ? "" : $timeStart->a;
+        $timeStart =  $hh.":".$mm." ".$a;
+
         $timeEnd = json_decode($event->time_end);
-        $timeEnd = $timeEnd->hh.":".$timeEnd->mm." ".$timeEnd->a;
+        $hh = empty($timeEnd->hh) ? "" : $timeEnd->hh;
+        $mm = empty($timeEnd->mm) ? "" : $timeEnd->mm;
+        $a = empty($timeEnd->a) ? "" : $timeEnd->a;
+        $timeEnd =  $hh.":".$mm." ".$a;
+
     @endphp
 <div class="row mt-6">
     <h1>Confirmation - Yes, I'm going</h1>
