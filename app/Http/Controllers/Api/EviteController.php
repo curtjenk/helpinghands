@@ -63,7 +63,7 @@ class EviteController extends Controller
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(!isset($resp)) {
-            Log::debug('response_no: failed: No evite sent'.$user->name);
+            Log::debug('response_no: failed: No evite sent '.$user->name . ' eventid='.$event_id . ' userid='.$user_id);
             abort(400, "No evite sent for $user->email");
         }
         if ($resp->helping != null ||
