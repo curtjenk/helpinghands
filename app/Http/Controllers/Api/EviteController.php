@@ -89,17 +89,18 @@ class EviteController extends Controller
 
     private function getResponseModel($event_id, $user_id, $token=null)
     {
-        if (isset($token)) {
-            return App\Response::where('token', $token)
-                ->where('event_id',$event_id)
-                ->where('user_id',$user_id)
-                ->first();
-        } else {
+        //*  got a bug somewhere. generating a new token but shouldn't .
+        // if (isset($token)) {
+        //     return App\Response::where('token', $token)
+        //         ->where('event_id',$event_id)
+        //         ->where('user_id',$user_id)
+        //         ->first();
+        // } else {
             return App\Response::
                   where('event_id',$event_id)
                 ->where('user_id',$user_id)
                 ->first();
-        }
+        // }
     }
 
     /**
