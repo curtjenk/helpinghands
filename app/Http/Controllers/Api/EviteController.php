@@ -26,6 +26,9 @@ class EviteController extends Controller
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
+        if(empty($resp->id)) {
+            $resp = $this->getResponseModel($event_id, $user_id, null);
+        }
         if(!isset($resp)) {
             Log::debug('response_yes: failed: No evite sent'.$user->name);
             abort(400, "No evite sent for $user->email");
@@ -63,6 +66,9 @@ class EviteController extends Controller
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(empty($resp->id)) {
+            $resp = $this->getResponseModel($event_id, $user_id, null);
+        }
+        if(empty($resp->id)) {
             Log::debug('response_no: failed: No evite sent '.$user->name . ' eventid='.$event_id . ' userid='.$user_id. ' token='.$token);
             abort(400, "No evite sent for $user->email");
         }
@@ -89,18 +95,17 @@ class EviteController extends Controller
 
     private function getResponseModel($event_id, $user_id, $token=null)
     {
-        //*  got a bug somewhere. generating a new token but shouldn't .
-        // if (isset($token)) {
-        //     return App\Response::where('token', $token)
-        //         ->where('event_id',$event_id)
-        //         ->where('user_id',$user_id)
-        //         ->first();
-        // } else {
+        if (isset($token)) {
+            return App\Response::where('token', $token)
+                ->where('event_id',$event_id)
+                ->where('user_id',$user_id)
+                ->first();
+        } else {
             return App\Response::
                   where('event_id',$event_id)
                 ->where('user_id',$user_id)
                 ->first();
-        // }
+        }
     }
 
     /**
@@ -147,6 +152,8 @@ class EviteController extends Controller
                                'resp' => null];
                 ++$cnt;
             } else if (empty($responded->helping)) {
+                // Already sent an evite, but no response .. ie, helping=null
+                // Resend the evite
                 // Log::debug([print_r($helper->name, true), $responded->helping, 'Resending evite']);
                 $invitees[] = ['user' => $helper,
                                'firstTime' => false,
@@ -158,8 +165,6 @@ class EviteController extends Controller
         }
 
         if ($cnt > 0) {
-            //update Event
-            //TODO remove this update since we now have the evites table
             $event->evite_sent = Carbon::now();
             $event->save();
             //Create an Evite
