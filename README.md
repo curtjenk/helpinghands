@@ -8,10 +8,6 @@
 </p>
 ## Notes:
 
-- sudo apt-get install postgresql-contrib
-- Run CREATE EXTENSION citext; at the psql prompt
-        CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
-
 
 ## About Laravel
 
