@@ -51,7 +51,7 @@ class Evite extends Mailable
     public function build()
     {
         if (isset($this->confirm)) {
-            Log::debug("Send confirmation to ".$this->user->name.' '.$this->user->email.' ('.$this->confirm.')');
+            Log::debug("Now sending confirmation to ".$this->user->name.' '.$this->user->email.' ('.$this->confirm.')');
             if ($this->confirm == 1) {
                 return $this->subject($this->event->subject)
                     ->view('emails.evite.confirm_yes')
@@ -79,17 +79,17 @@ class Evite extends Mailable
         //check for first time (!$responded) or resending because no response (helping ==null)
         $token = '';
         if ($this->firstTime) {
-            Log::debug("Send evite to ".$this->user->name.' '.$this->user->email);
             $newresp = \App\Response::create([
                 'user_id'=>$this->user->id,
                 'event_id'=>$this->event->id,
                 'token'=>\App\Response::generateToken()
             ]);
             $token = $newresp->token;
+            Log::debug("Send evite to ".$this->user->name.' '.$this->user->email.' '.$token);
 
         } else {
-            Log::debug("Re-Send evite to ".$this->user->name.' '.$this->user->email);
             $token = $this->resp->token;
+            Log::debug("Re-Send evite to ".$this->user->name.' '.$this->user->email.' '.$token);
         }
 
         $type = $this->event->event_type->name;
