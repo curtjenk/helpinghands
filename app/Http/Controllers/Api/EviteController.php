@@ -24,15 +24,14 @@ class EviteController extends Controller
     {
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
-        Log::debug("1-Response yes: event= ".$event_id." user=".$user_id." token=".$token);
-        Log::debug("2-Response yes: event subject= ".$event->subject);
-        Log::debug("3-Response yes: user name= ".$user->name);
+        Log::debug($user->name. " 0-Response yes: event= ".$event_id." user=".$user_id." token=".$token);
+        Log::debug($user->name. " 1-Response yes: event subject= ".$event->subject);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(empty($resp->id)) {
             $resp = $this->getResponseModel($event_id, $user_id, null);
         }
         if(!isset($resp)) {
-            Log::debug('0-Response yes: failed: No evite sent to'.$user->name);
+            Log::debug($user->name. ' 2-Response yes: failed: No evite sent to'.$user->name);
             abort(400, "No evite sent for $user->email");
         }
 
@@ -50,7 +49,7 @@ class EviteController extends Controller
         $resp->helping = true;
         $resp->save();
 
-        Log::debug('X-Response yes: send confirmation email '.$user->name);
+        Log::debug($user->name. ' 2-Response yes: send confirmation email '.$user->name);
         $invitee = ['user' => $user,
                      'firstTime' => false,
                      'resp' => $resp];
@@ -65,29 +64,26 @@ class EviteController extends Controller
     {
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
-        Log::debug("1-Response NO: event= ".$event_id." user=".$user_id." token=".$token);
-        Log::debug("2-Response NO: event subject= ".$event->subject);
-        Log::debug("3-Response NO: user name= ".$user->name);
+        Log::debug($user->name." 0-Response NO: event= ".$event_id." user=".$user_id." token=".$token);
+        Log::debug($user->name." 1-Response NO: event subject= ".$event->subject);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
         if(empty($resp->id)) {
             $resp = $this->getResponseModel($event_id, $user_id, null);
         }
         if(empty($resp->id)) {
-            Log::debug('0-Response NO: failed: No evite sent '.$user->name . ' eventid='.$event_id . ' userid='.$user_id. ' token='.$token);
+            Log::debug($user->name. '2-Response NO: failed: No evite sent '.$user->name . ' eventid='.$event_id . ' userid='.$user_id. ' token='.$token);
             abort(400, "No evite sent for $user->email");
         }
-        if ($resp->helping != null ||
-            $resp->helping==0 || $resp->helping==false ||
-            $resp->helping==1 || $resp->helping==true){
+        if (isset($resp->helping)){
             //already responded
-            Log::debug('?-Response NO: already responded! '.$user->name);
+            Log::debug($user->name.' 2-Response NO: already responded! '.$user->name);
             return view('emails.evite.confirm_no',
                 ['event'=>$event,
                  'user'=>$user]);
         }
         $resp->helping = false;
         $resp->save();
-        Log::debug('X-Response NO: send confirmation email '.$user->name);
+        Log::debug($user->name. ' 2-Response NO: send confirmation email '.$user->name);
         $invitee = ['user' => $user,
                     'firstTime' => false,
                     'resp' => $resp];
@@ -155,7 +151,7 @@ class EviteController extends Controller
                                'firstTime' => true,
                                'resp' => null];
                 ++$cnt;
-            } else if (empty($responded->helping)) {
+            } else if (!isset($responded->helping)) {
                 // Already sent an evite, but no response .. ie, helping=null
                 // Resend the evite
                 // Log::debug([print_r($helper->name, true), $responded->helping, 'Resending evite']);
