@@ -10,7 +10,7 @@ use Auth;
 use App;
 use DB;
 use Log;
-
+// TODO: Delete this file
 class EviteController extends Controller
 {
     /**
@@ -20,6 +20,9 @@ class EviteController extends Controller
      */
     public function response_yes($event_id, $user_id, $token)
     {
+        Log::debug("Web::EviteController::response_yes...aborting");
+        abort(400);
+
         Log::debug("Response yes");
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
@@ -54,6 +57,8 @@ class EviteController extends Controller
 
     public function response_no($event_id, $user_id, $token)
     {
+        Log::debug("Web::EviteController::response_no...aborting");
+        abort(400);
         $user = App\User::findOrFail($user_id);
         $event = App\Event::findOrFail($event_id);
         $resp = $this->getResponseModel($event_id, $user_id, $token);
@@ -97,6 +102,8 @@ class EviteController extends Controller
      */
     public function send_evites($event_id)
     {
+        Log::debug("Web::EviteController::response_yes...aborting..shouldn't be here");
+        abort(400);
         $user = Auth::user();
         $event = App\Event::findOrFail($event_id);
         $this->authorize('send-evites');
